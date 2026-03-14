@@ -35,7 +35,7 @@ Follow these principles in order of importance:
 
 **6. Use .dockerignore** — Exclude node_modules, .git, .env, test files, docs from the build context.
 
-See [references/dockerfile-patterns.md](references/dockerfile-patterns.md) for language-specific templates.
+Use [templates/dockerfile.md](templates/dockerfile.md) as a starting point for Node.js, Python, Go, and docker-compose configurations.
 
 ### Step 3: Validate
 

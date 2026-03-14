@@ -83,6 +83,14 @@ If you can't explain why, you haven't found the root cause yet.
 
 See [references/common-bugs.md](references/common-bugs.md) for patterns of frequently encountered bugs by language/framework.
 
+## Principles Applied
+
+- **Methodical over intuition**: Resist the urge to guess and change things. Every action is a test of a hypothesis.
+- **Binary search mindset**: Always cut the problem space in half. Don't narrow from the edges — bisect from the middle.
+- **Root cause vs. symptom**: A null check that masks a null isn't a fix. Understand *why* the unexpected state exists.
+- **Reproducibility before fixes**: If you can't reproduce the bug reliably, you can't verify the fix. Spend time here first.
+- **Minimal fix**: Change the least amount of code that fixes the root cause. Broad changes introduce new bugs.
+
 ## Anti-patterns in Debugging
 
 - **Shotgun debugging**: Changing random things and hoping. Always have a hypothesis.
@@ -90,3 +98,10 @@ See [references/common-bugs.md](references/common-bugs.md) for patterns of frequ
 - **Printf-only debugging**: Print statements are fine, but use a debugger for complex state issues.
 - **Fix the symptom**: Adding a null check instead of understanding why the value is null.
 - **Fixing without a test**: You'll be back here in a month.
+
+See [references/debugging-patterns.md](references/debugging-patterns.md) for hypothesis-driven debugging technique and language-specific tips.
+
+## Cross-Skill References
+
+- `incident-response` — use instead when production is actively down and users are impacted (time-pressured response)
+- `tdd-workflow` — write the regression test (Step 6) using the TDD workflow

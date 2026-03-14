@@ -1,0 +1,41 @@
+{
+  "skill_name": "incident-response",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Production is down. Users are getting 500 errors on checkout. We deployed 20 minutes ago. What do I do?",
+      "expected_output": "Structured incident response starting with triage (scope/severity assessment), immediate mitigation recommendation (rollback the deploy), communication guidance, and timeline tracking",
+      "assertions": [
+        "Immediately recommends rollback as fastest mitigation given recent deploy",
+        "Asks or addresses scope questions: is it all users or a subset? Is it only checkout or other pages too?",
+        "Recommends notifying stakeholders now, not after root cause is found",
+        "Distinguishes mitigation (stop the bleeding) from investigation (find the cause)",
+        "Does not attempt deep root cause analysis before mitigation is in place",
+        "Suggests monitoring after rollback to verify recovery"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We have an incident where a background job is running but producing incorrect results — all order totals calculated in the last 2 hours are wrong by about 15%. No service is down, users aren't seeing errors. How should we handle this?",
+      "expected_output": "Recognizes this as a data integrity incident (potentially Sev1 despite no downtime), recommends stopping the job immediately, scoping the data impact, and planning data correction before communication",
+      "assertions": [
+        "Recognizes data corruption as a high-severity issue even without service downtime",
+        "Recommends stopping the job immediately to prevent more bad data",
+        "Addresses scoping the affected records (which orders, time range, total count)",
+        "Raises the question of customer communication and billing correction",
+        "Does not treat this as a low-priority issue just because no service is down"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I want to do an incident response drill with my team to practice before a real incident happens. Can you help me plan it?",
+      "expected_output": "Clarifies this is incident response preparation/training, not an active incident — redirects to planning a drill scenario rather than executing incident response steps",
+      "assertions": [
+        "Recognizes this is a planning/training request, not an active incident",
+        "Does not execute the incident response workflow as if production is down",
+        "Offers to help design drill scenarios, runbooks, or role assignments",
+        "May suggest this is adjacent to retrospective/process improvement work"
+      ]
+    }
+  ]
+}

@@ -44,7 +44,7 @@ Each module should be independently usable with well-defined inputs (variables) 
 
 ### Step 3: Write the Configuration
 
-Follow these principles. See [references/iac-patterns.md](references/iac-patterns.md) for detailed patterns.
+Follow these principles. Use [templates/terraform-module.md](templates/terraform-module.md) as a starting point for module structure, variables, outputs, and README format.
 
 **Modularity**: Each module does one thing (networking, database, compute). Modules compose through outputs → inputs.
 

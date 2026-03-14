@@ -1,0 +1,41 @@
+{
+  "skill_name": "technical-debt-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We're planning our Q2 priorities and I want to do a technical debt review of our payments service. It's been growing for 3 years and is getting painful to work with. Where should I start?",
+      "expected_output": "Structured technical debt review starting with hotspot identification (not a comprehensive file-by-file scan), categorizing by type and severity, and producing a prioritized roadmap for Q2",
+      "assertions": [
+        "Starts by gathering information about where pain is concentrated (asks about churn, where bugs appear, what engineers avoid)",
+        "Focuses on hotspots rather than reviewing every file",
+        "Categorizes debt by type (complexity, test, architecture, etc.) and severity",
+        "Produces a prioritized roadmap with effort estimates",
+        "Distinguishes between quick wins, quarterly investments, and strategic changes",
+        "Does not recommend a full rewrite without strong justification"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Every file in our repo has some technical debt. How do I decide where to start when everything needs work?",
+      "expected_output": "Provides the prioritization framework: focus on high-churn + untested areas first, use value-to-cost ratio, and recommend starting with test coverage before any refactoring",
+      "assertions": [
+        "Recommends focusing on churn (frequently-changed files) rather than trying to address all debt",
+        "Emphasizes that test debt must be addressed before structural debt",
+        "Provides a concrete prioritization heuristic (not just 'prioritize by impact')",
+        "Acknowledges that low-impact debt can be accepted / deferred",
+        "Does not recommend addressing everything at once"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I found a function that's 20 lines with a bug in it. Can you help me refactor it?",
+      "expected_output": "Recognizes this is a small, targeted refactoring task — redirects to refactoring skill rather than performing a strategic debt review",
+      "assertions": [
+        "Recognizes this is a small-scale refactoring task, not a strategic debt review",
+        "Does not launch into a full technical debt audit workflow",
+        "May suggest using the refactoring skill for this specific task",
+        "Can still help fix the bug/refactor, but scopes appropriately to the small task"
+      ]
+    }
+  ]
+}

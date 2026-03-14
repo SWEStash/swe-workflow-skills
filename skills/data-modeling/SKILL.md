@@ -51,7 +51,7 @@ Produce SQL DDL or ORM model definitions. For each table include:
 - Constraints (NOT NULL, UNIQUE, CHECK) that enforce business rules
 - Timestamps (created_at, updated_at) as appropriate
 
-See [references/conventions.md](references/conventions.md) for naming and type conventions.
+Use [templates/schema.md](templates/schema.md) as a starting point for table DDL, index naming, enum patterns, and migration file structure.
 
 ### Step 5: Plan the Migration
 

@@ -79,3 +79,8 @@ After completing the planned sequence:
 - **SRP**: Each extracted function/class should have one reason to change
 - **YAGNI**: Don't introduce abstractions for hypothetical future needs during refactoring
 - **Functional Independence**: Refactoring should reduce coupling, not increase it
+
+## Cross-Skill References
+
+- `technical-debt-review` — use to identify which areas are worth refactoring at a strategic level before starting
+- `dependency-impact-analysis` — use before refactoring a shared component or public interface to understand blast radius

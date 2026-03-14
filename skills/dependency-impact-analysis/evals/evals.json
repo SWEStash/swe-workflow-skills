@@ -1,0 +1,41 @@
+{
+  "skill_name": "dependency-impact-analysis",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to rename the 'user_id' field to 'account_id' in our REST API response for GET /api/users. We have a mobile app, a web app, and two internal microservices that call this endpoint. What's the impact?",
+      "expected_output": "Dependency impact analysis identifying all four consumers, classifying the rename as breaking for all of them, recommending a versioning strategy, and producing a migration plan with coordination steps",
+      "assertions": [
+        "Identifies all four consumers (mobile app, web app, two microservices) as affected",
+        "Classifies this as a breaking change for all consumers (field rename, not additive)",
+        "Flags mobile app as highest risk (users may not update; old app versions still call the API)",
+        "Recommends API versioning (v1 keeps user_id, v2 uses account_id) for the mobile app case",
+        "Produces a migration sequence: add v2, migrate internal consumers, migrate web, sunset v1 after mobile migration window",
+        "Does not suggest a simultaneous big-bang rename as the only option"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I'm adding a new optional 'metadata' JSON column to the orders table. Is this safe to deploy?",
+      "expected_output": "Classifies this as an additive/backwards-compatible change requiring minimal coordination, confirms it's safe to deploy without consumer updates, and notes any edge cases",
+      "assertions": [
+        "Confirms this is a backwards-compatible (additive) change",
+        "Notes that existing code ignores the new column and remains safe",
+        "May mention that ORM models should be updated to avoid unexpected behavior when they serialize full rows",
+        "Does not require complex coordination or versioning",
+        "Gives a clear 'safe to proceed' verdict with any minor caveats"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I add authentication to this endpoint?",
+      "expected_output": "Recognizes this is an API design or security question, not a dependency impact analysis request — redirects to the appropriate skill",
+      "assertions": [
+        "Recognizes this is not a dependency impact analysis request",
+        "Does not perform a blast radius analysis for adding auth",
+        "May note that adding required auth to an existing endpoint is a breaking change for current consumers (brief impact observation)",
+        "Directs to security-audit or api-design skill for the actual implementation guidance"
+      ]
+    }
+  ]
+}

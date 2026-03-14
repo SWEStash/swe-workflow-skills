@@ -1,0 +1,41 @@
+{
+  "skill_name": "configuration-strategy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm adding a payment integration to our app. We'll need a Stripe API key, a webhook secret, and a flag to enable the new checkout flow for a gradual rollout. How should I manage this configuration?",
+      "expected_output": "Configuration strategy covering secrets (Stripe key, webhook secret → secrets manager), feature flag (new checkout → percentage rollout), and environment variable design with a phased rollout plan",
+      "assertions": [
+        "Identifies Stripe API key and webhook secret as secrets, recommends secrets manager not env var",
+        "Recommends feature flag for the checkout rollout, not a hard env var switch",
+        "Suggests percentage-based rollout for the feature flag",
+        "Warns against committing any credential to version control",
+        "Recommends startup validation to fail fast if secrets are missing",
+        "Notes different values needed for dev/staging/production"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Audit this Python file for configuration anti-patterns:\n\nDB_URL = 'postgresql://admin:password123@prod-db.internal:5432/myapp'\nAPI_TIMEOUT = 30\nDEBUG = True\nSTRIPE_KEY = 'sk_live_abc123xyz'\nRATELIMIT = 100",
+      "expected_output": "Identifies hardcoded credentials (DB_URL with password, STRIPE_KEY), hardcoded production hostname, and DEBUG=True as anti-patterns, with specific remediation for each",
+      "assertions": [
+        "Flags DB_URL as critical: contains hardcoded password and production hostname",
+        "Flags STRIPE_KEY as critical: live API key hardcoded in source",
+        "Flags DEBUG=True as problematic for production environments",
+        "Notes that API_TIMEOUT and RATELIMIT are acceptable as constants or could be made configurable",
+        "Recommends secrets manager or environment variables for the credentials",
+        "Recommends .env.example to document these variables without committing values"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "What's the best way to set up Terraform configuration for our infrastructure?",
+      "expected_output": "Recognizes this is an infrastructure-as-code question, not primarily a configuration strategy question — may address env var and secrets aspects but should note that IaC configuration patterns are covered by infrastructure-as-code skill",
+      "assertions": [
+        "Addresses the secrets/variable management aspects that overlap with config strategy",
+        "Recognizes that Terraform-specific patterns (workspaces, modules, state management) are better handled by the infrastructure-as-code skill",
+        "Does not attempt to be a comprehensive Terraform guide"
+      ]
+    }
+  ]
+}

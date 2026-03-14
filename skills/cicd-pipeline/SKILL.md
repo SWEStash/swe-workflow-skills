@@ -38,7 +38,7 @@ Parallelize independent stages. Lint, unit tests, and security scans can run sim
 
 ### Step 3: Write the Configuration
 
-Write the pipeline config for the target platform. See [references/pipeline-patterns.md](references/pipeline-patterns.md) for platform-specific templates.
+Write the pipeline config for the target platform. Use [templates/github-actions.md](templates/github-actions.md) as a starting point for GitHub Actions PR validation and production deploy workflows, plus a GitLab CI equivalent.
 
 Key best practices:
 - **Cache dependencies** — Cache node_modules, pip packages, Go modules between runs

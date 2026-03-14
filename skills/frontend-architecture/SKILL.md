@@ -132,6 +132,8 @@ Rules:
 - Features export a clean public API through their `index.ts`
 - Circular imports between features means a responsibility boundary is wrong
 
+Use [templates/folder-structure.md](templates/folder-structure.md) as a starting point — includes the full `src/` layout, a co-located component template, design tokens, and a custom hook pattern.
+
 ### Step 6: Validate the Architecture
 
 - [ ] Can a new engineer understand where to add a new feature?

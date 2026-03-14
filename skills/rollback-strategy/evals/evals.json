@@ -1,0 +1,41 @@
+{
+  "skill_name": "rollback-strategy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm about to deploy a feature that adds a new 'subscription_tier' column to the users table and backfills it based on existing billing data. How do I make sure I can roll back safely?",
+      "expected_output": "Structured rollback analysis covering the schema change (additive column = simple) and the backfill (data migration = complex), with a phased deploy recommendation and explicit reverse migration guidance",
+      "assertions": [
+        "Identifies the additive column as safe/simple for rollback",
+        "Identifies the backfill as the complex part requiring a reverse transformation",
+        "Recommends writing and testing the reverse backfill before deploying",
+        "Suggests testing migration timing on production-sized data",
+        "Recommends making a database backup before the backfill runs",
+        "Produces or outlines a written rollback plan"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We need to rename the 'email' column to 'email_address' in our users table. What's the safest way to do this and be able to roll back?",
+      "expected_output": "Recommends the expand-contract pattern (4-step phased approach) rather than a single rename, explaining why a direct rename is a breaking change that cannot be safely rolled back",
+      "assertions": [
+        "Warns that a direct column rename is a breaking change for any running application code",
+        "Recommends the expand-contract pattern: add new column → backfill → migrate reads/writes → drop old column",
+        "Explains that each step is independently rollback-safe",
+        "Notes that the old column should not be dropped until all references to it are confirmed removed"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Help me roll back the deploy I just did — users are getting 500 errors.",
+      "expected_output": "Recognizes this is an active incident execution context, not a planning context — redirects to incident-response skill for immediate action while potentially providing the rollback steps if a rollback plan exists",
+      "assertions": [
+        "Recognizes this is an active incident, not a pre-deploy planning session",
+        "Prioritizes speed and clear action over comprehensive planning",
+        "Mentions incident-response skill for the overall incident workflow",
+        "Asks for or uses the rollback plan if one was previously created",
+        "Does not spend time on rollback planning when immediate action is needed"
+      ]
+    }
+  ]
+}

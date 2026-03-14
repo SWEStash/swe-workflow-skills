@@ -89,3 +89,18 @@ For urgent hotfixes where the full checklist feels heavy, run at minimum:
 4. Rollback plan exists
 
 Everything else can be addressed in a follow-up, but these four prevent the worst outcomes.
+
+## Principles Applied
+
+- **KISS**: The simplest deploy that can safely reach production. Avoid adding complexity (new flags, new services) in the same deployment as the feature.
+- **Defense in depth**: Validate at every gate — tests, staging, canary — not just once. Each gate catches a different class of failure.
+- **Fail fast**: If a check fails, stop and fix before proceeding. A blocked deploy is far cheaper than a production incident.
+- **YAGNI**: Don't deploy speculative configuration or unused feature flags. Unused config is future confusion.
+
+See [references/pre-deploy-gates.md](references/pre-deploy-gates.md) for environment-specific checklists, schema migration safety, and rollback trigger criteria.
+
+## Cross-Skill References
+
+- `rollback-strategy` — design the rollback plan before deploying (required for High-risk changes)
+- `configuration-strategy` — verify all environment variables and feature flags are configured correctly
+- `incident-response` — use if the deployment causes a production incident

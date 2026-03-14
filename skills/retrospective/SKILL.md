@@ -146,3 +146,10 @@ Use the template at [templates/post-mortem.md](templates/post-mortem.md). Publis
 - **Action over discussion**: Every retro must produce specific, owned action items. A retro without action items is just venting.
 - **KISS**: 2-3 action items per retro, not 15. Fewer items done beats many items forgotten.
 - **Continuous improvement**: Small improvements every sprint compound. A 5% improvement per sprint is 3x better in a year.
+
+## Cross-Skill References
+
+- `incident-response` — triggers a post-mortem; use this skill for the post-mortem workflow
+- `technical-debt-review` — if retrospectives repeatedly surface the same maintenance pain, escalate to a full debt review
+
+See [references/facilitation-guide.md](references/facilitation-guide.md) for retro formats, handling difficult conversations, and action item quality criteria.
