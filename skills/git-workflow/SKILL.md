@@ -1,6 +1,8 @@
 ---
 name: git-workflow
-description: Write well-structured commit messages, PR descriptions, and manage branching strategy following conventional commits and team conventions. Use when the user wants to write a commit message, create a PR description, set up a branching strategy, squash or reorganize commits, write a merge commit, or manage their git history. Triggers on phrases like "write a commit message", "commit this", "PR description", "pull request", "branching strategy", "git workflow", "squash commits", "rebase", "conventional commits", "how should I commit this", or when deployment-checklist leads to creating a release. Also use when the user asks to review staged changes before committing.
+description: "Write commit messages, PR descriptions, and manage branching strategy following conventional commits. Triggers: write a commit message, commit this, PR description, pull request, branching strategy, git workflow, squash commits, rebase, conventional commits, how should I commit this, review staged changes."
+model: haiku
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Git Workflow

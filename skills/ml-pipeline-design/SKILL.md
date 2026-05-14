@@ -1,6 +1,8 @@
 ---
 name: ml-pipeline-design
-description: Design reproducible ML training and data pipelines — data ingestion, validation, feature engineering, model training, evaluation, and continuous training orchestration. Use when the user needs to build an ML training pipeline, design data preprocessing workflows, implement feature engineering, set up continuous training, validate data quality, or move from notebooks to production-grade pipelines. Triggers on phrases like "training pipeline", "data pipeline", "feature engineering", "ETL for ML", "continuous training", "data validation", "feature store", "preprocessing pipeline", "notebook to pipeline", "orchestrate training", "Airflow", "Kubeflow", "pipeline DAG", or when ml-experiment-tracking work needs to be automated into repeatable pipelines. This skill covers the pipeline and automation phase of MLOps.
+description: "Design reproducible ML training and data pipelines — ingestion, validation, feature engineering, training, evaluation, continuous training orchestration. Triggers: training pipeline, data pipeline, feature engineering, ETL for ML, continuous training, data validation, feature store, preprocessing, notebook to pipeline, orchestrate training, Airflow, Kubeflow, pipeline DAG."
+model: opus
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # ML Pipeline Design

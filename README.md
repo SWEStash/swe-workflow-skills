@@ -143,9 +143,36 @@ The `description` field in SKILL.md's YAML frontmatter is the primary mechanism 
 **Rules for writing descriptions:**
 - **Keyword-rich**: Include all the phrases a user might say ("plan this feature", "scope this out", "break this down", "sprint planning"). Cast a wide net.
 - **Third-person, present tense**: "Use when the user needs to..." not "I help with..."
-- **Under 1024 characters**: Hard limit enforced by Claude Code
+- **~350 characters, hard cap 1024**: The 1024-char per-skill limit is enforced, but it is not the binding constraint at scale. Claude Code only injects skill listings up to `skillListingBudgetFraction` of the context (default 1% ≈ 2k tokens). With 30+ skills installed, ~350 chars per description is a realistic target — anything longer and `/doctor` will report descriptions being dropped.
 - **Slightly assertive**: "Use when the user reports a bug" triggers more reliably than "May be used for bug reports." Lean toward the pushy side — under-triggering is the most common failure mode.
 - **Include related vocabulary**: If your skill is about deployments, also mention "go live", "ship it", "push to production", "release".
+
+**Recommended pattern:** `<one-line purpose>. Triggers: <comma-separated keywords>. <one-line boundary or delegation note>.`
+
+### Listing Budget
+
+Every installed skill contributes its `name` + `description` to a single listing that Claude Code injects on every prompt. The total is capped by `skillListingBudgetFraction` in `settings.json` (default `0.01`, i.e. 1% of context). When the cap is exceeded, the least-recently-used descriptions are dropped, and dropped skills will not trigger.
+
+Check with `/doctor` — it reports dropped descriptions when this happens.
+
+If you install many skills, raise the budget in `~/.claude/settings.json`:
+
+```json
+{ "skillListingBudgetFraction": 0.02 }
+```
+
+At 2% (~4k tokens of context budget), the full 39 skills in this repo fit comfortably.
+
+### Frontmatter Fields
+
+Beyond `name` and `description`, two optional fields are recommended:
+
+| Field | Purpose | Used in this repo |
+|---|---|---|
+| `model` | Pin a default model when the skill activates | `haiku` for cheap formatting/lookup skills, `sonnet` for most design/review work, `opus` for deep multi-step reasoning (architecture, security audit, debt review, RCA) |
+| `allowed-tools` | Restrict tools the skill can call | Most skills use `Read, Grep, Glob, Write, Edit`. Implementation- or infra-adjacent skills add `Bash`. Research-oriented skills (dependency-management, security-audit) add `WebFetch, WebSearch`. |
+
+Neither field counts toward the listing budget — only `name` + `description` do.
 
 ### Token Economy and Progressive Disclosure
 

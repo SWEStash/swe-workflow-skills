@@ -1,6 +1,8 @@
 ---
 name: dependency-impact-analysis
-description: Map the blast radius of a proposed change before implementing it — identify all dependents of a component, classify impact as breaking or additive, identify cross-team coordination needs, and produce a change propagation plan. Use when the user is about to change an API contract, modify a database schema that multiple services use, upgrade a shared library, change an event schema, rename or move a shared component, or needs to understand what will break before making a change. Triggers on phrases like "what will break if I change this", "blast radius", "impact analysis", "breaking change", "who depends on this", "what uses this endpoint", "safe to rename this", "shared schema change", "downstream impact", "dependency graph", "what services call this API", or before making changes to interfaces, contracts, or shared components. Use api-design for designing the new API contract after the impact is understood.
+description: "Map the blast radius of a change before implementing — find dependents, classify breaking vs additive, identify coordination needs, produce a propagation plan. Triggers: what will break if I change this, blast radius, impact analysis, breaking change, who depends on this, downstream impact, safe to rename, shared schema change, dependency graph."
+model: opus
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Dependency Impact Analysis

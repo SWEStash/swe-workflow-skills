@@ -1,6 +1,8 @@
 ---
 name: frontend-architecture
-description: Design frontend application architecture — React component hierarchy, state management strategy, design tokens, data fetching patterns, routing structure, error boundaries, and code organization. Use when the user needs to structure a React or React Native app, choose a state management approach, design a component library, plan client-side data flow, organize frontend code, design component APIs (props, composition), or make frontend architectural decisions. Triggers on phrases like "component architecture", "state management", "design system", "design tokens", "component library", "React structure", "folder structure", "how to organize", "Zustand vs Redux", "React Query", "data fetching", "code splitting", "error boundary", "compound component", "component API", "frontend structure", or when architecture-design reveals a frontend component to the system. This skill designs the frontend CODE STRUCTURE — use ui-ux-design for the user experience and accessibility-design for WCAG compliance.
+description: "Design frontend architecture — React component hierarchy, state management, design tokens, data fetching, routing, error boundaries, code organization. Triggers: component architecture, state management, design system, design tokens, component library, React structure, folder structure, Zustand vs Redux, React Query, code splitting, error boundary, compound component."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Frontend Architecture

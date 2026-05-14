@@ -1,6 +1,8 @@
 ---
 name: observability-design
-description: Design production observability — SLIs/SLOs/SLAs with error budgets, OpenTelemetry instrumentation (traces, metrics, logs), structured logging, alerting rules, and dashboards. Use when the user needs to define service reliability targets, instrument an application with tracing or metrics, design structured logging, create alerting rules, set up dashboards, calculate error budgets, or implement OpenTelemetry. Triggers on phrases like "SLO", "SLI", "SLA", "error budget", "observability", "monitoring", "OpenTelemetry", "OTel", "tracing", "distributed tracing", "structured logging", "alerting", "dashboard", "metrics", "uptime", "availability target", "nine nines", "correlation ID", "log levels", "alert fatigue", or when deployment-checklist or architecture-design identifies monitoring gaps. This skill designs observability — use performance-optimization for finding bottlenecks, and bug-investigating for debugging specific issues.
+description: "Design production observability — SLIs, SLOs, SLAs, error budgets, OpenTelemetry traces/metrics/logs, structured logging, alerting, dashboards. Triggers: SLO, SLI, SLA, error budget, observability, monitoring, OpenTelemetry, OTel, tracing, distributed tracing, structured logging, alerting, dashboard, metrics, correlation ID, alert fatigue."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Observability Design

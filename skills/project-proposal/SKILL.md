@@ -1,6 +1,8 @@
 ---
 name: project-proposal
-description: Write lightweight project proposals for budget approval, stakeholder buy-in, and go/no-go decisions — including problem statement, business case, scope, rough estimates, risk assessment, and success criteria. Use when the user needs to propose a new project, justify a budget, get buy-in for an initiative, assess risks before committing, write a project brief, or answer "should we build this?". Triggers on phrases like "project proposal", "project brief", "business case", "budget estimate", "should we build this", "go/no-go", "risk assessment", "cost-benefit", "ROI", "justify this project", "stakeholder approval", or when an idea needs formal evaluation before committing engineering resources. This skill produces the decision document — use feature-planning for the implementation plan once approved.
+description: "Write lightweight project proposals for budget approval and go/no-go decisions — problem, business case, scope, rough estimates, risks, success criteria. Triggers: project proposal, project brief, business case, budget estimate, should we build this, go/no-go, risk assessment, cost-benefit, ROI, justify this project, stakeholder approval."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Project Proposal

@@ -1,6 +1,8 @@
 ---
 name: deployment-checklist
-description: Pre-deployment verification and release safety checks to ensure production readiness. Use when the user is preparing to deploy, release, or ship code to production or staging. Triggers on phrases like "deploy", "release", "ship it", "push to production", "go live", "pre-deploy check", "is this ready to deploy", "merge to main", "release checklist", or when the user has completed implementation and is ready to ship.
+description: "Pre-deploy verification and release safety checks — config, migrations, monitoring, rollback readiness, comms. Triggers: deployment checklist, ready to deploy, pre-deploy, release checklist, go-live, ship checklist, deploy safety, is this safe to ship, release readiness."
+model: haiku
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Deployment Checklist

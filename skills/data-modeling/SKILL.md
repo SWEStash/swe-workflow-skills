@@ -1,6 +1,8 @@
 ---
 name: data-modeling
-description: Design database schemas, entity relationships, and migration strategies with emphasis on normalization, data integrity, and evolutionary design. Use when the user is designing a database schema, creating tables, planning migrations, defining entities and relationships, choosing between SQL and NoSQL, or needs to model a domain. Triggers on phrases like "design the schema", "create the database", "data model", "entity relationship", "migration strategy", "what tables do I need", or when a feature plan involves data storage changes.
+description: "Design database schemas, relationships, indexes, and migration strategies — relational and document stores. Triggers: data model, schema design, ER diagram, database schema, table design, foreign key, index strategy, normalization, denormalization, migration plan, document model, partition key."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Data Modeling

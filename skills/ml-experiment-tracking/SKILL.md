@@ -1,6 +1,8 @@
 ---
 name: ml-experiment-tracking
-description: Design reproducible ML experiments with proper tracking, versioning, and comparison of runs using tools like MLflow, Weights & Biases, or DVC. Use when the user is running ML experiments, needs to track hyperparameters and metrics, compare model versions, ensure reproducibility, version datasets, or set up experiment infrastructure. Triggers on phrases like "experiment tracking", "MLflow", "wandb", "weights and biases", "DVC", "track experiments", "compare models", "hyperparameter", "reproducibility", "model registry", "which model is better", "experiment results", "log metrics", or when the user is iterating on ML model development. This skill covers the experimentation and development phase of MLOps.
+description: "Design reproducible ML experiments — tracking, versioning, run comparison with MLflow, W&B, or DVC. Triggers: experiment tracking, MLflow, wandb, weights and biases, DVC, track experiments, compare models, hyperparameter, reproducibility, model registry, which model is better, experiment results, log metrics."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # ML Experiment Tracking

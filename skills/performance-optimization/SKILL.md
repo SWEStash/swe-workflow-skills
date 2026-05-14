@@ -1,6 +1,8 @@
 ---
 name: performance-optimization
-description: Identify and resolve performance bottlenecks through static code analysis — N+1 queries, algorithmic complexity, database query optimization, caching strategy, memory leak patterns, bundle size reduction, and connection management. Use when the user reports slowness, wants to optimize code, needs to improve query performance, reduce load times, design a caching strategy, or analyze algorithmic complexity. Triggers on phrases like "this is slow", "optimize", "performance", "N+1", "query optimization", "caching", "bundle size", "memory leak", "latency", "response time", "load time", "scale", "bottleneck", or when code-reviewing or bug-investigating surfaces performance concerns.
+description: "Identify and resolve performance bottlenecks via static analysis — N+1 queries, algorithmic complexity, query optimization, caching, memory leaks, bundle size, connection management. Triggers: this is slow, optimize, performance, N+1, query optimization, caching, bundle size, memory leak, latency, response time, scale, bottleneck."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # Performance Optimization

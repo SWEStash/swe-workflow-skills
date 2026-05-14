@@ -1,6 +1,8 @@
 ---
 name: incident-response
-description: Structured production incident response workflow covering triage, mitigation, investigation, recovery, and communication. Use when production is actively broken, a service is down, users are impacted, or an on-call alert has fired. Triggers on phrases like "production is down", "site is down", "incident", "outage", "users are seeing errors", "on-call", "alert fired", "p0", "p1", "sev1", "sev2", "something is broken in prod", "rollback", "emergency deploy", or when the user is under active pressure to resolve a live production issue. This skill is for active incidents under time pressure — use bug-investigating for offline root cause analysis and retrospective for the post-mortem.
+description: "Structured production incident workflow — triage, mitigation, investigation, recovery, comms. Triggers: production is down, site is down, incident, outage, users seeing errors, on-call, alert fired, p0, p1, sev1, sev2, broken in prod, rollback, emergency deploy. For active incidents under time pressure."
+model: opus
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # Incident Response

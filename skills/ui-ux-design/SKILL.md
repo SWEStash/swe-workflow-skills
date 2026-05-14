@@ -1,6 +1,8 @@
 ---
 name: ui-ux-design
-description: Design user experiences from an engineer's perspective — user flows, wireframe specifications, interaction patterns, responsive strategy, navigation design, and UI state handling (loading, error, empty). Use when the user needs to design a user interface, map user flows, specify wireframes, define interaction patterns, handle loading and error states, design forms, plan responsive layouts, or translate vague requirements into implementable UI specs. Triggers on phrases like "design the UI", "user flow", "wireframe", "how should this screen look", "loading state", "error state", "empty state", "responsive design", "navigation design", "page layout", "form design", "screen flow", "mockup", "interaction design", or when prd-writing produces user stories that need UI specification. This skill designs the USER EXPERIENCE — use frontend-architecture for the technical component structure and accessibility-design for WCAG compliance.
+description: "Design user experiences from an engineer's perspective — user flows, wireframes, interaction patterns, responsive strategy, navigation, loading/error/empty states. Triggers: design the UI, user flow, wireframe, how should this screen look, loading state, error state, empty state, responsive design, navigation, page layout, form design, mockup."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # UI/UX Design

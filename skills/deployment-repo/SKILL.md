@@ -1,6 +1,8 @@
 ---
 name: deployment-repo
-description: Design and maintain a deployment repository (GitOps repo) that orchestrates multiple services in a polyrepo architecture — version pinning, environment promotion, compatibility matrices, and system-level configuration. Use when the user has multiple services across separate repos and needs to coordinate deployments, pin compatible service versions, manage environment-specific manifests (docker-compose, Helm, Kustomize, Terraform), or set up a central place for E2E tests and system documentation. Triggers on phrases like "deployment repo", "GitOps repo", "polyrepo", "multi-repo", "version pinning", "compatibility matrix", "service versions", "environment promotion", "multi-service deployment", "orchestration repo", "how do I coordinate microservices", "which versions work together", or when architecture-design involves a multi-service system.
+description: "Design a deployment (GitOps) repo that orchestrates multiple services in a polyrepo — version pinning, environment promotion, compatibility matrices, system config. Triggers: deployment repo, GitOps repo, polyrepo, multi-repo, version pinning, compatibility matrix, environment promotion, multi-service deployment, orchestration repo, which versions work together."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # Deployment Repository Design

@@ -1,6 +1,8 @@
 ---
 name: configuration-strategy
-description: Design environment configuration, secrets management, and feature flag strategy for an application or feature — including hierarchy, rollout plan, and audit for anti-patterns. Use when the user needs to design how configuration will be managed, decide where to store secrets, plan a feature flag rollout, audit code for hardcoded values or config anti-patterns, or set up environment-specific configuration. Triggers on phrases like "configuration strategy", "config management", "feature flags", "environment variables", "secrets management", "hardcoded values", "config hierarchy", "environment-specific config", "how should I manage config", "where do I store secrets", "feature flag rollout", or when feature-planning reveals a feature that requires significant configuration work. Use deployment-checklist to verify configuration is correct before deploying.
+description: "Design environment configuration, secrets management, and feature-flag hierarchy for a service or feature. Triggers: config strategy, environment variables, .env, secrets management, feature flag, config hierarchy, config precedence, twelve-factor config, environment-specific settings."
+model: haiku
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Configuration Strategy

@@ -1,6 +1,8 @@
 ---
 name: project-documentation
-description: Write and maintain project documentation — README files, contributing guides, API documentation, changelogs, and inline code documentation. Use when the user wants to create or improve a README, write a contributing guide, document an API, generate a changelog, add JSDoc/docstrings, or make a project more accessible to new contributors. Triggers on phrases like "write a README", "document this project", "create documentation", "contributing guide", "changelog", "API docs", "how do I document", "this needs docs", "onboarding docs", "write docs for", or when deployment-checklist flags missing documentation.
+description: "Write and maintain project docs — README, contributing guides, API docs, changelogs, inline docs. Triggers: write a README, document this project, create documentation, contributing guide, changelog, API docs, how do I document, this needs docs, onboarding docs, JSDoc, docstrings."
+model: haiku
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Project Documentation

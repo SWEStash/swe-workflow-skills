@@ -1,6 +1,8 @@
 ---
 name: architecture-documentation
-description: Design and maintain architecture documentation using multi-level diagrams and docs-as-code practices. Use when the user needs to create system diagrams, document architecture visually, organize architecture docs, set up C4 diagrams, create runtime or infrastructure diagrams, establish diagram conventions, or validate documentation completeness. Triggers on phrases like "architecture diagram", "document the architecture", "C4 diagram", "system context diagram", "container diagram", "component diagram", "architecture docs", "docs-as-code", "diagram our system", "architecture visualization", "PlantUML", "Structurizr", "D2 diagram", "Mermaid architecture", "infrastructure diagram", "runtime flow diagram", "how should I organize architecture docs". For architectural decision-making and ADRs, use the architecture-design skill instead.
+description: "Design and maintain architecture documentation with multi-level diagrams (C4) and docs-as-code. Triggers: architecture diagram, document the architecture, C4 diagram, system context, container diagram, component diagram, architecture docs, docs-as-code, PlantUML, Structurizr, D2, Mermaid architecture, infrastructure diagram, runtime flow. Use architecture-design for ADRs."
+model: opus
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Architecture Documentation

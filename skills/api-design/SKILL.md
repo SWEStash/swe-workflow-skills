@@ -1,6 +1,8 @@
 ---
 name: api-design
-description: Design RESTful and GraphQL APIs with consistent endpoint naming, request/response contracts, error handling, pagination, versioning, and authentication patterns. Use when the user needs to design new API endpoints, define request/response schemas, standardize error responses, plan API versioning, design pagination or filtering, or create an OpenAPI specification. Triggers on phrases like "design the API", "what endpoints do I need", "API contract", "REST API design", "GraphQL schema", "error response format", "pagination", "API versioning", "OpenAPI spec", "swagger", or when feature-planning identifies API work. This skill designs the API contract — use architecture-design for higher-level decisions like "REST vs GraphQL" or "monolith vs microservices".
+description: "Design RESTful and GraphQL APIs — endpoint naming, request/response contracts, error handling, pagination, versioning, auth patterns, OpenAPI specs. Triggers: design the API, API contract, REST API, GraphQL schema, error response format, pagination, API versioning, OpenAPI, swagger, endpoints. Use architecture-design for REST-vs-GraphQL or monolith-vs-microservices decisions."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # API Design

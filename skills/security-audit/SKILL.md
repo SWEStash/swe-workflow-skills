@@ -1,6 +1,8 @@
 ---
 name: security-audit
-description: Perform comprehensive security analysis of code and infrastructure — OWASP Top 10 assessment, authentication/authorization flow review, injection vulnerability scanning, data exposure analysis, secrets detection, dependency CVE auditing, and security hardening recommendations. Use when the user asks for a security review, vulnerability assessment, penetration test preparation, or wants to harden their application. Triggers on phrases like "security audit", "vulnerability", "is this secure", "security review", "pentest prep", "OWASP", "harden this", "check for vulnerabilities", "security scan", "injection", "XSS", "CSRF", "auth security", or when code-reviewing or deployment-checklist surfaces security concerns. This goes deeper than the security section in code-reviewing — use this for dedicated security analysis.
+description: "Comprehensive security analysis — OWASP Top 10, auth/authz flows, injection vulnerabilities, data exposure, secrets detection, dependency CVEs, hardening recommendations. Triggers: security audit, vulnerability, is this secure, security review, pentest prep, OWASP, harden this, check for vulnerabilities, injection, XSS, CSRF, auth security."
+model: opus
+allowed-tools: Read, Grep, Glob, Write, Edit, WebFetch, WebSearch
 ---
 
 # Security Audit

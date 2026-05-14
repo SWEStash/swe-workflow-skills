@@ -1,6 +1,8 @@
 ---
 name: tdd-workflow
-description: Guide test-driven development using the red-green-refactor cycle. Use when the user wants to implement a feature or fix using TDD, write tests first, or asks how to test something before implementing it. Triggers on phrases like "use tdd", "test first", "write the tests", "red green refactor", "let's do this test-driven", "what should I test", or when the user has acceptance criteria and is ready to implement. Also use when the user asks to implement a feature and you detect they value TDD from their project conventions or history.
+description: "Guide test-driven development with red-green-refactor. Triggers: use tdd, test first, write the tests, red green refactor, test-driven, what should I test, write tests before code, failing test, implement using TDD. For NEW code via test-first — use test-suite-design for adding tests to existing code."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # TDD Workflow

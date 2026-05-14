@@ -1,6 +1,8 @@
 ---
 name: ml-model-deployment
-description: Deploy ML models to production with proper serving infrastructure, monitoring, drift detection, and safe rollout strategies. Use when the user needs to serve a model via API, set up model monitoring, detect data or concept drift, implement A/B testing for models, design a model serving architecture, or plan a model rollout strategy. Triggers on phrases like "deploy model", "serve model", "model API", "model monitoring", "data drift", "concept drift", "model degradation", "A/B test model", "canary deployment model", "model serving", "inference endpoint", "prediction API", "model in production", "retrain trigger", or when an ML experiment is ready for production. This skill covers the deployment, monitoring, and operations phase of MLOps.
+description: "Deploy ML models to production — serving infrastructure, monitoring, drift detection, safe rollouts. Triggers: deploy model, serve model, model API, model monitoring, data drift, concept drift, model degradation, A/B test model, canary model, inference endpoint, prediction API, retrain trigger."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # ML Model Deployment

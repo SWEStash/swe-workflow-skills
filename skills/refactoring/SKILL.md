@@ -1,6 +1,8 @@
 ---
 name: refactoring
-description: Systematic code improvement guided by design principles, code smells detection, and safe transformation patterns. Use when the user wants to improve existing code without changing behavior — cleaning up tech debt, reducing complexity, improving naming, extracting abstractions, or simplifying logic. Triggers on phrases like "refactor this", "clean this up", "simplify this code", "reduce complexity", "extract this", "this code is messy", "tech debt", "improve this code", or when a code review identifies refactoring opportunities.
+description: "Systematic code improvement via design principles, smell detection, and safe transformation patterns. Triggers: refactor this, clean this up, simplify this code, reduce complexity, extract this, this code is messy, tech debt, improve this code, code smell, rename, extract function, dead code."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # Refactoring

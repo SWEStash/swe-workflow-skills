@@ -1,6 +1,8 @@
 ---
 name: gitops-delivery
-description: Design GitOps-based continuous delivery using declarative operators like ArgoCD or Flux — automated reconciliation from a Git source of truth, cross-repo CI/CD triggers, drift detection, and progressive delivery. Use when the user needs to set up ArgoCD or Flux, automate deployments from a Git repository, configure cross-repo triggers (app repo build updates deployment repo), implement progressive delivery (canary, blue-green via GitOps), or detect and remediate configuration drift. Triggers on phrases like "ArgoCD", "Flux", "FluxCD", "GitOps", "git-based deployment", "declarative delivery", "auto-sync", "drift detection", "cross-repo trigger", "reconciliation loop", "pull-based deployment", or when deployment-repo needs an automated delivery mechanism.
+description: "Design GitOps continuous delivery with ArgoCD or Flux — declarative reconciliation, cross-repo CI/CD triggers, drift detection, progressive delivery. Triggers: ArgoCD, Flux, FluxCD, GitOps, git-based deployment, declarative delivery, auto-sync, drift detection, cross-repo trigger, reconciliation loop, pull-based deployment, canary GitOps."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # GitOps Delivery

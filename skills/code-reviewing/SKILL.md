@@ -1,6 +1,8 @@
 ---
 name: code-reviewing
-description: Perform structured code reviews enforcing design principles (DRY, KISS, YAGNI, SRP), best practices, and project conventions. Use when the user asks for a code review, wants feedback on their code, asks "is this code good?", requests a PR review, or asks to check code quality. Triggers on phrases like "review this code", "code review", "check my code", "what do you think of this implementation", "review this PR", "is there anything wrong with this", or when the user shares code and asks for feedback. Also use for reviewing git diffs before committing.
+description: "Structured code reviews enforcing DRY, KISS, YAGNI, SRP, best practices, and project conventions. Triggers: review this code, code review, check my code, what do you think of this implementation, review this PR, is this code good, feedback on my code, review staged changes before commit."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Code Reviewing

@@ -1,6 +1,8 @@
 ---
 name: effort-estimation
-description: Estimate engineering effort using agile techniques — story points, t-shirt sizing, three-point estimation, and capacity planning for sprints and projects. Use when the user needs to estimate a task, feature, or project, plan sprint capacity, forecast delivery dates, provide budget estimates, or answer "how long will this take?". Triggers on phrases like "estimate this", "how long will this take", "story points", "t-shirt sizing", "effort estimation", "capacity planning", "sprint planning", "budget estimate", "forecast", "velocity", "when will this be done", or when project-proposal or feature-planning requires effort numbers. This skill helps produce the ESTIMATES — use feature-planning for task breakdown and project-proposal for the business case.
+description: "Estimate engineering effort with agile techniques — story points, t-shirt sizing, three-point estimation, capacity planning. Triggers: estimate this, how long will this take, story points, t-shirt sizing, effort estimation, capacity planning, sprint planning, budget estimate, forecast, velocity, when will this be done."
+model: haiku
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Effort Estimation

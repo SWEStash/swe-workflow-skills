@@ -1,6 +1,8 @@
 ---
 name: test-data-strategy
-description: Design and generate test data using factories, synthetic data, property-based testing, boundary value analysis, contract testing, and load test scenarios — while maintaining data privacy compliance. Use when the user needs test data for a new feature, wants to generate realistic data at scale, needs GDPR-compliant test data, wants to implement property-based or fuzz testing, needs to design boundary value tests, create service contract tests, design load test scenarios, or is struggling with test data management. Triggers on phrases like "test data", "synthetic data", "fake data", "factory", "seed data", "fixtures", "property-based testing", "fuzz testing", "boundary values", "edge cases", "contract testing", "Pact", "load test data", "generate data", "realistic data", "GDPR test data", "anonymize", or when test-suite-design or tdd-workflow requires non-trivial test data. This skill designs the DATA that tests consume — use test-suite-design for structuring the tests themselves.
+description: "Design and generate test data — factories, synthetic data, property-based testing, boundary analysis, contract testing, load scenarios, GDPR-safe data. Triggers: test data, synthetic data, fake data, factory, seed data, fixtures, property-based testing, fuzz testing, boundary values, contract testing, Pact, load test data, anonymize, GDPR test data."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Test Data Strategy

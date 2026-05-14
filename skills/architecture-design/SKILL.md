@@ -1,6 +1,8 @@
 ---
 name: architecture-design
-description: Guide architectural and design decisions using Architecture Decision Records (ADRs). Use when the user needs to make structural decisions about their system — new services, choosing between patterns, database selection, API design, component boundaries, state management, or any decision that is costly to reverse. Triggers on phrases like "how should I architect", "which pattern should I use", "design decision", "should I use X or Y", "system design", "ADR", "component design", or when a feature plan reveals the need for structural changes.
+description: "Guide architectural and structural decisions using Architecture Decision Records (ADRs) — new services, pattern choices, database selection, component boundaries, state management, costly-to-reverse decisions. Triggers: how should I architect, which pattern, design decision, should I use X or Y, system design, ADR, component design, architectural trade-off."
+model: opus
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Architecture Design

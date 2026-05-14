@@ -1,6 +1,8 @@
 ---
 name: rollback-strategy
-description: Design safe rollback plans before deploying — identify irreversible changes, classify rollback complexity per component, and create a tested undo procedure. Use when the user is planning a deployment and needs to design a rollback plan, evaluate whether a change is safe to deploy, assess rollback risk for database migrations, plan feature flag rollout and rollback, or answer "what happens if this deploy goes wrong?". Triggers on phrases like "rollback plan", "rollback strategy", "how do I undo this", "can we revert this", "what if the deploy fails", "safe to deploy", "feature flag rollout", "blue-green deploy", "database migration rollback", "irreversible change", or when deployment-checklist identifies a high-risk deploy that needs a rollback plan. Use incident-response when you need to execute a rollback during an active incident.
+description: "Design safe rollback plans before deploying — identify irreversible changes, classify rollback complexity, create tested undo procedures. Triggers: rollback plan, rollback strategy, how do I undo this, can we revert, what if the deploy fails, safe to deploy, feature flag rollout, blue-green, database migration rollback, irreversible change."
+model: haiku
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Rollback Strategy

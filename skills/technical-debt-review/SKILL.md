@@ -1,6 +1,8 @@
 ---
 name: technical-debt-review
-description: Strategic assessment of accumulated technical debt in a codebase — identify hotspots, categorize debt by type and severity, estimate effort, and produce a prioritized remediation roadmap. Use when the user wants to assess code quality at a strategic level, plan a large-scale refactoring initiative, identify the biggest sources of maintenance pain, understand where the codebase is degrading, or make a case for paying down technical debt to stakeholders. Triggers on phrases like "technical debt", "code quality", "codebase health", "refactoring roadmap", "big refactor", "this codebase is a mess", "we need to clean up", "maintenance burden", "legacy code", "rewrite vs refactor", "where should we focus", "architecture review", or when planning quarterly or sprint priorities and needing to assess where debt is. This skill is for strategic, large-scale assessment — use refactoring for small, test-protected, incremental code improvements.
+description: "Strategic codebase health assessment — identify hotspots, categorize debt, produce remediation roadmap. Triggers: technical debt, tech debt, debt review, codebase health, hotspots, debt assessment, remediation plan, what should we fix first, debt roadmap, code rot, legacy code audit."
+model: opus
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Technical Debt Review

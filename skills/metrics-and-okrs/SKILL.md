@@ -1,6 +1,8 @@
 ---
 name: metrics-and-okrs
-description: Define OKRs (Objectives and Key Results), KPIs, success metrics, and engineering health metrics for projects and teams. Use when the user needs to write OKRs for a quarter, define KPIs for a project, establish success metrics for a feature launch, measure engineering team health (DORA metrics), or answer "how do we know if this succeeded?". Triggers on phrases like "OKR", "KPI", "metrics", "success metrics", "key results", "objectives", "measure success", "DORA metrics", "engineering metrics", "velocity", "cycle time", "deployment frequency", "how do we measure", "what should we track", or when project-proposal or prd-writing needs measurable success criteria. This skill designs WHAT to measure and WHY — use observability-design for HOW to instrument and collect the data.
+description: "Define OKRs, KPIs, success metrics, and engineering health metrics (DORA). Triggers: OKR, KPI, metrics, success metrics, key results, objectives, measure success, DORA metrics, engineering metrics, velocity, cycle time, deployment frequency, how do we measure, what should we track."
+model: haiku
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Metrics & OKRs

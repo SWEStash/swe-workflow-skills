@@ -1,6 +1,8 @@
 ---
 name: cicd-pipeline
-description: Design and write CI/CD pipeline configurations for automated build, test, and deployment workflows. Supports GitHub Actions, GitLab CI, and general pipeline design. Use when the user needs to create or improve a CI/CD pipeline, automate testing on PRs, set up automated deployments, configure build workflows, or add quality gates. Triggers on phrases like "CI/CD", "pipeline", "GitHub Actions", "GitLab CI", "workflow", "automated deployment", "build pipeline", "continuous integration", "continuous deployment", "automate tests on PR", "deploy automatically", or when deployment-checklist identifies missing automation.
+description: "Design CI/CD pipelines for automated build, test, deploy — GitHub Actions, GitLab CI, quality gates. Triggers: CI/CD, pipeline, GitHub Actions, GitLab CI, workflow, automated deployment, build pipeline, continuous integration, continuous deployment, automate tests on PR, deploy automatically, quality gate."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # CI/CD Pipeline Design

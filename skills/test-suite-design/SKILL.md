@@ -1,6 +1,8 @@
 ---
 name: test-suite-design
-description: Design and implement comprehensive test suites for existing code, plan testing strategy across layers (unit/integration/e2e), and build test infrastructure (fixtures, factories, helpers). Use when the user wants to add tests to untested code, improve test coverage, design a testing strategy, create test helpers or fixtures, or asks "how should I test this?" for existing code. Triggers on phrases like "add tests", "write tests for", "increase coverage", "test this module", "testing strategy", "test plan", "what tests do I need", "test infrastructure", "test helpers", "this has no tests", or when the user shares existing code and wants comprehensive test coverage. This is NOT for TDD (writing tests before new code) — use tdd-workflow for that instead.
+description: "Design comprehensive test suites for existing code — strategy across unit/integration/e2e, fixtures, factories, helpers. Triggers: add tests, write tests for, increase coverage, test this module, testing strategy, test plan, what tests do I need, test infrastructure, test helpers, this has no tests. Not for TDD — use tdd-workflow."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # Test Suite Design

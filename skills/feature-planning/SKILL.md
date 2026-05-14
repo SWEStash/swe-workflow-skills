@@ -1,6 +1,8 @@
 ---
 name: feature-planning
-description: Break features into well-scoped implementation tasks with acceptance criteria, risk assessment, and dependency mapping. Use when the user mentions planning a feature, creating tasks, writing user stories, breaking down work, scoping a feature, estimating effort, sprint planning, or asks "how should I implement this feature?" Triggers on phrases like "plan this", "break this down", "scope this feature", "create tasks for", or any request to go from requirements to actionable development tasks.
+description: "Break features into well-scoped tasks with acceptance criteria, risk assessment, and dependency mapping. Triggers: plan this, break this down, scope this feature, create tasks for, sprint planning, how should I implement this feature, user stories, acceptance criteria, dependency mapping, feature breakdown."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Feature Planning

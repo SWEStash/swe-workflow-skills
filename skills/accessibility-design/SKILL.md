@@ -1,6 +1,8 @@
 ---
 name: accessibility-design
-description: Design and implement accessible web and mobile applications following WCAG 2.1/2.2 guidelines — semantic HTML, ARIA patterns, keyboard navigation, focus management, color contrast, screen reader compatibility, and accessible forms. Use when the user needs to make an application accessible, implement ARIA patterns, fix accessibility issues, plan keyboard navigation, handle focus management, ensure color contrast compliance, design accessible forms, or audit an existing app for accessibility. Triggers on phrases like "accessibility", "a11y", "WCAG", "screen reader", "keyboard navigation", "ARIA", "focus management", "color contrast", "accessible", "alt text", "semantic HTML", "tab order", "focus trap", "skip link", "announce", or when ui-ux-design, frontend-architecture, or code-reviewing surfaces accessibility concerns. This skill covers accessibility as a design-time concern — build it in, don't bolt it on.
+description: "Design and implement accessible web/mobile apps to WCAG 2.1/2.2 — semantic HTML, ARIA patterns, keyboard navigation, focus management, color contrast, screen readers, accessible forms. Triggers: accessibility, a11y, WCAG, screen reader, keyboard navigation, ARIA, focus management, color contrast, alt text, semantic HTML, tab order, focus trap, skip link, announce. Build it in, don't bolt it on."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Accessibility Design

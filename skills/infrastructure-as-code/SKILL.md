@@ -1,6 +1,8 @@
 ---
 name: infrastructure-as-code
-description: Write and review Infrastructure as Code using Terraform, CloudFormation, Pulumi, or similar tools following modularity, security, and state management best practices. Use when the user needs to provision cloud resources, write Terraform modules, create CloudFormation templates, manage infrastructure state, design cloud architecture as code, or review IaC for security and correctness. Triggers on phrases like "Terraform", "CloudFormation", "Pulumi", "infrastructure as code", "IaC", "provision", "cloud resources", "terraform module", "state management", "terraform plan", "CDK", or when architecture-design or deployment-checklist involves cloud infrastructure changes.
+description: "Write and review IaC with Terraform, CloudFormation, Pulumi, or CDK — modularity, security, state management. Triggers: Terraform, CloudFormation, Pulumi, infrastructure as code, IaC, provision, cloud resources, terraform module, state management, terraform plan, CDK, drift, remote state."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # Infrastructure as Code

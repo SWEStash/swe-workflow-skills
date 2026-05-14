@@ -1,6 +1,8 @@
 ---
 name: dependency-management
-description: Evaluate, audit, and upgrade project dependencies — assess new libraries before adoption, audit existing dependencies for vulnerabilities, plan major version upgrades, and maintain healthy dependency hygiene. Use when the user wants to evaluate a library, audit dependencies for security issues, upgrade packages, resolve version conflicts, reduce bundle size from dependencies, or clean up unused packages. Triggers on phrases like "should I use this library", "npm audit", "upgrade dependencies", "dependency vulnerability", "outdated packages", "evaluate this package", "is this library maintained", "dependency conflict", "bundle size", "lock file", "breaking changes in upgrade", or when security-audit or deployment-checklist surfaces dependency concerns.
+description: "Evaluate, audit, and upgrade project dependencies — assess libraries before adoption, audit CVEs, plan major upgrades, resolve conflicts. Triggers: should I use this library, npm audit, upgrade dependencies, dependency vulnerability, outdated packages, evaluate this package, is this library maintained, dependency conflict, lock file, breaking changes in upgrade."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit, WebFetch, WebSearch
 ---
 
 # Dependency Management

@@ -1,6 +1,8 @@
 ---
 name: prd-writing
-description: Write lightweight agile Product Requirements Documents (PRDs) and technical RFCs that align stakeholders before implementation. Use when the user needs to write a PRD, create an RFC, document product requirements, write a technical design document, propose a technical approach, or needs to communicate what to build and why before coding starts. Triggers on phrases like "PRD", "product requirements", "RFC", "request for comments", "technical design doc", "design document", "tech spec", "write requirements", "what are we building", "spec this out", or when feature-planning reveals the need for stakeholder alignment on requirements before task breakdown. This skill produces the WHAT and WHY — use feature-planning for the HOW (task breakdown) and architecture-design for structural decisions (ADRs).
+description: "Write lightweight agile PRDs and technical RFCs that align stakeholders before implementation. Triggers: PRD, product requirements, RFC, request for comments, technical design doc, design document, tech spec, write requirements, what are we building, spec this out. Produces the WHAT and WHY — feature-planning handles HOW."
+model: sonnet
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # PRD & RFC Writing

@@ -1,6 +1,8 @@
 ---
 name: retrospective
-description: Facilitate sprint retrospectives, project post-mortems, and incident post-mortems that produce actionable improvements with clear owners. Use when the user needs to run a retrospective, write a post-mortem, conduct a lessons-learned session, review what went well and what didn't, or capture action items from a completed sprint, project, or incident. Triggers on phrases like "retrospective", "retro", "post-mortem", "postmortem", "lessons learned", "what went wrong", "what went well", "incident review", "blameless", "action items", "sprint review", "project wrap-up", "after action review", or when a project or sprint completes and the team needs to reflect and improve.
+description: "Facilitate sprint retros, project post-mortems, and incident post-mortems with actionable, owned improvements. Triggers: retrospective, retro, post-mortem, postmortem, lessons learned, what went wrong, what went well, incident review, blameless, action items, sprint review, after action review."
+model: haiku
+allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Retrospective
