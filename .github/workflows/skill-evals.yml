@@ -1,0 +1,56 @@
+name: skill-evals
+
+# Regression gate for the skill set (TDD for skills). On PRs that touch
+# skills/, replays each changed skill's evals + pressure_tests through the
+# Claude API and fails if a previously-green assertion regresses.
+#
+# Requires repo secret ANTHROPIC_API_KEY. The job is skipped (not failed) when
+# the secret is absent, so forks without the secret don't get red checks.
+
+on:
+  pull_request:
+    paths:
+      - "skills/**"
+      - "evals/**"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "green | red | both"
+        default: "green"
+
+permissions:
+  contents: read
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # need base ref for --changed diff
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Guard on API key
+        id: guard
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::ANTHROPIC_API_KEY not set — skipping skill evals."
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Install deps
+        if: steps.guard.outputs.run == 'true'
+        run: pip install -r evals/requirements.txt
+      - name: Run evals on changed skills
+        if: steps.guard.outputs.run == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python evals/run.py \
+            --changed --base "origin/${{ github.base_ref || 'main' }}" \
+            --mode "${{ github.event.inputs.mode || 'green' }}" \
+            -k 3

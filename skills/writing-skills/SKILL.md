@@ -83,4 +83,5 @@ Apply rigor where mistakes are expensive; keep freedom where judgment matters.
 
 - README "Building Skills" — the canonical rules and common mistakes.
 - [references/pressure-testing.md](references/pressure-testing.md) — running baseline scenarios and the pressure levers.
+- `EVALS.md` (repo root) — the automated RED/GREEN harness that replays evals through subagents and gates regressions in CI.
 - `verification-before-completion` — the discipline that proves a skill change works (run the eval, read the result).
