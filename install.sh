@@ -44,6 +44,9 @@ Install Claude Code skills from this repo.
 
 Options:
   -g, --global    Install to ~/.claude/skills/ (default: ./.claude/skills/)
+  -d, --dir DIR   Install to DIR/skills/ — a custom Claude config directory
+                  (mutually exclusive with --global; the hook, if requested,
+                  goes to DIR/hooks/ and settings live at DIR/settings.json)
   -a, --all       Install all skills (default: frequent skills only)
   -k, --hook      Also install the opt-in SessionStart hook (prints the
                   settings.json snippet to enable it; never edits settings)
@@ -57,6 +60,8 @@ Examples:
   $(basename "$0")                          # install frequent skills to current project
   $(basename "$0") --global                 # install frequent skills globally
   $(basename "$0") --all --global           # install all skills globally
+  $(basename "$0") --dir /etc/claude --all  # install all skills to /etc/claude/skills
+  $(basename "$0") -d ~/work/.claude         # install frequent skills to a custom config dir
   $(basename "$0") feature-planning         # install one skill
   $(basename "$0") -g code-reviewing prd-writing
 EOF
@@ -65,11 +70,17 @@ EOF
 GLOBAL=false
 ALL=false
 HOOK=false
+CONFIG_DIR=""
 SELECTED=()
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -g|--global) GLOBAL=true; shift ;;
+    -d|--dir)
+      shift
+      [[ $# -gt 0 ]] || { echo "Error: --dir requires a path" >&2; exit 1; }
+      CONFIG_DIR="$1"; shift ;;
+    --dir=*) CONFIG_DIR="${1#*=}"; shift ;;
     -a|--all) ALL=true; shift ;;
     -k|--hook) HOOK=true; shift ;;
     -l|--list)
@@ -86,7 +97,15 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if $GLOBAL; then
+if [[ -n "$CONFIG_DIR" ]]; then
+  if $GLOBAL; then
+    echo "Error: --dir and --global are mutually exclusive" >&2
+    exit 1
+  fi
+  # Expand a leading ~ (survives even when the path was quoted).
+  case "$CONFIG_DIR" in "~" | "~/"*) CONFIG_DIR="${HOME}${CONFIG_DIR#\~}" ;; esac
+  DEST="$CONFIG_DIR/skills"
+elif $GLOBAL; then
   DEST="$HOME/.claude/skills"
 else
   DEST="$(pwd)/.claude/skills"

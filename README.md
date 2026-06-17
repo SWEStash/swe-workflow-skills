@@ -104,10 +104,16 @@ cp -r skills/* ~/.claude/skills/
 `install.sh` installs the frequent-skills subset (including `skill-router`) by default:
 
 ```bash
-./install.sh                 # frequent skills -> ./.claude/skills/
-./install.sh --all --global  # all skills -> ~/.claude/skills/
-./install.sh --hook          # also set up the opt-in SessionStart hook (see hooks/README.md)
+./install.sh                    # frequent skills -> ./.claude/skills/
+./install.sh --all --global     # all skills -> ~/.claude/skills/
+./install.sh --dir /etc/claude  # custom config dir -> /etc/claude/skills/
+./install.sh --hook             # also set up the opt-in SessionStart hook (see hooks/README.md)
 ```
+
+Use `--dir DIR` to target a non-standard Claude config directory (skills land
+in `DIR/skills/`; with `--hook`, the hook lands in `DIR/hooks/` and the
+settings snippet points at `DIR/settings.json`). It's mutually exclusive with
+`--global`.
 
 ### Activation (optional hook)
 
@@ -171,25 +177,45 @@ the agent to skip the skill's Iron Law under named pressure levers:
 
 ### Running evals (TDD for the skill set)
 
-Two runners replay these through the Claude API — generate a candidate reply
+Both runners replay the scenarios through Claude — generate a candidate reply
 (skill loaded = GREEN, absent = RED), then judge each assertion with a skeptical
-LLM-as-judge. See [EVALS.md](EVALS.md) for the full guide.
+LLM-as-judge. Pick the path that fits; see [EVALS.md](EVALS.md) for the full guide.
 
 | Runner | Use | Needs |
 |--------|-----|-------|
-| `evals/workflow-runner.mjs` | Fast local RED/GREEN loop | Claude Code Workflow tool |
-| `evals/run.py` | CI regression gate | `ANTHROPIC_API_KEY` + `pip install -r evals/requirements.txt` |
+| `evals/workflow-runner.mjs` | Fast local RED/GREEN loop | Claude Code (Workflow tool) |
+| `evals/run.py` | CI regression gate / scripting | `ANTHROPIC_API_KEY` + `pip install -r evals/requirements.txt` |
+
+#### Way 1 — In Claude Code (no API key, no setup)
+
+Ask Claude to run the in-session runner. It builds the test payload from the
+skills' `evals.json` and invokes the Workflow tool — no key, no `pip install`:
+
+> "Run `evals/workflow-runner.mjs` over the pressure tests and show GREEN vs RED per skill."
+
+Under the hood Claude builds the payload (one `{skill, path, prompt, assertions}`
+per case — the snippet is in the runner's header comment) and calls
+`Workflow({ scriptPath: "evals/workflow-runner.mjs", args })`. Output is a
+per-skill `GREEN x/n  RED x/n` table plus a total.
+
+#### Way 2 — In CI or from a shell (API key)
 
 ```bash
-python evals/run.py --all --update-baseline      # record the golden baseline
-python evals/run.py --changed --base origin/main # CI: only changed skills
+pip install -r evals/requirements.txt
+export ANTHROPIC_API_KEY=...
+
+python evals/run.py --all --update-baseline       # record the golden baseline (once)
+python evals/run.py --changed --base origin/main  # CI: only changed skills
+python evals/run.py --skills tdd-workflow -k 3     # one skill, majority of 3
 ```
 
-The CI workflow (`.github/workflows/skill-evals.yml`) runs on PRs touching
-`skills/` and **gates on regression-vs-baseline** — a previously-green assertion
-that now fails fails the build. It does not gate on an absolute pass rate (the
-judge is intentionally harsh and some assertions span a whole session, not one
-reply); the stable signals are *GREEN ≥ RED* and *no drift*.
+The GitHub Actions workflow (`.github/workflows/skill-evals.yml`) runs `run.py`
+on PRs that touch `skills/` (gated on the `ANTHROPIC_API_KEY` repo secret — it
+skips, rather than fails, when the secret is absent). It **gates on
+regression-vs-baseline**: a previously-green assertion that now fails fails the
+build. It does not gate on an absolute pass rate — the judge is intentionally
+harsh and some assertions span a whole session rather than one reply, so the
+stable signals are *GREEN ≥ RED* and *no drift between commits*.
 
 ## Building Skills
 
