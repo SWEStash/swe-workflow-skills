@@ -1,0 +1,65 @@
+name: routing-evals
+
+# Activation (routing) regression gate. On PRs that touch skills/, the catalog,
+# or the routing harness, this:
+#   1. checks the mined routing-dataset.json is not stale (offline), then
+#   2. routes each changed skill's cases on haiku (skill-router's shipping model)
+#      and fails if a case that routed correctly in routing-baseline.json now
+#      misroutes — exactly like skill-evals.yml gates on GREEN drift.
+#
+# Requires repo secret ANTHROPIC_API_KEY. The model-in-the-loop step is skipped
+# (not failed) when the secret is absent, so forks without it don't get red
+# checks; the offline dataset-drift check always runs.
+
+on:
+  pull_request:
+    paths:
+      - "skills/**"
+      - "catalog.json"
+      - "evals/routing*"
+  workflow_dispatch:
+    inputs:
+      k:
+        description: "votes per case (majority)"
+        default: "3"
+
+permissions:
+  contents: read
+
+jobs:
+  routing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # need base ref for --changed diff
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Offline: the mined dataset must match the skills' evals (no API key).
+      - name: Check routing dataset is current
+        run: python evals/routing.py --check-dataset
+
+      - name: Guard on API key
+        id: guard
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::ANTHROPIC_API_KEY not set — skipping model-in-the-loop routing eval."
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Install deps
+        if: steps.guard.outputs.run == 'true'
+        run: pip install -r evals/requirements.txt
+      - name: Route changed skills and gate on regression
+        if: steps.guard.outputs.run == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python evals/routing.py --run \
+            --changed --base "origin/${{ github.base_ref || 'main' }}" \
+            -k "${{ github.event.inputs.k || '3' }}"

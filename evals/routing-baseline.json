@@ -1,0 +1,334 @@
+{
+  "_note": "Full haiku routing baseline recorded by evals/routing-runner.mjs (in-session, Workflow tool). Refresh with `python evals/routing.py --run --update-baseline` (needs ANTHROPIC_API_KEY) or re-run the in-session runner. The gate (routing.py / routing-evals.yml) fails if any case that passed here later misroutes.",
+  "model": "claude-haiku-4-5",
+  "k": 1,
+  "summary": {
+    "model": "claude-haiku-4-5",
+    "layer2": {
+      "n_positive": 41,
+      "n_boundary": 28,
+      "n_trivial": 8,
+      "positive_accuracy": 1,
+      "boundary_pass_rate": 1,
+      "false_activation_rate": 0,
+      "confusion_pairs": []
+    },
+    "layer3": {
+      "n_positive": 8,
+      "n_trivial": 8,
+      "router_invocation_rate": 0.75,
+      "correct_invoke": 6,
+      "over_route": 0
+    }
+  },
+  "cases": {
+    "positive:accessibility-design:1": {
+      "chosen": "accessibility-design",
+      "pass": true
+    },
+    "boundary:accessibility-design:3": {
+      "chosen": "accessibility-design",
+      "pass": true
+    },
+    "positive:api-design:1": {
+      "chosen": "api-design",
+      "pass": true
+    },
+    "boundary:api-design:3": {
+      "chosen": "api-design",
+      "pass": true
+    },
+    "positive:architecture-design:1": {
+      "chosen": "architecture-design",
+      "pass": true
+    },
+    "boundary:architecture-design:3": {
+      "chosen": "architecture-design",
+      "pass": true
+    },
+    "positive:architecture-documentation:1": {
+      "chosen": "architecture-documentation",
+      "pass": true
+    },
+    "boundary:architecture-documentation:3": {
+      "chosen": "architecture-design",
+      "pass": true
+    },
+    "positive:bug-investigating:1": {
+      "chosen": "bug-investigating",
+      "pass": true
+    },
+    "boundary:bug-investigating:3": {
+      "chosen": "bug-investigating",
+      "pass": true
+    },
+    "positive:cicd-pipeline:1": {
+      "chosen": "cicd-pipeline",
+      "pass": true
+    },
+    "positive:code-reviewing:1": {
+      "chosen": "code-reviewing",
+      "pass": true
+    },
+    "boundary:code-reviewing:3": {
+      "chosen": "code-reviewing",
+      "pass": true
+    },
+    "positive:configuration-strategy:1": {
+      "chosen": "configuration-strategy",
+      "pass": true
+    },
+    "boundary:configuration-strategy:3": {
+      "chosen": "infrastructure-as-code",
+      "pass": true
+    },
+    "positive:containerization:1": {
+      "chosen": "containerization",
+      "pass": true
+    },
+    "positive:data-modeling:1": {
+      "chosen": "data-modeling",
+      "pass": true
+    },
+    "boundary:data-modeling:3": {
+      "chosen": "data-modeling",
+      "pass": true
+    },
+    "positive:dependency-impact-analysis:1": {
+      "chosen": "dependency-impact-analysis",
+      "pass": true
+    },
+    "boundary:dependency-impact-analysis:3": {
+      "chosen": "api-design",
+      "pass": true
+    },
+    "positive:dependency-management:1": {
+      "chosen": "dependency-management",
+      "pass": true
+    },
+    "boundary:dependency-management:3": {
+      "chosen": "dependency-management",
+      "pass": true
+    },
+    "positive:deployment-checklist:1": {
+      "chosen": "deployment-checklist",
+      "pass": true
+    },
+    "boundary:deployment-checklist:3": {
+      "chosen": "deployment-checklist",
+      "pass": true
+    },
+    "positive:deployment-repo:1": {
+      "chosen": "deployment-repo",
+      "pass": true
+    },
+    "boundary:deployment-repo:3": {
+      "chosen": "test-suite-design",
+      "pass": true
+    },
+    "positive:effort-estimation:1": {
+      "chosen": "effort-estimation",
+      "pass": true
+    },
+    "positive:feature-planning:1": {
+      "chosen": "feature-planning",
+      "pass": true
+    },
+    "boundary:feature-planning:3": {
+      "chosen": "feature-planning",
+      "pass": true
+    },
+    "positive:frontend-architecture:1": {
+      "chosen": "frontend-architecture",
+      "pass": true
+    },
+    "positive:git-workflow:1": {
+      "chosen": "git-workflow",
+      "pass": true
+    },
+    "boundary:git-workflow:3": {
+      "chosen": "git-workflow",
+      "pass": true
+    },
+    "positive:gitops-delivery:1": {
+      "chosen": "gitops-delivery",
+      "pass": true
+    },
+    "boundary:gitops-delivery:3": {
+      "chosen": "gitops-delivery",
+      "pass": true
+    },
+    "positive:incident-response:1": {
+      "chosen": "incident-response",
+      "pass": true
+    },
+    "boundary:incident-response:3": {
+      "chosen": "NONE",
+      "pass": true
+    },
+    "positive:infrastructure-as-code:1": {
+      "chosen": "infrastructure-as-code",
+      "pass": true
+    },
+    "positive:metrics-and-okrs:1": {
+      "chosen": "metrics-and-okrs",
+      "pass": true
+    },
+    "positive:ml-experiment-tracking:1": {
+      "chosen": "ml-experiment-tracking",
+      "pass": true
+    },
+    "positive:ml-model-deployment:1": {
+      "chosen": "ml-model-deployment",
+      "pass": true
+    },
+    "positive:ml-pipeline-design:1": {
+      "chosen": "ml-pipeline-design",
+      "pass": true
+    },
+    "positive:observability-design:1": {
+      "chosen": "observability-design",
+      "pass": true
+    },
+    "boundary:observability-design:3": {
+      "chosen": "observability-design",
+      "pass": true
+    },
+    "positive:performance-optimization:1": {
+      "chosen": "performance-optimization",
+      "pass": true
+    },
+    "boundary:performance-optimization:3": {
+      "chosen": "performance-optimization",
+      "pass": true
+    },
+    "positive:prd-writing:1": {
+      "chosen": "prd-writing",
+      "pass": true
+    },
+    "positive:project-documentation:1": {
+      "chosen": "project-documentation",
+      "pass": true
+    },
+    "boundary:project-documentation:3": {
+      "chosen": "project-documentation",
+      "pass": true
+    },
+    "positive:project-proposal:1": {
+      "chosen": "project-proposal",
+      "pass": true
+    },
+    "positive:refactoring:1": {
+      "chosen": "refactoring",
+      "pass": true
+    },
+    "boundary:refactoring:3": {
+      "chosen": "NONE",
+      "pass": true
+    },
+    "positive:retrospective:1": {
+      "chosen": "retrospective",
+      "pass": true
+    },
+    "positive:rollback-strategy:1": {
+      "chosen": "rollback-strategy",
+      "pass": true
+    },
+    "boundary:rollback-strategy:3": {
+      "chosen": "incident-response",
+      "pass": true
+    },
+    "positive:security-audit:1": {
+      "chosen": "security-audit",
+      "pass": true
+    },
+    "boundary:security-audit:3": {
+      "chosen": "security-audit",
+      "pass": true
+    },
+    "positive:tdd-workflow:1": {
+      "chosen": "tdd-workflow",
+      "pass": true
+    },
+    "boundary:tdd-workflow:3": {
+      "chosen": "tdd-workflow",
+      "pass": true
+    },
+    "positive:technical-debt-review:1": {
+      "chosen": "technical-debt-review",
+      "pass": true
+    },
+    "boundary:technical-debt-review:3": {
+      "chosen": "refactoring",
+      "pass": true
+    },
+    "positive:test-data-strategy:1": {
+      "chosen": "test-data-strategy",
+      "pass": true
+    },
+    "boundary:test-data-strategy:3": {
+      "chosen": "test-data-strategy",
+      "pass": true
+    },
+    "positive:test-suite-design:1": {
+      "chosen": "test-suite-design",
+      "pass": true
+    },
+    "boundary:test-suite-design:3": {
+      "chosen": "test-suite-design",
+      "pass": true
+    },
+    "positive:ui-ux-design:1": {
+      "chosen": "ui-ux-design",
+      "pass": true
+    },
+    "positive:verification-before-completion:1": {
+      "chosen": "verification-before-completion",
+      "pass": true
+    },
+    "boundary:verification-before-completion:3": {
+      "chosen": "NONE",
+      "pass": true
+    },
+    "positive:writing-skills:1": {
+      "chosen": "writing-skills",
+      "pass": true
+    },
+    "boundary:writing-skills:3": {
+      "chosen": "project-documentation",
+      "pass": true
+    },
+    "trivial:0": {
+      "chosen": "NONE",
+      "pass": true
+    },
+    "trivial:1": {
+      "chosen": "NONE",
+      "pass": true
+    },
+    "trivial:2": {
+      "chosen": "NONE",
+      "pass": true
+    },
+    "trivial:3": {
+      "chosen": "NONE",
+      "pass": true
+    },
+    "trivial:4": {
+      "chosen": "NONE",
+      "pass": true
+    },
+    "trivial:5": {
+      "chosen": "NONE",
+      "pass": true
+    },
+    "trivial:6": {
+      "chosen": "NONE",
+      "pass": true
+    },
+    "trivial:7": {
+      "chosen": "NONE",
+      "pass": true
+    }
+  }
+}

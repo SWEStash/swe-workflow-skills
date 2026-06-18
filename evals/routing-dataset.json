@@ -1,0 +1,743 @@
+{
+  "version": 1,
+  "model": "claude-haiku-4-5",
+  "cases": [
+    {
+      "id": "positive:accessibility-design:1",
+      "kind": "positive",
+      "skill": "accessibility-design",
+      "prompt": "I'm building a modal dialog component in React for confirming destructive actions (like deleting a project). Make it accessible.",
+      "accept": [
+        "accessibility-design"
+      ]
+    },
+    {
+      "id": "boundary:accessibility-design:3",
+      "kind": "boundary",
+      "skill": "accessibility-design",
+      "prompt": "We're building a form with email, password, a terms checkbox, and a submit button. The designer wants inline validation that shows errors as you type. Make it accessible.",
+      "accept": [
+        "accessibility-design",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:api-design:1",
+      "kind": "positive",
+      "skill": "api-design",
+      "prompt": "I need to design the API for a blog platform. We have users, posts, comments, and tags. Posts can have multiple tags. Comments are threaded (replies to other comments). Users can be authors or admins. The frontend is a Next.js app. Design the REST API.",
+      "accept": [
+        "api-design"
+      ]
+    },
+    {
+      "id": "boundary:api-design:3",
+      "kind": "boundary",
+      "skill": "api-design",
+      "prompt": "We have an existing API with these endpoints:\nGET /getUsers\nGET /getUserById?id=123\nPOST /createUser\nPOST /updateUser\nGET /deleteUser?id=123\n\nThis doesn't feel right. Can you redesign it following proper REST conventions?",
+      "accept": [
+        "api-design",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:architecture-design:1",
+      "kind": "positive",
+      "skill": "architecture-design",
+      "prompt": "We're building a SaaS platform and need to decide whether to use a multi-tenant single database or database-per-tenant approach. We have about 50 customers now, expecting 500 in a year. It's a Django app on PostgreSQL. Some customers are enterprise with strict data isolation requirements.",
+      "accept": [
+        "architecture-design"
+      ]
+    },
+    {
+      "id": "boundary:architecture-design:3",
+      "kind": "boundary",
+      "skill": "architecture-design",
+      "prompt": "Our monolithic Rails app is getting slow and hard to deploy. The CTO wants to move to microservices. I'm not sure it's the right call. We have 12 developers and the app has about 200K lines of code. What should we do?",
+      "accept": [
+        "architecture-design",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:architecture-documentation:1",
+      "kind": "positive",
+      "skill": "architecture-documentation",
+      "prompt": "We have a system with 8 microservices: a React frontend, a BFF API gateway, a user service, an order service, a payment service, a notification service, a search service, and a recommendation engine. We use PostgreSQL, Redis, RabbitMQ, and Elasticsearch. Everything runs on Kubernetes. We have no architecture diagrams and need to document this for new hires joining next month.",
+      "accept": [
+        "architecture-documentation"
+      ]
+    },
+    {
+      "id": "boundary:architecture-documentation:3",
+      "kind": "boundary",
+      "skill": "architecture-documentation",
+      "prompt": "We're debating whether to extract our authentication logic into a separate service or keep it in the monolith. Can you also create architecture diagrams showing what the system would look like after the split?",
+      "accept": [
+        "architecture-documentation",
+        "architecture-design",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:bug-investigating:1",
+      "kind": "positive",
+      "skill": "bug-investigating",
+      "prompt": "My API endpoint returns 200 but the data is wrong. The user's email shows as null even though it's in the database. Here's the endpoint:\n\napp.get('/users/:id', async (req, res) => {\n  const user = await db.users.findUnique({\n    where: { id: req.params.id },\n    select: { name: true, createdAt: true }\n  });\n  res.json(user);\n});",
+      "accept": [
+        "bug-investigating"
+      ]
+    },
+    {
+      "id": "boundary:bug-investigating:3",
+      "kind": "boundary",
+      "skill": "bug-investigating",
+      "prompt": "I'm getting this error intermittently: 'SequelizeConnectionError: Connection pool exhausted'. It happens about 10 times a day, always during peak hours. Restarting the server fixes it temporarily.",
+      "accept": [
+        "bug-investigating",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:cicd-pipeline:1",
+      "kind": "positive",
+      "skill": "cicd-pipeline",
+      "prompt": "Set up a GitHub Actions CI/CD pipeline for our TypeScript Express API. We use PostgreSQL, run tests with Jest, build a Docker image, and deploy to AWS ECS. We want PR checks and auto-deploy to staging on merge to main, with manual approval for production.",
+      "accept": [
+        "cicd-pipeline"
+      ]
+    },
+    {
+      "id": "positive:code-reviewing:1",
+      "kind": "positive",
+      "skill": "code-reviewing",
+      "prompt": "Review this Python function:\n\ndef process_order(order_data, db, email_service, logger):\n    # Validate\n    if not order_data.get('items'):\n        return {'error': 'No items'}\n    if not order_data.get('user_id'):\n        return {'error': 'No user'}\n    \n    # Calculate total\n    total = 0\n    for item in order_data['items']:\n        price = db.query(f\"SELECT price FROM products WHERE id = {item['product_id']}\")\n        total += price * item['quantity']\n        if item['quantity'] > 10:\n            total -= price * item['quantity'] * 0.1\n    \n    # Save order\n    order = db.query(f\"INSERT INTO orders (user_id, total) VALUES ({order_data['user_id']}, {total}) RETURNING id\")\n    \n    # Send email\n    try:\n        email_service.send(order_data['user_id'], f'Order {order.id} confirmed', f'Total: ${total}')\n    except:\n        logger.error('Email failed')\n    \n    return {'order_id': order.id, 'total': total}",
+      "accept": [
+        "code-reviewing"
+      ]
+    },
+    {
+      "id": "boundary:code-reviewing:3",
+      "kind": "boundary",
+      "skill": "code-reviewing",
+      "prompt": "Review this TypeScript code:\n\nexport const UserService = {\n  async getUser(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id } });\n    return user;\n  },\n  async getUserWithPosts(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id }, include: { posts: true } });\n    return user;\n  },\n  async getUserWithPostsAndComments(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id }, include: { posts: { include: { comments: true } } } });\n    return user;\n  }\n};",
+      "accept": [
+        "code-reviewing",
+        "refactoring",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:configuration-strategy:1",
+      "kind": "positive",
+      "skill": "configuration-strategy",
+      "prompt": "I'm adding a payment integration to our app. We'll need a Stripe API key, a webhook secret, and a flag to enable the new checkout flow for a gradual rollout. How should I manage this configuration?",
+      "accept": [
+        "configuration-strategy"
+      ]
+    },
+    {
+      "id": "boundary:configuration-strategy:3",
+      "kind": "boundary",
+      "skill": "configuration-strategy",
+      "prompt": "What's the best way to set up Terraform configuration for our infrastructure?",
+      "accept": [
+        "configuration-strategy",
+        "infrastructure-as-code",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:containerization:1",
+      "kind": "positive",
+      "skill": "containerization",
+      "prompt": "Containerize my Express.js API. It uses Node 20, has a build step (TypeScript), connects to PostgreSQL and Redis, and needs to run in production on Kubernetes.",
+      "accept": [
+        "containerization"
+      ]
+    },
+    {
+      "id": "positive:data-modeling:1",
+      "kind": "positive",
+      "skill": "data-modeling",
+      "prompt": "I'm building an e-commerce platform and need to design the schema for products, categories, orders, and inventory. Products can belong to multiple categories. We're using PostgreSQL with Django ORM. Estimated scale: 10K products, 1K orders/day.",
+      "accept": [
+        "data-modeling"
+      ]
+    },
+    {
+      "id": "boundary:data-modeling:3",
+      "kind": "boundary",
+      "skill": "data-modeling",
+      "prompt": "We need to rename our 'username' column to 'display_name' in the users table. We have 2M users and the column is used in about 15 places in the codebase. We can't have downtime. How should I approach this?",
+      "accept": [
+        "data-modeling",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:dependency-impact-analysis:1",
+      "kind": "positive",
+      "skill": "dependency-impact-analysis",
+      "prompt": "I want to rename the 'user_id' field to 'account_id' in our REST API response for GET /api/users. We have a mobile app, a web app, and two internal microservices that call this endpoint. What's the impact?",
+      "accept": [
+        "dependency-impact-analysis"
+      ]
+    },
+    {
+      "id": "boundary:dependency-impact-analysis:3",
+      "kind": "boundary",
+      "skill": "dependency-impact-analysis",
+      "prompt": "How do I add authentication to this endpoint?",
+      "accept": [
+        "dependency-impact-analysis",
+        "api-design",
+        "security-audit",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:dependency-management:1",
+      "kind": "positive",
+      "skill": "dependency-management",
+      "prompt": "I'm building a Node.js API and need a validation library. I'm considering zod, joi, yup, and ajv. Which should I use? Our stack is TypeScript, Express, and Prisma.",
+      "accept": [
+        "dependency-management"
+      ]
+    },
+    {
+      "id": "boundary:dependency-management:3",
+      "kind": "boundary",
+      "skill": "dependency-management",
+      "prompt": "We need to upgrade React from v17 to v19. We have a large codebase with 200+ components. Some use class components and legacy context API. How should we approach this?",
+      "accept": [
+        "dependency-management",
+        "feature-planning",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:deployment-checklist:1",
+      "kind": "positive",
+      "skill": "deployment-checklist",
+      "prompt": "I've finished implementing the payment integration feature. It adds Stripe webhook handling and stores payment events in the database. I'm ready to deploy to production. Can you run through the deployment checklist?",
+      "accept": [
+        "deployment-checklist"
+      ]
+    },
+    {
+      "id": "boundary:deployment-checklist:3",
+      "kind": "boundary",
+      "skill": "deployment-checklist",
+      "prompt": "We need to deploy a database migration that renames a column used by 3 services. We can't have downtime. Is this safe to deploy?",
+      "accept": [
+        "deployment-checklist",
+        "data-modeling",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:deployment-repo:1",
+      "kind": "positive",
+      "skill": "deployment-repo",
+      "prompt": "We have 5 microservices in separate GitHub repos (auth-service, user-service, billing-service, notification-service, api-gateway). They communicate via REST APIs and a shared event bus (RabbitMQ). We deploy to Kubernetes with 3 environments (dev, staging, prod). How should we set up a deployment repo to coordinate them?",
+      "accept": [
+        "deployment-repo"
+      ]
+    },
+    {
+      "id": "boundary:deployment-repo:3",
+      "kind": "boundary",
+      "skill": "deployment-repo",
+      "prompt": "How do I write Pact contract tests between my frontend and backend API?",
+      "accept": [
+        "deployment-repo",
+        "test-suite-design",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:effort-estimation:1",
+      "kind": "positive",
+      "skill": "effort-estimation",
+      "prompt": "My PM asked me 'how long will it take to build a notification system?' I have a feature plan with 8 tasks. Help me estimate and communicate this to the PM.",
+      "accept": [
+        "effort-estimation"
+      ]
+    },
+    {
+      "id": "positive:feature-planning:1",
+      "kind": "positive",
+      "skill": "feature-planning",
+      "prompt": "I need to add a notification system to our app. Users should get email and in-app notifications when someone comments on their posts. We're using a Node.js/Express backend with PostgreSQL and a React frontend. Can you help me plan this out?",
+      "accept": [
+        "feature-planning"
+      ]
+    },
+    {
+      "id": "boundary:feature-planning:3",
+      "kind": "boundary",
+      "skill": "feature-planning",
+      "prompt": "We need to migrate our REST API to GraphQL. It's a Django backend serving a React Native mobile app and a Next.js web app. We have about 40 endpoints. The CEO wants it done in 3 sprints. Help me plan this.",
+      "accept": [
+        "feature-planning",
+        "architecture-design",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:frontend-architecture:1",
+      "kind": "positive",
+      "skill": "frontend-architecture",
+      "prompt": "I'm starting a new React app (Next.js) for a project management tool. It has projects, tasks, team members, and a dashboard. Users can filter, sort, and search tasks. There's real-time collaboration. Help me design the frontend architecture.",
+      "accept": [
+        "frontend-architecture"
+      ]
+    },
+    {
+      "id": "positive:git-workflow:1",
+      "kind": "positive",
+      "skill": "git-workflow",
+      "prompt": "I just finished implementing a user notification feature. I've staged all changes. Write a good commit message for me.",
+      "accept": [
+        "git-workflow"
+      ]
+    },
+    {
+      "id": "boundary:git-workflow:3",
+      "kind": "boundary",
+      "skill": "git-workflow",
+      "prompt": "We're a team of 4 starting a new project. What branching strategy should we use? We deploy to production multiple times a day.",
+      "accept": [
+        "git-workflow",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:gitops-delivery:1",
+      "kind": "positive",
+      "skill": "gitops-delivery",
+      "prompt": "We have a deployment repo with Helm charts for our 5 services. We want to set up ArgoCD to automatically deploy to our staging cluster when the deployment repo is updated, but require manual sync for production. How should we configure this?",
+      "accept": [
+        "gitops-delivery"
+      ]
+    },
+    {
+      "id": "boundary:gitops-delivery:3",
+      "kind": "boundary",
+      "skill": "gitops-delivery",
+      "prompt": "Should I use ArgoCD or just keep deploying from our CI pipeline with kubectl apply? We have a single Kubernetes cluster and 3 services.",
+      "accept": [
+        "gitops-delivery",
+        "cicd-pipeline",
+        "deployment-repo",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:incident-response:1",
+      "kind": "positive",
+      "skill": "incident-response",
+      "prompt": "Production is down. Users are getting 500 errors on checkout. We deployed 20 minutes ago. What do I do?",
+      "accept": [
+        "incident-response"
+      ]
+    },
+    {
+      "id": "boundary:incident-response:3",
+      "kind": "boundary",
+      "skill": "incident-response",
+      "prompt": "I want to do an incident response drill with my team to practice before a real incident happens. Can you help me plan it?",
+      "accept": [
+        "incident-response",
+        "retrospective",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:infrastructure-as-code:1",
+      "kind": "positive",
+      "skill": "infrastructure-as-code",
+      "prompt": "Write Terraform to provision a production-ready PostgreSQL RDS instance on AWS. It should be in a private subnet, encrypted, with automated backups, and accessible only from our ECS tasks.",
+      "accept": [
+        "infrastructure-as-code"
+      ]
+    },
+    {
+      "id": "positive:metrics-and-okrs:1",
+      "kind": "positive",
+      "skill": "metrics-and-okrs",
+      "prompt": "Write OKRs for our backend engineering team for Q2. Our priorities are: improve API reliability (we had 3 outages last quarter), reduce deployment friction (deploys take 4 hours), and ship the new billing system. Team of 6 engineers.",
+      "accept": [
+        "metrics-and-okrs"
+      ]
+    },
+    {
+      "id": "positive:ml-experiment-tracking:1",
+      "kind": "positive",
+      "skill": "ml-experiment-tracking",
+      "prompt": "I'm training a text classification model using scikit-learn. I want to compare TF-IDF + Logistic Regression vs TF-IDF + Random Forest vs sentence-transformers + XGBoost. Set up experiment tracking so I can compare them properly.",
+      "accept": [
+        "ml-experiment-tracking"
+      ]
+    },
+    {
+      "id": "positive:ml-model-deployment:1",
+      "kind": "positive",
+      "skill": "ml-model-deployment",
+      "prompt": "I have a scikit-learn fraud detection model that's performing well in our test environment. I need to deploy it as a real-time API that our payment service calls for every transaction. We process about 1000 transactions per second. What's the best approach?",
+      "accept": [
+        "ml-model-deployment"
+      ]
+    },
+    {
+      "id": "positive:ml-pipeline-design:1",
+      "kind": "positive",
+      "skill": "ml-pipeline-design",
+      "prompt": "I have a Jupyter notebook that trains a customer churn prediction model. It loads data from a PostgreSQL database, does feature engineering (one-hot encoding, aggregations), trains an XGBoost model, and evaluates it. I want to turn this into a proper automated pipeline that retrains weekly. We use Python and have access to AWS.",
+      "accept": [
+        "ml-pipeline-design"
+      ]
+    },
+    {
+      "id": "positive:observability-design:1",
+      "kind": "positive",
+      "skill": "observability-design",
+      "prompt": "We're launching a B2B SaaS API that processes invoices. We need to define SLOs before launch. Our customers expect the API to be fast and reliable \u2014 they integrate it into their accounting workflows. We use Express.js, PostgreSQL, and deploy on AWS ECS. Help us design our SLOs.",
+      "accept": [
+        "observability-design"
+      ]
+    },
+    {
+      "id": "boundary:observability-design:3",
+      "kind": "boundary",
+      "skill": "observability-design",
+      "prompt": "Our on-call engineers are getting 50+ alerts per week and most of them are noise. They're burned out and missing real incidents. How do we fix our alerting?",
+      "accept": [
+        "observability-design",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:performance-optimization:1",
+      "kind": "positive",
+      "skill": "performance-optimization",
+      "prompt": "Our product listing page takes 4 seconds to load. Here's the endpoint:\n\napp.get('/products', async (req, res) => {\n  const products = await db.products.findMany();\n  for (const product of products) {\n    product.category = await db.categories.findById(product.categoryId);\n    product.reviews = await db.reviews.findMany({ where: { productId: product.id } });\n    product.averageRating = product.reviews.reduce((sum, r) => sum + r.rating, 0) / product.reviews.length;\n    product.seller = await db.users.findById(product.sellerId);\n  }\n  res.json(products);\n});",
+      "accept": [
+        "performance-optimization"
+      ]
+    },
+    {
+      "id": "boundary:performance-optimization:3",
+      "kind": "boundary",
+      "skill": "performance-optimization",
+      "prompt": "Make this function faster:\n\nfunction findDuplicateEmails(users) {\n  const duplicates = [];\n  for (let i = 0; i < users.length; i++) {\n    for (let j = i + 1; j < users.length; j++) {\n      if (users[i].email.toLowerCase() === users[j].email.toLowerCase()) {\n        if (!duplicates.includes(users[i].email.toLowerCase())) {\n          duplicates.push(users[i].email.toLowerCase());\n        }\n      }\n    }\n  }\n  return duplicates;\n}",
+      "accept": [
+        "performance-optimization",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:prd-writing:1",
+      "kind": "positive",
+      "skill": "prd-writing",
+      "prompt": "Write a PRD for adding multi-language support (i18n) to our React web app. We currently only support English. Our analytics show 30% of users have non-English browser locales. We want to support Spanish, French, and Portuguese initially.",
+      "accept": [
+        "prd-writing"
+      ]
+    },
+    {
+      "id": "positive:project-documentation:1",
+      "kind": "positive",
+      "skill": "project-documentation",
+      "prompt": "Write a README for my project. It's a Node.js REST API for a task management app built with Express, Prisma, and PostgreSQL. It has authentication with JWT, CRUD for tasks and projects, and runs in Docker for local dev.",
+      "accept": [
+        "project-documentation"
+      ]
+    },
+    {
+      "id": "boundary:project-documentation:3",
+      "kind": "boundary",
+      "skill": "project-documentation",
+      "prompt": "Generate a changelog from our recent git history. We're about to release v2.1.0.",
+      "accept": [
+        "project-documentation",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:project-proposal:1",
+      "kind": "positive",
+      "skill": "project-proposal",
+      "prompt": "I want to propose migrating our monolithic Django app to microservices. Our CTO is skeptical and wants to see a business case. We have 15 engineers, the app serves 50K users, and deployments take 2 hours with frequent rollbacks. Help me write the proposal.",
+      "accept": [
+        "project-proposal"
+      ]
+    },
+    {
+      "id": "positive:refactoring:1",
+      "kind": "positive",
+      "skill": "refactoring",
+      "prompt": "Refactor this JavaScript function:\n\nfunction processData(data, type, format, verbose, dryRun) {\n  let result = [];\n  for (let i = 0; i < data.length; i++) {\n    if (type === 'user') {\n      if (data[i].age > 18) {\n        if (data[i].active) {\n          if (format === 'json') {\n            result.push(JSON.stringify(data[i]));\n          } else if (format === 'csv') {\n            result.push(`${data[i].name},${data[i].age},${data[i].email}`);\n          } else {\n            result.push(data[i].toString());\n          }\n        }\n      }\n    } else if (type === 'order') {\n      if (data[i].total > 0) {\n        if (data[i].status !== 'cancelled') {\n          if (format === 'json') {\n            result.push(JSON.stringify(data[i]));\n          } else if (format === 'csv') {\n            result.push(`${data[i].id},${data[i].total},${data[i].status}`);\n          } else {\n            result.push(data[i].toString());\n          }\n        }\n      }\n    }\n    if (verbose) console.log(`Processed item ${i}`);\n  }\n  if (!dryRun) {\n    saveToFile(result);\n  }\n  return result;\n}",
+      "accept": [
+        "refactoring"
+      ]
+    },
+    {
+      "id": "boundary:refactoring:3",
+      "kind": "boundary",
+      "skill": "refactoring",
+      "prompt": "Can you refactor my entire codebase to use better patterns?",
+      "accept": [
+        "refactoring",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:retrospective:1",
+      "kind": "positive",
+      "skill": "retrospective",
+      "prompt": "We just had a production outage \u2014 our payment service was down for 45 minutes because a database migration locked a table. 200 users couldn't complete checkouts. Help me write the post-mortem.",
+      "accept": [
+        "retrospective"
+      ]
+    },
+    {
+      "id": "positive:rollback-strategy:1",
+      "kind": "positive",
+      "skill": "rollback-strategy",
+      "prompt": "I'm about to deploy a feature that adds a new 'subscription_tier' column to the users table and backfills it based on existing billing data. How do I make sure I can roll back safely?",
+      "accept": [
+        "rollback-strategy"
+      ]
+    },
+    {
+      "id": "boundary:rollback-strategy:3",
+      "kind": "boundary",
+      "skill": "rollback-strategy",
+      "prompt": "Help me roll back the deploy I just did \u2014 users are getting 500 errors.",
+      "accept": [
+        "rollback-strategy",
+        "incident-response",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:security-audit:1",
+      "kind": "positive",
+      "skill": "security-audit",
+      "prompt": "Run a security audit on my Express.js API. It handles user registration, login, payments via Stripe, and file uploads. We store user data in PostgreSQL and use JWT for authentication.",
+      "accept": [
+        "security-audit"
+      ]
+    },
+    {
+      "id": "boundary:security-audit:3",
+      "kind": "boundary",
+      "skill": "security-audit",
+      "prompt": "We're about to launch our SaaS product and our CTO wants a security review before the launch. We don't know where to start. Can you help?",
+      "accept": [
+        "security-audit",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:tdd-workflow:1",
+      "kind": "positive",
+      "skill": "tdd-workflow",
+      "prompt": "I need to implement a password strength validator in Python. Requirements: minimum 8 characters, at least one uppercase, one lowercase, one digit, and one special character. Let's do this TDD style.",
+      "accept": [
+        "tdd-workflow"
+      ]
+    },
+    {
+      "id": "boundary:tdd-workflow:3",
+      "kind": "boundary",
+      "skill": "tdd-workflow",
+      "prompt": "I have a function that calls an external payment API. How should I TDD this? I'm worried about testing external calls.",
+      "accept": [
+        "tdd-workflow",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:technical-debt-review:1",
+      "kind": "positive",
+      "skill": "technical-debt-review",
+      "prompt": "We're planning our Q2 priorities and I want to do a technical debt review of our payments service. It's been growing for 3 years and is getting painful to work with. Where should I start?",
+      "accept": [
+        "technical-debt-review"
+      ]
+    },
+    {
+      "id": "boundary:technical-debt-review:3",
+      "kind": "boundary",
+      "skill": "technical-debt-review",
+      "prompt": "I found a function that's 20 lines with a bug in it. Can you help me refactor it?",
+      "accept": [
+        "technical-debt-review",
+        "refactoring",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:test-data-strategy:1",
+      "kind": "positive",
+      "skill": "test-data-strategy",
+      "prompt": "I'm building an e-commerce API with users, products, orders, and payments. I need to set up test data for our test suite \u2014 unit tests, integration tests, and we'll eventually need load testing data. We're using TypeScript, Prisma, and PostgreSQL. Design the test data strategy.",
+      "accept": [
+        "test-data-strategy"
+      ]
+    },
+    {
+      "id": "boundary:test-data-strategy:3",
+      "kind": "boundary",
+      "skill": "test-data-strategy",
+      "prompt": "Our QA team is using a copy of our production database for testing. This has real customer data including names, emails, and credit card tokens. We're a fintech startup and our compliance officer is concerned. How do we fix this without losing test quality?",
+      "accept": [
+        "test-data-strategy",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:test-suite-design:1",
+      "kind": "positive",
+      "skill": "test-suite-design",
+      "prompt": "I have a UserService class in TypeScript with methods for createUser, updateUser, deleteUser, and getUserById. It talks to a PostgreSQL database through Prisma and sends welcome emails via SendGrid. There are zero tests. Help me add a comprehensive test suite.",
+      "accept": [
+        "test-suite-design"
+      ]
+    },
+    {
+      "id": "boundary:test-suite-design:3",
+      "kind": "boundary",
+      "skill": "test-suite-design",
+      "prompt": "Write tests for this function:\n\nfunction calculateShippingCost(order) {\n  if (!order.items || order.items.length === 0) return 0;\n  const weight = order.items.reduce((sum, item) => sum + item.weight * item.quantity, 0);\n  if (order.destination === 'domestic') {\n    if (weight < 1) return 5.99;\n    if (weight < 5) return 9.99;\n    return 14.99 + Math.ceil((weight - 5) / 5) * 4.99;\n  }\n  if (order.destination === 'international') {\n    return weight * 12.99;\n  }\n  throw new Error(`Unknown destination: ${order.destination}`);\n}",
+      "accept": [
+        "test-suite-design",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:ui-ux-design:1",
+      "kind": "positive",
+      "skill": "ui-ux-design",
+      "prompt": "Design the UI for a project management dashboard. Users should see their projects, tasks within each project, and be able to create/edit/delete tasks. It's a React web app. We don't have a designer \u2014 I need to figure out the screens and flows myself.",
+      "accept": [
+        "ui-ux-design"
+      ]
+    },
+    {
+      "id": "positive:verification-before-completion:1",
+      "kind": "positive",
+      "skill": "verification-before-completion",
+      "prompt": "I just refactored the auth module to extract a helper function. Go ahead and tell me it's done and commit it.",
+      "accept": [
+        "verification-before-completion"
+      ]
+    },
+    {
+      "id": "boundary:verification-before-completion:3",
+      "kind": "boundary",
+      "skill": "verification-before-completion",
+      "prompt": "A subagent reported it implemented the feature and all its tests pass. Mark the task complete.",
+      "accept": [
+        "verification-before-completion",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:writing-skills:1",
+      "kind": "positive",
+      "skill": "writing-skills",
+      "prompt": "I want to add a new skill to this library for designing caching strategies (cache invalidation, TTLs, cache layers). Help me write it.",
+      "accept": [
+        "writing-skills"
+      ]
+    },
+    {
+      "id": "boundary:writing-skills:3",
+      "kind": "boundary",
+      "skill": "writing-skills",
+      "prompt": "Can you write the API documentation for our payments service?",
+      "accept": [
+        "writing-skills",
+        "api-design",
+        "project-documentation",
+        "NONE"
+      ]
+    },
+    {
+      "id": "trivial:0",
+      "kind": "trivial",
+      "skill": null,
+      "prompt": "thanks, that's exactly what I needed!",
+      "accept": [
+        "NONE"
+      ]
+    },
+    {
+      "id": "trivial:1",
+      "kind": "trivial",
+      "skill": null,
+      "prompt": "what does the acronym CRUD stand for?",
+      "accept": [
+        "NONE"
+      ]
+    },
+    {
+      "id": "trivial:2",
+      "kind": "trivial",
+      "skill": null,
+      "prompt": "can you rename the variable `usr` to `user` in this function?",
+      "accept": [
+        "NONE"
+      ]
+    },
+    {
+      "id": "trivial:3",
+      "kind": "trivial",
+      "skill": null,
+      "prompt": "what time zone is UTC+0?",
+      "accept": [
+        "NONE"
+      ]
+    },
+    {
+      "id": "trivial:4",
+      "kind": "trivial",
+      "skill": null,
+      "prompt": "good morning! ready to pair today?",
+      "accept": [
+        "NONE"
+      ]
+    },
+    {
+      "id": "trivial:5",
+      "kind": "trivial",
+      "skill": null,
+      "prompt": "is Python whitespace-sensitive?",
+      "accept": [
+        "NONE"
+      ]
+    },
+    {
+      "id": "trivial:6",
+      "kind": "trivial",
+      "skill": null,
+      "prompt": "fix the typo in this comment: 'recieve' should be 'receive'",
+      "accept": [
+        "NONE"
+      ]
+    },
+    {
+      "id": "trivial:7",
+      "kind": "trivial",
+      "skill": null,
+      "prompt": "what's the difference between == and === in JavaScript?",
+      "accept": [
+        "NONE"
+      ]
+    }
+  ]
+}

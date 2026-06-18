@@ -1,0 +1,13 @@
+{
+  "_comment": "Curated trivial / conversational / tiny-mechanical prompts that must route to NONE. Guards against over-routing (which costs an extra hop under the name-only baseline). Mined positives/boundaries come from skills/*/evals/evals.json; these are the only hand-authored cases, sanctioned by the design note in docs/EVALS.md.",
+  "prompts": [
+    "thanks, that's exactly what I needed!",
+    "what does the acronym CRUD stand for?",
+    "can you rename the variable `usr` to `user` in this function?",
+    "what time zone is UTC+0?",
+    "good morning! ready to pair today?",
+    "is Python whitespace-sensitive?",
+    "fix the typo in this comment: 'recieve' should be 'receive'",
+    "what's the difference between == and === in JavaScript?"
+  ]
+}
