@@ -113,13 +113,13 @@ cp -r skills/* ~/.claude/skills/
 Use `--dir DIR` to target a non-standard Claude config directory (skills land
 in `DIR/skills/`; the hook and `resolve.py` in `DIR/hooks/`; the `/role` command
 in `DIR/commands/`). It's mutually exclusive with `--global`. See
-[ROLES.md](ROLES.md) for the activation model.
+[ROLES.md](docs/ROLES.md) for the activation model.
 
 ### Activation (the SessionStart hook)
 
 Skills trigger from their descriptions, but under-triggering is the most common
 failure mode at scale — which is why this library uses the name-only baseline +
-orchestrator described in [ROLES.md](ROLES.md). The `skill-router` skill is the
+orchestrator described in [ROLES.md](docs/ROLES.md). The `skill-router` skill is the
 entry point; the
 [SessionStart hook](hooks/README.md) injects a short pointer at session start so
 Claude consults the router before substantial SDLC work. It's a nudge, not a
@@ -132,7 +132,7 @@ skills install, but only the `skill-router` orchestrator + safety skills
 auto-trigger; the rest are listed by name and **activated on demand** by the
 router (which routes from a generated catalog and invokes by name). This keeps the
 listing from overflowing on any window. **Roles** promote a working set back to
-auto-triggering. See **[ROLES.md](ROLES.md)** for the full model.
+auto-triggering. See **[ROLES.md](docs/ROLES.md)** for the full model.
 
 ```bash
 ./install.sh --hook        # all skills + name-only baseline + the SessionStart hook
@@ -208,7 +208,7 @@ the agent to skip the skill's Iron Law under named pressure levers:
 
 Both runners replay the scenarios through Claude — generate a candidate reply
 (skill loaded = GREEN, absent = RED), then judge each assertion with a skeptical
-LLM-as-judge. Pick the path that fits; see [EVALS.md](EVALS.md) for the full guide.
+LLM-as-judge. Pick the path that fits; see [EVALS.md](docs/EVALS.md) for the full guide.
 
 | Runner | Use | Needs |
 |--------|-----|-------|
@@ -274,7 +274,7 @@ this format SDO-compliant.
 
 Every installed skill contributes its `name` + `description` to a single listing that Claude Code injects on every prompt. The total is capped by `skillListingBudgetFraction` in `settings.json` (default `0.01`, i.e. 1% of context). When the cap is exceeded, the least-recently-used descriptions are dropped arbitrarily, and dropped skills will not trigger. Check with `/doctor` — it reports dropped descriptions.
 
-**This repo sidesteps the cap with a name-only baseline** rather than by raising the budget: only a pinned set keeps full descriptions; the rest are listed name-only (invoked on demand by `skill-router`). So the listing stays tiny on any window — see [ROLES.md](ROLES.md). A good `description` still matters for every skill: it's what the orchestrator routes on (from `catalog.json`) and what auto-triggers when a role promotes the skill to `on`.
+**This repo sidesteps the cap with a name-only baseline** rather than by raising the budget: only a pinned set keeps full descriptions; the rest are listed name-only (invoked on demand by `skill-router`). So the listing stays tiny on any window — see [ROLES.md](docs/ROLES.md). A good `description` still matters for every skill: it's what the orchestrator routes on (from `catalog.json`) and what auto-triggers when a role promotes the skill to `on`.
 
 (If you instead run a flat install of many skills with descriptions on, you can raise the budget — e.g. `{ "skillListingBudgetFraction": 0.02 }` — but the baseline approach is preferred.)
 
@@ -324,7 +324,7 @@ top of the three evals: a scenario that tempts the agent to skip the skill's
 Iron Law under combined pressure (time, sunk cost, authority, exhaustion), with
 assertions that it doesn't capitulate. Bulletproof skills by capturing the exact
 rationalizations a fresh agent uses *without* the skill (RED), then writing the
-minimum that counters them (GREEN) — see [EVALS.md](EVALS.md) and the
+minimum that counters them (GREEN) — see [EVALS.md](docs/EVALS.md) and the
 `writing-skills` skill.
 
 ### Common Mistakes

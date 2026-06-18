@@ -2,7 +2,7 @@
 
 This library uses a **name-only baseline with an active orchestrator** so that a
 large skill set stays reliable on any context window. The source of truth is
-[`roles.json`](roles.json); the catalog and marketplace are generated from it.
+[`roles.json`](../roles.json); the catalog and marketplace are generated from it.
 
 ## The problem this solves
 
@@ -91,7 +91,7 @@ installer prints the settings snippet; it never edits your settings for you.
 For environments that don't run hooks (e.g. `claude.ai/code`), the repo is also a
 marketplace of **per-role plugins** — each a hard subset, so the subset *is* the
 scope, no orchestrator needed. Generated from `roles.json` by
-`scripts/build-plugins.mjs` into [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json)
+`scripts/build-plugins.mjs` into [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json)
 and `plugins/` (do not edit by hand).
 
 ```text

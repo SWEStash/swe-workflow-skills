@@ -1,6 +1,6 @@
 # SessionStart hook — the activation baseline writer
 
-This hook drives the **name-only baseline** (see [ROLES.md](../ROLES.md)). On every
+This hook drives the **name-only baseline** (see [ROLES.md](../docs/ROLES.md)). On every
 session boundary (`startup|resume|clear|compact`) it writes the activation
 `skillOverrides` into `settings.local.json` — all skills `name-only` except the
 pinned set (and the active role's set, if one is set) — and emits

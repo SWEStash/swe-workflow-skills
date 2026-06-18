@@ -9,4 +9,4 @@ node scripts/build-plugins.mjs
 ```
 
 Each subdirectory is a Claude Code plugin (one per role) exposed via
-`.claude-plugin/marketplace.json`. See ROLES.md for installation.
+`.claude-plugin/marketplace.json`. See docs/ROLES.md for installation.

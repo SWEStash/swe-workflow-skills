@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "_comment": "Single source of truth for role-based, window-aware skill activation. Consumed by install.sh (via scripts/resolve.py), scripts/build-plugins.mjs, and skill-router. A role's working set = its core set UNION its skills. 'pinned' skills stay auto-triggerable (skillOverrides: on) regardless of role/window when installed; everything else is gated: on with a 1m window OR when in the active role, else name-only. See ROLES.md.",
+  "_comment": "Single source of truth for role-based, window-aware skill activation. Consumed by install.sh (via scripts/resolve.py), scripts/build-plugins.mjs, and skill-router. A role's working set = its core set UNION its skills. 'pinned' skills stay auto-triggerable (skillOverrides: on) regardless of role/window when installed; everything else is gated: on with a 1m window OR when in the active role, else name-only. See docs/ROLES.md.",
 
   "pinned": [
     "skill-router",
