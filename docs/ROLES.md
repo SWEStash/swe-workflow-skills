@@ -29,14 +29,40 @@ unreliable and uncontrolled.
 - **Roles promote a working set back to `on`.** Activating a role flips its skills
   to auto-trigger for direct, one-hop use of your daily set.
 
-| `skillOverrides` value | In listing | Auto-triggers | Invocable |
-|------------------------|------------|---------------|-----------|
-| `on`                   | name+desc  | yes           | yes       |
-| `name-only`            | name only  | no            | yes       |
-| `off`                  | hidden     | no            | yes (`/name`) |
+| `skillOverrides` value  | In listing | Auto-triggers | User-invocable |
+|-------------------------|------------|---------------|----------------|
+| `on` (default)          | name+desc  | yes           | yes            |
+| `name-only`             | name only  | no            | yes            |
+| `user-invocable-only`   | hidden     | no            | yes (`/name`)  |
+| `off`                   | hidden     | no            | no             |
 
 `skillOverrides` and the listing **hot-reload** when `settings.local.json`
 changes, so the baseline and role switches apply without a restart.
+
+## Two ways to avoid cropping (and where each works)
+
+Cropping has exactly two cures, and which install method you pick comes down to which
+one a given surface can use:
+
+1. **Name-only baseline (lever ①)** — keep descriptions out of the listing for all but
+   the pinned set. Scales to any number of skills. But it *is* `skillOverrides`, and
+   **`skillOverrides` only affects skills under `.claude/skills/`** (personal / project
+   / enterprise level). Applying it is a settings write — done by the installer and
+   re-asserted by the hook. Works where settings + hooks run: **CLI and Cowork.**
+2. **Small install (lever ②)** — install fewer skills than the budget (~20). Weaker (it
+   caps your working set) but needs no settings, so it works **everywhere**, including
+   Claude Code on the web and claude.ai chat. This is exactly what a per-role plugin does.
+
+### Why plugins can't carry the baseline
+
+Per the Claude Code docs, **"Plugin skills are not affected by `skillOverrides`."** No
+plugin setting and no hook can mark a plugin's skills name-only — the only visibility
+control for a plugin's skills is enabling/disabling the plugin. So a single
+"everything" plugin would inject all 40+ descriptions and crop on *every* surface, CLI
+included. That's why the full library ships via the **installer** (lever ①) and the
+marketplace ships **per-role plugins** (lever ②), each small enough to fit — and why
+the per-role plugins omit `skill-router` (with no baseline to route around, and no
+catalog it could read, it would only waste a listing slot).
 
 ## Roles
 
@@ -59,27 +85,33 @@ A role's working set = its **core** ∪ its own skills. Cores: **universal** =
 `project-documentation`. Inspect with `python3 scripts/resolve.py skills <role>`
 or list roles with `python3 scripts/resolve.py roles`.
 
-## Install (CLI — the dynamic model)
+## Install (CLI — the full dynamic model)
+
+This is the only path that delivers the **whole library** (all 42 skills) without
+cropping, because the name-only baseline (`skillOverrides`) applies only to skills in
+`.claude/skills/` — see [Why plugins can't carry the baseline](#why-plugins-cant-carry-the-baseline).
 
 ```bash
-./install.sh --hook              # all skills, name-only baseline, + the hook
-./install.sh --global --hook     # ...to the user config dir
+./install.sh                     # all skills + machinery + hook + baseline -> ./.claude/
+./install.sh --global            # ...to the user config dir
+./install.sh --no-hook           # skip the hook (baseline still applied at install)
 ./install.sh --role pm           # hard subset: just the PM skills (no orchestrator gating)
 ./install.sh --role pm --prune   # ...and drop other library skills from a prior install
 ```
 
-The default installs **all** skills plus the machinery: the catalog/role markers
-beside the skills, `resolve.py`, and the `/role` command. `--hook` installs the
-SessionStart hook that writes the baseline (`skillOverrides`) into
-`settings.local.json` on every session boundary (`startup|resume|clear|compact`)
-and emits `reloadSkills`. **The dynamic model needs the hook** — without it, no
-baseline is applied and you fall back to plain description-triggering. The
-installer prints the settings snippet; it never edits your settings for you.
+The default installs **all** skills plus the machinery (catalog/role markers,
+`resolve.py`, the `/role` command), **applies the name-only baseline** to
+`settings.local.json` immediately, and installs the SessionStart hook. Because the
+baseline is written at install time and `skillOverrides` persists, the install is
+**crop-safe right away** — even before you wire the hook, and with `--no-hook`. The
+hook (on by default) **re-asserts** the baseline on every session boundary
+(`startup|resume|clear|compact`), emits `reloadSkills`, and injects the router
+nudge — needed because the skill listing isn't re-injected after `/compact`. The
+installer prints the `settings.json` snippet to enable it; it never edits your settings.
 
 Re-running install is idempotent: each skill is re-copied cleanly (no stale
 leftover files). `--prune` additionally removes previously-installed library skills
-outside the new selection (never your own custom skills) — use it to narrow a prior
-all-skills install down to one role's hard subset. `--global` resolves to
+outside the new selection (never your own custom skills). `--global` resolves to
 `$CLAUDE_CONFIG_DIR` when that env var is set, else `~/.claude`; explicit `--dir`
 always wins.
 
@@ -109,21 +141,28 @@ never edits. The `.active-role` marker is only written by `--role` (and rewritte
 `/role` rewrites `settings.local.json` (hot-reloads) and records the choice in an
 `.active-role` marker so the hook re-asserts it across compaction.
 
-## Install (web / static — per-role plugins)
+## Install (plugins — the recommended, cross-surface path)
 
-For environments that don't run hooks (e.g. `claude.ai/code`), the repo is also a
-marketplace of **per-role plugins** — each a hard subset, so the subset *is* the
-scope, no orchestrator needed. Generated from `roles.json` by
-`scripts/build-plugins.mjs` into [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json)
-and `plugins/` (do not edit by hand).
+For everywhere hooks don't run — **Claude Code on the web, claude.ai chat, and
+Cowork** — and as the simplest managed install on the CLI too, the repo is a
+marketplace of **per-role plugins**. Each is a hard subset (lever ②), so the subset
+*is* the scope: small enough to never crop, no orchestrator or baseline needed.
+Generated from `roles.json` by `scripts/build-plugins.mjs` into
+[`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json) and `plugins/`
+(do not edit by hand).
 
 ```text
-/plugin marketplace add <owner>/swe-workflow-skills
+/plugin marketplace add maprea/swe-workflow-skills
 /plugin install swe-workflow-pm@swe-workflow
 ```
 
-> **Web caveat (unverified):** plugin/skill support on `claude.ai/code` is, per our
-> research, more limited than the desktop CLI. Verify before relying on it.
+In **claude.ai chat** the same marketplace is added from Customize → Plugins (Team/
+Enterprise admins can distribute it org-wide); bundled **skills and slash-commands
+work**, while **hooks and sub-agents are greyed out** (Cowork-only). On **Claude Code
+web**, plugins and skills load but **hooks don't run** — which is exactly why these
+are per-role subsets rather than one full-library plugin (see
+[Why plugins can't carry the baseline](#why-plugins-cant-carry-the-baseline)).
+Verified against the Claude Code / claude.ai docs, 2026-06.
 
 ## Missing roles (future iterations)
 
@@ -132,8 +171,11 @@ Need **new skills** first (build via the `writing-skills` RED→GREEN process):
 
 ## Open follow-ups
 
-- Verify the `claude.ai/code` web plugin/skill story end-to-end.
-- Per-role plugins bundle the shared orchestrator/catalog (full library); consider
-  scoping each plugin's catalog to its own subset.
+- The two largest roles (`backend` 18, `devops` 17 skills after dropping the router)
+  sit near the ~20 listing cap — consider trimming or splitting so plugin subsets stay
+  comfortably crop-safe on web.
 - Decide whether to keep committing generated `plugins/` + `catalog.json` or
   generate them at release.
+
+_Resolved: per-role plugins no longer bundle `skill-router` (it can't route without a
+catalog or baseline); the `claude.ai/code` + chat plugin story is verified above._

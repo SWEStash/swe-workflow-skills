@@ -61,14 +61,29 @@ assert d["skillOverrides"]["api-design"] == "name-only"
 PY
 pass "settings merge preserves other keys + unmanaged overrides"
 
-echo "5. install (default all + machinery + hook)"
-./install.sh --hook --dir "$TMP/inst" >/dev/null 2>&1 || fail "install"
+echo "5. install (default = all + machinery + hook + baseline applied)"
+./install.sh --dir "$TMP/inst" >/dev/null 2>&1 || fail "install"
 [[ $(find "$TMP/inst/skills" -maxdepth 1 -mindepth 1 -type d | wc -l) -eq 42 ]] || fail "expected 42 skills"
 for f in skills/.roles.json skills/.catalog.json hooks/resolve.py hooks/session-start.sh commands/role.md; do
-  [[ -f "$TMP/inst/$f" ]] || fail "missing $f"
+  [[ -f "$TMP/inst/$f" ]] || fail "missing $f (hook is now default)"
 done
 grep -q '@@' "$TMP/inst/commands/role.md" && fail "unsubstituted placeholders in role.md"
-pass "42 skills + catalog/roles markers + resolve.py + hook + /role command"
+# Baseline applied at install time → crop-safe before the hook is even wired.
+python3 - "$TMP/inst/settings.local.json" <<'PY' || fail "install did not apply baseline"
+import json, os, sys
+p = sys.argv[1]
+assert os.path.isfile(p), "settings.local.json not written by install"
+ov = json.load(open(p)).get("skillOverrides", {})
+n = sum(1 for v in ov.values() if v == "name-only")
+assert n == 36, f"expected 36 name-only at install, got {n}"
+assert "skill-router" not in ov, "router must stay on"
+PY
+# --no-hook: baseline still applied, but no hook script installed.
+./install.sh --no-hook --dir "$TMP/nohook" >/dev/null 2>&1 || fail "install --no-hook"
+[[ ! -f "$TMP/nohook/hooks/session-start.sh" ]] || fail "--no-hook should not install the hook"
+python3 -c "import json;ov=json.load(open('$TMP/nohook/settings.local.json')).get('skillOverrides',{});assert sum(1 for v in ov.values() if v=='name-only')==36" \
+  || fail "--no-hook must still apply the baseline"
+pass "default installs hook + applies 36 name-only baseline; --no-hook keeps baseline, skips hook"
 
 echo "6. SessionStart hook writes baseline + reloadSkills (preserving keys)"
 printf '{"model":"x"}' > "$TMP/inst/settings.local.json"

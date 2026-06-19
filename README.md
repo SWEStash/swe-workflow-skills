@@ -87,39 +87,56 @@ These skills encode the methodology of a disciplined engineer: DRY, YAGNI, KISS,
 
 ## Installation
 
-### Per-project (recommended for teams)
-```bash
-cp -r skills/* your-project/.claude/skills/
-git add .claude/skills/
-git commit -m "feat: add swe workflow skills for Claude Code"
+Two supported paths, chosen by what your environment can run. (See
+**[ROLES.md](docs/ROLES.md)** for the full activation model and **why** it splits this way.)
+
+### 1. Plugins — recommended (CLI, Claude Code web, claude.ai chat, Cowork)
+
+Install the per-role plugin for your hat. Each is a focused, crop-safe subset that
+auto-triggers with no extra setup, and it works everywhere plugins do:
+
+```text
+/plugin marketplace add maprea/swe-workflow-skills
+/plugin install swe-workflow-pm@swe-workflow
 ```
 
-### Global (personal use across all projects)
+Roles: `backend`, `frontend`, `devops`, `ml`, `security`, `architect`, `em`, `pm`,
+`qa`, `designer`. The subset *is* the scope, so it stays under the skill-listing
+budget (no "cropping").
+
+> **Why per-role, not one all-in-one plugin?** Plugin-bundled skills are exempt from
+> `skillOverrides`, so Claude Code can't mark them name-only — a 40-skill plugin would
+> always inject 40 descriptions and crop the listing. The full library needs the
+> installer below, which places skills where the name-only baseline *can* apply.
+
+### 2. Installer — the full library + orchestrator (CLI / Cowork, advanced)
+
+For the whole library with reliable activation, use `install.sh`. It copies all 42
+skills into `.claude/skills/`, applies the **name-only baseline** (only `skill-router`
++ the safety skills keep descriptions; the rest list by name and are routed on
+demand), and installs the SessionStart hook + `/role` command. This is the only way
+to get all 40+ skills without cropping.
+
 ```bash
-cp -r skills/* ~/.claude/skills/
-```
-
-### Using the installer
-
-`install.sh` installs **all** skills plus the orchestrator machinery by default:
-
-```bash
-./install.sh                    # all skills + machinery -> ./.claude/
-./install.sh --global --hook    # all skills + baseline hook -> user config dir
-./install.sh --dir /etc/claude  # custom config dir -> /etc/claude/
+./install.sh                    # all skills + machinery + hook + baseline -> ./.claude/
+./install.sh --global           # ...to the user config dir ($CLAUDE_CONFIG_DIR or ~/.claude)
+./install.sh --no-hook          # skip the hook (baseline still applied)
 ./install.sh --role pm          # a lean hard subset (just the PM skills)
 ./install.sh --role pm --prune  # ...and remove other library skills from a prior install
+./install.sh --dir /etc/claude  # a custom config dir
 ```
 
-Re-running install is safe: each skill is re-copied cleanly (no stale leftover
-files). Add `--prune` to also remove previously-installed **library** skills that
-aren't in the new selection — it never touches your own custom skills.
+The hook is installed **by default**; it re-asserts the baseline each session and
+nudges Claude to consult `skill-router` first. The installer prints a `settings.json`
+snippet to enable it — it never edits your settings. Switch the promoted set at
+runtime with **`/role`** (`/role backend`, `/role all` to reset). Re-running is
+idempotent (clean per-skill copy); `--prune` narrows a prior install to the selection
+(never touches your own custom skills). `--global` honors `$CLAUDE_CONFIG_DIR`;
+`--dir` targets an explicit dir.
 
-Use `--dir DIR` to target a non-standard Claude config directory (skills land
-in `DIR/skills/`; the hook and `resolve.py` in `DIR/hooks/`; the `/role` command
-in `DIR/commands/`). It's mutually exclusive with `--global`. `--global` installs
-to `$CLAUDE_CONFIG_DIR` if that env var is set, otherwise `~/.claude/`. See
-[ROLES.md](docs/ROLES.md) for the activation model.
+> **Teams:** run the installer into your project's `.claude/` and commit it — a
+> committed `.claude/` (skills + the baseline in `settings.json`) also carries over to
+> Claude Code on the web.
 
 ### Uninstallation
 
@@ -137,42 +154,20 @@ own custom skills are left alone. It prompts before deleting (`--yes` to skip). 
 never edits `settings.json`; if you enabled the hook, it prints the exact
 `SessionStart` block for you to remove from `settings.json` by hand.
 
-### Activation (the SessionStart hook)
+### How activation works (the short version)
 
-Skills trigger from their descriptions, but under-triggering is the most common
-failure mode at scale — which is why this library uses the name-only baseline +
-orchestrator described in [ROLES.md](docs/ROLES.md). The `skill-router` skill is the
-entry point; the
-[SessionStart hook](hooks/README.md) injects a short pointer at session start so
-Claude consults the router before substantial SDLC work. It's a nudge, not a
-gate — the user's instructions always take precedence.
-
-### Roles & the activation model
-
-To stay reliable with 40+ skills, the library uses a **name-only baseline**: all
-skills install, but only the `skill-router` orchestrator + safety skills
-auto-trigger; the rest are listed by name and **activated on demand** by the
-router (which routes from a generated catalog and invokes by name). This keeps the
-listing from overflowing on any window. **Roles** promote a working set back to
-auto-triggering. See **[ROLES.md](docs/ROLES.md)** for the full model.
-
-```bash
-./install.sh --hook        # all skills + name-only baseline + the SessionStart hook
-./install.sh --role pm     # hard subset: just the PM skills
-./install.sh --list        # list skills and roles
-```
-
-The `--hook` SessionStart hook writes the baseline into `settings.local.json` each
-session (and is what makes the dynamic model work). Switch the promoted set at
-runtime with the **`/role`** command (`/role backend`, `/role all` to reset). For
-environments without hooks (e.g. the web app), the repo is also a **plugin
-marketplace** of per-role hard subsets (generated from `roles.json` by
-`scripts/build-plugins.mjs`):
-
-```text
-/plugin marketplace add <owner>/swe-workflow-skills
-/plugin install swe-workflow-pm@swe-workflow
-```
+At 40+ skills, description-based auto-triggering becomes unreliable: Claude injects
+each skill's name+description into a listing capped at ~1% of context, and past the
+cap it drops descriptions (so skills silently stop auto-triggering). This library's
+answer is the **name-only baseline** — only `skill-router` + the safety skills keep
+descriptions; the orchestrator routes to everything else by name. That baseline is
+`skillOverrides`, which **only applies to skills in `.claude/skills/`** — hence the
+installer (path 2) for the full library, and small per-role **plugins** (path 1)
+everywhere else, where staying small is the only way to avoid cropping. The full
+activation model is in **[ROLES.md](docs/ROLES.md)**; a side-by-side comparison of every
+install method and surface is in **[INSTALL-MATRIX.md](docs/INSTALL-MATRIX.md)**; the
+default [SessionStart hook](hooks/README.md) re-asserts the baseline and nudges Claude
+toward the router.
 
 ## Skill Architecture
 

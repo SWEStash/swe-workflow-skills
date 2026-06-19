@@ -25,8 +25,12 @@ Options:
   -p, --prune      After installing the selected set, remove previously-installed
                    library skills that are NOT in the new selection (never touches
                    your own custom skills). Use to narrow a prior all-skills install.
-  -k, --hook       Also install the SessionStart hook that writes the activation
-                   baseline (prints the settings snippet; never edits settings)
+  -k, --hook       (default) Install the SessionStart hook that re-asserts the
+                   name-only baseline each session + injects the router nudge
+                   (prints the settings snippet; never edits settings)
+      --no-hook    Skip the SessionStart hook. The name-only baseline is still
+                   applied at install time (persists in settings.local.json); you
+                   just don't get automatic re-assert or the router nudge.
   -l, --list       List available skills and roles
   -h, --help       Show this help
 
@@ -35,8 +39,9 @@ Arguments:
                    orchestrator machinery unless skill-router is included)
 
 Examples:
-  $(basename "$0")                          # all skills + machinery -> ./.claude/
-  $(basename "$0") --global --hook           # all skills + hook, globally
+  $(basename "$0")                          # all skills + machinery + hook -> ./.claude/
+  $(basename "$0") --global                  # all skills + hook, to the user config dir
+  $(basename "$0") --global --no-hook        # ...baseline applied, but no hook installed
   $(basename "$0") --role pm                 # just the PM subset
   $(basename "$0") --role pm --prune         # PM subset; drop other library skills
   $(basename "$0") --dir /etc/claude         # all skills to /etc/claude/
@@ -45,7 +50,7 @@ EOF
 }
 
 GLOBAL=false
-HOOK=false
+HOOK=true
 PRUNE=false
 CONFIG_DIR=""
 ROLE=""
@@ -66,7 +71,8 @@ while [[ $# -gt 0 ]]; do
       ROLE="$1"; shift ;;
     --role=*) ROLE="${1#*=}"; shift ;;
     -p|--prune) PRUNE=true; shift ;;
-    -k|--hook) HOOK=true; shift ;;
+    -k|--hook) HOOK=true; shift ;;       # default; accepted for explicitness/back-compat
+    --no-hook) HOOK=false; shift ;;
     -l|--list)
       echo "Available skills:"
       ls "$SKILLS_DIR" | sed 's/^/  /'
@@ -174,6 +180,21 @@ if $has_router; then
         "$CMD_SRC" > "$CMD_DEST_DIR/role.md"
     echo "Installed /role command -> $CMD_DEST_DIR/role.md"
   fi
+
+  # Apply the name-only baseline right now, so a fresh install never overflows the
+  # skill listing (cropping). skillOverrides persists in settings.local.json, so this
+  # holds even before the hook is wired and with --no-hook; the hook just re-asserts it
+  # each session. Best-effort (needs python3; same engine the hook uses).
+  if command -v python3 >/dev/null 2>&1; then
+    if ROLES_JSON="$DEST/.roles.json" python3 "$TOOLS_DIR/resolve.py" apply \
+         "$CLAUDE_DIR/settings.local.json" "$DEST" ${ROLE:+"$ROLE"} >/dev/null 2>&1; then
+      echo "Applied name-only baseline -> $CLAUDE_DIR/settings.local.json"
+    else
+      echo "Warning: could not apply the name-only baseline (check python3/resolve.py)." >&2
+    fi
+  else
+    echo "Warning: python3 not found; skipped the name-only baseline (skills may crop until you run /role)." >&2
+  fi
 fi
 
 if $HOOK; then
@@ -191,8 +212,9 @@ if $HOOK; then
     HOOK_PATH="$HOOK_DEST_DIR/session-start.sh"
     echo "Installed hook script -> $HOOK_PATH"
     echo ""
-    echo "To enable it, merge this into $CLAUDE_DIR/settings.json (the installer"
-    echo "does NOT edit settings for you):"
+    echo "The name-only baseline is already applied. To have it re-asserted every"
+    echo "session (and the router nudge injected), merge this into"
+    echo "$CLAUDE_DIR/settings.json (the installer does NOT edit settings for you):"
     echo ""
     cat <<EOF
   "hooks": {
@@ -207,8 +229,8 @@ if $HOOK; then
   }
 EOF
     echo ""
-    echo "The hook writes the activation baseline to settings.local.json on each"
-    echo "session start. Start a new session and run /doctor to confirm it's registered."
+    echo "Start a new session and run /doctor to confirm the hook is registered."
+    echo "(Prefer no hook? Re-run with --no-hook; the baseline still applies.)"
   fi
 fi
 

@@ -10,7 +10,7 @@
     {
       "name": "swe-workflow-backend",
       "displayName": "Backend / Full-stack Engineer",
-      "description": "Skills for service, API, and data work: design, test-first implementation, performance, and shipping. (19 skills)",
+      "description": "Skills for service, API, and data work: design, test-first implementation, performance, and shipping. (18 skills)",
       "version": "0.1.0",
       "source": {
         "source": "directory",
@@ -20,7 +20,7 @@
     {
       "name": "swe-workflow-frontend",
       "displayName": "Frontend Engineer",
-      "description": "Skills for UI/UX, component architecture, accessibility, and client-side performance. (15 skills)",
+      "description": "Skills for UI/UX, component architecture, accessibility, and client-side performance. (14 skills)",
       "version": "0.1.0",
       "source": {
         "source": "directory",
@@ -30,7 +30,7 @@
     {
       "name": "swe-workflow-devops",
       "displayName": "DevOps / SRE / Platform Engineer",
-      "description": "Skills for CI/CD, containers, infrastructure-as-code, delivery, observability, and incidents. (18 skills)",
+      "description": "Skills for CI/CD, containers, infrastructure-as-code, delivery, observability, and incidents. (17 skills)",
       "version": "0.1.0",
       "source": {
         "source": "directory",
@@ -40,7 +40,7 @@
     {
       "name": "swe-workflow-ml",
       "displayName": "ML Engineer / MLOps",
-      "description": "Skills for ML pipelines, experiment tracking, model deployment, and the data/observability around them. (13 skills)",
+      "description": "Skills for ML pipelines, experiment tracking, model deployment, and the data/observability around them. (12 skills)",
       "version": "0.1.0",
       "source": {
         "source": "directory",
@@ -50,7 +50,7 @@
     {
       "name": "swe-workflow-security",
       "displayName": "Security Engineer",
-      "description": "Skills for security audits, dependency/CVE management, blast-radius analysis, and incident handling. (13 skills)",
+      "description": "Skills for security audits, dependency/CVE management, blast-radius analysis, and incident handling. (12 skills)",
       "version": "0.1.0",
       "source": {
         "source": "directory",
@@ -60,7 +60,7 @@
     {
       "name": "swe-workflow-architect",
       "displayName": "Architect / Staff Engineer",
-      "description": "Skills for structural decisions, documentation, contracts, blast radius, and technical-debt strategy. (15 skills)",
+      "description": "Skills for structural decisions, documentation, contracts, blast radius, and technical-debt strategy. (14 skills)",
       "version": "0.1.0",
       "source": {
         "source": "directory",
@@ -70,7 +70,7 @@
     {
       "name": "swe-workflow-em",
       "displayName": "Engineering Manager / Tech Lead",
-      "description": "Skills for planning, estimation, metrics, retros, proposals, and steering reviews and incidents. (10 skills)",
+      "description": "Skills for planning, estimation, metrics, retros, proposals, and steering reviews and incidents. (9 skills)",
       "version": "0.1.0",
       "source": {
         "source": "directory",
@@ -80,7 +80,7 @@
     {
       "name": "swe-workflow-pm",
       "displayName": "Product / Project Manager",
-      "description": "Skills for proposals, PRDs/specs, estimation, OKRs/metrics, and retrospectives. (7 skills)",
+      "description": "Skills for proposals, PRDs/specs, estimation, OKRs/metrics, and retrospectives. (6 skills)",
       "version": "0.1.0",
       "source": {
         "source": "directory",
@@ -90,7 +90,7 @@
     {
       "name": "swe-workflow-qa",
       "displayName": "QA / Test Engineer",
-      "description": "Skills for test-first development, coverage strategy, test data, review, and systematic debugging. (10 skills)",
+      "description": "Skills for test-first development, coverage strategy, test data, review, and systematic debugging. (9 skills)",
       "version": "0.1.0",
       "source": {
         "source": "directory",
@@ -100,7 +100,7 @@
     {
       "name": "swe-workflow-designer",
       "displayName": "Designer / UX",
-      "description": "Skills for user flows, accessibility, product requirements, and the frontend architecture that realizes them. (6 skills)",
+      "description": "Skills for user flows, accessibility, product requirements, and the frontend architecture that realizes them. (5 skills)",
       "version": "0.1.0",
       "source": {
         "source": "directory",

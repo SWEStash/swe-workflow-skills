@@ -10,11 +10,12 @@ pointer telling Claude to route through `skill-router`.
 It runs on every boundary because the skill listing is **not re-injected after
 `/compact`**, so the baseline must be re-asserted.
 
-The hook is opt-in, but **the dynamic activation model depends on it**: without
-it, no baseline is written and you fall back to plain (overflow-prone)
-description-triggering. It must be installed by `./install.sh --hook` (or with the
-machinery present) because it calls `resolve.py` and reads the `.roles.json`
-marker next to the skills.
+The installer **applies the baseline once at install time** (so the install is
+crop-safe immediately, and stays so even with `--no-hook`, since `skillOverrides`
+persists in `settings.local.json`). This hook's job is to **re-assert** that baseline
+each session — covering `/compact` and any skills added later — and to inject the
+router nudge. It's installed **by default**; pass `--no-hook` to skip it. It calls
+`resolve.py` and reads the `.roles.json` marker next to the skills.
 
 ## What's here
 
@@ -23,18 +24,19 @@ marker next to the skills.
 
 ## Enable it
 
-The easiest path:
+It's on by default — any full install includes it:
 
 ```bash
-./install.sh --hook          # project-local (.claude/)
-./install.sh --hook --global # global (~/.claude/)
+./install.sh             # project-local (.claude/), hook included
+./install.sh --global    # user config dir, hook included
+./install.sh --no-hook   # skip the hook (baseline still applied at install)
 ```
 
-`--hook` copies `session-start.sh` (and `resolve.py`) into your config's `hooks/`
-and prints the exact `settings.json` snippet to paste, with the absolute
+The installer copies `session-start.sh` (and `resolve.py`) into your config's
+`hooks/` and prints the exact `settings.json` snippet to paste, with the absolute
 `HOOK_PATH` filled in. It does **not** modify your `settings.json` automatically —
 merging is left to you so your existing config is never clobbered. (The hook then
-manages the `skillOverrides` key in `settings.local.json` at runtime.)
+re-asserts the `skillOverrides` baseline in `settings.local.json` at runtime.)
 
 ## Manual setup
 

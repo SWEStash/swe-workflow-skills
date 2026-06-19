@@ -59,6 +59,14 @@ function resolvedSkills(roleKey) {
   return out;
 }
 
+// Skills that belong in the CLI dynamic model but NOT in a plugin. The orchestrator
+// (`skill-router`) only earns its place under the name-only baseline, where it routes
+// among suppressed skills via the catalog. A plugin can't apply that baseline —
+// plugin skills are exempt from `skillOverrides` (per the Claude Code docs), so a
+// plugin's subset just auto-triggers. The router would have no catalog to route from
+// and would only waste a skill-listing-budget slot. Exclude it from plugins.
+const PLUGIN_EXCLUDE = new Set(["skill-router"]);
+
 function build() {
   rmSync(PLUGINS, { recursive: true, force: true });
   rmSync(join(MARKET_DIR, "marketplace.json"), { force: true });
@@ -68,7 +76,7 @@ function build() {
 
   for (const [key, r] of Object.entries(roles.roles)) {
     const pluginDir = join(PLUGINS, key);
-    const skills = resolvedSkills(key);
+    const skills = resolvedSkills(key).filter((s) => !PLUGIN_EXCLUDE.has(s));
 
     // Copy each resolved skill from the canonical source.
     for (const skill of skills) {
