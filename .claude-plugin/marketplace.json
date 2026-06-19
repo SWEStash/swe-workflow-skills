@@ -3,7 +3,7 @@
   "displayName": "SWE Workflow Skills",
   "description": "Role-scoped SDLC workflow skills. Install the plugin(s) for your role.",
   "version": "0.1.0",
-  "author": {
+  "owner": {
     "name": "SWEStash"
   },
   "plugins": [

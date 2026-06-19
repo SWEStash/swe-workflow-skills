@@ -114,7 +114,7 @@ function build() {
     displayName: "SWE Workflow Skills",
     description: "Role-scoped SDLC workflow skills. Install the plugin(s) for your role.",
     version: VERSION,
-    author: { name: "SWEStash" },
+    owner: { name: "SWEStash" },
     plugins: marketplacePlugins,
   };
   writeFileSync(
