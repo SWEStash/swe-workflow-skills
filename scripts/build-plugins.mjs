@@ -105,7 +105,7 @@ function build() {
       displayName: r.label,
       description: `${r.description} (${skills.length} skills)`,
       version: VERSION,
-      source: { source: "directory", path: `./plugins/${key}` },
+      source: `./plugins/${key}`,
     });
   }
 
