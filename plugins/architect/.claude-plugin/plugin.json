@@ -1,10 +1,10 @@
 {
-  "name": "dev-workflow-architect",
+  "name": "swe-workflow-architect",
   "displayName": "Architect / Staff Engineer",
   "description": "Skills for structural decisions, documentation, contracts, blast radius, and technical-debt strategy.",
   "version": "0.1.0",
   "author": {
-    "name": "dev-workflow-skills"
+    "name": "Mariano Aprea"
   },
   "keywords": [
     "skills",

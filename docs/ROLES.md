@@ -118,8 +118,8 @@ scope, no orchestrator needed. Generated from `roles.json` by
 and `plugins/` (do not edit by hand).
 
 ```text
-/plugin marketplace add <owner>/dev-workflow-skills
-/plugin install dev-workflow-pm@dev-workflow
+/plugin marketplace add <owner>/swe-workflow-skills
+/plugin install swe-workflow-pm@swe-workflow
 ```
 
 > **Web caveat (unverified):** plugin/skill support on `claude.ai/code` is, per our

@@ -1,10 +1,10 @@
 {
-  "name": "dev-workflow-designer",
+  "name": "swe-workflow-designer",
   "displayName": "Designer / UX",
   "description": "Skills for user flows, accessibility, product requirements, and the frontend architecture that realizes them.",
   "version": "0.1.0",
   "author": {
-    "name": "dev-workflow-skills"
+    "name": "Mariano Aprea"
   },
   "keywords": [
     "skills",

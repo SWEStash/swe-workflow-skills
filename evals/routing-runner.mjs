@@ -76,7 +76,7 @@ log(`loaded ${cases.length} cases`)
 // system prompt in evals/routing.py. Each agent reads the catalog itself (the
 // real router reads .catalog.json at runtime), then routes.
 const ROUTING_INSTRUCTION =
-  `You are skill-router, the orchestrator for the dev-workflow skills library in ` +
+  `You are skill-router, the orchestrator for the swe-workflow skills library in ` +
   `Claude Code. First read the skill catalog JSON at ${a.catalog} — it lists every ` +
   `skill's name and description. Given a developer's message, decide which ONE skill ` +
   `should be activated.\n\n` +

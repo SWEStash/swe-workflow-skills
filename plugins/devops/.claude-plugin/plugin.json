@@ -1,10 +1,10 @@
 {
-  "name": "dev-workflow-devops",
+  "name": "swe-workflow-devops",
   "displayName": "DevOps / SRE / Platform Engineer",
   "description": "Skills for CI/CD, containers, infrastructure-as-code, delivery, observability, and incidents.",
   "version": "0.1.0",
   "author": {
-    "name": "dev-workflow-skills"
+    "name": "Mariano Aprea"
   },
   "keywords": [
     "skills",

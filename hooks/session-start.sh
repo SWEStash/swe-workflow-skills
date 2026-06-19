@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# dev-workflow-skills — SessionStart hook (the activation baseline writer).
+# swe-workflow-skills — SessionStart hook (the activation baseline writer).
 #
 # The library uses a "name-only baseline": all skills are installed, but only a
 # pinned critical set (the skill-router orchestrator + safety skills) keeps its
@@ -37,7 +37,7 @@ if command -v python3 >/dev/null 2>&1 && [[ -f "$RESOLVE" && -f "$ROLES_FILE" &&
 fi
 
 read -r -d '' BASE <<'EOF' || true
-This project has the dev-workflow skills library installed with a name-only
+This project has the swe-workflow skills library installed with a name-only
 baseline: only a few critical skills (the `skill-router` orchestrator plus the
 safety skills) keep their descriptions in context and auto-trigger. Every other
 skill is listed by name only — still invocable, just not auto-triggered.

@@ -79,11 +79,11 @@ function build() {
 
     // plugin.json manifest (only file under the plugin's .claude-plugin/).
     const manifest = {
-      name: `dev-workflow-${key}`,
+      name: `swe-workflow-${key}`,
       displayName: r.label,
       description: r.description,
       version: VERSION,
-      author: { name: "dev-workflow-skills" },
+      author: { name: "Mariano Aprea" },
       keywords: ["skills", "sdlc", key],
     };
     mkdirSync(join(pluginDir, ".claude-plugin"), { recursive: true });
@@ -93,7 +93,7 @@ function build() {
     );
 
     marketplacePlugins.push({
-      name: `dev-workflow-${key}`,
+      name: `swe-workflow-${key}`,
       displayName: r.label,
       description: `${r.description} (${skills.length} skills)`,
       version: VERSION,
@@ -102,11 +102,11 @@ function build() {
   }
 
   const marketplace = {
-    name: "dev-workflow",
-    displayName: "Dev Workflow Skills",
+    name: "swe-workflow",
+    displayName: "SWE Workflow Skills",
     description: "Role-scoped SDLC workflow skills. Install the plugin(s) for your role.",
     version: VERSION,
-    author: { name: "dev-workflow-skills" },
+    author: { name: "Mariano Aprea" },
     plugins: marketplacePlugins,
   };
   writeFileSync(

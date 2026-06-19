@@ -1,0 +1,12 @@
+# Local Claude Code config / self-install artifacts (this repo dogfoods its own skills)
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Node
+node_modules/
+
+# OS
+.DS_Store

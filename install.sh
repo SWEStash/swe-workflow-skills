@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
 SKILLS_DIR="$REPO_ROOT/skills"
 RESOLVE="$REPO_ROOT/scripts/resolve.py"
-[[ -d "$SKILLS_DIR" ]] || { echo "Error: must be run from the dev-workflow-skills repo root" >&2; exit 1; }
+[[ -d "$SKILLS_DIR" ]] || { echo "Error: must be run from the swe-workflow-skills repo root" >&2; exit 1; }
 
 usage() {
   cat <<EOF

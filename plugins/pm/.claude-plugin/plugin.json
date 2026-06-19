@@ -1,10 +1,10 @@
 {
-  "name": "dev-workflow-pm",
+  "name": "swe-workflow-pm",
   "displayName": "Product / Project Manager",
   "description": "Skills for proposals, PRDs/specs, estimation, OKRs/metrics, and retrospectives.",
   "version": "0.1.0",
   "author": {
-    "name": "dev-workflow-skills"
+    "name": "Mariano Aprea"
   },
   "keywords": [
     "skills",

@@ -1,4 +1,4 @@
-# Dev Workflow Skills for Claude Code
+# SWE Workflow Skills for Claude Code
 
 A curated collection of 40 SDLC Claude Code Agent Skills (plus two meta skills — `skill-router` and `writing-skills`) designed for senior software engineers who want to enforce best practices, maintain high code quality, and accelerate their development workflow.
 
@@ -91,7 +91,7 @@ These skills encode the methodology of a disciplined engineer: DRY, YAGNI, KISS,
 ```bash
 cp -r skills/* your-project/.claude/skills/
 git add .claude/skills/
-git commit -m "feat: add dev workflow skills for Claude Code"
+git commit -m "feat: add swe workflow skills for Claude Code"
 ```
 
 ### Global (personal use across all projects)
@@ -170,8 +170,8 @@ marketplace** of per-role hard subsets (generated from `roles.json` by
 `scripts/build-plugins.mjs`):
 
 ```text
-/plugin marketplace add <owner>/dev-workflow-skills
-/plugin install dev-workflow-pm@dev-workflow
+/plugin marketplace add <owner>/swe-workflow-skills
+/plugin install swe-workflow-pm@swe-workflow
 ```
 
 ## Skill Architecture

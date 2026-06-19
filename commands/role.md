@@ -1,12 +1,12 @@
 ---
 name: role
-description: "Switch the active dev-workflow role: promote that role's skills to auto-trigger (on) and send the rest to name-only. Usage: /role <name> to set, /role to show current + list, /role all (or none) to reset to baseline."
+description: "Switch the active swe-workflow role: promote that role's skills to auto-trigger (on) and send the rest to name-only. Usage: /role <name> to set, /role to show current + list, /role all (or none) to reset to baseline."
 argument-hint: [role]
 allowed-tools: Bash
 disable-model-invocation: true
 ---
 
-The user is managing the active dev-workflow skill role. The requested role argument is: `$ARGUMENTS`
+The user is managing the active swe-workflow skill role. The requested role argument is: `$ARGUMENTS`
 
 Run this script exactly once via Bash, then report the result to the user concisely (the new active role, and that the change hot-reloads so it applies to the next prompt):
 

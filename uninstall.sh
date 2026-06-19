@@ -3,13 +3,13 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
 SKILLS_DIR="$REPO_ROOT/skills"
-[[ -d "$SKILLS_DIR" ]] || { echo "Error: must be run from the dev-workflow-skills repo root" >&2; exit 1; }
+[[ -d "$SKILLS_DIR" ]] || { echo "Error: must be run from the swe-workflow-skills repo root" >&2; exit 1; }
 
 usage() {
   cat <<EOF
 Usage: $(basename "$0") [options]
 
-Remove the dev-workflow-skills library from a Claude config directory. Removes only
+Remove the swe-workflow-skills library from a Claude config directory. Removes only
 what install.sh created: this repo's skills, the catalog/role markers, resolve.py,
 the SessionStart hook, and the /role command. Your own custom skills are never
 touched. The library's skillOverrides entries are pruned from settings.local.json
@@ -90,13 +90,13 @@ for f in \
 done
 
 if [[ ${#TARGETS[@]} -eq 0 ]]; then
-  echo "Nothing to remove under $CLAUDE_DIR (no dev-workflow-skills install found)."
+  echo "Nothing to remove under $CLAUDE_DIR (no swe-workflow-skills install found)."
   exit 0
 fi
 
 echo "Will remove from $CLAUDE_DIR:"
 printf '  %s\n' "${TARGETS[@]}"
-echo "  (and prune dev-workflow skillOverrides from $SETTINGS_LOCAL)"
+echo "  (and prune swe-workflow skillOverrides from $SETTINGS_LOCAL)"
 
 if $DRY_RUN; then
   echo ""
@@ -113,7 +113,7 @@ fi
 # Prune settings.local.json BEFORE deleting resolve.py (we may be using the installed copy).
 if [[ ${#LIB_SKILLS[@]} -gt 0 && -f "$RESOLVE" ]] && command -v python3 >/dev/null 2>&1; then
   python3 "$RESOLVE" prune "$SETTINGS_LOCAL" "${LIB_SKILLS[@]}" || \
-    echo "Warning: could not prune $SETTINGS_LOCAL (remove dev-workflow skillOverrides by hand)." >&2
+    echo "Warning: could not prune $SETTINGS_LOCAL (remove swe-workflow skillOverrides by hand)." >&2
 fi
 
 for t in "${TARGETS[@]}"; do

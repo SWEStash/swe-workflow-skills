@@ -165,7 +165,7 @@ def routing_system_prompt(catalog: list[dict]) -> str:
     lines = [f"- {s['name']}: {s['description']}"
              for s in catalog if s["name"] != ROUTER]
     return (
-        "You are skill-router, the orchestrator for the dev-workflow skills "
+        "You are skill-router, the orchestrator for the swe-workflow skills "
         "library in Claude Code. Given a developer's message, decide which ONE "
         "skill should be activated to handle it.\n\n"
         "How to route:\n"

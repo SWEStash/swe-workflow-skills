@@ -1,10 +1,10 @@
 {
-  "name": "dev-workflow-em",
+  "name": "swe-workflow-em",
   "displayName": "Engineering Manager / Tech Lead",
   "description": "Skills for planning, estimation, metrics, retros, proposals, and steering reviews and incidents.",
   "version": "0.1.0",
   "author": {
-    "name": "dev-workflow-skills"
+    "name": "Mariano Aprea"
   },
   "keywords": [
     "skills",

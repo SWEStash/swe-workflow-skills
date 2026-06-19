@@ -1,13 +1,13 @@
 ---
 name: skill-router
-description: "Orchestrator and entry point for the dev-workflow skills library. Use when starting substantial software work or unsure which skill fits — planning, architecture, design, implementation, testing, debugging, review, refactoring, security, deployment, incidents, or PM docs. Reads the skill catalog, routes intent to the right skill, and invokes it by name (most skills are loaded name-only and do not auto-trigger). Shows the Golden Path workflow chains."
+description: "Orchestrator and entry point for the swe-workflow skills library. Use when starting substantial software work or unsure which skill fits — planning, architecture, design, implementation, testing, debugging, review, refactoring, security, deployment, incidents, or PM docs. Reads the skill catalog, routes intent to the right skill, and invokes it by name (most skills are loaded name-only and do not auto-trigger). Shows the Golden Path workflow chains."
 model: haiku
 allowed-tools: Read, Grep, Glob, Skill
 ---
 
 # Skill Router
 
-This project installs the **dev-workflow skills library** — a set of structured
+This project installs the **swe-workflow skills library** — a set of structured
 SDLC workflows. This skill is the **orchestrator**: most skills are loaded
 **name-only** (listed but not auto-triggering), so they activate by being
 invoked. Use this router to pick the right skill quickly and invoke it, then hand
