@@ -63,7 +63,7 @@ pass "settings merge preserves other keys + unmanaged overrides"
 
 echo "5. install (default = all + machinery + hook + baseline applied)"
 ./install.sh --dir "$TMP/inst" >/dev/null 2>&1 || fail "install"
-[[ $(find "$TMP/inst/skills" -maxdepth 1 -mindepth 1 -type d | wc -l) -eq 42 ]] || fail "expected 42 skills"
+[[ $(find "$TMP/inst/skills" -maxdepth 1 -mindepth 1 -type d | wc -l) -eq 44 ]] || fail "expected 44 skills"
 for f in skills/.roles.json skills/.catalog.json hooks/resolve.py hooks/session-start.sh commands/role.md; do
   [[ -f "$TMP/inst/$f" ]] || fail "missing $f (hook is now default)"
 done
@@ -75,15 +75,15 @@ p = sys.argv[1]
 assert os.path.isfile(p), "settings.local.json not written by install"
 ov = json.load(open(p)).get("skillOverrides", {})
 n = sum(1 for v in ov.values() if v == "name-only")
-assert n == 36, f"expected 36 name-only at install, got {n}"
+assert n == 38, f"expected 38 name-only at install, got {n}"
 assert "skill-router" not in ov, "router must stay on"
 PY
 # --no-hook: baseline still applied, but no hook script installed.
 ./install.sh --no-hook --dir "$TMP/nohook" >/dev/null 2>&1 || fail "install --no-hook"
 [[ ! -f "$TMP/nohook/hooks/session-start.sh" ]] || fail "--no-hook should not install the hook"
-python3 -c "import json;ov=json.load(open('$TMP/nohook/settings.local.json')).get('skillOverrides',{});assert sum(1 for v in ov.values() if v=='name-only')==36" \
+python3 -c "import json;ov=json.load(open('$TMP/nohook/settings.local.json')).get('skillOverrides',{});assert sum(1 for v in ov.values() if v=='name-only')==38" \
   || fail "--no-hook must still apply the baseline"
-pass "default installs hook + applies 36 name-only baseline; --no-hook keeps baseline, skips hook"
+pass "default installs hook + applies 38 name-only baseline; --no-hook keeps baseline, skips hook"
 
 echo "6. SessionStart hook writes baseline + reloadSkills (preserving keys)"
 printf '{"model":"x"}' > "$TMP/inst/settings.local.json"
@@ -94,10 +94,10 @@ import json, sys
 d = json.load(open(sys.argv[1]))
 assert d["model"] == "x", "hook must preserve other settings keys"
 n = sum(1 for v in d["skillOverrides"].values() if v == "name-only")
-assert n == 36, f"expected 36 name-only at baseline, got {n}"
+assert n == 38, f"expected 38 name-only at baseline, got {n}"
 assert "skill-router" not in d["skillOverrides"], "router stays on"
 PY
-pass "hook writes 36 name-only baseline, reloadSkills, valid JSON, preserves keys"
+pass "hook writes 38 name-only baseline, reloadSkills, valid JSON, preserves keys"
 
 echo "7. /role command flow (set + reset)"
 runrole() { sed -n '/```bash/,/```/p' "$TMP/inst/commands/role.md" | sed "1d;\$d; s/\$ARGUMENTS/$1/" | bash >/dev/null 2>&1; }

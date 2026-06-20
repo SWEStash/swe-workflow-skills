@@ -1,0 +1,33 @@
+{
+  "skill_name": "metrics-and-okrs",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write OKRs for our backend engineering team for Q2. Our priorities are: improve API reliability (we had 3 outages last quarter), reduce deployment friction (deploys take 4 hours), and ship the new billing system. Team of 6 engineers.",
+      "expected_output": "Should produce 3 objectives with 2-4 measurable key results each, using baselines where available, targeting realistic improvements, and flagging that 'ship billing system' needs to be reframed as an outcome.",
+      "assertions": [
+        "Frames objectives as inspiring goals, not tasks",
+        "Reframes 'ship billing system' as an outcome (e.g., 'billing accuracy' or 'customer billing complaints reduced')",
+        "Key results are measurable with specific numbers",
+        "Includes baseline values where the user provided data (outage count, deploy time)",
+        "Targets are ambitious but not absurd (not 'zero outages ever')",
+        "Reliability KRs use SLO-like framing (availability %, MTTR)",
+        "Deployment KRs use DORA metrics (lead time, frequency)",
+        "Produces a complete OKR document"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We launched a new search feature 2 weeks ago. My PM is asking 'how do we know if it's successful?'. Help me define the success metrics.",
+      "expected_output": "Should define leading and lagging indicators, distinguish between product metrics and technical metrics, and establish measurement timelines.",
+      "assertions": [
+        "Defines product metrics (search usage rate, click-through, zero-result rate)",
+        "Defines technical metrics (search latency, error rate)",
+        "Establishes baselines (what was the old search doing?)",
+        "Distinguishes leading (this week) from lagging (30 days) indicators",
+        "Suggests a timeframe for evaluation (not 'check once and declare victory')",
+        "Warns against vanity metrics (total searches without context is meaningless)"
+      ]
+    }
+  ]
+}

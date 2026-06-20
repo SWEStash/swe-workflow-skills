@@ -121,13 +121,14 @@
         "data-modeling",
         "dependency-impact-analysis",
         "technical-debt-review",
+        "project-review",
         "configuration-strategy",
         "performance-optimization"
       ]
     },
     "em": {
       "label": "Engineering Manager / Tech Lead",
-      "description": "Skills for planning, estimation, metrics, retros, proposals, and steering reviews and incidents.",
+      "description": "Skills for planning, estimation, metrics, retros, proposals, reviews, and steering reviews and incidents.",
       "core": "universal",
       "skills": [
         "technical-debt-review",
@@ -136,20 +137,34 @@
         "effort-estimation",
         "project-proposal",
         "prd-writing",
+        "project-review",
+        "strategic-review",
         "code-reviewing",
         "incident-response"
       ]
     },
     "pm": {
       "label": "Product / Project Manager",
-      "description": "Skills for proposals, PRDs/specs, estimation, OKRs/metrics, and retrospectives.",
+      "description": "Skills for proposals, PRDs/specs, estimation, OKRs/metrics, retrospectives, and strategic reviews.",
       "core": "universal",
       "skills": [
         "project-proposal",
         "prd-writing",
         "effort-estimation",
         "metrics-and-okrs",
-        "retrospective"
+        "retrospective",
+        "strategic-review"
+      ]
+    },
+    "strategy": {
+      "label": "Strategy / Founder Review",
+      "description": "Skills for pre-public and strategic reviews: vision and positioning, market analysis, execution-vs-roadmap, and go/no-go synthesis.",
+      "core": "universal",
+      "skills": [
+        "strategic-review",
+        "project-review",
+        "project-proposal",
+        "metrics-and-okrs"
       ]
     },
     "qa": {

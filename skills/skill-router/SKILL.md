@@ -65,6 +65,7 @@ installed skill by name, regardless of role.
 - **feature-planning** — break a feature into scoped tasks, acceptance criteria, dependencies
 - **prd-writing** — write a PRD / RFC / tech spec to align on the WHAT and WHY
 - **project-proposal** — business case / budget / go-no-go before a project starts
+- **strategic-review** — vision, positioning, defensible wedge, live competitive/market analysis before going public
 - **effort-estimation** — story points, t-shirt sizing, three-point estimates, capacity
 - **metrics-and-okrs** — define OKRs, KPIs, success metrics, DORA / engineering health
 
@@ -93,6 +94,7 @@ installed skill by name, regardless of role.
 - **performance-optimization** — N+1, algorithmic complexity, caching, bundle size
 - **refactoring** — systematic, test-protected code improvement
 - **technical-debt-review** — codebase health, hotspots, remediation roadmap
+- **project-review** — whole-project execution health: scope alignment, roadmap adherence, implementation maturity, evidence-it-works
 
 ### Diagnose & Fix
 - **bug-investigating** — systematic debugging, reproduce → isolate → hypothesize → verify
@@ -131,6 +133,11 @@ When work spans phases, chain skills rather than improvising:
 **Continuous improvement**
 `technical-debt-review` → `refactoring` → `dependency-impact-analysis`
 (blast radius) → `test-suite-design` (if coverage is thin)
+
+**Pre-public / pre-milestone review**
+`strategic-review` (vision, positioning, market) → `project-review` (scope,
+roadmap, implementation, evidence) → synthesis → `artifact-design` (interactive
+report). See `strategic-review/templates/full-review-prompt.md` for the combined brief.
 
 ## When NOT to route
 

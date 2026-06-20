@@ -1,0 +1,42 @@
+{
+  "skill_name": "strategic-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We're considering taking our open-source developer tool public in a couple of months. Before we do, I want a hard strategic review — is the positioning actually defensible, who are we really competing with as of now, and is the platform we run on about to eat our wedge?",
+      "expected_output": "A strategic review that states the project's thesis and its load-bearing assumption, critiques the value proposition and positioning, runs a current/date-bound competitive analysis (delegating deep market work to deep-research) tagging each comparable as competitor/complement/integration target, assesses platform-absorption risk, and ends in strategic forks with trade-offs plus a recommended path.",
+      "assertions": [
+        "States the project's strategic thesis in one sentence and identifies the load-bearing assumption to test",
+        "Critiques the value proposition / positioning, separating what's strong from what rests on unproven assumptions",
+        "Runs a live, date-bound competitive analysis rather than relying on memory, and delegates a deep sweep to deep-research",
+        "Tags comparables by relationship (competitor / complement / integration target)",
+        "Assesses platform-absorption / wedge-closure risk and names what would invalidate the thesis",
+        "Ends with strategic forks (trade-offs) and a recommended path, labeling findings confirmed vs inferred and dated",
+        "Defers implementation/roadmap/evidence questions to project-review"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Honestly the space we're in feels crowded and I'm not sure what makes us different anymore. Big platforms keep shipping features that overlap with ours. Is there even a defensible wedge here?",
+      "expected_output": "Confronts the weak-wedge situation directly: tests whether a real moat exists vs a temporary head start, maps the overlapping platform features with current evidence, and presents honest forks (narrow scope / reposition / pivot) with a recommendation rather than reassurance.",
+      "assertions": [
+        "Distinguishes a durable moat (standard, network, data, switching cost) from a temporary head start",
+        "Examines the overlapping platform/incumbent features with current, dated evidence",
+        "Does not offer false reassurance — willing to conclude the wedge is thin if that's what the evidence shows",
+        "Presents distinct strategic forks (e.g. narrow / reposition / pivot) with trade-offs and a recommendation",
+        "Names the observable event that would invalidate continuing"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I'm writing the one-line tagline for our landing page. Should it say 'fast' or 'simple'?",
+      "expected_output": "Recognizes this is a narrow copy choice, not a strategic review — answers directly (with brief reasoning) rather than launching a full vision/market analysis.",
+      "assertions": [
+        "Recognizes this is a small copy/messaging question, not a strategic review",
+        "Does not launch the full strategic-review workflow (thesis, market scan, forks)",
+        "Answers the tagline question directly with brief, practical reasoning",
+        "May note that messaging should follow from positioning if a deeper review is ever wanted"
+      ]
+    }
+  ]
+}

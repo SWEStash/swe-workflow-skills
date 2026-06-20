@@ -45,23 +45,30 @@
     {
       "name": "swe-workflow-architect",
       "displayName": "Architect / Staff Engineer",
-      "description": "Skills for structural decisions, documentation, contracts, blast radius, and technical-debt strategy. (14 skills)",
+      "description": "Skills for structural decisions, documentation, contracts, blast radius, and technical-debt strategy. (15 skills)",
       "version": "0.1.0",
       "source": "./plugins/architect"
     },
     {
       "name": "swe-workflow-em",
       "displayName": "Engineering Manager / Tech Lead",
-      "description": "Skills for planning, estimation, metrics, retros, proposals, and steering reviews and incidents. (9 skills)",
+      "description": "Skills for planning, estimation, metrics, retros, proposals, reviews, and steering reviews and incidents. (11 skills)",
       "version": "0.1.0",
       "source": "./plugins/em"
     },
     {
       "name": "swe-workflow-pm",
       "displayName": "Product / Project Manager",
-      "description": "Skills for proposals, PRDs/specs, estimation, OKRs/metrics, and retrospectives. (6 skills)",
+      "description": "Skills for proposals, PRDs/specs, estimation, OKRs/metrics, retrospectives, and strategic reviews. (7 skills)",
       "version": "0.1.0",
       "source": "./plugins/pm"
+    },
+    {
+      "name": "swe-workflow-strategy",
+      "displayName": "Strategy / Founder Review",
+      "description": "Skills for pre-public and strategic reviews: vision and positioning, market analysis, execution-vs-roadmap, and go/no-go synthesis. (5 skills)",
+      "version": "0.1.0",
+      "source": "./plugins/strategy"
     },
     {
       "name": "swe-workflow-qa",

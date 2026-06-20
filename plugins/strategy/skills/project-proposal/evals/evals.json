@@ -1,0 +1,31 @@
+{
+  "skill_name": "project-proposal",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to propose migrating our monolithic Django app to microservices. Our CTO is skeptical and wants to see a business case. We have 15 engineers, the app serves 50K users, and deployments take 2 hours with frequent rollbacks. Help me write the proposal.",
+      "expected_output": "Should produce a concise proposal with clear problem statement (deployment pain, not just 'microservices are trendy'), alternatives including 'do nothing' and 'modular monolith', honest risk assessment, and measurable success criteria.",
+      "assertions": [
+        "Frames the problem as deployment pain and team scalability, not 'microservices are better'",
+        "Includes 'do nothing' and 'modular monolith' as alternatives",
+        "Provides rough effort estimate in person-weeks with a range",
+        "Risk assessment includes distributed system complexity and team skill gaps",
+        "Success criteria are measurable (deploy time, rollback rate, team velocity)",
+        "Keeps the proposal to 1-2 pages equivalent",
+        "Does NOT assume microservices are the right answer — presents it objectively"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Write a project proposal for adding a real-time chat feature to our SaaS product. Budget approval needed from the VP of Engineering.",
+      "expected_output": "Should ask clarifying questions about the business case before writing, then produce a structured proposal.",
+      "assertions": [
+        "Asks about the business justification (why chat? user demand data?)",
+        "Asks about build vs buy (Sendbird, Stream, custom WebSocket)",
+        "Includes build vs buy as alternatives",
+        "Estimates account for ongoing operational cost (not just build cost)",
+        "Risk section addresses real-time infrastructure complexity"
+      ]
+    }
+  ]
+}

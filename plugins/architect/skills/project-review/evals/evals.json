@@ -1,0 +1,42 @@
+{
+  "skill_name": "project-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We're about to go public with our toolkit. It's spread across a strategy repo, a core implementation repo, and a validation harness. Before we announce, review where the project actually stands against its roadmap — what's really built, what's still a stub, and whether our own validation backs up the claims.",
+      "expected_output": "A structured execution review: inventories the project's own scope/roadmap claims, maps implementation maturity by component (production-ready vs stub/deferred), reconciles against the roadmap to surface ahead/behind and scope drift, reads the actual validation results (including negative ones), and produces prioritized severity-tagged findings with an execution scorecard.",
+      "assertions": [
+        "Starts by inventorying the project's own claims/scope/roadmap before judging",
+        "Maps implementation maturity by component into tiers (production-ready / thin / stub / deferred), naming specific paths",
+        "Explicitly distinguishes what is built from what is validated from what is planned",
+        "Reads and reports the actual validation/evidence results, including negative or inconclusive ones, rather than assuming success",
+        "Surfaces scope drift and roadmap mismatches (ahead-of-docs or behind-a-claimed-milestone)",
+        "Produces prioritized, severity-tagged findings tied to cited evidence, not an exhaustive nit list",
+        "Defers vision/positioning/market questions to strategic-review rather than answering them here"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our strategy doc says the project is still 'pre-development', but I think engineering has actually built most of phase 1 already. Can you review the real state? Also a lot of the docs claim features that I'm not sure are real.",
+      "expected_output": "Recognizes the docs may be stale or over-claiming and treats code as the source of truth: maps what's actually implemented vs what docs claim, flags both directions of mismatch (built-but-undocumented and claimed-but-absent), and labels each finding confirmed vs inferred with a cited source.",
+      "assertions": [
+        "Treats the actual code/artifacts as ground truth when docs and reality conflict",
+        "Flags claimed-but-absent features (documentation over-claiming) as findings",
+        "Flags built-but-understated work (code ahead of the stated status) as findings",
+        "Labels each conclusion as confirmed (with a cited source) or inferred",
+        "Greps for stub/not-implemented markers rather than trusting prose descriptions of capability"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "There's a 20-line function in our payments module with a bug. Can you review it and tell me how to fix it?",
+      "expected_output": "Recognizes this is a single small code change, not a project-level execution review — redirects to code-reviewing / bug-investigating rather than launching the full review workflow.",
+      "assertions": [
+        "Recognizes this is a narrow, single-unit task, not a whole-project execution review",
+        "Does not launch the full project-review workflow (claims inventory, maturity map, etc.)",
+        "Redirects to code-reviewing or bug-investigating as the right-altitude skill",
+        "Can still help with the specific function, scoped appropriately"
+      ]
+    }
+  ]
+}
