@@ -12,7 +12,7 @@ These skills encode the methodology of a disciplined engineer: DRY, YAGNI, KISS,
 
 | Skill | Purpose |
 |-------|---------|
-| `skill-router` | Entry point and dispatcher — maps an intent to the right skill and lays out the Golden Path workflow chains. Invoke it when unsure which skill applies. Pairs with the optional [SessionStart hook](hooks/README.md) that nudges Claude to consult it. |
+| `skill-router` | Entry point and dispatcher — maps an intent to the right skill and lays out the Golden Path workflow chains. Invoke it FIRST on any non-trivial task — before exploring, planning, or editing — not only when unsure which skill applies. Pairs with the optional [SessionStart hook](hooks/README.md) that nudges Claude to consult it. |
 | `writing-skills` | How to author, edit, and pressure-test skills in this library — description/budget rules, progressive disclosure, the 3-eval rule, and TDD-for-docs. The installable companion to the [Building Skills](#building-skills) guide below. |
 
 ### Software Engineering (22 skills)

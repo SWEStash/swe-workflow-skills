@@ -1,6 +1,6 @@
 ---
 name: skill-router
-description: "Orchestrator and entry point for the swe-workflow skills library. Use when starting substantial software work or unsure which skill fits — planning, architecture, design, implementation, testing, debugging, review, refactoring, security, deployment, incidents, or PM docs. Reads the skill catalog, routes intent to the right skill, and invokes it by name (most skills are loaded name-only and do not auto-trigger). Shows the Golden Path workflow chains."
+description: "Orchestrator and entry point for the swe-workflow skills library. Invoke FIRST on any non-trivial software task — before exploring or analyzing the codebase, spawning subagents, planning, designing, implementing, debugging, reviewing, refactoring, securing, deploying, or handling incidents — and do so even when you already believe you know how to proceed (do not wait until you feel unsure). Most skills are loaded name-only and do not auto-trigger, so routing through here is the ONLY way they activate; skipping it silently drops their guidance. Reads the skill catalog, matches intent, and invokes the right skill by name. Covers planning, architecture, design, implementation, testing, debugging, review, refactoring, security, deployment, incidents, and PM docs. Shows the Golden Path workflow chains."
 model: haiku
 allowed-tools: Read, Grep, Glob, Skill
 ---
@@ -10,8 +10,9 @@ allowed-tools: Read, Grep, Glob, Skill
 This project installs the **swe-workflow skills library** — a set of structured
 SDLC workflows. This skill is the **orchestrator**: most skills are loaded
 **name-only** (listed but not auto-triggering), so they activate by being
-invoked. Use this router to pick the right skill quickly and invoke it, then hand
-off and get out of the way.
+invoked. Use this router to pick the right skill — or skills — quickly and invoke them,
+then hand off and get out of the way. A task that spans several domains or phases
+needs several skills; invoke all that apply, not just the first.
 
 ## Activation model (why this skill matters)
 
@@ -23,17 +24,24 @@ orchestrator is how those skills get activated. A **role** can promote a working
 set back to auto-triggering; switch roles with the `/role <name>` command
 (`/role` to see options, `/role all` to reset to baseline).
 
-## The soft rule
+## The rule
 
-Before substantial software work — planning a feature, making a structural
-decision, implementing, debugging, reviewing, or shipping — **check whether a
-dedicated skill applies**, and invoke it. The skills encode the *how* and *why*
-of doing each activity well, so you don't have to re-derive them.
+Before substantial software work — planning a feature, making a structural or
+data decision, implementing, debugging, reviewing, refactoring, or shipping —
+**check whether a dedicated skill applies, and invoke it.** This is the default,
+not an optional extra. The skills encode the *how* and *why* of doing each
+activity well, so you don't have to re-derive them.
 
-This is a nudge, not a gate. Skip the router for trivial, conversational, or
-one-off requests where no workflow adds value. **The user's explicit
-instructions always take precedence** over any skill — if they say "don't use a
-skill" or "just do X", do that.
+Do **not** talk yourself out of it because the task "looks like a one-liner,"
+touches only one file, or seems obvious. Small structural changes (renames,
+config edits, dependency bumps) and anything that matches a specific skill's
+domain (accessibility, API design, security, data modeling, migrations,
+performance…) are exactly what the skills are for. When in doubt, route.
+
+Skip **only** for genuinely trivial, conversational, or information-lookup
+requests where no workflow adds value, or when the user tells you not to use a
+skill or to "just do X". **The user's explicit instructions always take
+precedence** over any skill.
 
 ## How to route
 
@@ -42,13 +50,23 @@ skill" or "just do X", do that.
    `~/.claude/skills/.catalog.json`). It holds every skill's full description, so
    you can match precisely even though their descriptions aren't in the listing.
    If it's absent (e.g. a plugin install), use the phase index below.
-2. **Match** the user's intent to the best-fit skill.
-3. **Invoke it by name** via the Skill tool — name-only skills are fully
-   invocable; the listing just doesn't show their description. Don't narrate the
-   routing; just hand off.
+2. **Match** the user's intent to **every** skill that applies — not just the
+   single best fit. A request often spans more than one domain (e.g. "review for
+   accessibility *and* UX" → both `accessibility-design` and `ui-ux-design`) or
+   more than one phase (a feature → planning, then data model, then API, …).
+3. **Invoke them by name** via the Skill tool — name-only skills are fully
+   invocable; the listing just doesn't show their description. When several skills
+   apply, **invoke them all, in workflow order, and integrate each one's guidance
+   — do not stop after the first.** Stating "I'll use both" is not enough; you
+   must actually call each one (invoke the next applicable skill before you finish
+   — e.g. load the UX skill before writing a combined a11y+UX review, and on a
+   Golden Path chain invoke each phase's skill as you reach it). "Hand off" means
+   stop narrating the routing and start the work, NOT "one skill is enough." Route
+   to a single skill only when the task genuinely maps to exactly one.
 4. If a matched skill isn't installed (a subset/plugin install), read its
    `SKILL.md` inline if present, or tell the user which skill/role to add.
-5. If the work spans several phases, follow the relevant **Golden Path** chain.
+5. If the work spans several phases, follow the relevant **Golden Path** chain,
+   invoking each skill in the chain as you reach its phase.
 6. If nothing fits, proceed normally — not everything needs a skill.
 
 ## Role-scoped routing (optional)

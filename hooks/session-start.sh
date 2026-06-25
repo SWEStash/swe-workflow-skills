@@ -40,13 +40,27 @@ read -r -d '' BASE <<'EOF' || true
 This project has the swe-workflow skills library installed with a name-only
 baseline: only a few critical skills (the `skill-router` orchestrator plus the
 safety skills) keep their descriptions in context and auto-trigger. Every other
-skill is listed by name only — still invocable, just not auto-triggered.
+skill is listed by name only — invocable, but it will NOT auto-trigger on its
+own. Routing through `skill-router` is the ONLY way those skills activate.
 
-Before substantial software work — planning, a structural/data decision,
-implementing, debugging, reviewing, or shipping — consult `skill-router`. It
-reads the full catalog and invokes the right skill by name (skills are invocable
-even when shown name-only). This is a nudge, not a gate; the user's explicit
-instructions always take precedence.
+Consult `skill-router` FIRST — as your very first action, before you explore or
+analyze the codebase, spawn subagents, plan, design, or make any Edit/Write — on
+any substantial software work: analysis, planning, a structural or data decision,
+implementing, debugging, reviewing, refactoring, or shipping. It reads the full
+catalog and invokes the right skill by name. Exploring or planning first and
+routing "once you understand the problem" is already too late — route, THEN
+explore under the chosen skill.
+
+Route even when you already believe you know how to proceed — do NOT wait until
+you feel unsure, and do NOT talk yourself out of it because the task "looks like a
+one-liner," touches only one file, or seems obvious. Small structural changes
+(renames, config edits, dependency bumps) and anything that matches a specific
+skill's domain (accessibility, API design, security, data modeling, migrations,
+performance…) are exactly what the skills are for. When in doubt, route.
+
+Skip ONLY for genuinely trivial, conversational, or information-lookup replies,
+or when the user tells you not to use a skill or to "just do X" — the user's
+explicit instructions always take precedence.
 EOF
 
 ROLE_LINE=""
