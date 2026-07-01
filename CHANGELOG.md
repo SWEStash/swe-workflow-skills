@@ -7,28 +7,22 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
-### Changed
-- Deployment layer rewritten in pure Node (`install.mjs`, `uninstall.mjs`,
-  `scripts/resolve.mjs`, `hooks/session-start.mjs`, `scripts/verify.mjs`), replacing the
-  bash + Python + `sed` scripts. Installs identically on Linux, macOS, and Windows.
-- README slimmed to a conventional structure; deep reference moved to
-  `docs/SKILLS.md` (catalog) and `docs/AUTHORING.md` (skill-authoring guide).
+## [0.1.0] — 2026-07-01
+
+Initial release.
 
 ### Added
-- Mermaid routing diagram and a worked "what routing looks like" walkthrough in
-  `docs/ROLES.md`; reproducible terminal-demo GIF source under `docs/demo/`.
-- Versioning policy (`docs/RELEASING.md`), a single-source `VERSION` file, and this
-  changelog.
-
-### Removed
-- `install.sh`, `uninstall.sh`, `scripts/resolve.py`, `hooks/session-start.sh`,
-  `scripts/verify.sh` (superseded by the Node equivalents above).
-
-## [0.1.0] — unreleased
-
-Initial library: 42 SDLC skills + the `skill-router` orchestrator and `writing-skills`
-meta skills, the name-only activation baseline, per-role plugins, the `/role` command,
-the SessionStart hook, and the eval harness.
+- 42 SDLC workflow skills across Software Engineering, Design, DevOps, MLOps, and
+  Project Management, plus two meta skills (`skill-router`, `writing-skills`).
+- Orchestrator-routed activation with a name-only baseline so the full library stays
+  reliable under Claude Code's skill-listing budget; `/role` promotes a role's set.
+- Pure-Node installer, uninstaller, and SessionStart hook (`install.mjs`,
+  `uninstall.mjs`, `scripts/resolve.mjs`, `hooks/session-start.mjs`) — identical on
+  Linux, macOS, and Windows.
+- Per-role plugin marketplace (`.claude-plugin/marketplace.json`).
+- Eval harness (in-session workflow runner + CI regression gate) and offline
+  `scripts/verify.mjs`.
+- Documentation: README, ROLES, INSTALL-MATRIX, SKILLS, AUTHORING, EVALS, RELEASING.
 
 [Unreleased]: https://github.com/SWEStash/swe-workflow-skills/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/SWEStash/swe-workflow-skills/releases/tag/v0.1.0
