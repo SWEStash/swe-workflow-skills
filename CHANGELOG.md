@@ -7,6 +7,9 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+- License badge now uses static shields.io endpoint for reliability.
+
 ## [0.1.0] — 2026-07-01
 
 Initial release.

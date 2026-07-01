@@ -2,7 +2,7 @@
 
 [![roles-check](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml/badge.svg)](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml)
 ![skills](https://img.shields.io/badge/skills-44-blue)
-[![license](https://img.shields.io/github/license/SWEStash/swe-workflow-skills)](LICENSE)
+[![license: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
 A curated library of **44 Claude Code Agent Skills** that walk Claude through the
 software lifecycle the way a disciplined senior engineer would — planning, design,
