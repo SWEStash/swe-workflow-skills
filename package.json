@@ -22,7 +22,8 @@
     "node": ">=18"
   },
   "scripts": {
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "prepublishOnly": "npm run verify"
   },
   "keywords": [
     "claude",
