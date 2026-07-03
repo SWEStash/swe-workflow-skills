@@ -8,6 +8,33 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- Nine Phase-4 skills across three groups:
+  - Governance & ops: `compliance-privacy` (GDPR/CCPA/SOC 2 engineering — data
+    mapping, minimization/retention, DSR machinery, control evidence; →
+    `security` role), `finops-cost-optimization` (allocation, unit economics,
+    rightsizing, commitments, architecture cost shape; → `strategy` role),
+    `code-archaeology` (history mining, tracing, Chesterton's fence,
+    characterization tests; → `architect` role), `resilience-engineering`
+    (failure modes, stability patterns, restore testing, chaos experiments,
+    game days, RTO/RPO; → `devops` role).
+  - DX & verification: `dx-audit` (loop measurement, friction log, avoidance
+    signals, tax-based prioritization; → `em` role), `browser-verification`
+    (drive the real UI; console/network/state evidence; the browser-specific
+    practice of verification-before-completion; → `frontend` + `qa` roles),
+    `subagent-orchestration` (fan-out judgment, cold-start prompting, worktree
+    isolation, skeptical verification and synthesis; deliberately role-less via
+    `meta_only`).
+  - Mobile: `mobile-architecture` (platform choice, offline-first/sync,
+    process-death survival, fleet constraints) and `mobile-release` (signing,
+    store review, staged rollouts with halt criteria, the forward-only
+    no-rollback playbook) — plus the new **`mobile` role** (14th role).
+- Catalog budget guards in `scripts/build-plugins.mjs`: per-description error
+  above the 1,024-char platform cap, warning above the 600-char soft cap, and a
+  total-catalog warning at 48k chars (~12k tokens) — the router (haiku) pays
+  the whole catalog per routing call; the warning points at the two-stage
+  routing adaptation documented in docs/ROLES.md.
+- `skill-router`: nine new phase-index entries, a new "Mobile" section, and an
+  app-store branch on the "Ship a release" Golden Path.
 - Four ideation & execution skills (Phase 3 of the expansion roadmap):
   - `brainstorming` — divergent Socratic ideation upstream of `prd-writing` /
     `feature-planning`: problem re-framing, real-vs-inherited constraints,

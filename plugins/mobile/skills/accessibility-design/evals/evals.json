@@ -1,0 +1,51 @@
+{
+  "skill_name": "accessibility-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm building a modal dialog component in React for confirming destructive actions (like deleting a project). Make it accessible.",
+      "expected_output": "Should implement the full accessible modal pattern: role=dialog, aria-modal, focus trap, Escape to close, focus restoration, background inert, and proper labeling.",
+      "assertions": [
+        "Uses role='dialog' and aria-modal='true'",
+        "Labels the dialog with aria-labelledby pointing to the title",
+        "Implements focus trap (Tab cycles within modal)",
+        "Moves focus to the first focusable element on open",
+        "Returns focus to the trigger element on close",
+        "Closes on Escape key",
+        "Makes background content inert while open",
+        "Destructive button is NOT the default focus (Cancel is safer default)",
+        "Uses semantic HTML (button elements, not divs with onClick)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Audit this React component for accessibility issues:\n\n<div className=\"card\" onClick={() => navigate(`/project/${id}`)}>\n  <div className=\"title\">{name}</div>\n  <img src={thumbnail} />\n  <div className=\"badge\" style={{color: status === 'active' ? 'green' : 'red'}}>\n    {status}\n  </div>\n  <div className=\"actions\">\n    <div className=\"btn\" onClick={(e) => { e.stopPropagation(); onDelete(id); }}>\n      🗑️\n    </div>\n  </div>\n</div>",
+      "expected_output": "Should identify all accessibility issues: clickable div instead of link/button, missing alt on img, color-only status indicator, icon button without label, no keyboard support.",
+      "assertions": [
+        "Identifies clickable div should be an <a> or <Link> (for navigation)",
+        "Identifies missing alt attribute on the image",
+        "Identifies color-only status indicator (green/red without text or icon)",
+        "Identifies delete button as a div — should be <button>",
+        "Identifies emoji icon without accessible label (aria-label needed)",
+        "Notes that div+onClick has no keyboard support (no Enter/Space handling)",
+        "Provides corrected accessible version of the component",
+        "Corrected version uses semantic HTML (a, button, img alt)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We're building a form with email, password, a terms checkbox, and a submit button. The designer wants inline validation that shows errors as you type. Make it accessible.",
+      "expected_output": "Should implement accessible form with labels, error announcements, aria-invalid, aria-describedby, and proper validation timing.",
+      "assertions": [
+        "Every input has an associated <label> with htmlFor",
+        "Error messages use aria-describedby to link to their field",
+        "Fields with errors have aria-invalid='true'",
+        "Errors are announced to screen readers (role='alert' or aria-live)",
+        "Validation is debounced (not on every keystroke)",
+        "Checkbox has an associated label (clickable text)",
+        "Submit button is a <button type='submit'>",
+        "On submit with errors, focus moves to the first field with an error"
+      ]
+    }
+  ]
+}

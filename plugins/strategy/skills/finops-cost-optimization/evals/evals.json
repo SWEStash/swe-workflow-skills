@@ -1,0 +1,40 @@
+{
+  "skill_name": "finops-cost-optimization",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Our AWS bill jumped from $18k to $31k/month over the last two quarters and leadership wants it 'fixed'. Where do we start?",
+      "expected_output": "Starts with visibility, not cuts: attribute the spend (tagging/allocation), rank the top line items, and separate usage-driven growth from step-change regressions; defines unit economics (cost per customer/request) as the real judge; then harvests waste in order of return (orphans, rightsizing from actual utilization, storage lifecycle, non-prod schedules), only then commitment discounts on the post-rightsizing baseline, plus budgets/anomaly alerts so the next jump is caught in days",
+      "assertions": [
+        "Establishes visibility and attribution first (tagging/allocation, ranking top line items from real billing data) before proposing any cuts",
+        "Distinguishes usage-driven growth from step-change regressions and/or introduces unit economics (cost per customer/request) rather than treating the total as the metric",
+        "Proposes concrete waste harvesting: orphaned resources, rightsizing based on actual utilization, storage lifecycle policies, or scheduling non-prod environments off",
+        "Recommends commitment discounts (RIs/savings plans) only after rightsizing, covering a conservative stable baseline",
+        "Sets up continuous guardrails: budgets and anomaly alerts routed to owning teams, and/or cost checks in the deploy loop"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our bill is dominated by data transfer: about 40% is inter-AZ traffic and NAT gateway charges between our microservices, and the rest of the top items are a Kafka cluster and a data warehouse where queries scan whole tables. Rightsizing won't move these. What are our options?",
+      "expected_output": "Recognizes structural/architectural cost shape: co-locating chatty services or reworking cross-AZ topology (weighing the availability trade-off), VPC endpoints / NAT alternatives, compression; warehouse scan costs via partitioning/clustering and incremental models; evaluates whether always-on streaming matches the actual latency need; recommends costing options with live pricing and recording the trade-offs as ADRs since these decisions trade resilience/latency for money",
+      "assertions": [
+        "Recognizes these as architecture-shaped costs that rightsizing cannot fix and addresses the egress/inter-AZ problem specifically (co-location, topology, VPC endpoints, compression)",
+        "Notes the availability/resilience trade-off in reducing cross-AZ traffic rather than recommending single-AZ blindly",
+        "Addresses the warehouse scan costs structurally (partitioning, clustering, incremental models) rather than only suggesting fewer queries",
+        "Questions whether the always-on streaming infrastructure matches the actual latency requirement (batch vs streaming)",
+        "Recommends verifying costs against current provider pricing and/or recording significant cost-driven decisions as ADRs"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our checkout API's p99 latency is 4 seconds and profiling shows an N+1 query pattern plus a missing index. Can you help optimize it?",
+      "expected_output": "Recognizes this as code/query performance work, not cloud-spend optimization — refers to performance-optimization for the N+1 and indexing work, noting the boundary: performance-optimization makes code faster (sometimes cheaper as a side effect); finops-cost-optimization attributes and reduces cloud spend",
+      "assertions": [
+        "Recognizes the request as application performance optimization, not cloud cost management",
+        "Refers to the performance-optimization skill for the N+1/indexing work",
+        "Does not produce a FinOps workflow (tagging, rightsizing, commitments) as the answer",
+        "States or implies the boundary: performance-optimization owns making code fast; finops-cost-optimization owns understanding and reducing spend"
+      ]
+    }
+  ]
+}

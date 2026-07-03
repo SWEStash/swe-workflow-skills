@@ -1,0 +1,40 @@
+{
+  "skill_name": "dx-audit",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Our 25-person engineering team feels slow. CI takes ~35 minutes, people complain about local setup, and new hires seem to take forever to become productive. Run a DX audit and tell us what to fix.",
+      "expected_output": "Measures the loops first (inner-loop timings, CI queue vs run time, flake rate, PR cycle time, onboarding time-to-first-merge), collects a friction log from engineers with attention to avoidance behavior, audits inner loop (one-command env, single-test speed) and outer loop (CI caching/sharding, flake quarantine, review latency, docs), prioritizes by time-cost × frequency × people with quick wins first, and commits to re-measuring the same numbers after fixes",
+      "assertions": [
+        "Quantifies the feedback loops with real measurements (build/test times, CI queue vs run, flake rate, PR cycle, onboarding time) before prescribing fixes",
+        "Collects friction from the engineers themselves (survey/interviews) and pays attention to avoidance behavior, not just complaints",
+        "Audits both the inner loop (env setup, single-test runs, hot reload, scripted common tasks) and the outer loop (CI caching/parallelization, flaky-test policy, review latency, docs)",
+        "Prioritizes findings by frequency × time-cost × people affected, sequencing quick wins before structural work, with owners",
+        "Plans to re-measure the baseline numbers after remediation and keep 2–3 DX metrics tracked continuously"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Management says our DX is fine because nobody's complaining, but I notice engineers never run the full test suite locally, deploys pile up on Fridays, and everyone SSHes into a shared staging box to test things. Is there a DX problem here?",
+      "expected_output": "Reads the avoidance signals as the loudest DX evidence: skipping the local suite implies it's too slow/flaky (verification is being skipped — top-tier severity), deploy batching implies the deploy loop is painful or risky, shared-staging testing implies local environments can't reproduce reality; quantifies each to confirm, and explains why absence of complaints doesn't mean absence of tax (normalized friction becomes invisible)",
+      "assertions": [
+        "Identifies the described behaviors as avoidance signals that indicate DX problems despite the absence of complaints",
+        "Infers the likely underlying causes: local suite too slow or flaky, painful/risky deploy loop, local environments unable to reproduce reality",
+        "Flags that engineers skipping verification (not running tests locally) is especially severe because it distorts quality behavior",
+        "Proposes measuring to confirm (suite runtime, flake rate, deploy lead time, env setup) rather than acting on inference alone",
+        "Explains why normalized friction stops generating complaints (habituation), so surveys must ask about avoidance, not just satisfaction"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our checkout module is a nightmare of spaghetti code — cyclomatic complexity through the roof, no tests, God classes everywhere. Audit it and give us a prioritized cleanup roadmap.",
+      "expected_output": "Recognizes this as a code-health/debt assessment, not a workflow-friction audit — refers to technical-debt-review for the hotspot analysis and remediation roadmap, stating the boundary: dx-audit covers the workflow around the code (loops, tooling, environments); technical-debt-review covers the code itself",
+      "assertions": [
+        "Recognizes the request as a code-health/technical-debt assessment, not a developer-workflow audit",
+        "Refers to the technical-debt-review skill for the hotspot analysis and cleanup roadmap",
+        "Does not produce a DX workflow audit (CI timings, onboarding, tooling friction) as the answer",
+        "States or implies the boundary: dx-audit audits the workflow around the code; technical-debt-review audits the code's health"
+      ]
+    }
+  ]
+}

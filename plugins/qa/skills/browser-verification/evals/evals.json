@@ -1,0 +1,40 @@
+{
+  "skill_name": "browser-verification",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I just finished implementing the new signup form (client validation + POST to /api/users + success toast). Unit tests pass. Can you verify it actually works in the browser before I open the PR?",
+      "expected_output": "Defines the proving flow (fill form → submit → 201 → toast → user exists), runs the real stack with seeded/realistic state, drives the flow interactively (typing, submitting — not just loading the page), watches console errors, network requests (endpoint, payload, status), and UI state, exercises validation errors and double-submit, and reports with evidence (screenshots, zero-console-errors statement, observed network results) rather than 'looks good'",
+      "assertions": [
+        "Defines the user-visible flow that proves the change (form fill → submit → success), not just that the page loads",
+        "Runs the actual app stack with realistic state and drives the flow interactively — typing into fields and submitting, via automation or manual clicking",
+        "Checks all three evidence channels: console errors, network requests (endpoint/payload/status), and the rendered UI outcome",
+        "Exercises non-happy paths relevant to the change, such as validation errors and double-submit or backend failure",
+        "Reports in evidence terms — screenshots and observed results (e.g. 'POST /api/users returned 201, toast rendered, zero console errors') — before declaring it works"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "QA says the orders dashboard 'sometimes shows nothing' but every time I open it, it looks fine and there are no errors in our logs. Verify whether the page is actually broken.",
+      "expected_output": "Recognizes 'works on my visit' isn't verification of the failure condition: reproduces the states where lists show nothing — empty data, slow API (throttled loading state), failed request (5xx/CORS with the error swallowed client-side), auth/role differences, race on refresh/back — while watching the browser console and network tab (server logs won't show client-side failures), and either reproduces it with evidence or reports precisely which states were exercised and ruled out",
+      "assertions": [
+        "Recognizes that the page rendering fine on one visit does not rule out state-dependent failure, and enumerates candidate states: empty data, slow/failed API responses, auth/role differences, or refresh/back races",
+        "Uses browser-side evidence (console, network tab) explicitly noting that server logs miss client-side failures like swallowed errors or CORS",
+        "Manipulates state to reproduce — seeding empty data, throttling, or forcing API failure — rather than only reloading the page",
+        "Checks the loading and empty states specifically (infinite spinner or blank-on-empty are classic 'shows nothing' causes)",
+        "Concludes with evidence: either a reproduced failure with its trigger, or a precise list of exercised-and-passing states — not 'seems fine'"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We need proper automated e2e coverage for our whole checkout funnel — browse, cart, payment, confirmation — running in CI on every PR. Set up the test strategy.",
+      "expected_output": "Recognizes this as designing a persistent automated test suite — refers to test-suite-design for the e2e strategy/infrastructure (and cicd-pipeline for the CI wiring), stating the boundary: browser-verification is the one-off evidence pass on the change in front of you; persistent suites are test-suite-design's domain",
+      "assertions": [
+        "Recognizes the request as persistent automated e2e suite design, not a one-off verification pass",
+        "Refers to the test-suite-design skill for the suite strategy (optionally cicd-pipeline for CI integration)",
+        "Does not respond with a single manual/ad-hoc browser verification session as the answer",
+        "States or implies the boundary: browser-verification verifies the change at hand; test-suite-design builds the lasting coverage"
+      ]
+    }
+  ]
+}

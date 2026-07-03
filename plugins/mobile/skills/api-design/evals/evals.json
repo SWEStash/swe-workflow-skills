@@ -1,0 +1,48 @@
+{
+  "skill_name": "api-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to design the API for a blog platform. We have users, posts, comments, and tags. Posts can have multiple tags. Comments are threaded (replies to other comments). Users can be authors or admins. The frontend is a Next.js app. Design the REST API.",
+      "expected_output": "Should identify all resources, design endpoints with proper RESTful naming, define request/response schemas, standardize errors, and include pagination for list endpoints.",
+      "assertions": [
+        "Identifies all resources (users, posts, comments, tags)",
+        "Uses plural nouns in URLs (/posts, /comments, /tags)",
+        "Handles the M:N relationship for posts and tags appropriately",
+        "Designs threaded comments without excessive URL nesting",
+        "Defines standard error response format",
+        "Includes pagination for list endpoints",
+        "Specifies auth requirements per endpoint",
+        "Distinguishes author vs admin permissions",
+        "Produces a complete API specification document"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "design api endpoints for user registration, login, password reset, and profile management",
+      "expected_output": "Should design auth-related endpoints following security best practices, not expose sensitive information in responses, and use appropriate HTTP methods.",
+      "assertions": [
+        "POST for registration, login, and password reset (not GET)",
+        "Does not return password hash or sensitive data in responses",
+        "Includes email verification flow",
+        "Password reset uses a token-based flow (not sending password via email)",
+        "Login response includes token and token expiry",
+        "Profile endpoints require authentication",
+        "Standardized error responses for auth failures (401 vs 403)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We have an existing API with these endpoints:\nGET /getUsers\nGET /getUserById?id=123\nPOST /createUser\nPOST /updateUser\nGET /deleteUser?id=123\n\nThis doesn't feel right. Can you redesign it following proper REST conventions?",
+      "expected_output": "Should identify specific violations (verbs in URLs, GET for delete, query params for identity) and redesign using proper REST conventions.",
+      "assertions": [
+        "Identifies that URLs use verbs instead of nouns",
+        "Identifies that DELETE uses GET method",
+        "Identifies that identity is in query params instead of path",
+        "Redesigns to: GET /users, GET /users/:id, POST /users, PATCH /users/:id, DELETE /users/:id",
+        "Explains WHY each change matters (not just 'this is the convention')",
+        "Notes that this is a breaking change requiring versioning or migration plan"
+      ]
+    }
+  ]
+}

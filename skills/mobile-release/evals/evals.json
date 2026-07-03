@@ -1,0 +1,41 @@
+{
+  "skill_name": "mobile-release",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Our React Native app's first store release is in three weeks (iOS and Android). We've only ever run debug builds locally. Set up our release process.",
+      "expected_output": "Builds the machinery before the deadline: CI-managed signing with certificates/keystores in a secrets manager (and upload-key recovery documented), automated version + monotonic build numbers, internal → beta (TestFlight/Play tracks) → production channels, privacy manifests/data-safety forms prepared with the features, a pre-submission gate (release builds on real devices incl. oldest supported OS, guideline self-review, demo account for reviewers), staged rollout with numeric halt criteria, and submission timed ahead of the date since review time isn't controllable",
+      "assertions": [
+        "Sets up signing properly: certificates/keystores in a secrets manager, CI-managed signing, and key recovery documented",
+        "Automates versioning with monotonically increasing build numbers and establishes beta channels (TestFlight / Play tracks) before production",
+        "Prepares store compliance surfaces (privacy manifests, data-safety forms, permission justifications, reviewer demo account) as part of the process",
+        "Defines a pre-submission verification gate including release-build testing on real devices, not just debug builds",
+        "Plans a staged/phased rollout with pre-defined numeric halt criteria and crash monitoring",
+        "Warns against committing to a release date before approval, since review time is outside the team's control"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Version 3.2.0 hit 50% rollout and crash reports are spiking — a null crash on app launch for users with legacy profile data. Leadership is asking us to 'just roll back to 3.1'. What do we actually do?",
+      "expected_output": "States the mobile reality: there is no rollback — users on 3.2.0 keep it; then runs the forward-only playbook in speed order: halt the staged rollout immediately (caps new exposure), check for a remote-config/feature-flag or server-side mitigation (can the backend repair/serve the legacy data shape?), prepare a minimal hotfix build through an accelerated but still-gated path (repro test for the legacy-data case, staged rollout again), consider expedited review, and afterwards feed the gap (legacy-data case missing from the beta gate) back into the process with a retrospective",
+      "assertions": [
+        "Corrects the premise explicitly: shipped mobile versions cannot be rolled back — users who updated keep the crashing build; only forward paths exist",
+        "Halts the staged rollout immediately to cap new exposure before anything else",
+        "Evaluates faster-than-hotfix mitigations: remote config / feature flag kill switch or a server-side fix for the legacy data shape",
+        "Prepares a minimal hotfix that still passes a verification gate (repro of the legacy-profile crash, real-device check, staged re-rollout) rather than YOLO-shipping",
+        "Closes the loop: the legacy-data scenario becomes a beta-gate/regression case and the halt gets a retrospective"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We need to automate releases for our TypeScript API client library on npm — version bumps from conventional commits, changelog generation, and publishing with provenance.",
+      "expected_output": "Recognizes this as general package/registry release engineering — refers to release-management for the semver automation, changelog, and npm publishing gates, stating the boundary: mobile-release covers the store-mediated app path (review, staged rollout, no-rollback); release-management covers libraries, services, and registries",
+      "assertions": [
+        "Recognizes the request as library/registry release automation, not a store-mediated mobile app release",
+        "Refers to the release-management skill for conventional-commit versioning, changelog, and npm publish gates",
+        "Does not apply store-specific machinery (signing/provisioning, review queues, staged device rollouts) to an npm library",
+        "States or implies the boundary: release-management owns general versioning/registry publishing; mobile-release owns the app-store path"
+      ]
+    }
+  ]
+}

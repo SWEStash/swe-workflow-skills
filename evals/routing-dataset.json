@@ -120,6 +120,27 @@
       ]
     },
     {
+      "id": "positive:browser-verification:1",
+      "kind": "positive",
+      "skill": "browser-verification",
+      "prompt": "I just finished implementing the new signup form (client validation + POST to /api/users + success toast). Unit tests pass. Can you verify it actually works in the browser before I open the PR?",
+      "accept": [
+        "browser-verification"
+      ]
+    },
+    {
+      "id": "boundary:browser-verification:3",
+      "kind": "boundary",
+      "skill": "browser-verification",
+      "prompt": "We need proper automated e2e coverage for our whole checkout funnel \u2014 browse, cart, payment, confirmation \u2014 running in CI on every PR. Set up the test strategy.",
+      "accept": [
+        "browser-verification",
+        "cicd-pipeline",
+        "test-suite-design",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:bug-investigating:1",
       "kind": "positive",
       "skill": "bug-investigating",
@@ -168,6 +189,26 @@
       ]
     },
     {
+      "id": "positive:code-archaeology:1",
+      "kind": "positive",
+      "skill": "code-archaeology",
+      "prompt": "I just inherited a 8-year-old Django billing service. The original team is gone, there are no docs, and I need to change how proration is calculated. Help me understand it before I touch anything.",
+      "accept": [
+        "code-archaeology"
+      ]
+    },
+    {
+      "id": "boundary:code-archaeology:3",
+      "kind": "boundary",
+      "skill": "code-archaeology",
+      "prompt": "Our codebase is a mess of tech debt \u2014 give me a prioritized assessment of what we should fix first and a remediation roadmap for the quarter.",
+      "accept": [
+        "code-archaeology",
+        "technical-debt-review",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:code-reviewing:1",
       "kind": "positive",
       "skill": "code-reviewing",
@@ -184,6 +225,26 @@
       "accept": [
         "code-reviewing",
         "refactoring",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:compliance-privacy:1",
+      "kind": "positive",
+      "skill": "compliance-privacy",
+      "prompt": "We're a B2B SaaS with EU customers and we just got our first GDPR deletion request. We honestly don't know where all the user data lives. What do we need to build to handle this properly?",
+      "accept": [
+        "compliance-privacy"
+      ]
+    },
+    {
+      "id": "boundary:compliance-privacy:3",
+      "kind": "boundary",
+      "skill": "compliance-privacy",
+      "prompt": "Can you review our Express API code for injection vulnerabilities and check whether our JWT auth implementation is secure?",
+      "accept": [
+        "compliance-privacy",
+        "security-audit",
         "NONE"
       ]
     },
@@ -357,6 +418,26 @@
       ]
     },
     {
+      "id": "positive:dx-audit:1",
+      "kind": "positive",
+      "skill": "dx-audit",
+      "prompt": "Our 25-person engineering team feels slow. CI takes ~35 minutes, people complain about local setup, and new hires seem to take forever to become productive. Run a DX audit and tell us what to fix.",
+      "accept": [
+        "dx-audit"
+      ]
+    },
+    {
+      "id": "boundary:dx-audit:3",
+      "kind": "boundary",
+      "skill": "dx-audit",
+      "prompt": "Our checkout module is a nightmare of spaghetti code \u2014 cyclomatic complexity through the roof, no tests, God classes everywhere. Audit it and give us a prioritized cleanup roadmap.",
+      "accept": [
+        "dx-audit",
+        "technical-debt-review",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:effort-estimation:1",
       "kind": "positive",
       "skill": "effort-estimation",
@@ -382,6 +463,26 @@
       "accept": [
         "feature-planning",
         "architecture-design",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:finops-cost-optimization:1",
+      "kind": "positive",
+      "skill": "finops-cost-optimization",
+      "prompt": "Our AWS bill jumped from $18k to $31k/month over the last two quarters and leadership wants it 'fixed'. Where do we start?",
+      "accept": [
+        "finops-cost-optimization"
+      ]
+    },
+    {
+      "id": "boundary:finops-cost-optimization:3",
+      "kind": "boundary",
+      "skill": "finops-cost-optimization",
+      "prompt": "Our checkout API's p99 latency is 4 seconds and profiling shows an N+1 query pattern plus a missing index. Can you help optimize it?",
+      "accept": [
+        "finops-cost-optimization",
+        "performance-optimization",
         "NONE"
       ]
     },
@@ -517,6 +618,46 @@
       "prompt": "I have a Jupyter notebook that trains a customer churn prediction model. It loads data from a PostgreSQL database, does feature engineering (one-hot encoding, aggregations), trains an XGBoost model, and evaluates it. I want to turn this into a proper automated pipeline that retrains weekly. We use Python and have access to AWS.",
       "accept": [
         "ml-pipeline-design"
+      ]
+    },
+    {
+      "id": "positive:mobile-architecture:1",
+      "kind": "positive",
+      "skill": "mobile-architecture",
+      "prompt": "We're a 4-person team (all TypeScript devs) building a field-service app: technicians view job details, fill inspection forms, and take photos \u2014 often in basements and rural areas with no signal. Design the app architecture.",
+      "accept": [
+        "mobile-architecture"
+      ]
+    },
+    {
+      "id": "boundary:mobile-architecture:3",
+      "kind": "boundary",
+      "skill": "mobile-architecture",
+      "prompt": "Our React web dashboard is getting messy \u2014 we need to restructure the component hierarchy, pick a state management library (Zustand vs Redux), and organize our design tokens. How should we architect it?",
+      "accept": [
+        "mobile-architecture",
+        "frontend-architecture",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:mobile-release:1",
+      "kind": "positive",
+      "skill": "mobile-release",
+      "prompt": "Our React Native app's first store release is in three weeks (iOS and Android). We've only ever run debug builds locally. Set up our release process.",
+      "accept": [
+        "mobile-release"
+      ]
+    },
+    {
+      "id": "boundary:mobile-release:3",
+      "kind": "boundary",
+      "skill": "mobile-release",
+      "prompt": "We need to automate releases for our TypeScript API client library on npm \u2014 version bumps from conventional commits, changelog generation, and publishing with provenance.",
+      "accept": [
+        "mobile-release",
+        "release-management",
+        "NONE"
       ]
     },
     {
@@ -676,6 +817,27 @@
       ]
     },
     {
+      "id": "positive:resilience-engineering:1",
+      "kind": "positive",
+      "skill": "resilience-engineering",
+      "prompt": "Our e-commerce platform runs on one Postgres instance, a Node API, and Redis, all in a single AWS availability zone. Leadership asked: 'what happens if AWS has a bad day?' Design our resilience strategy.",
+      "accept": [
+        "resilience-engineering"
+      ]
+    },
+    {
+      "id": "boundary:resilience-engineering:3",
+      "kind": "boundary",
+      "skill": "resilience-engineering",
+      "prompt": "Production is down RIGHT NOW \u2014 the primary database failed over but the app servers are still erroring and customers can't check out. What do we do?",
+      "accept": [
+        "resilience-engineering",
+        "incident-response",
+        "retrospective",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:retrospective:1",
       "kind": "positive",
       "skill": "retrospective",
@@ -739,6 +901,26 @@
       "prompt": "I'm writing the one-line tagline for our landing page. Should it say 'fast' or 'simple'?",
       "accept": [
         "strategic-review",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:subagent-orchestration:1",
+      "kind": "positive",
+      "skill": "subagent-orchestration",
+      "prompt": "I need to migrate 40 API endpoint files from our old error-handling pattern to the new Result-type pattern. The transformation is mechanical but each file has quirks. Can we parallelize this across subagents?",
+      "accept": [
+        "subagent-orchestration"
+      ]
+    },
+    {
+      "id": "boundary:subagent-orchestration:3",
+      "kind": "boundary",
+      "skill": "subagent-orchestration",
+      "prompt": "Here's our approved 5-phase implementation plan for the billing feature. Execute it phase by phase, verifying each phase before moving to the next.",
+      "accept": [
+        "subagent-orchestration",
+        "plan-execution",
         "NONE"
       ]
     },

@@ -1,10 +1,10 @@
 # SWE Workflow Skills for Claude Code
 
 [![roles-check](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml/badge.svg)](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml)
-![skills](https://img.shields.io/badge/skills-53-blue)
+![skills](https://img.shields.io/badge/skills-62-blue)
 [![license: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
-A curated library of **53 Claude Code Agent Skills** that walk Claude through the
+A curated library of **62 Claude Code Agent Skills** that walk Claude through the
 software lifecycle the way a disciplined senior engineer would — planning, design,
 TDD, review, security, deployment, incidents, and the project-management work around
 them.
@@ -42,8 +42,8 @@ full-SDLC breadth that popular collections don't cover:
   around them — coverage the popular community collections (superpowers, the
   awesome-lists) don't attempt.
 - **Role-scoped.** `/role backend` (or `frontend`, `devops`, `ml`, `ai`, `data`,
-  `security`, `architect`, `em`, `pm`, `qa`, `designer`) promotes a working set to
-  auto-trigger; the rest stay one route away.
+  `security`, `architect`, `em`, `pm`, `strategy`, `qa`, `mobile`, `designer`) promotes
+  a working set to auto-trigger; the rest stay one route away.
 - **Cross-platform install.** The installer and SessionStart hook are **pure Node** — the
   one runtime Claude Code already requires — so they run identically on Linux, macOS, and
   Windows (no bash, Python, or `sed`).
@@ -61,7 +61,7 @@ web, claude.ai chat, and Cowork):
 **Want the whole library with the orchestrator** (CLI) — no clone needed:
 
 ```bash
-npx swe-workflow-skills install --global   # all 53 skills + router + /role + the SessionStart hook
+npx swe-workflow-skills install --global   # all 62 skills + router + /role + the SessionStart hook
 ```
 
 Or from a clone: `node install.mjs --global`.
@@ -119,17 +119,18 @@ review) live in the `skill-router` skill and **[ROLES.md](docs/ROLES.md)**.
 
 ## What's included
 
-53 skills — **[full catalog → SKILLS.md](docs/SKILLS.md)**:
+62 skills — **[full catalog → SKILLS.md](docs/SKILLS.md)**:
 
 | Area | Count | Examples |
 |------|-------|----------|
-| Software Engineering | 25 | feature-planning, plan-execution, architecture-design, threat-modeling, tdd-workflow, code-reviewing, security-audit, incident-response |
+| Software Engineering | 30 | feature-planning, plan-execution, architecture-design, threat-modeling, compliance-privacy, code-archaeology, tdd-workflow, security-audit, browser-verification, subagent-orchestration |
 | Project Management | 8 | brainstorming, prd-writing, effort-estimation, build-vs-buy, metrics-and-okrs, retrospective, strategic-review |
-| DevOps | 6 | containerization, cicd-pipeline, release-management, infrastructure-as-code, gitops-delivery |
+| DevOps | 8 | containerization, cicd-pipeline, release-management, gitops-delivery, resilience-engineering, finops-cost-optimization |
 | Design | 3 | ui-ux-design, frontend-architecture, accessibility-design |
 | MLOps | 3 | ml-pipeline-design, ml-experiment-tracking, ml-model-deployment |
 | AI Engineering | 2 | llm-app-engineering, ai-evaluation |
 | Data Engineering | 2 | data-pipeline-design, data-quality |
+| Mobile | 2 | mobile-architecture, mobile-release |
 | Evaluation & Monitoring | 2 | observability-design, test-data-strategy |
 | Meta | 2 | skill-router, writing-skills |
 

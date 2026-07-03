@@ -39,16 +39,38 @@ function parseFrontmatter(skillDir) {
 }
 
 // Build catalog.json: full descriptions for every skill, read by the orchestrator
-// (skill-router) at routing time — no listing-budget pressure.
+// (skill-router) at routing time — no listing-budget pressure, but the whole file
+// lands in the router's (haiku) context on every routing call, so its total size
+// is a budget of its own. Guards below keep drift visible; if the total warning
+// fires, the answer is the two-stage routing adaptation tracked in docs/ROLES.md,
+// not raising the threshold.
+const DESC_HARD_CAP = 1024; // platform cap on skill descriptions
+const DESC_SOFT_CAP = 600; // this repo's discipline (~350–550 target)
+const CATALOG_WARN_CHARS = 48_000; // ~12k tokens per routing call on haiku
+
 function buildCatalog() {
   const skills = readdirSync(SKILLS)
     .filter((e) => statSync(join(SKILLS, e)).isDirectory())
     .sort()
     .map((dir) => {
       const { name, description } = parseFrontmatter(dir);
+      if (description.length > DESC_HARD_CAP) {
+        console.error(`ERROR: ${name} description is ${description.length} chars (> ${DESC_HARD_CAP} platform cap)`);
+        process.exit(1);
+      }
+      if (description.length > DESC_SOFT_CAP) {
+        console.warn(`warn: ${name} description is ${description.length} chars (> ${DESC_SOFT_CAP} soft cap — trim it)`);
+      }
       return { name, description, path: `${dir}/SKILL.md` };
     });
-  writeFileSync(CATALOG, JSON.stringify({ version: 1, skills }, null, 2) + "\n");
+  const json = JSON.stringify({ version: 1, skills }, null, 2) + "\n";
+  if (json.length > CATALOG_WARN_CHARS) {
+    console.warn(
+      `warn: catalog.json is ${json.length} chars (> ${CATALOG_WARN_CHARS}) — the router pays this per routing call; ` +
+        `time to implement the two-stage routing adaptation (see docs/ROLES.md follow-ups)`
+    );
+  }
+  writeFileSync(CATALOG, json);
   return skills.length;
 }
 

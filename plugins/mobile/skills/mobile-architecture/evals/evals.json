@@ -1,0 +1,40 @@
+{
+  "skill_name": "mobile-architecture",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We're a 4-person team (all TypeScript devs) building a field-service app: technicians view job details, fill inspection forms, and take photos — often in basements and rural areas with no signal. Design the app architecture.",
+      "expected_output": "Platform choice driven by the actual context (TS team → React Native/Expo bias, recorded as an ADR with trade-offs), and — decisive here — offline-first design: local database as source of truth, queued mutations with idempotency keys and visible pending state, conflict resolution decided per data type, delta sync, photo upload queue tolerant of interrupted connectivity; plus navigation/deep links, state surviving process death, and old-client-tolerant API contracts",
+      "assertions": [
+        "Grounds the platform choice in the stated context (TypeScript team → cross-platform bias) and records it as an ADR-style decision with trade-offs, not a generic framework comparison",
+        "Designs offline-first for the connectivity reality: local store as source of truth with mutations queued for background sync",
+        "Addresses sync hazards concretely: idempotency for retried mutations, a chosen conflict-resolution approach, and visible pending/unsynced state in the UI",
+        "Handles the platform lifecycle: state survives process death, and large uploads (photos) tolerate interruption",
+        "Plans API contracts tolerant of old clients and/or remote-config kill switches, acknowledging that shipped versions persist on devices"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our shipped iOS/Android app assumed always-online and now users are furious about spinners everywhere. Retrofitting offline is the mandate. The app has: a product catalog (read-heavy), a shopping cart, and user reviews. How do we approach it?",
+      "expected_output": "Rejects one-size-fits-all: chooses a sync model per data domain — catalog as read cache (local store + background refresh), cart as offline-first with queued mutations and conflict handling (merge/last-write per field; cart merges across devices), reviews as queued writes with pending-state UI; introduces the repository boundary so the UI stops knowing about the network, sequences the retrofit incrementally by domain, and flags conflict resolution and idempotency as the design decisions to make before coding",
+      "assertions": [
+        "Chooses a sync strategy per data domain (read cache for catalog, offline-first/queued mutations for cart and reviews) instead of one blanket approach",
+        "Introduces a repository/data-layer boundary so UI code stops depending on network availability directly",
+        "Addresses conflict resolution explicitly for the mutable domains (cart across devices) as a decision made before implementation",
+        "Includes idempotency for queued/retried mutations and visible pending/unsynced state in the UI",
+        "Sequences the retrofit incrementally (domain by domain) rather than a big-bang rewrite"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our React web dashboard is getting messy — we need to restructure the component hierarchy, pick a state management library (Zustand vs Redux), and organize our design tokens. How should we architect it?",
+      "expected_output": "Recognizes this as web SPA frontend architecture — refers to frontend-architecture for the component hierarchy, state management, and design-token work, stating the boundary: mobile-architecture covers apps shipped through app stores with mobile constraints; frontend-architecture covers web client architecture",
+      "assertions": [
+        "Recognizes the request as web SPA architecture, not a store-shipped mobile app",
+        "Refers to the frontend-architecture skill for component hierarchy, state management, and design tokens",
+        "Does not apply mobile-specific concerns (offline sync, store review, process death) to the web dashboard",
+        "States or implies the boundary: frontend-architecture owns web client architecture; mobile-architecture owns store-distributed mobile apps"
+      ]
+    }
+  ]
+}

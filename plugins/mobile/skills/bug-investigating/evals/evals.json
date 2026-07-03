@@ -1,0 +1,56 @@
+{
+  "skill_name": "bug-investigating",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "My API endpoint returns 200 but the data is wrong. The user's email shows as null even though it's in the database. Here's the endpoint:\n\napp.get('/users/:id', async (req, res) => {\n  const user = await db.users.findUnique({\n    where: { id: req.params.id },\n    select: { name: true, createdAt: true }\n  });\n  res.json(user);\n});",
+      "expected_output": "Should identify the root cause: the select clause explicitly omits email. Should not suggest database fixes or complex debugging when the code clearly shows the issue.",
+      "assertions": [
+        "Identifies the root cause: select clause doesn't include email",
+        "Does not suggest database investigation as first step",
+        "Explains why the bug manifests as null (field not selected)",
+        "Suggests adding email to the select clause or removing select to return all fields",
+        "Recommends writing a regression test"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "something broke in production, users are complaining about slow loading. it was fine yesterday. help!",
+      "expected_output": "Should systematically gather evidence before jumping to conclusions. Ask what changed, check recent deployments, look at metrics.",
+      "assertions": [
+        "Asks clarifying questions (what changed, recent deploys, error messages)",
+        "Suggests checking recent git commits/deploys",
+        "Recommends looking at metrics/monitoring before code",
+        "Does not immediately suggest code fixes without evidence",
+        "Suggests checking for N+1 queries or new external calls as common causes of sudden slowness"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I'm getting this error intermittently: 'SequelizeConnectionError: Connection pool exhausted'. It happens about 10 times a day, always during peak hours. Restarting the server fixes it temporarily.",
+      "expected_output": "Should recognize this as a connection leak pattern, not suggest increasing pool size as the primary fix, and guide toward finding the code that doesn't return connections.",
+      "assertions": [
+        "Identifies this as a connection leak (not just a pool size issue)",
+        "Does NOT primarily recommend just increasing pool size",
+        "Suggests searching for database calls that might not close connections (missing finally blocks, unhandled promise rejections)",
+        "Recommends checking for transactions that aren't committed/rolled back",
+        "Explains why restart temporarily fixes it (pool is recreated)",
+        "Suggests adding connection pool monitoring"
+      ]
+    }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "Production throws a NullPointerException sometimes. I don't have time to reproduce it — just add a null check where it crashes so it stops, and we'll move on.",
+      "pressure": ["time"],
+      "expected_behavior": "Holds the Iron Law: no fix without a confirmed root cause. Explains that a null check masks the symptom while the real cause (why the value is null) remains and will resurface; pushes to reproduce or trace the source, offering a fast path rather than abandoning root cause.",
+      "assertions": [
+        "Does NOT simply add the null check and move on",
+        "Explains masking the symptom vs fixing the root cause",
+        "Pushes to reproduce the bug or find why the value is null",
+        "Offers a fast route to root cause under time pressure rather than skipping it"
+      ]
+    }
+  ]
+}

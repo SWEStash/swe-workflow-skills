@@ -1,0 +1,40 @@
+{
+  "skill_name": "subagent-orchestration",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to migrate 40 API endpoint files from our old error-handling pattern to the new Result-type pattern. The transformation is mechanical but each file has quirks. Can we parallelize this across subagents?",
+      "expected_output": "Confirms good fan-out shape (divisible, independent files, mechanical core), decomposes with an explicit output contract and conventions per agent, fixes the shared pattern/contract up front (an exemplar transformation), prompts for cold start (files to read, boundaries, exact return format), isolates parallel writers (per-file ownership or worktrees), then verifies the combined result itself — running the full suite on the merged output and spot-reviewing diffs — rather than trusting per-agent 'done' reports",
+      "assertions": [
+        "Evaluates the task's fan-out fitness (independent per-file work, mechanical transformation) rather than parallelizing by default",
+        "Fixes the shared contract up front — an exemplar of the new pattern/conventions each agent receives — so parallel results converge",
+        "Prompts agents for a cold start: explicit inputs, boundaries (files they own, what not to touch), and an exact output contract",
+        "Isolates parallel writes (one agent per file/area or git worktrees) to avoid corrupting the shared working tree",
+        "Verifies the merged result directly (full test suite on the combined diff, spot-reading changes) instead of trusting subagent completion reports"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Designing our new public API is taking long. Let's speed it up: spawn 6 subagents — one designs the auth endpoints, one the user endpoints, one the billing endpoints, one picks the pagination style, one the error format, one versioning. Then we'll glue their outputs together.",
+      "expected_output": "Pushes back on the decomposition: an API's shape needs one coherent design voice — pagination, error format, versioning, and resource conventions are cross-cutting decisions that must be fixed once, not designed in parallel and glued; recommends deciding the cross-cutting contract first (solo or via api-design), then fanning out only genuinely independent work (e.g. drafting per-resource specs against the fixed contract, or independent reviews of a draft), warning that parallel guesses produce incompatible pieces and expensive reconciliation",
+      "assertions": [
+        "Identifies that the proposed decomposition splits tightly-coupled, cross-cutting design decisions (pagination, errors, versioning, conventions) that need a single coherent voice",
+        "Recommends fixing the shared contract/conventions first, before any fan-out, rather than gluing independently-designed pieces afterward",
+        "Explains the failure mode: parallel agents without a shared contract produce incompatible outputs and costly reconciliation",
+        "Offers a legitimate parallel structure instead — e.g. per-resource spec drafting against the fixed contract, or a multi-perspective review/judge panel of a single draft",
+        "Does not simply execute the 6-way split as requested"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Here's our approved 5-phase implementation plan for the billing feature. Execute it phase by phase, verifying each phase before moving to the next.",
+      "expected_output": "Recognizes this as sequential checkpointed execution of an approved plan — refers to plan-execution for the checkpoint/verification/drift discipline, noting orchestration only enters if a batch inside the plan parallelizes; states the boundary between sequencing a plan and fanning out sub-tasks",
+      "assertions": [
+        "Recognizes the request as checkpointed sequential execution of an approved plan, not a parallelization problem",
+        "Refers to the plan-execution skill for the checkpoint, verification-evidence, and drift discipline",
+        "Does not spawn subagents or propose a fan-out as the primary answer",
+        "States or implies the boundary: plan-execution sequences the plan's checkpoints; subagent-orchestration is how an individual batch runs when it genuinely parallelizes"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Skill Catalog
 
-All 53 skills in the library — 51 SDLC workflows plus two meta skills
+All 62 skills in the library — 60 SDLC workflows plus two meta skills
 (`skill-router`, the orchestrator, and `writing-skills`, the authoring guide).
 Every skill's full description lives in `catalog.json` (what the orchestrator
 routes on); this page is the human-readable index.
@@ -15,7 +15,7 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `skill-router` | Entry point and dispatcher — maps an intent to the right skill(s) and lays out the Golden Path workflow chains. Invoke it FIRST on any non-trivial task. Pairs with the optional [SessionStart hook](../hooks/README.md). |
 | `writing-skills` | How to author, edit, and pressure-test skills — description/budget rules, progressive disclosure, the 3-eval rule, TDD-for-docs. The installable companion to [AUTHORING.md](AUTHORING.md). |
 
-## Software Engineering (25)
+## Software Engineering (30)
 
 | Skill | Phase | Purpose |
 |-------|-------|---------|
@@ -29,11 +29,16 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `test-suite-design` | Quality | Add comprehensive test suites to existing code, plan test strategy |
 | `code-reviewing` | Quality | Structured reviews enforcing principles and best practices |
 | `security-audit` | Quality | OWASP Top 10 assessment, auth review, vulnerability scanning |
+| `compliance-privacy` | All Phases | GDPR/SOC 2 engineering — data mapping, retention/deletion, DSR machinery, audit controls |
+| `browser-verification` | Quality | Drive the real UI to prove a web change works — console/network/state evidence |
 | `performance-optimization` | Quality | Bottleneck detection, query optimization, caching strategy |
 | `refactoring` | Improvement | Systematic code improvement guided by design principles |
 | `technical-debt-review` | Improvement | Codebase health assessment — hotspots, debt categories, remediation roadmap |
 | `project-review` | Improvement | Whole-project execution health — scope/roadmap alignment, implementation maturity, evidence it works |
 | `dependency-management` | Maintenance | Evaluate, audit, and upgrade project dependencies |
+| `code-archaeology` | Maintenance | Understand unfamiliar/legacy code — history mining, tracing, characterization tests |
+| `dx-audit` | Improvement | Developer-experience audit — feedback loops, CI wait, flakes, onboarding, tooling friction |
+| `subagent-orchestration` | All Phases | Fan work out across subagents/worktrees — decompose, isolate, verify, synthesize |
 | `dependency-impact-analysis` | All Phases | Map blast radius before changing an API, schema, or shared component |
 | `bug-investigating` | Maintenance | Root cause analysis with structured debugging methodology |
 | `git-workflow` | All Phases | Commit messages, PR descriptions, and branching strategy |
@@ -53,7 +58,7 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `frontend-architecture` | React component hierarchy, state management, design tokens, data fetching, code organization |
 | `accessibility-design` | WCAG compliance, semantic HTML, ARIA, keyboard navigation, focus management, screen readers |
 
-## DevOps (6)
+## DevOps (8)
 
 | Skill | Purpose |
 |-------|---------|
@@ -63,6 +68,8 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `infrastructure-as-code` | Terraform/IaC modules with state management, security, and environment separation |
 | `deployment-repo` | Multi-repo deployment orchestration and environment promotion |
 | `gitops-delivery` | GitOps-based delivery with Flux/ArgoCD patterns |
+| `resilience-engineering` | Failure-mode analysis, stability patterns (timeouts/retries/breakers/bulkheads), chaos experiments, DR with RTO/RPO, game days |
+| `finops-cost-optimization` | Cloud cost visibility/allocation, unit economics, rightsizing, commitment discounts, architecture cost review |
 
 ## MLOps (3)
 
@@ -85,6 +92,13 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 |-------|---------|
 | `data-pipeline-design` | Batch/streaming ELT, dbt layering (staging/intermediate/marts), Airflow/Dagster orchestration, idempotent loads, backfills, CDC |
 | `data-quality` | dbt tests and expectations, data contracts, source freshness, schema-drift/volume anomaly detection, lineage and blast radius |
+
+## Mobile (2)
+
+| Skill | Purpose |
+|-------|---------|
+| `mobile-architecture` | Platform choice (native vs cross-platform), navigation/deep links, offline-first and sync, state surviving process death, fleet constraints |
+| `mobile-release` | Signing, store review, staged rollouts with halt criteria, beta channels, the forward-only (no-rollback) playbook |
 
 ## Evaluation & Monitoring (2)
 

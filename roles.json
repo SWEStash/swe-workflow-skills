@@ -30,7 +30,8 @@
   },
 
   "meta_only": [
-    "writing-skills"
+    "writing-skills",
+    "subagent-orchestration"
   ],
 
   "roles": {
@@ -64,6 +65,7 @@
         "api-design",
         "tdd-workflow",
         "test-suite-design",
+        "browser-verification",
         "performance-optimization",
         "refactoring"
       ]
@@ -83,6 +85,7 @@
         "rollback-strategy",
         "incident-response",
         "observability-design",
+        "resilience-engineering",
         "configuration-strategy"
       ]
     },
@@ -131,6 +134,7 @@
       "skills": [
         "security-audit",
         "threat-modeling",
+        "compliance-privacy",
         "dependency-management",
         "dependency-impact-analysis",
         "incident-response",
@@ -147,6 +151,7 @@
         "architecture-documentation",
         "api-design",
         "data-modeling",
+        "code-archaeology",
         "dependency-impact-analysis",
         "technical-debt-review",
         "project-review",
@@ -169,7 +174,8 @@
         "strategic-review",
         "code-reviewing",
         "incident-response",
-        "release-management"
+        "release-management",
+        "dx-audit"
       ]
     },
     "pm": {
@@ -194,6 +200,7 @@
         "project-review",
         "project-proposal",
         "build-vs-buy",
+        "finops-cost-optimization",
         "metrics-and-okrs"
       ]
     },
@@ -205,8 +212,22 @@
         "tdd-workflow",
         "test-suite-design",
         "test-data-strategy",
+        "browser-verification",
         "code-reviewing",
         "bug-investigating"
+      ]
+    },
+    "mobile": {
+      "label": "Mobile Engineer",
+      "description": "Skills for native and cross-platform mobile apps: architecture, offline/sync, UI/UX, accessibility, performance, API contracts, and app-store releases.",
+      "core": "technical",
+      "skills": [
+        "mobile-architecture",
+        "mobile-release",
+        "ui-ux-design",
+        "accessibility-design",
+        "performance-optimization",
+        "api-design"
       ]
     },
     "designer": {

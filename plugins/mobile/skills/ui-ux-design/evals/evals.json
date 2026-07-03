@@ -1,0 +1,35 @@
+{
+  "skill_name": "ui-ux-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Design the UI for a project management dashboard. Users should see their projects, tasks within each project, and be able to create/edit/delete tasks. It's a React web app. We don't have a designer — I need to figure out the screens and flows myself.",
+      "expected_output": "Should map the user flow first (dashboard → project → task), then specify each screen with all states (loading, empty, error, loaded), define interaction patterns for CRUD operations, and include responsive behavior.",
+      "assertions": [
+        "Maps the user flow before designing individual screens",
+        "Defines at least 3 screens (dashboard, project detail, task detail/modal)",
+        "Each screen has loading, empty, and error states defined",
+        "Empty state has a helpful CTA (not just 'no items')",
+        "CRUD interactions have specified feedback (toast, inline, redirect)",
+        "Delete has a confirmation pattern",
+        "Responsive behavior defined for mobile vs desktop",
+        "Produces screen specifications using the template"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to design a multi-step checkout flow for an e-commerce app. Steps: cart review → shipping address → payment → confirmation. It needs to work on mobile too.",
+      "expected_output": "Should design the complete flow with all states including error recovery, define form validation patterns, address mobile-specific concerns, and handle edge cases.",
+      "assertions": [
+        "Flow includes progress indicator showing current step",
+        "Each step saves data (user doesn't lose progress on back navigation)",
+        "Form validation strategy specified (when errors show, how they clear)",
+        "Payment step has loading state during processing",
+        "Error recovery for payment failure doesn't lose form data",
+        "Confirmation step shows order summary before final submit",
+        "Mobile layout addresses keyboard handling for address/payment forms",
+        "Handles edge case: cart modified during checkout, session timeout"
+      ]
+    }
+  ]
+}

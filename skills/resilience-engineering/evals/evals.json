@@ -1,0 +1,40 @@
+{
+  "skill_name": "resilience-engineering",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Our e-commerce platform runs on one Postgres instance, a Node API, and Redis, all in a single AWS availability zone. Leadership asked: 'what happens if AWS has a bad day?' Design our resilience strategy.",
+      "expected_output": "Runs failure-mode analysis per dependency (down/slow/partial/data-corruption, single points of failure), sets explicit targets first (availability tier, RTO/RPO per store) noting cost scales with the numbers, applies stability patterns at boundaries (timeouts, retries with backoff+jitter on idempotent ops, circuit breakers, graceful degradation deciding in advance what turns off), designs data recovery (automated backups, isolated copy, scheduled restore tests), and proposes verification via small chaos experiments and a game day rather than declaring the design done",
+      "assertions": [
+        "Performs failure-mode analysis across the dependencies, covering slow/partial failures and data corruption — not just total outage — and identifies single points of failure",
+        "Sets explicit RTO/RPO and availability targets before choosing mechanisms, noting that cost scales with the targets (backups vs standby vs multi-AZ/region)",
+        "Applies concrete stability patterns: timeouts, retries with backoff and jitter (idempotent only), circuit breakers, and pre-decided graceful degradation",
+        "Treats backups as unproven until restored — schedules restore testing and keeps a copy isolated from the blast radius",
+        "Proposes verifying with chaos experiments (hypothesis-driven, small blast radius) and/or a game day rehearsing the runbooks"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We already have retries everywhere — every service retries failed calls 5 times. Last month a 30-second blip in our auth service somehow became a 45-minute full-platform outage. Make us more resilient.",
+      "expected_output": "Diagnoses the retry storm / cascade: unbudgeted retries amplified load (5 retries per hop compound multiplicatively across the chain), likely no timeouts or breakers so threads piled onto a hung dependency; prescribes retry budgets, exponential backoff with jitter, idempotency checks, circuit breakers to fail fast, load shedding at the edge, and bulkheads to contain blast radius — showing that MORE retrying is the opposite of resilience here",
+      "assertions": [
+        "Identifies the naive retries as an amplifier (retry storm / cascading failure), including how retries compound across call-chain hops",
+        "Recommends retry budgets and exponential backoff with jitter, restricted to idempotent operations, instead of fixed retry counts",
+        "Adds circuit breakers and timeouts so a hung or flapping dependency fails fast instead of tying up resources",
+        "Recommends load shedding/backpressure and/or bulkheads to contain the blast radius of a degraded dependency",
+        "Frames the fix as controlling and bounding retries — explicitly countering the assumption that more retrying equals more resilience"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Production is down RIGHT NOW — the primary database failed over but the app servers are still erroring and customers can't check out. What do we do?",
+      "expected_output": "Recognizes an active incident under time pressure — hands off to incident-response for triage/mitigation/comms rather than starting a peacetime resilience design; may note that post-recovery, the failure feeds back into failure-mode analysis and a game-day-style review via retrospective",
+      "assertions": [
+        "Recognizes this as an active production incident, not a resilience design exercise",
+        "Refers to the incident-response skill/workflow for triage, mitigation, and communication",
+        "Does not respond with a peacetime workflow (failure-mode analysis, chaos experiments, DR design) as the immediate answer",
+        "States or implies the boundary: resilience-engineering is peacetime design and rehearsal; incident-response handles the live fire (with learnings looping back afterward)"
+      ]
+    }
+  ]
+}

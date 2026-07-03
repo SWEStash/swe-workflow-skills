@@ -159,6 +159,7 @@ catalog it could read, it would only waste a listing slot).
 | `pm`       | Product / Project Manager        | universal |
 | `strategy` | Strategy / Founder Review        | universal |
 | `qa`       | QA / Test Engineer               | technical |
+| `mobile`   | Mobile Engineer                  | technical |
 | `designer` | Designer / UX                    | universal |
 
 A role's working set = its **core** ∪ its own skills. Cores: **universal** =
@@ -167,8 +168,11 @@ A role's working set = its **core** ∪ its own skills. Cores: **universal** =
 `code-reviewing`, `verification-before-completion`, `bug-investigating`,
 `project-documentation`. Inspect with `node scripts/resolve.mjs skills <role>`
 or list roles with `node scripts/resolve.mjs roles`. Promoted-set sizes stay at
-or under the ~20-description crop cap (`backend` sits exactly at 20; `devops`
-at 19 — additions to either core force a trim decision).
+or under the ~20-description crop cap (`backend` and `devops` both sit exactly
+at 20 — any addition to either, or to the technical core, forces a trim or a
+role split first). `subagent-orchestration` is deliberately role-less
+(`meta_only`, like `writing-skills`): it's a way of working, not a hat — always
+one route away.
 
 ## Install (CLI — the full dynamic model)
 
@@ -257,31 +261,51 @@ Verified against the Claude Code / claude.ai docs, 2026-06.
 All need **new skills** first (build via the `writing-skills` RED→GREEN process),
 in planned order:
 
-1. **Deferred skills** — subagent-orchestration, compliance-privacy (GDPR/SOC2),
-   finops-cost-optimization, code-archaeology/legacy-comprehension,
-   chaos/DR-resilience, dx-audit, mobile-engineering set.
-2. **Deferred roles** — **Data Scientist** (needs EDA / statistical-analysis /
-   notebook-to-production skills), **Mobile Engineer** (needs the mobile set).
-3. **Machinery** — migrate all skills to the `description` + `when_to_use`
+1. **Deferred roles** — **Data Scientist** (needs EDA / statistical-analysis /
+   notebook-to-production skills); possible `backend`/`devops` splits (both at
+   the 20-description cap).
+2. **Machinery** — migrate all skills to the `description` + `when_to_use`
    frontmatter split as one coordinated change (catalog builder + routing
    re-baseline); apply `context: fork` to heavy read-only review skills; periodic
-   obsolescence review (re-run evals RED; retire skills where RED ≈ GREEN).
+   obsolescence review (re-run evals RED; retire skills where RED ≈ GREEN);
+   **router scaling** (see follow-ups below).
 
 _Done 2026-07: **AI & data** — `ai-evaluation`, `llm-app-engineering`,
 `data-pipeline-design`, `data-quality` shipped with the new `ai` and `data`
 roles; `ml` extended with `ai-evaluation`. **Ideation & execution** —
 `brainstorming` (universal core), `plan-execution` (technical core, hardened),
-`threat-modeling` (→ `security`), `build-vs-buy` (→ `strategy`)._
+`threat-modeling` (→ `security`), `build-vs-buy` (→ `strategy`).
+**Governance & ops** — `compliance-privacy` (→ `security`),
+`finops-cost-optimization` (→ `strategy`), `code-archaeology` (→ `architect`),
+`resilience-engineering` (→ `devops`). **DX & verification** — `dx-audit`
+(→ `em`), `browser-verification` (→ `frontend`, `qa`), `subagent-orchestration`
+(meta_only). **Mobile** — `mobile-architecture` + `mobile-release` with the new
+`mobile` role._
 
 ## Open follow-ups
 
-- The two largest roles (`backend` 20, `devops` 19 with core, after
-  `plan-execution` joined the technical core) now sit AT the ~20 listing cap —
-  `release-management` joined `devops` in place of `dependency-impact-analysis`
-  (still in `architect`, always routable) to stay crop-safe; `backend`
-  deliberately did NOT get it (route via `skill-router`). `backend` has no
-  headroom left: the next addition to it or to the technical core forces a trim
-  or a role split.
+- The two largest roles (`backend` 20 after `plan-execution` joined the
+  technical core; `devops` 20 after `resilience-engineering`) both sit AT the
+  ~20 listing cap — `release-management` joined `devops` in place of
+  `dependency-impact-analysis` (still in `architect`, always routable) to stay
+  crop-safe; `backend` deliberately did NOT get it (route via `skill-router`).
+  Neither has headroom left: the next addition to either, or to the technical
+  core, forces a trim or a role split.
+- **Router scaling (haiku)**: `skill-router` runs on haiku and reads the whole
+  `catalog.json` per routing call — the catalog is a context budget of its own.
+  At 62 skills it's ~32k chars (~8k tokens): no window pressure (200k), but a
+  real per-call cost and a growing candidate set. Standing mitigations:
+  the ~350–550-char description discipline (now machine-checked —
+  `build-plugins.mjs` errors above the 1,024 platform cap, warns above 600
+  chars/description and above 48k chars total catalog), terse one-line phase-index
+  entries in the router, and role-scoped routing (lead with the active role's
+  set). **Adaptation trigger**: when the total-catalog warning fires (~90+
+  skills at current discipline) or routing accuracy degrades in the eval
+  baseline, implement two-stage routing — the router shortlists from its
+  compact phase index (or a generated name+gist index), then reads only the
+  shortlisted skills' full descriptions instead of the whole catalog. Haiku
+  routes mostly on names (EVALS.md finding), so the compact first stage should
+  hold accuracy; verify with the routing harness before switching.
 - Pinned set reviewed 2026-07 (re-reviewed with the Phase-2 AI/data and Phase-3
   ideation/execution additions): unchanged. `release-management` is
   high-consequence but, like `deployment-checklist` and `rollback-strategy`, it

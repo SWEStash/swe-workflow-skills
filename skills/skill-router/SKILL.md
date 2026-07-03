@@ -105,6 +105,7 @@ installed skill by name, regardless of role.
 - **frontend-architecture** — component hierarchy, state management, design tokens
 - **accessibility-design** — WCAG, ARIA, keyboard nav, focus, screen readers
 - **threat-modeling** — design-time security: trust boundaries, STRIDE, abuse cases, mitigations
+- **compliance-privacy** — GDPR/SOC 2 obligations: data mapping, retention/deletion, DSRs, controls
 - **configuration-strategy** — env config, secrets management, feature-flag hierarchy
 - **dependency-impact-analysis** — blast radius of a change *before* implementing
 - **dependency-management** — evaluate, audit (CVEs), and upgrade libraries
@@ -114,6 +115,8 @@ installed skill by name, regardless of role.
 - **tdd-workflow** — NEW code, test-first, red-green-refactor
 - **test-suite-design** — add tests to EXISTING code, coverage strategy
 - **test-data-strategy** — factories, synthetic data, property-based, contract testing
+- **browser-verification** — drive the real UI to prove a web change works: console/network/state evidence
+- **subagent-orchestration** — fan work out across subagents/worktrees; verify and synthesize results
 - **git-workflow** — commit messages, PR descriptions, branching strategy
 - **project-documentation** — README, contributing guide, changelog, docstrings
 
@@ -124,6 +127,8 @@ installed skill by name, regardless of role.
 - **refactoring** — systematic, test-protected code improvement
 - **technical-debt-review** — codebase health, hotspots, remediation roadmap
 - **project-review** — whole-project execution health: scope alignment, roadmap adherence, implementation maturity, evidence-it-works
+- **code-archaeology** — understand unfamiliar/legacy code first: history mining, tracing, characterization tests
+- **dx-audit** — developer-experience audit: feedback loops, CI wait, flakes, onboarding, tooling friction
 
 ### Diagnose & Fix
 - **bug-investigating** — systematic debugging, reproduce → isolate → hypothesize → verify
@@ -138,7 +143,13 @@ installed skill by name, regardless of role.
 - **deployment-repo** — GitOps polyrepo orchestration, version pinning, promotion
 - **gitops-delivery** — ArgoCD / Flux declarative delivery, drift detection
 - **observability-design** — SLI/SLO/SLA, OpenTelemetry, structured logging, alerting
+- **resilience-engineering** — failure modes, stability patterns, chaos experiments, DR/RTO/RPO, game days
+- **finops-cost-optimization** — cloud spend: allocation, unit economics, rightsizing, commitments, egress
 - **incident-response** — ACTIVE production incident: triage, mitigate, communicate
+
+### Mobile
+- **mobile-architecture** — platform choice, navigation, offline-first/sync, state, push, fleet constraints
+- **mobile-release** — signing, store review, staged rollouts, no-rollback playbook, beta channels
 
 ### Reflect
 - **retrospective** — sprint retros, project / incident post-mortems, action items
@@ -179,6 +190,7 @@ approved plan; wraps `tdd-workflow` per task) → `code-reviewing` →
 `git-workflow` (commits carry the bump intent) → `release-management` (version,
 changelog, tag, publish gate, registry) → `deployment-checklist` (if it deploys) →
 `rollback-strategy`. `cicd-pipeline` automates the gate as a pipeline stage.
+App-store releases (signing, review, staged rollout) → `mobile-release`.
 
 **LLM feature**
 `feature-planning` → `llm-app-engineering` (prompt/RAG/agent design) →

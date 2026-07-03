@@ -1,0 +1,47 @@
+{
+  "skill_name": "performance-optimization",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Our product listing page takes 4 seconds to load. Here's the endpoint:\n\napp.get('/products', async (req, res) => {\n  const products = await db.products.findMany();\n  for (const product of products) {\n    product.category = await db.categories.findById(product.categoryId);\n    product.reviews = await db.reviews.findMany({ where: { productId: product.id } });\n    product.averageRating = product.reviews.reduce((sum, r) => sum + r.rating, 0) / product.reviews.length;\n    product.seller = await db.users.findById(product.sellerId);\n  }\n  res.json(products);\n});",
+      "expected_output": "Should identify the N+1 problem as the primary bottleneck (3 queries per product in a loop), recommend eager loading or batch queries, and note the missing pagination. Should quantify the impact.",
+      "assertions": [
+        "Identifies the N+1 query problem as the primary bottleneck",
+        "Quantifies the impact (if 100 products: 1 + 100 + 100 + 100 = 301 queries)",
+        "Recommends eager loading (include/join) or batch loading (IN clause)",
+        "Identifies missing pagination (loads ALL products)",
+        "Suggests computing averageRating in the database query, not in application code",
+        "Does NOT start with micro-optimizations (variable names, array methods)",
+        "Provides concrete refactored code",
+        "Suggests adding an index on reviews.productId if not present"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our API response times are fine for small accounts but degrade badly for enterprise customers with 50K+ records. The main offender is the search endpoint. How should I approach this?",
+      "expected_output": "Should ask for the current query and indexes, suggest EXPLAIN ANALYZE, and recommend strategies for large dataset search (proper indexing, cursor pagination, search-specific solutions like Elasticsearch for complex search).",
+      "assertions": [
+        "Asks to see the current query and database schema",
+        "Suggests running EXPLAIN ANALYZE on the slow query",
+        "Identifies that OFFSET-based pagination degrades with large datasets",
+        "Recommends cursor-based pagination",
+        "Considers whether a dedicated search index (Elasticsearch, Meilisearch) is appropriate",
+        "Does NOT immediately recommend adding Redis cache as the first solution",
+        "Applies KISS — recommends database-level fixes before adding new infrastructure"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Make this function faster:\n\nfunction findDuplicateEmails(users) {\n  const duplicates = [];\n  for (let i = 0; i < users.length; i++) {\n    for (let j = i + 1; j < users.length; j++) {\n      if (users[i].email.toLowerCase() === users[j].email.toLowerCase()) {\n        if (!duplicates.includes(users[i].email.toLowerCase())) {\n          duplicates.push(users[i].email.toLowerCase());\n        }\n      }\n    }\n  }\n  return duplicates;\n}",
+      "expected_output": "Should identify the O(n²) nested loop plus O(n) includes() check (effectively O(n³) worst case), and refactor to O(n) using a Map/Set.",
+      "assertions": [
+        "Identifies the algorithmic complexity (O(n²) from nested loops, O(n) from includes)",
+        "Explains WHY this is slow for large arrays",
+        "Refactors to O(n) using a Map or object for counting",
+        "Uses a Set for the duplicates result (not includes() on an array)",
+        "Notes the repeated toLowerCase() calls as a secondary optimization",
+        "Provides working refactored code"
+      ]
+    }
+  ]
+}

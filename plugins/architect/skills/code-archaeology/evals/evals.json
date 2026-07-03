@@ -1,0 +1,41 @@
+{
+  "skill_name": "code-archaeology",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I just inherited a 8-year-old Django billing service. The original team is gone, there are no docs, and I need to change how proration is calculated. Help me understand it before I touch anything.",
+      "expected_output": "Surveys structure first (entry points, load-bearing modules, does the test suite pass), mines git history for the proration code specifically (log --follow, pickaxe for magic values, blame with commit context, churn hotspots), traces one concrete billing case end to end, interrogates oddities against history/tests/production data before judging them, writes characterization tests pinning current proration outputs before any change, and records the recovered understanding",
+      "assertions": [
+        "Surveys the codebase shape first (entry points, dependency skeleton, whether tests run) instead of reading files linearly",
+        "Uses git history as a primary source — git log --follow, pickaxe (log -S), or blame with commit context — to recover why the proration code is the way it is",
+        "Traces at least one concrete billing input end to end through the code rather than only reading statically",
+        "Writes characterization tests that pin the CURRENT proration behavior (including odd cases) before making any change",
+        "Treats odd code as potentially load-bearing (Chesterton's fence) — checks history, tests, and production data before deeming anything vestigial",
+        "Records the recovered understanding (data-flow narrative, architecture note, or backfilled ADR) for the next person"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "There's a bizarre guard clause in our payment processor: `if amount == 999999: amount = amount - 1`. No comment, no test, git blame just shows a 'fixes' commit from 2019 by someone who left. Everyone's afraid to delete it. Should I?",
+      "expected_output": "Does not say 'yes, delete it' outright: digs into the 2019 commit's full context (message, sibling changes, linked ticket, the PR discussion), searches for related production data or downstream systems that might depend on the cap, and if all sources come up empty, proposes proving it's dead (logging/telemetry on the branch for a period) plus a characterization test — removal only with evidence and a safety net, not on vibes",
+      "assertions": [
+        "Investigates the 2019 commit's full context (message, other files in the same commit, linked ticket/PR discussion) rather than accepting blame's surface result",
+        "Considers that production data or a downstream system may depend on the behavior before judging it vestigial",
+        "Proposes gathering runtime evidence (logging/telemetry on the branch) to prove the code path is dead rather than assuming it",
+        "Recommends a characterization test or equivalent safety net around the behavior before/when removing it",
+        "Does not recommend immediate deletion based on the code looking senseless"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our codebase is a mess of tech debt — give me a prioritized assessment of what we should fix first and a remediation roadmap for the quarter.",
+      "expected_output": "Recognizes this as a debt assessment/prioritization request — refers to technical-debt-review for the hotspot analysis and remediation roadmap, noting the boundary: code-archaeology builds understanding of unfamiliar code; technical-debt-review assesses health and prioritizes fixes",
+      "assertions": [
+        "Recognizes the request as debt assessment and prioritization, not comprehension of unfamiliar code",
+        "Refers to the technical-debt-review skill for the hotspot analysis and roadmap",
+        "Does not produce an archaeology workflow (history mining, characterization tests) as the primary answer",
+        "States or implies the boundary: code-archaeology produces understanding; technical-debt-review assesses and prioritizes what to fix"
+      ]
+    }
+  ]
+}

@@ -32,6 +32,11 @@
       "path": "brainstorming/SKILL.md"
     },
     {
+      "name": "browser-verification",
+      "description": "Verify a web app change by driving the real UI in a browser — reproduce the user flow end to end, watch console errors and network failures, exercise loading/error/empty states, capture screenshots as evidence. Use before claiming a UI change works. Triggers: check it in the browser, verify the UI, click through the flow, console errors, test it like a user, smoke test the frontend. Designing persistent test suites → test-suite-design; the generic done-gate → verification-before-completion (this is its browser-specific practice).",
+      "path": "browser-verification/SKILL.md"
+    },
+    {
       "name": "bug-investigating",
       "description": "Systematic debugging and root cause analysis using structured methodology — reproduce, isolate, hypothesize, verify. Triggers: this doesn't work, I'm getting an error, something is broken, bug, debug this, why is this happening, unexpected behavior, regression, root cause, stack trace, error message.",
       "path": "bug-investigating/SKILL.md"
@@ -47,9 +52,19 @@
       "path": "cicd-pipeline/SKILL.md"
     },
     {
+      "name": "code-archaeology",
+      "description": "Understand unfamiliar or legacy code before changing it — map entry points, mine git history (blame, churn, log -S), trace data flow, recover the why behind odd code, pin current behavior with characterization tests, find seams for safe change. Triggers: understand this codebase, legacy code, inherited this project, what does this code do, why is it written this way, nobody knows how this works, onboard to this repo, is it safe to change this. Prioritizing debt → technical-debt-review; improving code you already understand → refactoring.",
+      "path": "code-archaeology/SKILL.md"
+    },
+    {
       "name": "code-reviewing",
       "description": "Structured code reviews enforcing DRY, KISS, YAGNI, SRP, best practices, and project conventions. Triggers: review this code, code review, check my code, what do you think of this implementation, review this PR, is this code good, feedback on my code, review staged changes before commit.",
       "path": "code-reviewing/SKILL.md"
+    },
+    {
+      "name": "compliance-privacy",
+      "description": "Engineer for regulatory and privacy obligations — GDPR/CCPA privacy-by-design, PII data mapping and minimization, retention and deletion (right to erasure), data subject requests, consent, SOC 2 controls (access, change management, audit logging). Triggers: GDPR, CCPA, SOC 2, HIPAA, compliance, privacy review, PII, personal data, data retention, right to be forgotten, DSR, audit requirements, are we compliant. Vulnerabilities in code → security-audit; attack analysis of a design → threat-modeling.",
+      "path": "compliance-privacy/SKILL.md"
     },
     {
       "name": "configuration-strategy",
@@ -97,6 +112,11 @@
       "path": "deployment-repo/SKILL.md"
     },
     {
+      "name": "dx-audit",
+      "description": "Audit and improve developer experience — inner-loop feedback (build/test/reload times), CI wait and queue times, flaky tests, local environment setup, onboarding time-to-first-PR, tooling friction, docs discoverability; produce a prioritized remediation plan. Triggers: developer experience, DX audit, devex, builds are slow, CI takes forever, flaky tests, onboarding takes weeks, tooling friction, developer productivity, engineers are frustrated. Code health/debt hotspots → technical-debt-review; designing one pipeline → cicd-pipeline.",
+      "path": "dx-audit/SKILL.md"
+    },
+    {
       "name": "effort-estimation",
       "description": "Estimate engineering effort with agile techniques — story points, t-shirt sizing, three-point estimation, capacity planning. Triggers: estimate this, how long will this take, story points, t-shirt sizing, effort estimation, capacity planning, sprint planning, budget estimate, forecast, velocity, when will this be done.",
       "path": "effort-estimation/SKILL.md"
@@ -105,6 +125,11 @@
       "name": "feature-planning",
       "description": "Break features into well-scoped tasks with acceptance criteria, risk assessment, and dependency mapping. Triggers: plan this, break this down, scope this feature, create tasks for, sprint planning, how should I implement this feature, user stories, acceptance criteria, dependency mapping, feature breakdown. Creates the plan — executing an already-approved plan checkpoint by checkpoint → plan-execution.",
       "path": "feature-planning/SKILL.md"
+    },
+    {
+      "name": "finops-cost-optimization",
+      "description": "Understand and reduce cloud spend — cost visibility and allocation (tagging, ownership), unit economics, rightsizing, autoscaling, commitment discounts (reserved instances, savings plans), storage/egress traps, architecture cost review, budgets and anomaly alerts. Triggers: cloud costs, AWS bill, cut costs, cost optimization, FinOps, why is our bill so high, rightsizing, reserved instances, savings plan, egress fees, cost per customer. Whether to build or buy a capability → build-vs-buy; making code faster → performance-optimization.",
+      "path": "finops-cost-optimization/SKILL.md"
     },
     {
       "name": "frontend-architecture",
@@ -157,6 +182,16 @@
       "path": "ml-pipeline-design/SKILL.md"
     },
     {
+      "name": "mobile-architecture",
+      "description": "Design mobile app architecture — native (Swift/Kotlin) vs cross-platform (React Native/Flutter) selection, navigation and deep linking, state management, offline-first design and data sync, local persistence, push notifications, platform constraints (background work, battery, permissions). Triggers: mobile app architecture, iOS app, Android app, React Native or Flutter, offline first, data sync, mobile state management, deep linking, push notifications, app structure. Web SPA component architecture → frontend-architecture.",
+      "path": "mobile-architecture/SKILL.md"
+    },
+    {
+      "name": "mobile-release",
+      "description": "Ship mobile apps through the app stores — signing and provisioning, store review and rejection handling, phased/staged rollouts with halt criteria, crash monitoring, versioning and build numbers, beta channels (TestFlight, Play tracks), forced updates, and the no-instant-rollback reality of mobile. Triggers: app store release, publish to App Store, Play Store, TestFlight, staged rollout, app review rejected, code signing, provisioning profile, mobile release, hotfix a mobile bug. General semver/registry/library publishing → release-management.",
+      "path": "mobile-release/SKILL.md"
+    },
+    {
       "name": "observability-design",
       "description": "Design production observability — SLIs, SLOs, SLAs, error budgets, OpenTelemetry traces/metrics/logs, structured logging, alerting, dashboards. Triggers: SLO, SLI, SLA, error budget, observability, monitoring, OpenTelemetry, OTel, tracing, distributed tracing, structured logging, alerting, dashboard, metrics, correlation ID, alert fatigue.",
       "path": "observability-design/SKILL.md"
@@ -202,6 +237,11 @@
       "path": "release-management/SKILL.md"
     },
     {
+      "name": "resilience-engineering",
+      "description": "Design systems that survive failure — failure-mode analysis, resilience patterns (timeouts, retries with backoff, circuit breakers, bulkheads, load shedding, graceful degradation), chaos experiments, disaster recovery with RTO/RPO, backup restore testing, game days. Triggers: chaos engineering, disaster recovery, DR plan, what if the database goes down, single point of failure, failover, circuit breaker, RTO, RPO, game day, high availability. An incident happening NOW → incident-response; undoing a bad deploy → rollback-strategy.",
+      "path": "resilience-engineering/SKILL.md"
+    },
+    {
       "name": "retrospective",
       "description": "Facilitate sprint retros, project post-mortems, and incident post-mortems with actionable, owned improvements. Triggers: retrospective, retro, post-mortem, postmortem, lessons learned, what went wrong, what went well, incident review, blameless, action items, sprint review, after action review.",
       "path": "retrospective/SKILL.md"
@@ -225,6 +265,11 @@
       "name": "strategic-review",
       "description": "Review a project's strategic position before going public, launching, or raising — vision, mission, value proposition, scope positioning, the defensible wedge, and a live competitive / market comparative analysis. Triggers: strategic review, positioning, go public, go-to-market, market analysis, competitive landscape, value proposition, is there a moat, who are our competitors, platform absorption risk, market positioning, comparable products. Use project-review for execution/roadmap/implementation health; delegates deep market scans to deep-research.",
       "path": "strategic-review/SKILL.md"
+    },
+    {
+      "name": "subagent-orchestration",
+      "description": "Decompose big or parallelizable work across subagents — when to fan out vs stay solo, scoping self-contained sub-tasks, prompting agents that don't share your context, isolating parallel edits (git worktrees), skeptically verifying and synthesizing results you didn't produce. Triggers: use subagents, parallelize this, fan out, orchestrate agents, multi-agent, spawn agents, worktree, delegate to agents, split this across agents, agent team. Sequencing checkpoints of an approved plan → plan-execution (orchestration parallelizes within its batches).",
+      "path": "subagent-orchestration/SKILL.md"
     },
     {
       "name": "tdd-workflow",

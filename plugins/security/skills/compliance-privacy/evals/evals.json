@@ -1,0 +1,41 @@
+{
+  "skill_name": "compliance-privacy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We're a B2B SaaS with EU customers and we just got our first GDPR deletion request. We honestly don't know where all the user data lives. What do we need to build to handle this properly?",
+      "expected_output": "Starts with a data inventory across ALL stores (databases, logs, analytics, backups, third-party processors, caches), then designs deletion machinery: erasure/anonymization across every store, a documented stance on backups, the ~30-day deadline, and testing the deletion path against a seeded user; frames rights handling as an engineered feature and adds minimization/retention so the problem shrinks over time",
+      "assertions": [
+        "Begins with a data inventory/mapping across all stores — explicitly including the commonly-missed ones (logs, analytics, backups, third-party processors, caches)",
+        "Designs deletion as an engineered, testable feature spanning every store, not a manual SQL runbook against the primary database",
+        "Addresses backups explicitly with a documented stance (e.g. excluded from immediate erasure, purged on backup expiry)",
+        "Mentions the response deadline for data subject requests (about 30 days) and/or verifying the deletion path against a seeded test user before a real request",
+        "Recommends minimization and retention policies (automated deletion, collect less, PII out of logs) so future obligations shrink",
+        "Flags that material legal decisions (lawful basis, DPAs, breach specifics) need counsel rather than deciding them itself"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "An enterprise prospect just sent us a security questionnaire asking if we're SOC 2 compliant. We're a 10-person startup with decent engineering hygiene (PRs, CI, SSO) but zero formal compliance work. What does getting there actually involve on the engineering side?",
+      "expected_output": "Explains SOC 2 as an audit of controls operating over time (Type I vs II), maps their existing hygiene (PR review, CI, SSO) onto trust-criteria controls and identifies the real gap as demonstrable evidence — access reviews, offboarding proof, audit logging, vendor review — recommending evidence automation over screenshot scrambles, scoping to the Security criterion first, and being realistic about timeline/audit-window",
+      "assertions": [
+        "Explains that SOC 2 audits controls operating over time (Type II observation window), not a one-time checklist",
+        "Maps existing engineering hygiene (PR reviews, CI, SSO) onto SOC 2 controls and identifies evidence/demonstrability as the actual gap",
+        "Covers the core control areas: logical access (least privilege, access reviews, offboarding), change management, audit logging, and vendor management",
+        "Recommends starting with the Security criterion and adding other trust criteria only when customers demand them",
+        "Recommends automating evidence collection rather than gathering screenshots before the audit"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Can you review our Express API code for injection vulnerabilities and check whether our JWT auth implementation is secure?",
+      "expected_output": "Recognizes this as a technical vulnerability review of existing code — refers to security-audit for the injection/auth analysis, stating the boundary: compliance-privacy handles regulatory and privacy obligations (GDPR/SOC 2, data rights, retention); security-audit finds technical vulnerabilities",
+      "assertions": [
+        "Recognizes the request as a technical security review of code, not a regulatory/privacy obligation question",
+        "Refers to the security-audit skill for the injection and auth review",
+        "Does not produce a compliance workflow (data mapping, DSR machinery, SOC 2 controls) as the answer",
+        "States the boundary: compliance-privacy covers regulatory/privacy obligations; security-audit covers technical vulnerabilities"
+      ]
+    }
+  ]
+}
