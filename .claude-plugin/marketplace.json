@@ -31,9 +31,23 @@
     {
       "name": "swe-workflow-ml",
       "displayName": "ML Engineer / MLOps",
-      "description": "Skills for ML pipelines, experiment tracking, model deployment, and the data/observability around them. (12 skills)",
+      "description": "Skills for ML pipelines, experiment tracking, evaluation, model deployment, and the data/observability around them. (13 skills)",
       "version": "0.1.0",
       "source": "./plugins/ml"
+    },
+    {
+      "name": "swe-workflow-ai",
+      "displayName": "AI Engineer",
+      "description": "Skills for LLM-powered applications: prompt/RAG/agent design, evaluation, experiment tracking, model deployment, and the API around them. (11 skills)",
+      "version": "0.1.0",
+      "source": "./plugins/ai"
+    },
+    {
+      "name": "swe-workflow-data",
+      "displayName": "Data Engineer",
+      "description": "Skills for data pipelines, analytics engineering, data quality/contracts, schema design, test data, and pipeline observability. (11 skills)",
+      "version": "0.1.0",
+      "source": "./plugins/data"
     },
     {
       "name": "swe-workflow-security",

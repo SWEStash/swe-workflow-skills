@@ -1,6 +1,6 @@
 # Skill Catalog
 
-All 45 skills in the library — 43 SDLC workflows plus two meta skills
+All 49 skills in the library — 47 SDLC workflows plus two meta skills
 (`skill-router`, the orchestrator, and `writing-skills`, the authoring guide).
 Every skill's full description lives in `catalog.json` (what the orchestrator
 routes on); this page is the human-readable index.
@@ -69,6 +69,20 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `ml-experiment-tracking` | Experiment design, reproducibility, tracking with MLflow/W&B, model registry |
 | `ml-pipeline-design` | Training pipelines, data validation, feature engineering, continuous training |
 | `ml-model-deployment` | Model serving, drift detection, monitoring, safe rollout strategies |
+
+## AI Engineering (2)
+
+| Skill | Purpose |
+|-------|---------|
+| `llm-app-engineering` | Prompt/context engineering, RAG architecture (chunking, hybrid retrieval, reranking, grounding), agent design, memory |
+| `ai-evaluation` | Golden datasets, offline metrics, RAG evaluation (ragas/deepeval/promptfoo), LLM-as-judge design and calibration, eval gates in CI, online A/B |
+
+## Data Engineering (2)
+
+| Skill | Purpose |
+|-------|---------|
+| `data-pipeline-design` | Batch/streaming ELT, dbt layering (staging/intermediate/marts), Airflow/Dagster orchestration, idempotent loads, backfills, CDC |
+| `data-quality` | dbt tests and expectations, data contracts, source freshness, schema-drift/volume anomaly detection, lineage and blast radius |
 
 ## Evaluation & Monitoring (2)
 

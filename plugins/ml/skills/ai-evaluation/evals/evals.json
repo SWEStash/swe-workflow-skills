@@ -1,0 +1,40 @@
+{
+  "skill_name": "ai-evaluation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We've built a RAG chatbot over our internal docs and we're planning to launch in two weeks. How should we evaluate it before launch? Someone on the team mentioned ragas.",
+      "expected_output": "Designs an evaluation plan: a golden dataset grounded in real user questions, the RAG triad (faithfulness, answer relevance, context precision/recall) separating retrieval from generation metrics, a concrete tool choice (ragas/deepeval/promptfoo) with rationale, LLM-as-judge reliability measures, and the eval suite wired in as a regression gate rather than a one-off check",
+      "assertions": [
+        "Proposes building a golden/evaluation dataset grounded in real user questions or the docs, rather than evaluating ad hoc",
+        "Covers the RAG triad or equivalent — faithfulness/groundedness, answer relevance, and retrieval/context quality — and distinguishes retrieval metrics from generation metrics",
+        "Recommends a concrete evaluation tool (ragas, deepeval, or promptfoo) and explains its role",
+        "Addresses LLM-as-judge reliability with at least one concrete measure: rubric design, position/self-preference bias, majority voting, or calibrating the judge against human spot-checks",
+        "Proposes running the evals as a repeatable regression gate (in CI or before each prompt/pipeline change), not only as a one-off pre-launch check"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our LLM feature summarizes long sales calls. We have no ground-truth summaries and no users yet. How do we evaluate quality with zero labeled data?",
+      "expected_output": "Does not treat missing labels as a blocker: proposes reference-free evaluation (rubric-based LLM-as-judge, groundedness against the source call, pairwise comparison between variants), bootstraps a small human-labeled golden set, calibrates the judge against human spot-checks, and plans online signals (feedback, A/B) once users exist",
+      "assertions": [
+        "Does not claim evaluation is impossible without labels — proposes reference-free approaches such as rubric-based LLM-as-judge, groundedness against the source transcript, or pairwise comparison between variants",
+        "Recommends bootstrapping a small human-labeled golden set (even tens of examples) and explains what it buys",
+        "Designs the judge with an explicit rubric or criteria decomposition rather than a bare overall score",
+        "Mentions checking the judge against human spot-checks (calibration/agreement) or using voting to reduce judge noise",
+        "Plans for online signals after launch (user feedback, A/B testing) as a complement to offline evals"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Set up MLflow for our fine-tuning experiments so we can log runs and compare hyperparameters across the team.",
+      "expected_output": "Recognizes this as experiment-tracking infrastructure, not evaluation design — hands off to ml-experiment-tracking for the MLflow setup and run comparison, noting the boundary: tracking records and compares runs, while ai-evaluation defines what and how to measure",
+      "assertions": [
+        "Recognizes the request is about experiment-tracking/run-comparison infrastructure, not about defining evaluation metrics or datasets",
+        "Refers to the ml-experiment-tracking skill for the MLflow setup and run comparison",
+        "Does not produce an evaluation-design workflow (golden datasets, judges, RAG metrics) as the answer to a tracking-infrastructure request",
+        "States the boundary: tracking records and compares runs, while evaluation design defines what and how to measure"
+      ]
+    }
+  ]
+}

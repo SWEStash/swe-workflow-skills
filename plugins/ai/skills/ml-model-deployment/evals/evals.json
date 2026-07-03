@@ -1,0 +1,34 @@
+{
+  "skill_name": "ml-model-deployment",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a scikit-learn fraud detection model that's performing well in our test environment. I need to deploy it as a real-time API that our payment service calls for every transaction. We process about 1000 transactions per second. What's the best approach?",
+      "expected_output": "Should design a serving architecture considering the 1000 TPS requirement, recommend appropriate serving pattern, address preprocessing consistency, and set up monitoring with drift detection.",
+      "assertions": [
+        "Considers the 1000 TPS requirement in architecture choice",
+        "Addresses feature preprocessing consistency (training-serving skew)",
+        "Recommends containerized serving with horizontal scaling",
+        "Sets up input validation for the prediction endpoint",
+        "Designs drift detection (fraud patterns change over time)",
+        "Plans a safe rollout strategy (shadow mode or canary)",
+        "Includes latency monitoring (fraud checks must be fast)",
+        "Plans for rollback"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our recommendation model has been in production for 6 months and click-through rates are declining. The data science team says the model metrics look fine on their test set. What's going on and how do we fix it?",
+      "expected_output": "Should identify this as likely data drift or concept drift, recommend checking production data distributions against training baseline, and suggest monitoring and retraining infrastructure.",
+      "assertions": [
+        "Identifies data/concept drift as the likely cause",
+        "Explains why test set metrics can look fine while production degrades",
+        "Recommends comparing production feature distributions against training baseline",
+        "Suggests PSI or KS tests for drift detection",
+        "Recommends setting up continuous monitoring to prevent recurrence",
+        "Suggests a retraining pipeline with fresh data",
+        "Does NOT just say 'retrain the model' without diagnosing the cause"
+      ]
+    }
+  ]
+}

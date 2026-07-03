@@ -1,0 +1,14 @@
+{
+  "name": "swe-workflow-data",
+  "displayName": "Data Engineer",
+  "description": "Skills for data pipelines, analytics engineering, data quality/contracts, schema design, test data, and pipeline observability.",
+  "version": "0.1.0",
+  "author": {
+    "name": "SWEStash"
+  },
+  "keywords": [
+    "skills",
+    "sdlc",
+    "data"
+  ]
+}

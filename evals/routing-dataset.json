@@ -22,6 +22,26 @@
       ]
     },
     {
+      "id": "positive:ai-evaluation:1",
+      "kind": "positive",
+      "skill": "ai-evaluation",
+      "prompt": "We've built a RAG chatbot over our internal docs and we're planning to launch in two weeks. How should we evaluate it before launch? Someone on the team mentioned ragas.",
+      "accept": [
+        "ai-evaluation"
+      ]
+    },
+    {
+      "id": "boundary:ai-evaluation:3",
+      "kind": "boundary",
+      "skill": "ai-evaluation",
+      "prompt": "Set up MLflow for our fine-tuning experiments so we can log runs and compare hyperparameters across the team.",
+      "accept": [
+        "ai-evaluation",
+        "ml-experiment-tracking",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:api-design:1",
       "kind": "positive",
       "skill": "api-design",
@@ -172,6 +192,46 @@
       "prompt": "We need to rename our 'username' column to 'display_name' in the users table. We have 2M users and the column is used in about 15 places in the codebase. We can't have downtime. How should I approach this?",
       "accept": [
         "data-modeling",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:data-pipeline-design:1",
+      "kind": "positive",
+      "skill": "data-pipeline-design",
+      "prompt": "We need to get data from Postgres and Stripe into Snowflake for BI dashboards. Design the pipeline \u2014 the team is considering dbt plus Airflow or Dagster.",
+      "accept": [
+        "data-pipeline-design"
+      ]
+    },
+    {
+      "id": "boundary:data-pipeline-design:3",
+      "kind": "boundary",
+      "skill": "data-pipeline-design",
+      "prompt": "Design the data pipeline that produces training features for our churn model \u2014 we need point-in-time correct features and a training set refreshed weekly.",
+      "accept": [
+        "data-pipeline-design",
+        "ml-pipeline-design",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:data-quality:1",
+      "kind": "positive",
+      "skill": "data-quality",
+      "prompt": "Stakeholders keep finding bad numbers in our dashboards \u2014 null customer IDs, duplicated orders, and data that's a day stale. We're on dbt + Snowflake. Set up data quality checks.",
+      "accept": [
+        "data-quality"
+      ]
+    },
+    {
+      "id": "boundary:data-quality:3",
+      "kind": "boundary",
+      "skill": "data-quality",
+      "prompt": "We need realistic but fake customer data to seed staging so QA can test the checkout flow \u2014 GDPR means we can't copy production.",
+      "accept": [
+        "data-quality",
+        "test-data-strategy",
         "NONE"
       ]
     },
@@ -361,6 +421,26 @@
       "prompt": "Write Terraform to provision a production-ready PostgreSQL RDS instance on AWS. It should be in a private subnet, encrypted, with automated backups, and accessible only from our ECS tasks.",
       "accept": [
         "infrastructure-as-code"
+      ]
+    },
+    {
+      "id": "positive:llm-app-engineering:1",
+      "kind": "positive",
+      "skill": "llm-app-engineering",
+      "prompt": "We're building an internal support assistant that answers questions over our product docs and past support tickets. Design the RAG architecture \u2014 how should we chunk, retrieve, and prompt?",
+      "accept": [
+        "llm-app-engineering"
+      ]
+    },
+    {
+      "id": "boundary:llm-app-engineering:3",
+      "kind": "boundary",
+      "skill": "llm-app-engineering",
+      "prompt": "We rewrote our assistant's system prompt and the answers feel better. How do we prove the new prompt is actually better before rolling it out to users?",
+      "accept": [
+        "llm-app-engineering",
+        "ai-evaluation",
+        "NONE"
       ]
     },
     {

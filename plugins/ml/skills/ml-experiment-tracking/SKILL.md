@@ -1,6 +1,6 @@
 ---
 name: ml-experiment-tracking
-description: "Design reproducible ML experiments — tracking, versioning, run comparison with MLflow, W&B, or DVC. Triggers: experiment tracking, MLflow, wandb, weights and biases, DVC, track experiments, compare models, hyperparameter, reproducibility, model registry, which model is better, experiment results, log metrics."
+description: "Design reproducible ML experiments — tracking, versioning, run comparison with MLflow, W&B, or DVC. Triggers: experiment tracking, MLflow, wandb, weights and biases, DVC, track experiments, compare models, hyperparameter, reproducibility, model registry, which model is better, experiment results, log metrics. Defining WHAT to measure (metrics, golden datasets, judges) → ai-evaluation; this skill records and compares the runs."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---

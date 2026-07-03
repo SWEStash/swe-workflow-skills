@@ -1,0 +1,44 @@
+{
+  "skill_name": "git-workflow",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I just finished implementing a user notification feature. I've staged all changes. Write a good commit message for me.",
+      "expected_output": "Should read the staged diff first, then write a Conventional Commits formatted message with type, scope, subject, and body explaining why.",
+      "assertions": [
+        "Runs git diff --staged to read the actual changes",
+        "Uses Conventional Commits format (type(scope): description)",
+        "Subject line is under 50 characters",
+        "Body explains WHY, not just WHAT",
+        "Checks if the staged changes are a single logical unit",
+        "If multiple logical changes, suggests splitting into separate commits"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to write a PR description for a branch that adds Stripe payment integration. The branch has 12 commits including some WIP and fix-typo commits. We're using a standard PR template.",
+      "expected_output": "Should read the branch diff and commit log, suggest squashing the WIP commits, then write a structured PR description.",
+      "assertions": [
+        "Reads git log and diff for the branch",
+        "Suggests cleaning up the 'WIP' and 'fix-typo' commits via rebase/squash",
+        "Writes a complete PR description with What/Why/How/Testing sections",
+        "Links to the relevant issue or task",
+        "Includes a checklist with relevant items (especially security for payments)",
+        "Notes for reviewers highlights the payment-related security considerations"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We're a team of 4 starting a new project. What branching strategy should we use? We deploy to production multiple times a day.",
+      "expected_output": "Should recommend a simple strategy (main + short-lived feature branches) given small team and continuous deployment. Should NOT suggest GitFlow or other complex models.",
+      "assertions": [
+        "Recommends simple branching (main + feature branches)",
+        "Does NOT recommend GitFlow (too heavy for 4 devs + continuous deployment)",
+        "Recommends short-lived branches (1-3 days max)",
+        "Suggests squash-merge as default merge strategy",
+        "Includes branch naming conventions",
+        "Mentions PR review requirements appropriate for team size"
+      ]
+    }
+  ]
+}

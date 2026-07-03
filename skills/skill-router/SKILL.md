@@ -140,9 +140,17 @@ installed skill by name, regardless of role.
 - **retrospective** — sprint retros, project / incident post-mortems, action items
 
 ### MLOps
-- **ml-pipeline-design** — training & data pipelines, feature engineering, orchestration
+- **ml-pipeline-design** — ML training & feature pipelines, point-in-time correctness, orchestration
 - **ml-experiment-tracking** — MLflow / W&B / DVC, run comparison, reproducibility
 - **ml-model-deployment** — serving, monitoring, drift detection, safe rollouts
+
+### AI / LLM Apps
+- **llm-app-engineering** — prompt/context engineering, RAG architecture, agent design, memory
+- **ai-evaluation** — golden datasets, RAG metrics, LLM-as-judge design, eval gates in CI, online A/B
+
+### Data Engineering
+- **data-pipeline-design** — batch/streaming ELT, dbt layering, Airflow/Dagster, idempotency, backfill
+- **data-quality** — dbt tests, expectations, data contracts, freshness, lineage / blast radius
 
 ## Golden Path workflow chains
 
@@ -164,6 +172,16 @@ When work spans phases, chain skills rather than improvising:
 `git-workflow` (commits carry the bump intent) → `release-management` (version,
 changelog, tag, publish gate, registry) → `deployment-checklist` (if it deploys) →
 `rollback-strategy`. `cicd-pipeline` automates the gate as a pipeline stage.
+
+**LLM feature**
+`feature-planning` → `llm-app-engineering` (prompt/RAG/agent design) →
+`ai-evaluation` (golden set, judge, CI gate) → `deployment-checklist`.
+`ml-model-deployment` joins when serving your own model.
+
+**Analytics / data pipeline**
+`data-pipeline-design` (ELT, layering, orchestration) → `data-modeling`
+(marts schema) → `data-quality` (tests, contracts, freshness) →
+`observability-design` (pipeline SLOs, alerting).
 
 **Pre-public / pre-milestone review**
 `strategic-review` (vision, positioning, market) → `project-review` (scope,

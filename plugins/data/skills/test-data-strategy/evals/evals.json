@@ -1,0 +1,49 @@
+{
+  "skill_name": "test-data-strategy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm building an e-commerce API with users, products, orders, and payments. I need to set up test data for our test suite — unit tests, integration tests, and we'll eventually need load testing data. We're using TypeScript, Prisma, and PostgreSQL. Design the test data strategy.",
+      "expected_output": "Should design a 3-layer factory architecture (build/create/scenario), define boundary values for key fields, set up Faker for realistic data, and outline the load test data generation approach.",
+      "assertions": [
+        "Designs layered factories (build → create → scenario)",
+        "Creates factories for all key entities (user, product, order, payment)",
+        "Defines scenario builders for complex test setups (checkout scenario)",
+        "Identifies boundary values for price (0, negative, max), quantity (0, 1, max), and user roles",
+        "Uses Faker with a fixed seed for reproducibility",
+        "Separates unit test data (in-memory) from integration test data (database)",
+        "Outlines load test data generation as a separate concern",
+        "Addresses referential integrity across related factories"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I have a function that validates and normalizes email addresses. It handles international domains, plus addressing (user+tag@), case normalization, and various edge cases. How do I test this thoroughly? Example-based tests feel insufficient.",
+      "expected_output": "Should recommend property-based testing for this kind of input-space-heavy function, define key properties (roundtrip, normalization idempotence), and supplement with explicit boundary values.",
+      "assertions": [
+        "Recommends property-based testing (fast-check or Hypothesis)",
+        "Defines the idempotence property: normalize(normalize(email)) === normalize(email)",
+        "Defines the preservation property: normalizing a valid email doesn't invalidate it",
+        "Supplements with explicit boundary examples for known edge cases",
+        "Tests special characters, unicode domains, maximum-length emails",
+        "Does NOT rely solely on hand-picked examples",
+        "Provides working property-based test code"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our QA team is using a copy of our production database for testing. This has real customer data including names, emails, and credit card tokens. We're a fintech startup and our compliance officer is concerned. How do we fix this without losing test quality?",
+      "expected_output": "Should recommend transitioning to factories for most tests, synthetic generation for staging, and masked production data only for specific data-shape-dependent scenarios. Should be specific about what data to mask and how.",
+      "assertions": [
+        "Identifies this as a compliance violation (PII in test environments)",
+        "Recommends factories for unit and integration tests (no real data needed)",
+        "Recommends synthetic data generation for staging",
+        "If production data is needed, recommends masking with specific techniques per field type",
+        "Provides concrete masking examples (emails, names, card tokens)",
+        "Warns against just copying and 'finding/replacing' — proper masking tools needed",
+        "Suggests separating the transition into phases (don't try to replace everything at once)",
+        "Does NOT just say 'don't use production data' without providing alternatives"
+      ]
+    }
+  ]
+}

@@ -147,8 +147,8 @@ The three layers from the original design:
 ### Dataset — mined from the existing evals
 
 `routing.py --build-dataset` writes `evals/routing-dataset.json` (GENERATED,
-committed, drift-checked via `--check-dataset` like `catalog.json`). Today: **41
-positive + 28 boundary + 8 trivial = 77 cases**. It stays in sync — every new
+committed, drift-checked via `--check-dataset` like `catalog.json`). Today: **48
+positive + 35 boundary + 8 trivial = 91 cases**. It stays in sync — every new
 skill's 3 evals yield 2 new routing cases.
 
 - **Happy-path** prompt (eval #1) → positive: `accept = {that skill}`.

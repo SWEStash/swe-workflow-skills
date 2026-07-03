@@ -1,0 +1,48 @@
+{
+  "skill_name": "project-documentation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write a README for my project. It's a Node.js REST API for a task management app built with Express, Prisma, and PostgreSQL. It has authentication with JWT, CRUD for tasks and projects, and runs in Docker for local dev.",
+      "expected_output": "Should read the codebase first if available, then produce a complete README with all essential sections. Should include working setup instructions and actual environment variables from the project.",
+      "assertions": [
+        "Reads codebase/package.json before writing if available",
+        "Starts with a clear one-line description of what the project does",
+        "Includes prerequisites with specific versions",
+        "Setup instructions go from git clone to running server",
+        "Includes Docker setup instructions",
+        "Lists environment variables needed with descriptions",
+        "Includes verification step (e.g., 'visit localhost:3000/health')",
+        "Code examples are copy-pasteable",
+        "Saves the README.md file to the project root"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to document the API endpoints of my Express app. We have about 15 endpoints across users, tasks, and projects resources.",
+      "expected_output": "Should read the route files, then produce organized API documentation grouped by resource with request/response examples.",
+      "assertions": [
+        "Reads the actual route/controller files to discover endpoints",
+        "Groups endpoints by resource (users, tasks, projects)",
+        "Documents method, path, description for each endpoint",
+        "Includes request body schema for POST/PUT endpoints",
+        "Includes response shape examples",
+        "Documents error responses (400, 401, 404)",
+        "Notes authentication requirements per endpoint"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Generate a changelog from our recent git history. We're about to release v2.1.0.",
+      "expected_output": "Should read git log, categorize commits into Added/Changed/Fixed/etc., and produce a Keep a Changelog formatted entry.",
+      "assertions": [
+        "Reads git log to find changes since last tag/release",
+        "Categorizes changes into Keep a Changelog sections",
+        "Writes entries from user perspective, not developer perspective",
+        "Includes the version number and date",
+        "Includes comparison link to previous version",
+        "Does not include trivial commits (merge commits, typo fixes) unless relevant"
+      ]
+    }
+  ]
+}

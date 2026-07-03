@@ -8,6 +8,27 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- Four AI & data skills (Phase 2 of the expansion roadmap):
+  - `ai-evaluation` — golden datasets, offline metrics, RAG evaluation
+    (faithfulness / answer relevance / context precision-recall) with
+    ragas / deepeval / promptfoo, LLM-as-judge design and calibration, eval
+    regression gates in CI, and online A/B + human feedback.
+  - `llm-app-engineering` — prompt/context engineering, RAG architecture
+    (chunking, hybrid retrieval, reranking, grounded prompts, context budget),
+    agent design (tool surfaces, decomposition, guardrails), memory; delegates
+    measurement to `ai-evaluation`.
+  - `data-pipeline-design` — batch/streaming ELT, dbt layering
+    (staging/intermediate/marts), Airflow/Dagster orchestration, idempotent
+    loads, parameterized backfills, CDC ingestion.
+  - `data-quality` — dbt tests and expectations, data contracts at the producer
+    boundary, source freshness, severity/ownership/alerting, schema-drift and
+    volume anomaly detection, lineage-scoped blast radius.
+- New roles: `ai` (AI Engineer: llm-app-engineering, ai-evaluation,
+  ml-experiment-tracking, ml-model-deployment, api-design) and `data`
+  (Data Engineer: data-pipeline-design, data-quality, data-modeling,
+  test-data-strategy, observability-design), both on the technical core.
+- `skill-router`: new "AI / LLM Apps" and "Data Engineering" phase-index
+  sections and two Golden Paths (LLM feature; analytics/data pipeline).
 - `release-management` skill: cut and publish releases right-sized to the project —
   semver decisions, changelogs, tagging, publish gates, registry publishing, and
   release automation (release-please / changesets / semantic-release), with a
@@ -19,6 +40,9 @@ All notable changes to this project are documented here. The format follows
   in docs/ROLES.md.
 
 ### Changed
+- `ml` role gains `ai-evaluation`; `ml-pipeline-design` and
+  `ml-experiment-tracking` descriptions now state their boundaries with the new
+  `data-pipeline-design` and `ai-evaluation` skills.
 - AUTHORING.md and `writing-skills` refreshed to current Agent Skills platform rules:
   `when_to_use` and other newer frontmatter fields (`context: fork`, `paths`,
   `disable-model-invocation`, `effort`), dynamic context injection, compaction

@@ -7,6 +7,11 @@
       "path": "accessibility-design/SKILL.md"
     },
     {
+      "name": "ai-evaluation",
+      "description": "Define how to evaluate ML models and GenAI/LLM apps — golden datasets, offline metrics, RAG evaluation (faithfulness, answer relevance, context precision/recall) with ragas/deepeval/promptfoo, LLM-as-judge design and calibration, eval regression gates in CI, online A/B and human feedback. Triggers: evaluate the model, eval my chatbot, RAG evals, ragas, LLM as judge, golden dataset, eval suite, is the new prompt better, hallucination rate, benchmark our AI app. Logging/comparing runs → ml-experiment-tracking; building the app → llm-app-engineering.",
+      "path": "ai-evaluation/SKILL.md"
+    },
+    {
       "name": "api-design",
       "description": "Design RESTful and GraphQL APIs — endpoint naming, request/response contracts, error handling, pagination, versioning, auth patterns, OpenAPI specs. Triggers: design the API, API contract, REST API, GraphQL schema, error response format, pagination, API versioning, OpenAPI, swagger, endpoints. Use architecture-design for REST-vs-GraphQL or monolith-vs-microservices decisions.",
       "path": "api-design/SKILL.md"
@@ -50,6 +55,16 @@
       "name": "data-modeling",
       "description": "Design database schemas, relationships, indexes, and migration strategies — relational and document stores. Triggers: data model, schema design, ER diagram, database schema, table design, foreign key, index strategy, normalization, denormalization, migration plan, document model, partition key.",
       "path": "data-modeling/SKILL.md"
+    },
+    {
+      "name": "data-pipeline-design",
+      "description": "Design batch and streaming data pipelines — ELT into a warehouse/lakehouse, dbt and analytics engineering (staging/intermediate/marts layers), orchestration with Airflow or Dagster, idempotent loads, incremental models, backfills, CDC ingestion. Triggers: data pipeline, ELT, ETL, dbt models, data warehouse, Snowflake, BigQuery, ingest into the warehouse, Airflow DAG, Dagster, Kafka streaming, backfill, incremental load, nightly job duplicates rows. ML training/feature pipelines → ml-pipeline-design; validating the data → data-quality.",
+      "path": "data-pipeline-design/SKILL.md"
+    },
+    {
+      "name": "data-quality",
+      "description": "Keep warehouse and pipeline data trustworthy — dbt tests, expectations (Great Expectations/Soda), data contracts with upstream producers, source freshness, schema-drift and volume anomaly detection, lineage and blast radius, severity and alerting. Triggers: data quality, bad data in dashboards, data validation, dbt tests, data contract, schema drift, stale data, freshness check, duplicate rows, nulls in the warehouse, data lineage, data SLA, upstream schema change broke us. Generating test/synthetic data → test-data-strategy; schema design → data-modeling.",
+      "path": "data-quality/SKILL.md"
     },
     {
       "name": "dependency-impact-analysis",
@@ -107,13 +122,18 @@
       "path": "infrastructure-as-code/SKILL.md"
     },
     {
+      "name": "llm-app-engineering",
+      "description": "Design and build LLM-powered applications — prompt and context engineering, RAG architecture (chunking, hybrid retrieval, reranking, grounded prompts), agent design (tool surfaces, planning, sub-agents), and memory. Triggers: build a chatbot, LLM app, AI assistant, prompt engineering, system prompt, RAG design, chunking, embeddings, vector database, semantic search, AI agent, tool calling, agent memory, context window, hallucinations. Measuring quality → ai-evaluation; model serving/inference infra → ml-model-deployment.",
+      "path": "llm-app-engineering/SKILL.md"
+    },
+    {
       "name": "metrics-and-okrs",
       "description": "Define OKRs, KPIs, success metrics, and engineering health metrics (DORA). Triggers: OKR, KPI, metrics, success metrics, key results, objectives, measure success, DORA metrics, engineering metrics, velocity, cycle time, deployment frequency, how do we measure, what should we track.",
       "path": "metrics-and-okrs/SKILL.md"
     },
     {
       "name": "ml-experiment-tracking",
-      "description": "Design reproducible ML experiments — tracking, versioning, run comparison with MLflow, W&B, or DVC. Triggers: experiment tracking, MLflow, wandb, weights and biases, DVC, track experiments, compare models, hyperparameter, reproducibility, model registry, which model is better, experiment results, log metrics.",
+      "description": "Design reproducible ML experiments — tracking, versioning, run comparison with MLflow, W&B, or DVC. Triggers: experiment tracking, MLflow, wandb, weights and biases, DVC, track experiments, compare models, hyperparameter, reproducibility, model registry, which model is better, experiment results, log metrics. Defining WHAT to measure (metrics, golden datasets, judges) → ai-evaluation; this skill records and compares the runs.",
       "path": "ml-experiment-tracking/SKILL.md"
     },
     {
@@ -123,7 +143,7 @@
     },
     {
       "name": "ml-pipeline-design",
-      "description": "Design reproducible ML training and data pipelines — ingestion, validation, feature engineering, training, evaluation, continuous training orchestration. Triggers: training pipeline, data pipeline, feature engineering, ETL for ML, continuous training, data validation, feature store, preprocessing, notebook to pipeline, orchestrate training, Airflow, Kubeflow, pipeline DAG.",
+      "description": "Design reproducible ML training and data pipelines — ingestion, validation, feature engineering, training, evaluation, continuous training orchestration. Triggers: training pipeline, ML data pipeline, feature engineering, ETL for ML, continuous training, data validation, feature store, preprocessing, notebook to pipeline, orchestrate training, Kubeflow, pipeline DAG, point-in-time features. Analytics/BI ELT and dbt warehouse pipelines → data-pipeline-design.",
       "path": "ml-pipeline-design/SKILL.md"
     },
     {

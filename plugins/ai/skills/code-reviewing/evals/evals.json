@@ -1,0 +1,62 @@
+{
+  "skill_name": "code-reviewing",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review this Python function:\n\ndef process_order(order_data, db, email_service, logger):\n    # Validate\n    if not order_data.get('items'):\n        return {'error': 'No items'}\n    if not order_data.get('user_id'):\n        return {'error': 'No user'}\n    \n    # Calculate total\n    total = 0\n    for item in order_data['items']:\n        price = db.query(f\"SELECT price FROM products WHERE id = {item['product_id']}\")\n        total += price * item['quantity']\n        if item['quantity'] > 10:\n            total -= price * item['quantity'] * 0.1\n    \n    # Save order\n    order = db.query(f\"INSERT INTO orders (user_id, total) VALUES ({order_data['user_id']}, {total}) RETURNING id\")\n    \n    # Send email\n    try:\n        email_service.send(order_data['user_id'], f'Order {order.id} confirmed', f'Total: ${total}')\n    except:\n        logger.error('Email failed')\n    \n    return {'order_id': order.id, 'total': total}",
+      "expected_output": "Should identify SQL injection (blocker), SRP violation, bare except, missing transaction, N+1 query potential, and magic number 0.1. Should use severity levels and provide concrete fix suggestions.",
+      "assertions": [
+        "Identifies SQL injection as a blocker (string interpolation in SQL)",
+        "Flags SRP violation (validate + calculate + save + email in one function)",
+        "Catches the bare except clause",
+        "Notes the magic number 0.1 (discount percentage)",
+        "Suggests parameterized queries",
+        "Uses severity levels (blocker/suggestion/nit)",
+        "Provides concrete code suggestions for fixes",
+        "Notes something positive (if applicable)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Can you review the changes in my last git commit?",
+      "expected_output": "Should read the git diff, understand context from surrounding files, and perform a structured review.",
+      "assertions": [
+        "Runs git diff or git show to read the changes",
+        "Reads surrounding code for context",
+        "Follows the structured review format (summary, blockers, suggestions, nits)",
+        "Provides specific file:line references for findings"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review this TypeScript code:\n\nexport const UserService = {\n  async getUser(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id } });\n    return user;\n  },\n  async getUserWithPosts(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id }, include: { posts: true } });\n    return user;\n  },\n  async getUserWithPostsAndComments(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id }, include: { posts: { include: { comments: true } } } });\n    return user;\n  }\n};",
+      "expected_output": "Should flag DRY violation (three nearly identical functions), Promise<any> types, and suggest a more flexible approach (e.g., include options parameter). Should be constructive and suggest a concrete refactoring.",
+      "assertions": [
+        "Flags DRY violation across the three functions",
+        "Flags the use of any return type",
+        "Suggests consolidation with an options/includes parameter",
+        "Does not just say 'this is bad' — provides a refactored version",
+        "Notes that this might be a case for a single flexible query function",
+        "Applies KISS — suggested solution is not over-engineered"
+      ]
+    }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "Review this new test file for our storage codec:\n\nimport { packRaw, unpackRaw } from '../rawjson.js';\ndescribe('raw_json codec', () => {\n  it('round-trips a value', () => { expect(unpackRaw(packRaw('hi'))).toBe('hi'); });\n  it('writes the gzip magic bytes', () => { expect(packRaw('hi')[0]).toBe(0x1f); expect(packRaw('hi')[1]).toBe(0x8b); });\n  it('shrinks a big payload', () => { const big = 'x'.repeat(5000); expect(packRaw(big).length).toBeLessThan(big.length); });\n});\n\nLooks like solid coverage to me — anything to flag?",
+      "pressure": [
+        "looks_good",
+        "more_tests_is_better"
+      ],
+      "expected_behavior": "Flags that two of the three tests re-verify zlib's own behavior rather than the project's logic: asserting the gzip magic bytes and that compression shrinks the payload are zlib's contract, covered by zlib's own tests, and add maintenance cost without testing our code. Recommends keeping the round-trip and adding tests for OUR logic (the legacy-fallback branches), not the library's.",
+      "assertions": [
+        "Flags the 'gzip magic bytes' test as re-verifying third-party (zlib) behavior",
+        "Flags the 'shrinks a big payload' test as testing zlib's compression, not our code",
+        "Does NOT praise the file as good coverage just because it has more tests",
+        "Keeps/endorses the round-trip test as legitimate own-logic coverage",
+        "Suggests testing our actual logic instead (e.g. the legacy fallback branches)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "skill_name": "llm-app-engineering",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We're building an internal support assistant that answers questions over our product docs and past support tickets. Design the RAG architecture — how should we chunk, retrieve, and prompt?",
+      "expected_output": "Designs the full retrieval-augmented pipeline: structure-aware chunking with reasoned size/overlap, retrieval beyond naive top-k (hybrid search, metadata filters, reranking), a grounded generation prompt with citations and an explicit no-answer path, a context budget, and a handoff to evaluation (golden questions, RAG metrics via ai-evaluation) before calling the design done",
+      "assertions": [
+        "Proposes a chunking strategy tied to the documents' structure (headings, tickets) with reasoning about size and overlap, not an arbitrary fixed size",
+        "Designs retrieval beyond naive top-k vector search: hybrid keyword+vector search, metadata filtering, or a reranking stage, with rationale",
+        "Outlines a grounded generation prompt: answer only from retrieved context, cite sources, and explicitly say when the context does not contain the answer",
+        "Considers the context budget: how many chunks to include, their ordering, and behavior when retrieval returns too little or too much",
+        "Delegates measuring quality to an evaluation setup (golden questions and RAG metrics / the ai-evaluation skill) rather than declaring the design done"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our coding agent has access to 25 tools and it keeps picking the wrong one and forgetting what it already did in long multi-step tasks. How do we fix the design?",
+      "expected_output": "Diagnoses a context/tool-design problem: prunes and disambiguates the tool surface, externalizes state (plan file/scratchpad, summarization) for long horizons, considers decomposing into phases or sub-agents with scoped toolsets, and verifies the fix with task-success evals rather than anecdotes",
+      "assertions": [
+        "Diagnoses this as a context/tool design problem (overlapping tools, unbounded history), not primarily a model-capability problem",
+        "Proposes reducing or restructuring the tool surface: fewer and clearer tools, distinct names and descriptions, or grouping/namespacing",
+        "Addresses long-horizon memory: a scratchpad or plan file, summarization/compaction of history, or state externalized outside the context window",
+        "Considers decomposition into phases or sub-agents with scoped toolsets for distinct stages of the task",
+        "Recommends verifying the improvement with evals (task success rate on representative tasks) rather than eyeballing a few runs"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We rewrote our assistant's system prompt and the answers feel better. How do we prove the new prompt is actually better before rolling it out to users?",
+      "expected_output": "Recognizes this as a measurement question, not a prompt-design question — hands off to ai-evaluation: compare both prompt variants on the same golden dataset with pairwise/judge scoring or metric deltas, gated before rollout, rather than offering more prompt-engineering advice",
+      "assertions": [
+        "Recognizes this is a measurement/evaluation question, not a prompt-design question",
+        "Refers to the ai-evaluation skill for the methodology (golden dataset, LLM-as-judge, regression comparison)",
+        "Mentions comparing the two prompt variants on the same dataset (pairwise/side-by-side or metric deltas), not anecdotes",
+        "Does not answer with further prompt-engineering advice as the primary response"
+      ]
+    }
+  ]
+}

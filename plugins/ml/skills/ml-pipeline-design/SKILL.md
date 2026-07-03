@@ -1,6 +1,6 @@
 ---
 name: ml-pipeline-design
-description: "Design reproducible ML training and data pipelines — ingestion, validation, feature engineering, training, evaluation, continuous training orchestration. Triggers: training pipeline, data pipeline, feature engineering, ETL for ML, continuous training, data validation, feature store, preprocessing, notebook to pipeline, orchestrate training, Airflow, Kubeflow, pipeline DAG."
+description: "Design reproducible ML training and data pipelines — ingestion, validation, feature engineering, training, evaluation, continuous training orchestration. Triggers: training pipeline, ML data pipeline, feature engineering, ETL for ML, continuous training, data validation, feature store, preprocessing, notebook to pipeline, orchestrate training, Kubeflow, pipeline DAG, point-in-time features. Analytics/BI ELT and dbt warehouse pipelines → data-pipeline-design."
 model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---

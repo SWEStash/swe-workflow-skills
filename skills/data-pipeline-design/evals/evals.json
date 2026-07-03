@@ -1,0 +1,41 @@
+{
+  "skill_name": "data-pipeline-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We need to get data from Postgres and Stripe into Snowflake for BI dashboards. Design the pipeline — the team is considering dbt plus Airflow or Dagster.",
+      "expected_output": "Designs an ELT pipeline: extraction/connector choice for both sources, raw load into Snowflake, dbt layering (staging → intermediate → marts), a reasoned Airflow-vs-Dagster recommendation, idempotent incremental models, and a backfill story — not just the initial full load",
+      "assertions": [
+        "Recommends ELT (load raw, transform in-warehouse) and explains why it fits a Snowflake + dbt stack",
+        "Designs dbt layering: raw/staging models, intermediate transformations, and marts for BI consumption",
+        "Makes a reasoned orchestrator recommendation (Airflow vs Dagster) instead of listing both neutrally",
+        "Designs for idempotency: reruns must not duplicate or corrupt data (incremental models with unique keys, merge or delete+insert patterns)",
+        "Covers incremental loading and a backfill strategy (parameterized date ranges or partitions), not just the initial full load",
+        "Addresses extraction from the sources concretely (managed connector such as Fivetran/Airbyte/dlt, or CDC) rather than hand-waving ingestion"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our nightly job loads yesterday's orders into the warehouse. When it fails midway and we rerun it, we get duplicate rows — and backfilling last month means manually editing the date in the script 30 times. Fix the design.",
+      "expected_output": "Identifies the non-idempotent append-only load as the root cause; converts the job to an idempotent write pattern (delete+insert by partition, merge/upsert on a key, or partition overwrite) parameterized over a logical date, so backfill becomes running the same job over a range via the orchestrator — with a lookback window for late-arriving data",
+      "assertions": [
+        "Identifies the root cause as a non-idempotent, append-only load",
+        "Proposes an idempotent write pattern: delete+insert by partition, merge/upsert on a unique key, or partition-overwrite semantics",
+        "Parameterizes the run over a logical date/window so any day can be run or re-run identically (backfill = the same job over a range)",
+        "Recommends orchestrator-native backfill (or an equivalent parameterized range run) over hand-edited scripts",
+        "Considers late-arriving or corrected data (lookback window, watermark, or reprocessing policy), not just the happy path"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Design the data pipeline that produces training features for our churn model — we need point-in-time correct features and a training set refreshed weekly.",
+      "expected_output": "Recognizes this as an ML training/feature pipeline, not analytics ELT — hands off to ml-pipeline-design, flagging point-in-time correctness/leakage as the ML-specific concern that a BI-oriented warehouse design does not address",
+      "assertions": [
+        "Recognizes this is an ML training/feature pipeline, not an analytics/BI ELT pipeline",
+        "Refers to the ml-pipeline-design skill for feature engineering and training orchestration",
+        "Flags point-in-time correctness / data leakage as the ML-specific concern that distinguishes this from BI work",
+        "Does not answer with a BI-oriented warehouse/dbt marts design as the primary solution"
+      ]
+    }
+  ]
+}

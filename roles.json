@@ -86,12 +86,37 @@
     },
     "ml": {
       "label": "ML Engineer / MLOps",
-      "description": "Skills for ML pipelines, experiment tracking, model deployment, and the data/observability around them.",
+      "description": "Skills for ML pipelines, experiment tracking, evaluation, model deployment, and the data/observability around them.",
       "core": "technical",
       "skills": [
         "ml-pipeline-design",
         "ml-experiment-tracking",
         "ml-model-deployment",
+        "ai-evaluation",
+        "data-modeling",
+        "test-data-strategy",
+        "observability-design"
+      ]
+    },
+    "ai": {
+      "label": "AI Engineer",
+      "description": "Skills for LLM-powered applications: prompt/RAG/agent design, evaluation, experiment tracking, model deployment, and the API around them.",
+      "core": "technical",
+      "skills": [
+        "llm-app-engineering",
+        "ai-evaluation",
+        "ml-experiment-tracking",
+        "ml-model-deployment",
+        "api-design"
+      ]
+    },
+    "data": {
+      "label": "Data Engineer",
+      "description": "Skills for data pipelines, analytics engineering, data quality/contracts, schema design, test data, and pipeline observability.",
+      "core": "technical",
+      "skills": [
+        "data-pipeline-design",
+        "data-quality",
         "data-modeling",
         "test-data-strategy",
         "observability-design"

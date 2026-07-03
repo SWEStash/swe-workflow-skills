@@ -151,6 +151,8 @@ catalog it could read, it would only waste a listing slot).
 | `frontend` | Frontend Engineer                | technical |
 | `devops`   | DevOps / SRE / Platform Engineer | technical |
 | `ml`       | ML Engineer / MLOps              | technical |
+| `ai`       | AI Engineer (LLM apps)           | technical |
+| `data`     | Data Engineer                    | technical |
 | `security` | Security Engineer                | technical |
 | `architect`| Architect / Staff Engineer       | technical |
 | `em`       | Engineering Manager / Tech Lead  | universal |
@@ -251,23 +253,22 @@ Verified against the Claude Code / claude.ai docs, 2026-06.
 All need **new skills** first (build via the `writing-skills` RED→GREEN process),
 in planned order:
 
-1. **AI & data** — `ai-evaluation` (ML models + GenAI/RAG: golden datasets, ragas /
-   deepeval / promptfoo, LLM-as-judge, CI eval gates), `llm-app-engineering`
-   (prompt/context engineering, RAG, agent design), `data-pipeline-design` (ELT/dbt,
-   orchestration, idempotency/backfill), `data-quality` (expectations, contracts,
-   freshness, lineage) → new **`data`** and **`ai`** (AI Engineer) roles; extend `ml`.
-2. **Ideation & execution** — `brainstorming` (upstream of prd-writing /
+1. **Ideation & execution** — `brainstorming` (upstream of prd-writing /
    feature-planning), `plan-execution` (checkpointed execution of plans),
    `threat-modeling` (STRIDE; → `security` role), `build-vs-buy` (→ `strategy` role).
-3. **Deferred skills** — subagent-orchestration, compliance-privacy (GDPR/SOC2),
+2. **Deferred skills** — subagent-orchestration, compliance-privacy (GDPR/SOC2),
    finops-cost-optimization, code-archaeology/legacy-comprehension,
    chaos/DR-resilience, dx-audit, mobile-engineering set.
-4. **Deferred roles** — **Data Scientist** (needs EDA / statistical-analysis /
+3. **Deferred roles** — **Data Scientist** (needs EDA / statistical-analysis /
    notebook-to-production skills), **Mobile Engineer** (needs the mobile set).
-5. **Machinery** — migrate all skills to the `description` + `when_to_use`
+4. **Machinery** — migrate all skills to the `description` + `when_to_use`
    frontmatter split as one coordinated change (catalog builder + routing
    re-baseline); apply `context: fork` to heavy read-only review skills; periodic
    obsolescence review (re-run evals RED; retire skills where RED ≈ GREEN).
+
+_Done 2026-07: **AI & data** — `ai-evaluation`, `llm-app-engineering`,
+`data-pipeline-design`, `data-quality` shipped with the new `ai` and `data`
+roles; `ml` extended with `ai-evaluation`._
 
 ## Open follow-ups
 
@@ -276,11 +277,13 @@ in planned order:
   `dependency-impact-analysis` (still in `architect`, always routable) to stay
   crop-safe; `backend` deliberately did NOT get it (route via `skill-router`).
   Consider splitting these roles before adding more.
-- Pinned set reviewed 2026-07: unchanged. `release-management` is high-consequence
-  but, like `deployment-checklist` and `rollback-strategy`, it activates at a
-  deliberate moment the router catches reliably — pinning is reserved for skills
-  that must interrupt work the agent already believes is fine (verification, TDD,
-  bugs, incidents, review).
+- Pinned set reviewed 2026-07 (and re-reviewed with the Phase-2 AI/data additions):
+  unchanged. `release-management` is high-consequence but, like
+  `deployment-checklist` and `rollback-strategy`, it activates at a deliberate
+  moment the router catches reliably — pinning is reserved for skills that must
+  interrupt work the agent already believes is fine (verification, TDD, bugs,
+  incidents, review). The four AI/data skills are advisory design workflows and
+  clearly don't qualify.
 - Decide whether to keep committing generated `plugins/` + `catalog.json` or
   generate them at release.
 

@@ -1,0 +1,44 @@
+{
+  "skill_name": "feature-planning",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to add a notification system to our app. Users should get email and in-app notifications when someone comments on their posts. We're using a Node.js/Express backend with PostgreSQL and a React frontend. Can you help me plan this out?",
+      "expected_output": "A structured plan with clarifying questions asked first, acceptance criteria in Given/When/Then format, 5-10 granular tasks with dependencies, risk identification, and a saved markdown plan file.",
+      "assertions": [
+        "Asks clarifying questions before producing the plan",
+        "Includes acceptance criteria in Given/When/Then format",
+        "Tasks are granular (1-4 hours each) with clear deliverables",
+        "Dependency map is present showing task ordering",
+        "Risks section identifies at least 2 technical risks",
+        "Out of scope section explicitly excludes something",
+        "Saves the plan as a markdown file"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "plan adding dark mode to our vue app",
+      "expected_output": "Should ask clarifying questions first (CSS variables vs theme library? System preference detection? Per-component or global? Persistence?), then produce a structured plan after getting answers.",
+      "assertions": [
+        "Does not immediately produce a plan from this vague request",
+        "Asks at least 3 clarifying questions",
+        "Applies YAGNI by not over-engineering the approach",
+        "Tasks include both implementation and testing",
+        "Acceptance criteria are independently testable"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We need to migrate our REST API to GraphQL. It's a Django backend serving a React Native mobile app and a Next.js web app. We have about 40 endpoints. The CEO wants it done in 3 sprints. Help me plan this.",
+      "expected_output": "Should flag the complexity and risks, suggest an incremental migration strategy rather than big-bang, break into phased milestones, and identify the critical path.",
+      "assertions": [
+        "Flags the risk of a full rewrite in 3 sprints",
+        "Suggests incremental or parallel migration strategy",
+        "Recommends architectural decisions be made first",
+        "References the architecture-design skill for ADR",
+        "Identifies external dependencies (mobile app release cycle)",
+        "Creates phased milestones, not just flat task list"
+      ]
+    }
+  ]
+}

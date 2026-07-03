@@ -1,7 +1,7 @@
 {
   "name": "swe-workflow-ml",
   "displayName": "ML Engineer / MLOps",
-  "description": "Skills for ML pipelines, experiment tracking, model deployment, and the data/observability around them.",
+  "description": "Skills for ML pipelines, experiment tracking, evaluation, model deployment, and the data/observability around them.",
   "version": "0.1.0",
   "author": {
     "name": "SWEStash"

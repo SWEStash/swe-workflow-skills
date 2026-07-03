@@ -1,0 +1,52 @@
+{
+  "skill_name": "observability-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We're launching a B2B SaaS API that processes invoices. We need to define SLOs before launch. Our customers expect the API to be fast and reliable — they integrate it into their accounting workflows. We use Express.js, PostgreSQL, and deploy on AWS ECS. Help us design our SLOs.",
+      "expected_output": "Should identify critical user journeys (submit invoice, retrieve invoice, list invoices), define SLIs as ratios (availability, latency), set appropriate SLO targets, calculate error budgets, define error budget policies, and produce an SLO document.",
+      "assertions": [
+        "Identifies critical user journeys before defining metrics",
+        "Defines SLIs as good events / total events ratios",
+        "Sets availability SLO (e.g., 99.9%) with justification",
+        "Sets latency SLO with specific threshold (e.g., 99% < 500ms)",
+        "Calculates error budget in concrete terms (minutes or requests)",
+        "Defines error budget policy with escalating actions",
+        "Does NOT set SLOs at 99.99% without justifying the cost",
+        "Recommends measuring SLIs at the load balancer, not just app-side",
+        "Produces an SLO document using the template"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We have a Node.js microservices architecture (5 services) and zero observability beyond console.log statements. Our CTO wants distributed tracing and proper monitoring. Where do we start?",
+      "expected_output": "Should recommend starting with OpenTelemetry auto-instrumentation on one service, then expanding. Should prioritize: structured logging → metrics → traces. Should not suggest instrumenting everything at once.",
+      "assertions": [
+        "Recommends starting with ONE service, not all five",
+        "Suggests OpenTelemetry auto-instrumentation as the quickest win",
+        "Prioritizes structured logging first (replacing console.log)",
+        "Recommends adding trace context to logs for correlation",
+        "Suggests an OTel Collector rather than direct-to-backend export",
+        "Does NOT recommend building custom instrumentation",
+        "Provides concrete Node.js OTel setup code",
+        "Suggests a backend for receiving telemetry (Jaeger, Grafana stack, etc.)",
+        "Applies KISS — not all 5 services on day one"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our on-call engineers are getting 50+ alerts per week and most of them are noise. They're burned out and missing real incidents. How do we fix our alerting?",
+      "expected_output": "Should diagnose alert fatigue, recommend switching to SLO-based burn rate alerting, help classify alerts by severity, and suggest an alert review process.",
+      "assertions": [
+        "Identifies 50+/week as severe alert fatigue",
+        "Recommends auditing existing alerts (what fires, how often, what action was taken)",
+        "Suggests removing or silencing alerts that are never actionable",
+        "Recommends burn rate alerting instead of raw threshold alerting",
+        "Distinguishes between page-worthy (urgent) and ticket-worthy (can wait) alerts",
+        "Requires every alert to link to a runbook",
+        "Suggests a monthly alert review cadence",
+        "Does NOT just say 'raise the thresholds' — addresses root cause"
+      ]
+    }
+  ]
+}
