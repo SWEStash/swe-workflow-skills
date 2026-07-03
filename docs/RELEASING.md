@@ -93,6 +93,6 @@ Before publishing a new version, sanity-check the tarball actually installs:
 ```bash
 npm pack                                   # inspect the file list + size
 tar xzf swe-workflow-skills-*.tgz -C /tmp  # extracts to /tmp/package
-node /tmp/package/bin/cli.mjs install --dir /tmp/pkgtest   # should install 44 skills
+node /tmp/package/bin/cli.mjs install --dir /tmp/pkgtest   # should install all skills (count = docs/SKILLS.md)
 npm publish                                # requires `npm login` first
 ```

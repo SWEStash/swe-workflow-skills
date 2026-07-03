@@ -7,11 +7,12 @@ allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 
 # Writing Skills
 
-Author and maintain skills for this library. The canonical rule set lives in the
-README's "Building Skills" section — read it for descriptions, listing budget,
-frontmatter, and common mistakes. This skill adds the parts that must be
-*applied*, not just read: how to reproduce a skill's failure before fixing it,
-how to write a description that actually triggers, and how to pressure-test.
+Author and maintain skills for this library. The canonical rule set lives in
+**docs/AUTHORING.md** — read it for descriptions, listing budget, frontmatter,
+dynamic context injection, and common mistakes. This skill adds the parts that
+must be *applied*, not just read: how to reproduce a skill's failure before
+fixing it, how to write a description that actually triggers, and how to
+pressure-test.
 
 ## ⛔ The Iron Law
 
@@ -53,16 +54,25 @@ description over the body, so get it right.
 - **Our format is a compliant hybrid:** `<when/purpose>. Triggers: <keywords>. <boundary>`.
   The `Triggers:` list *is* the when-to-use expressed as the phrases a user
   actually types — keep casting that net wide.
-- **~350 chars** (listing-budget constraint; hard cap 1024). Longer descriptions
-  get silently dropped at scale — `/doctor` reports it. See README "Listing Budget".
+- **Keep the hybrid format for now** (don't move triggers to `when_to_use` yet):
+  the catalog builder reads only `description`, so the router would lose the
+  trigger phrases. The `when_to_use` migration is a coordinated roadmap change
+  (builder + skills + routing re-baseline together).
+- **~350 chars** for `description` (listing-budget constraint; hard cap 1024).
+  Over budget, the *least-invoked* skills' descriptions drop silently — `/doctor`
+  reports it. See AUTHORING.md "Listing Budget".
 - **Anti-pattern:** describing mechanics/steps instead of triggering situations.
 
-## Structure and budget (brief — see README for detail)
+## Structure and budget (brief — see AUTHORING.md for detail)
 
 - Frontmatter: `name`, `description`, `model` (haiku/sonnet/opus by reasoning
-  need), `allowed-tools`.
+  need), `allowed-tools`. Newer fields where they fit: `when_to_use`,
+  `context: fork` + `agent` (heavy read-only skills), `paths` (file-scoped),
+  `disable-model-invocation` (deliberate-only workflows), `effort`.
 - Progressive disclosure: keep SKILL.md tight (aim < 300 lines); push deep
-  domain knowledge to `references/`, output formats to `templates/`.
+  domain knowledge to `references/`, output formats to `templates/`. On
+  compaction only a skill's first ~5k tokens are re-attached — front-load the
+  Iron Law and workflow; write standing instructions, not one-time steps.
 - Exactly **3 evals** (happy path / edge case / scope boundary) with specific,
   verifiable assertions. For hardened skills, add an optional `pressure` eval
   (see `verification-before-completion` and the safety-critical skills for the
@@ -79,9 +89,15 @@ Apply rigor where mistakes are expensive; keep freedom where judgment matters.
   architecture exploration, UX, estimation, proposals. Rigidity there produces
   worse outcomes, not better ones.
 
+## Retiring skills
+
+As base models improve, a skill can become pure overhead. Periodically re-run a
+skill's evals RED (without the skill); if RED ≈ GREEN, slim or retire it rather
+than letting it spend listing budget and re-attachment tokens.
+
 ## See also
 
-- README "Building Skills" — the canonical rules and common mistakes.
+- docs/AUTHORING.md — the canonical rules and common mistakes.
 - [references/pressure-testing.md](references/pressure-testing.md) — running baseline scenarios and the pressure levers.
 - `docs/EVALS.md` — the automated RED/GREEN harness that replays evals through subagents and gates regressions in CI.
 - `verification-before-completion` — the discipline that proves a skill change works (run the eval, read the result).

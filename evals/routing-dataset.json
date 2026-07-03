@@ -475,6 +475,27 @@
       ]
     },
     {
+      "id": "positive:project-review:1",
+      "kind": "positive",
+      "skill": "project-review",
+      "prompt": "We're about to go public with our toolkit. It's spread across a strategy repo, a core implementation repo, and a validation harness. Before we announce, review where the project actually stands against its roadmap \u2014 what's really built, what's still a stub, and whether our own validation backs up the claims.",
+      "accept": [
+        "project-review"
+      ]
+    },
+    {
+      "id": "boundary:project-review:3",
+      "kind": "boundary",
+      "skill": "project-review",
+      "prompt": "There's a 20-line function in our payments module with a bug. Can you review it and tell me how to fix it?",
+      "accept": [
+        "project-review",
+        "bug-investigating",
+        "code-reviewing",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:refactoring:1",
       "kind": "positive",
       "skill": "refactoring",
@@ -490,6 +511,27 @@
       "prompt": "Can you refactor my entire codebase to use better patterns?",
       "accept": [
         "refactoring",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:release-management:1",
+      "kind": "positive",
+      "skill": "release-management",
+      "prompt": "Our team maintains a Node.js library on GitHub with about a dozen contributors. We already use conventional commits. Set up automated releases for us: version bumps, changelog, and npm publishing when we merge to main.",
+      "accept": [
+        "release-management"
+      ]
+    },
+    {
+      "id": "boundary:release-management:3",
+      "kind": "boundary",
+      "skill": "release-management",
+      "prompt": "We're shipping to production on Friday and there are two pending database migrations. Is it safe to deploy? What should we double-check?",
+      "accept": [
+        "release-management",
+        "deployment-checklist",
+        "rollback-strategy",
         "NONE"
       ]
     },
@@ -538,6 +580,25 @@
       "prompt": "We're about to launch our SaaS product and our CTO wants a security review before the launch. We don't know where to start. Can you help?",
       "accept": [
         "security-audit",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:strategic-review:1",
+      "kind": "positive",
+      "skill": "strategic-review",
+      "prompt": "We're considering taking our open-source developer tool public in a couple of months. Before we do, I want a hard strategic review \u2014 is the positioning actually defensible, who are we really competing with as of now, and is the platform we run on about to eat our wedge?",
+      "accept": [
+        "strategic-review"
+      ]
+    },
+    {
+      "id": "boundary:strategic-review:3",
+      "kind": "boundary",
+      "skill": "strategic-review",
+      "prompt": "I'm writing the one-line tagline for our landing page. Should it say 'fast' or 'simple'?",
+      "accept": [
+        "strategic-review",
         "NONE"
       ]
     },

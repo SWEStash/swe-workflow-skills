@@ -52,6 +52,10 @@ Use the Conventional Commits format — see [references/conventions.md](referenc
 - Breaking changes: `BREAKING CHANGE: description`
 - Co-authors: `Co-authored-by: Name <email>`
 
+Commit types are not just style — in automated release flows they drive the version:
+`fix` → PATCH, `feat` → MINOR, `feat!`/`BREAKING CHANGE:` → MAJOR. A mislabeled type
+mis-versions the next release (see `release-management`).
+
 ### Step 3: Validate
 
 Before committing, check:
@@ -125,3 +129,9 @@ See [references/conventions.md](references/conventions.md) for branch naming con
 - **KISS**: One commit = one logical change. Don't bundle unrelated changes.
 - **DRY**: If you're writing the same commit message pattern repeatedly, you might be making commits too granular or too broad.
 - **Functional Independence**: Each PR should be independently deployable when possible. Avoid PRs that depend on other unmerged PRs.
+
+## Cross-Skill References
+
+- `release-management` — cutting the release these commits accumulate into: semver, changelog, tagging, publishing
+- `code-reviewing` — reviewing the PR the description introduces
+- `verification-before-completion` — run the proving commands before pushing or opening the PR

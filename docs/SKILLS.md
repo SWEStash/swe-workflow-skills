@@ -1,6 +1,6 @@
 # Skill Catalog
 
-All 44 skills in the library — 42 SDLC workflows plus two meta skills
+All 45 skills in the library — 43 SDLC workflows plus two meta skills
 (`skill-router`, the orchestrator, and `writing-skills`, the authoring guide).
 Every skill's full description lives in `catalog.json` (what the orchestrator
 routes on); this page is the human-readable index.
@@ -51,12 +51,13 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `frontend-architecture` | React component hierarchy, state management, design tokens, data fetching, code organization |
 | `accessibility-design` | WCAG compliance, semantic HTML, ARIA, keyboard navigation, focus management, screen readers |
 
-## DevOps (5)
+## DevOps (6)
 
 | Skill | Purpose |
 |-------|---------|
 | `containerization` | Dockerfiles, docker-compose, Kubernetes manifests with security and efficiency best practices |
 | `cicd-pipeline` | CI/CD pipeline design for GitHub Actions, GitLab CI with quality gates and safe deploys |
+| `release-management` | Cut and publish releases right-sized to the project — semver, changelogs, tagging, publish gates, release automation (release-please/changesets/semantic-release) |
 | `infrastructure-as-code` | Terraform/IaC modules with state management, security, and environment separation |
 | `deployment-repo` | Multi-repo deployment orchestration and environment promotion |
 | `gitops-delivery` | GitOps-based delivery with Flux/ArgoCD patterns |

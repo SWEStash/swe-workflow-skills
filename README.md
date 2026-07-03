@@ -1,10 +1,10 @@
 # SWE Workflow Skills for Claude Code
 
 [![roles-check](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml/badge.svg)](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml)
-![skills](https://img.shields.io/badge/skills-44-blue)
+![skills](https://img.shields.io/badge/skills-45-blue)
 [![license: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
-A curated library of **44 Claude Code Agent Skills** that walk Claude through the
+A curated library of **45 Claude Code Agent Skills** that walk Claude through the
 software lifecycle the way a disciplined senior engineer would — planning, design,
 TDD, review, security, deployment, incidents, and the project-management work around
 them.
@@ -17,21 +17,35 @@ LLM-as-judge eval harness.
 
 ## Why this library
 
-- **An orchestrator, not a pile of skills.** A `skill-router` skill maps your intent to
-  the right skill(s) and chains them across phases. Activation is *routed and
-  deterministic*, not left to fuzzy auto-triggering.
+Not just a pile of skills — an activation architecture, an eval discipline, and
+full-SDLC breadth that popular collections don't cover:
+
+- **An orchestrator, not auto-trigger roulette.** A `skill-router` skill maps your
+  intent to the right skill(s) and chains them across phases. Activation is *routed and
+  deterministic*, not left to fuzzy auto-triggering — the routing eval harness measures
+  it (top-1 accuracy 1.00, zero misroutes on the current baseline, regression-gated in
+  CI).
 - **Scales past Claude's skill-listing budget.** Claude Code only injects skill
   descriptions up to ~1% of context, so large libraries silently stop triggering past
   ~20–40 skills. This library keeps only the router + safety skills "loud" and lists the
-  rest **name-only** — so the router can invoke all 44 by name, with no cropping and
-  without making you pre-pick a subset ([how it works](docs/ROLES.md)).
+  rest **name-only** — the mechanism Claude Code's own docs now recommend for large
+  installs — so the router can invoke every skill by name, with no cropping and without
+  making you pre-pick a subset ([how it works](docs/ROLES.md)).
+- **Tested like code, not prose.** Every skill ships 3 evals; two LLM-as-judge
+  harnesses (content quality and routing accuracy) replay them with skill loaded vs
+  absent and gate regressions in CI. Safety-critical skills (deploys, releases, tests,
+  incidents, security) are **hardened**: an Iron Law, a rationalization table distilled
+  from real baseline failures, and pressure tests that try to talk the agent out of it.
+- **Full-SDLC breadth.** Planning, architecture/ADRs, API and data design, TDD, review,
+  security, releases, deploys, GitOps, observability, incidents, MLOps, and the
+  PM/strategy work around them — coverage the popular community collections
+  (superpowers, the awesome-lists) don't attempt.
 - **Role-scoped.** `/role backend` (or `frontend`, `devops`, `ml`, `security`,
   `architect`, `em`, `pm`, `qa`, `designer`) promotes a working set to auto-trigger; the
   rest stay one route away.
 - **Cross-platform install.** The installer and SessionStart hook are **pure Node** — the
   one runtime Claude Code already requires — so they run identically on Linux, macOS, and
   Windows (no bash, Python, or `sed`).
-- **Tested.** Every skill ships 3 evals; safety/discipline skills add pressure tests.
 
 ## Quick Start
 
@@ -46,7 +60,7 @@ web, claude.ai chat, and Cowork):
 **Want the whole library with the orchestrator** (CLI) — no clone needed:
 
 ```bash
-npx swe-workflow-skills install --global   # all 44 skills + router + /role + the SessionStart hook
+npx swe-workflow-skills install --global   # all 45 skills + router + /role + the SessionStart hook
 ```
 
 Or from a clone: `node install.mjs --global`.
@@ -104,13 +118,13 @@ review) live in the `skill-router` skill and **[ROLES.md](docs/ROLES.md)**.
 
 ## What's included
 
-44 skills — **[full catalog → SKILLS.md](docs/SKILLS.md)**:
+45 skills — **[full catalog → SKILLS.md](docs/SKILLS.md)**:
 
 | Area | Count | Examples |
 |------|-------|----------|
 | Software Engineering | 23 | feature-planning, architecture-design, tdd-workflow, code-reviewing, security-audit, refactoring, incident-response |
 | Project Management | 6 | prd-writing, effort-estimation, metrics-and-okrs, retrospective, strategic-review |
-| DevOps | 5 | containerization, cicd-pipeline, infrastructure-as-code, gitops-delivery |
+| DevOps | 6 | containerization, cicd-pipeline, release-management, infrastructure-as-code, gitops-delivery |
 | Design | 3 | ui-ux-design, frontend-architecture, accessibility-design |
 | MLOps | 3 | ml-pipeline-design, ml-experiment-tracking, ml-model-deployment |
 | Evaluation & Monitoring | 2 | observability-design, test-data-strategy |

@@ -83,5 +83,6 @@ Quality gates prevent bad code from advancing:
 - `deployment-repo` — for multi-service systems, the deployment repo handles system-level CI (contract tests, E2E, promotion)
 - `gitops-delivery` — pull-based delivery as an alternative to CI-driven `kubectl apply` / `helm upgrade`
 - `deployment-checklist` — pre-deployment verification gates to incorporate into the pipeline
+- `release-management` — the release stage itself: version bumps, changelog, tagging, publish gates, registry publishing (the pipeline automates what that skill decides)
 - `security-audit` — security scanning stages and SAST/DAST integration
 - `verification-before-completion` — run the proving commands locally before relying on the pipeline to catch failures

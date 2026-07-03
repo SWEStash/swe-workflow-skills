@@ -69,7 +69,7 @@ Walk through each section. Check items by reading code, running commands, and ve
 #### Documentation
 - [ ] README updated if setup steps changed
 - [ ] API documentation updated for new/changed endpoints
-- [ ] CHANGELOG updated (if project uses one)
+- [ ] Release cut correctly, if this deploy ships one — version, changelog, tag consistent (see `release-management`)
 - [ ] Breaking changes are clearly communicated
 
 ### Step 3: Report
@@ -126,6 +126,7 @@ See [references/pre-deploy-gates.md](references/pre-deploy-gates.md) for environ
 
 ## Cross-Skill References
 
+- `release-management` — cutting the versioned release (semver, changelog, tag, publish) that this checklist deploys
 - `rollback-strategy` — design the rollback plan before deploying (required for High-risk changes)
 - `configuration-strategy` — verify all environment variables and feature flags are configured correctly
 - `incident-response` — use if the deployment causes a production incident

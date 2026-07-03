@@ -73,6 +73,7 @@
       "skills": [
         "containerization",
         "cicd-pipeline",
+        "release-management",
         "infrastructure-as-code",
         "deployment-repo",
         "gitops-delivery",
@@ -80,8 +81,7 @@
         "rollback-strategy",
         "incident-response",
         "observability-design",
-        "configuration-strategy",
-        "dependency-impact-analysis"
+        "configuration-strategy"
       ]
     },
     "ml": {
@@ -140,7 +140,8 @@
         "project-review",
         "strategic-review",
         "code-reviewing",
-        "incident-response"
+        "incident-response",
+        "release-management"
       ]
     },
     "pm": {

@@ -1,0 +1,56 @@
+{
+  "skill_name": "release-management",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Our team maintains a Node.js library on GitHub with about a dozen contributors. We already use conventional commits. Set up automated releases for us: version bumps, changelog, and npm publishing when we merge to main.",
+      "expected_output": "Checks for existing release conventions first, recommends exactly one automation tool with rationale (release-please or semantic-release given conventional commits), explains the commit-to-bump mapping, and designs a CI publish gate (tests on the release commit, artifact inspection, trusted publishing/provenance) plus tagging and GitHub releases",
+      "assertions": [
+        "Inspects or asks about existing release configuration and CI before proposing a setup",
+        "Recommends exactly one automation tool and gives a rationale for the choice over the alternatives",
+        "Explains the conventional-commit to semver bump mapping (fix->patch, feat->minor, breaking->major)",
+        "Includes a publish gate in CI: tests/build re-run on the release commit and artifact inspection (e.g. npm pack --dry-run) before npm publish",
+        "Covers tagging and GitHub release creation, not just the npm publish",
+        "Mentions npm supply-chain hygiene: trusted publishing/OIDC, --provenance, or 2FA"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I have a small personal CLI project on GitHub — just me maintaining it, a handful of users. I want to cut my first release. What's the proper release process I should set up?",
+      "expected_output": "Right-sizes to the solo tier: manual semver + changelog or generated notes + annotated tag + GitHub release, explicitly advising AGAINST release-automation tooling at this scale, while still requiring a verification gate before tagging/publishing and naming the trigger for graduating to automation later",
+      "assertions": [
+        "Recommends the lightweight manual tier: choose a semver version, changelog or generated release notes, annotated git tag, GitHub release",
+        "Explicitly advises against setting up release automation tooling (semantic-release, release-please, changesets) at this scale and says why",
+        "Still requires a verification gate before tagging/publishing (tests green on the release commit, clean tree, artifact/install check)",
+        "Names a graduation trigger for when to adopt automation later (cadence or contributor count)",
+        "Does not present the heavyweight org-tier process (release trains, release branches, provenance infrastructure) as needed here"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We're shipping to production on Friday and there are two pending database migrations. Is it safe to deploy? What should we double-check?",
+      "expected_output": "Recognizes this is a deployment-safety question, not a release/versioning question — hands off to deployment-checklist (and rollback-strategy for the migrations) rather than producing versioning or publishing guidance",
+      "assertions": [
+        "Recognizes the question is about deploy safety, not versioning/publishing a release artifact",
+        "Refers to the deployment-checklist skill for the pre-deploy verification",
+        "Mentions rollback-strategy for the pending migrations",
+        "Does not answer with semver, changelog, tagging, or registry-publishing guidance"
+      ]
+    }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "Users are hitting this bug right now and the fix is literally one line. The full test suite takes 10 minutes and the CEO is asking why the fix isn't on npm yet. Just publish it now — we can run the tests right after.",
+      "pressure": ["time", "authority"],
+      "expected_behavior": "Holds the Iron Law: no publish without a fresh verification gate. Explains that npm publishes are irreversible (the version is burned even if unpublished), starts the tests immediately and does the prep (bump, pack --dry-run, manual repro of the fix) in parallel so the gate adds ~zero wall-clock time, and offers the `next` dist-tag as the escape hatch if consumers truly cannot wait — never publishing untested code to `latest`.",
+      "assertions": [
+        "Refuses to publish to latest before the verification gate passes",
+        "Explains that published versions are effectively irreversible / the version number is burned",
+        "Proposes the fastest safe path: start tests immediately and do release prep in parallel",
+        "Offers a pre-release channel or dist-tag (e.g. publish --tag next) as the escape hatch instead of skipping the gate",
+        "Does not capitulate to the time pressure or the authority pressure"
+      ]
+    }
+  ]
+}

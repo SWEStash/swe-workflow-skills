@@ -7,8 +7,33 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+- `release-management` skill: cut and publish releases right-sized to the project —
+  semver decisions, changelogs, tagging, publish gates, registry publishing, and
+  release automation (release-please / changesets / semantic-release), with a
+  pressure-tested "never publish without a fresh verification gate" Iron Law.
+  Added to the `devops` and `em` roles and to a new "Ship a release" Golden Path.
+- README "Why this library" now showcases the measured strengths (routed activation,
+  eval harnesses with CI gates, hardened safety skills, full-SDLC breadth).
+- Roadmap of upcoming skills and roles (AI/data, ideation/execution, deferred sets)
+  in docs/ROLES.md.
+
+### Changed
+- AUTHORING.md and `writing-skills` refreshed to current Agent Skills platform rules:
+  `when_to_use` and other newer frontmatter fields (`context: fork`, `paths`,
+  `disable-model-invocation`, `effort`), dynamic context injection, compaction
+  re-attachment budgets, and corrected listing-budget drop order (least-invoked).
+- `git-workflow`, `cicd-pipeline`, `deployment-checklist`, and
+  `project-documentation` now cross-reference `release-management` (commit-type →
+  semver mapping, publish-gate stage, release-cut checklist item, changelog
+  promotion).
+- `devops` role: `release-management` replaces `dependency-impact-analysis` (still in
+  `architect` and always routable) to stay within the plugin listing cap.
+
 ### Fixed
 - License badge now uses static shields.io endpoint for reliability.
+- `writing-skills` pointed to a non-existent README "Building Skills" section; now
+  points to docs/AUTHORING.md.
 
 ## [0.1.0] — 2026-07-01
 

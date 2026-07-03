@@ -87,6 +87,10 @@ Follow Keep a Changelog conventions:
 
 See [templates/changelog.md](templates/changelog.md) for the format.
 
+Accumulate entries under `[Unreleased]` as changes land; promoting them to a version
+heading happens at release time — version choice, tagging, and automated changelog
+generation are `release-management`'s domain.
+
 ## Workflow: Inline Documentation
 
 For code-level documentation (JSDoc, Python docstrings, Go doc comments):

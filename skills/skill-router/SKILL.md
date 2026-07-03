@@ -129,6 +129,7 @@ installed skill by name, regardless of role.
 - **rollback-strategy** — safe rollback plans, irreversible-change detection
 - **containerization** — Dockerfiles, docker-compose, Kubernetes manifests
 - **cicd-pipeline** — CI/CD pipelines, quality gates (GitHub Actions, GitLab CI)
+- **release-management** — semver, changelog, tagging, publish gates, registry publishing, release automation (right-sized to the project)
 - **infrastructure-as-code** — Terraform, CloudFormation, Pulumi, CDK
 - **deployment-repo** — GitOps polyrepo orchestration, version pinning, promotion
 - **gitops-delivery** — ArgoCD / Flux declarative delivery, drift detection
@@ -158,6 +159,11 @@ When work spans phases, chain skills rather than improvising:
 **Continuous improvement**
 `technical-debt-review` → `refactoring` → `dependency-impact-analysis`
 (blast radius) → `test-suite-design` (if coverage is thin)
+
+**Ship a release**
+`git-workflow` (commits carry the bump intent) → `release-management` (version,
+changelog, tag, publish gate, registry) → `deployment-checklist` (if it deploys) →
+`rollback-strategy`. `cicd-pipeline` automates the gate as a pipeline stage.
 
 **Pre-public / pre-milestone review**
 `strategic-review` (vision, positioning, market) → `project-review` (scope,

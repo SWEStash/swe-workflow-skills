@@ -246,16 +246,41 @@ are per-role subsets rather than one full-library plugin (see
 [Why plugins can't carry the baseline](#why-plugins-cant-carry-the-baseline)).
 Verified against the Claude Code / claude.ai docs, 2026-06.
 
-## Missing roles (future iterations)
+## Roadmap: roles and skills (future iterations)
 
-Need **new skills** first (build via the `writing-skills` RED→GREEN process):
-**Data Engineer** (data-pipeline/ETL, data-quality) and **Mobile Engineer**.
+All need **new skills** first (build via the `writing-skills` RED→GREEN process),
+in planned order:
+
+1. **AI & data** — `ai-evaluation` (ML models + GenAI/RAG: golden datasets, ragas /
+   deepeval / promptfoo, LLM-as-judge, CI eval gates), `llm-app-engineering`
+   (prompt/context engineering, RAG, agent design), `data-pipeline-design` (ELT/dbt,
+   orchestration, idempotency/backfill), `data-quality` (expectations, contracts,
+   freshness, lineage) → new **`data`** and **`ai`** (AI Engineer) roles; extend `ml`.
+2. **Ideation & execution** — `brainstorming` (upstream of prd-writing /
+   feature-planning), `plan-execution` (checkpointed execution of plans),
+   `threat-modeling` (STRIDE; → `security` role), `build-vs-buy` (→ `strategy` role).
+3. **Deferred skills** — subagent-orchestration, compliance-privacy (GDPR/SOC2),
+   finops-cost-optimization, code-archaeology/legacy-comprehension,
+   chaos/DR-resilience, dx-audit, mobile-engineering set.
+4. **Deferred roles** — **Data Scientist** (needs EDA / statistical-analysis /
+   notebook-to-production skills), **Mobile Engineer** (needs the mobile set).
+5. **Machinery** — migrate all skills to the `description` + `when_to_use`
+   frontmatter split as one coordinated change (catalog builder + routing
+   re-baseline); apply `context: fork` to heavy read-only review skills; periodic
+   obsolescence review (re-run evals RED; retire skills where RED ≈ GREEN).
 
 ## Open follow-ups
 
-- The two largest roles (`backend` 18, `devops` 17 skills after dropping the router)
-  sit near the ~20 listing cap — consider trimming or splitting so plugin subsets stay
-  comfortably crop-safe on web.
+- The two largest roles (`backend` 19, `devops` 18 with core) sit near the ~20
+  listing cap — `release-management` joined `devops` in place of
+  `dependency-impact-analysis` (still in `architect`, always routable) to stay
+  crop-safe; `backend` deliberately did NOT get it (route via `skill-router`).
+  Consider splitting these roles before adding more.
+- Pinned set reviewed 2026-07: unchanged. `release-management` is high-consequence
+  but, like `deployment-checklist` and `rollback-strategy`, it activates at a
+  deliberate moment the router catches reliably — pinning is reserved for skills
+  that must interrupt work the agent already believes is fine (verification, TDD,
+  bugs, incidents, review).
 - Decide whether to keep committing generated `plugins/` + `catalog.json` or
   generate them at release.
 

@@ -162,6 +162,11 @@
       "path": "refactoring/SKILL.md"
     },
     {
+      "name": "release-management",
+      "description": "Cut and publish software releases right-sized to the project — semver decisions, changelogs, tagging, automated version bumps (release-please, changesets, semantic-release), publishing gates, npm/PyPI/container registry publishing, pre-release channels, monorepo versioning. Triggers: cut a release, release this, publish to npm, publish to PyPI, publish this package, version bump, what version should this be, semver, changelog, tag a release, release notes, GitHub release, prerelease, release automation, release PR. Deploy-time safety → deployment-checklist; commit/PR hygiene → git-workflow.",
+      "path": "release-management/SKILL.md"
+    },
+    {
       "name": "retrospective",
       "description": "Facilitate sprint retros, project post-mortems, and incident post-mortems with actionable, owned improvements. Triggers: retrospective, retro, post-mortem, postmortem, lessons learned, what went wrong, what went well, incident review, blameless, action items, sprint review, after action review.",
       "path": "retrospective/SKILL.md"
