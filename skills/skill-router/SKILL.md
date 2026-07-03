@@ -87,7 +87,9 @@ installed skill by name, regardless of role.
 ## Catalog by SDLC phase
 
 ### Plan & Define
+- **brainstorming** — divergent Socratic ideation *before* a spec exists; opens options, then hands off
 - **feature-planning** — break a feature into scoped tasks, acceptance criteria, dependencies
+- **build-vs-buy** — build in-house vs vendor/SaaS vs adopt OSS: TCO, lock-in, exit costs
 - **prd-writing** — write a PRD / RFC / tech spec to align on the WHAT and WHY
 - **project-proposal** — business case / budget / go-no-go before a project starts
 - **strategic-review** — vision, positioning, defensible wedge, live competitive/market analysis before going public
@@ -102,11 +104,13 @@ installed skill by name, regardless of role.
 - **ui-ux-design** — user flows, wireframes, loading/error/empty states, responsive
 - **frontend-architecture** — component hierarchy, state management, design tokens
 - **accessibility-design** — WCAG, ARIA, keyboard nav, focus, screen readers
+- **threat-modeling** — design-time security: trust boundaries, STRIDE, abuse cases, mitigations
 - **configuration-strategy** — env config, secrets management, feature-flag hierarchy
 - **dependency-impact-analysis** — blast radius of a change *before* implementing
 - **dependency-management** — evaluate, audit (CVEs), and upgrade libraries
 
 ### Build & Test
+- **plan-execution** — execute an APPROVED plan: checkpoints, verification evidence, drift → re-plan
 - **tdd-workflow** — NEW code, test-first, red-green-refactor
 - **test-suite-design** — add tests to EXISTING code, coverage strategy
 - **test-data-strategy** — factories, synthetic data, property-based, contract testing
@@ -157,8 +161,11 @@ installed skill by name, regardless of role.
 When work spans phases, chain skills rather than improvising:
 
 **New feature**
-`feature-planning` → `architecture-design` (if structural) → `data-modeling`
-(if schema) → `tdd-workflow` → `code-reviewing` → `deployment-checklist`
+`brainstorming` (if the idea is still fuzzy) → `feature-planning` →
+`architecture-design` (if structural) → `data-modeling` (if schema) →
+`threat-modeling` (if new trust boundaries) → `plan-execution` (work the
+approved plan; wraps `tdd-workflow` per task) → `code-reviewing` →
+`deployment-checklist`
 
 **Bug / incident**
 `incident-response` (if prod is down) → `bug-investigating` → `tdd-workflow`

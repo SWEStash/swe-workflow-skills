@@ -1,0 +1,40 @@
+{
+  "skill_name": "brainstorming",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We want to improve developer onboarding at our company — new hires take about two months to ship their first meaningful change. I'm not sure where to start. Can we brainstorm?",
+      "expected_output": "Runs a Socratic divergent session: probes the problem first (where the two months actually go, for whom, what 'onboarded' means), separates real from inherited constraints, generates a broad and varied option set without evaluating mid-stream, deliberately includes wildcards (do-nothing/process-change, tiny-scope, buy-instead-of-build), then converges with named criteria and hands the 1–3 survivors to prd-writing or feature-planning with a parking lot for the rest",
+      "assertions": [
+        "Asks clarifying/Socratic questions about the underlying problem (where the time goes, for whom, what success looks like) before or while generating ideas, rather than immediately listing solutions",
+        "Generates a genuinely diverse option set spanning different kinds of interventions (e.g. docs, tooling, process, people/mentoring), not variations of a single idea",
+        "Does not evaluate, score, or eliminate ideas during the divergent generation phase",
+        "Includes at least one wildcard option such as a no-build/process change, a radically smaller-scope version, or buying/adopting instead of building",
+        "Converges using explicitly named selection criteria (e.g. impact, effort, reversibility) and identifies 1–3 candidates plus a parking lot, with a handoff toward prd-writing, feature-planning, or project-proposal"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I've decided we need to build a custom internal chat app for our 40-person company. Let's brainstorm features for it.",
+      "expected_output": "Widens before narrowing: probes the problem behind the already-chosen solution (what's failing with current communication, why existing tools don't fit), surfaces that 'build a custom chat app' is a solution not a problem, raises alternatives including buying/adopting existing tools (routing a serious buy-vs-build comparison to build-vs-buy), distinguishes real from assumed constraints — and still delivers the requested feature ideation rather than refusing or lecturing",
+      "assertions": [
+        "Probes the problem behind the chosen solution (what communication need is unmet, why existing tools fall short) instead of only listing features",
+        "Surfaces at least one alternative to building a custom chat app, such as adopting or configuring an existing tool, and mentions build-vs-buy for that comparison",
+        "Questions or tests the constraints/assumptions behind the decision (e.g. why custom, why now) and distinguishes real constraints from inherited ones",
+        "Still provides the requested divergent feature ideation for the chat app rather than refusing to engage with the user's framing",
+        "Does not converge on a final feature list without naming selection criteria first"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We've settled on building a CLI tool that syncs our design tokens to code. Break it into tasks with acceptance criteria and dependencies so the team can start next sprint.",
+      "expected_output": "Recognizes that ideation is complete and the user is asking for convergent task breakdown — refers to feature-planning for the scoped tasks, acceptance criteria, and dependency mapping rather than reopening divergent exploration",
+      "assertions": [
+        "Recognizes the request as convergent planning of an already-chosen idea, not ideation",
+        "Refers to the feature-planning skill for the task breakdown, acceptance criteria, and dependencies",
+        "Does not restart divergent idea generation or question the settled decision as the main response",
+        "States or implies the boundary: brainstorming opens the option space before a decision; feature-planning structures the work after it"
+      ]
+    }
+  ]
+}

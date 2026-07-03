@@ -14,11 +14,13 @@
   "core": {
     "universal": [
       "skill-router",
+      "brainstorming",
       "feature-planning"
     ],
     "technical": [
       "skill-router",
       "feature-planning",
+      "plan-execution",
       "git-workflow",
       "code-reviewing",
       "verification-before-completion",
@@ -124,10 +126,11 @@
     },
     "security": {
       "label": "Security Engineer",
-      "description": "Skills for security audits, dependency/CVE management, blast-radius analysis, and incident handling.",
+      "description": "Skills for design-time threat modeling, security audits, dependency/CVE management, blast-radius analysis, and incident handling.",
       "core": "technical",
       "skills": [
         "security-audit",
+        "threat-modeling",
         "dependency-management",
         "dependency-impact-analysis",
         "incident-response",
@@ -184,12 +187,13 @@
     },
     "strategy": {
       "label": "Strategy / Founder Review",
-      "description": "Skills for pre-public and strategic reviews: vision and positioning, market analysis, execution-vs-roadmap, and go/no-go synthesis.",
+      "description": "Skills for pre-public and strategic reviews: vision and positioning, market analysis, build-vs-buy decisions, execution-vs-roadmap, and go/no-go synthesis.",
       "core": "universal",
       "skills": [
         "strategic-review",
         "project-review",
         "project-proposal",
+        "build-vs-buy",
         "metrics-and-okrs"
       ]
     },

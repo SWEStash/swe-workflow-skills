@@ -1,0 +1,40 @@
+{
+  "skill_name": "threat-modeling",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We're designing a new file-sharing feature: users upload documents and can share them via public links, with optional password protection and expiry. Nothing is built yet. Can you threat model it before we start?",
+      "expected_output": "Models the system and data flows with explicit trust boundaries (internet → app, app → storage, anonymous link-holder → protected document), classifies the data at stake, enumerates the attack surface ranked by exposure, applies STRIDE per element/boundary crossing (e.g. link enumeration/guessing as information disclosure, password brute force as spoofing, upload abuse as DoS/tampering), writes abuse cases, and outputs prioritized mitigations framed as security requirements to feed into planning",
+      "assertions": [
+        "Models the system's components and data flows and identifies explicit trust boundaries before enumerating threats",
+        "Classifies the data at stake and enumerates entry points / attack surface ranked by exposure (unauthenticated public links first)",
+        "Applies STRIDE categories systematically per element or boundary crossing, naming the categories, rather than producing an unstructured threat list",
+        "Includes threats specific to this design, such as public-link guessing/enumeration, password brute-forcing, expired-link enforcement, and malicious file upload",
+        "Produces prioritized mitigations with an explicit decision per threat, framed as security requirements/acceptance criteria for implementation planning"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "New design to review before we build: we're adding inbound webhooks from a payment provider (they POST us payment events) plus an internal admin panel where support staff can issue refunds. Threat model this.",
+      "expected_output": "Treats the third-party webhook and the admin privilege line as distinct trust boundaries: webhook threats include spoofed/forged events (signature verification), replay (timestamp/nonce), and DoS/flooding; admin-panel threats center on elevation of privilege (function-level authz on refunds), repudiation (audit trail for refund actions), and insider abuse cases; ranks by exposure and emits concrete mitigations",
+      "assertions": [
+        "Identifies the inbound webhook from the payment provider as a trust boundary crossing and covers spoofed/forged events with signature verification as a mitigation",
+        "Covers replay of webhook events (timestamp, nonce, or idempotency handling) and denial of service on the webhook endpoint",
+        "Treats the admin/support refund capability as a privilege boundary — covering elevation of privilege and server-side function-level authorization",
+        "Addresses repudiation for refund actions (audit logging of who refunded what) and includes an insider/abuse-case perspective",
+        "Prioritizes threats by exposure and impact and records an explicit decision or mitigation per threat"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Here's our Express API that's been in production for a year — can you go through the code and check it for vulnerabilities like SQL injection, XSS, and broken auth?",
+      "expected_output": "Recognizes this as a reactive security review of existing code, not design-time threat modeling — refers to security-audit for the OWASP-style code review, stating the boundary: threat-modeling analyzes designs before they're built; security-audit reviews built systems",
+      "assertions": [
+        "Recognizes the request as a security review of existing, deployed code rather than design-time analysis",
+        "Refers to the security-audit skill for the vulnerability review",
+        "Does not produce a design-time threat model (DFDs, STRIDE-per-boundary of a not-yet-built system) as the answer",
+        "States the boundary: threat-modeling is proactive/design-time, security-audit is the reactive review of built code"
+      ]
+    }
+  ]
+}

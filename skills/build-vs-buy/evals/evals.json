@@ -1,0 +1,40 @@
+{
+  "skill_name": "build-vs-buy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We need feature flags for our product (SaaS, ~15 engineers, growing fast). Should we build our own flag service, buy LaunchDarkly, or self-host an open-source option like Unleash? Help me decide.",
+      "expected_output": "Frames feature flags as commodity infrastructure (core-vs-differentiator test), compares all three options on a multi-year TCO including ongoing ownership for build, projected-usage pricing for buy, and operations burden for self-hosted OSS, examines lock-in and exit costs plus vendor/OSS health, and lands on a clear recommendation recorded like an ADR with a revisit trigger",
+      "assertions": [
+        "Applies the core-vs-commodity framing — asks or determines whether feature flags differentiate this product (they don't) and lets that bias the decision",
+        "Compares build, buy, and OSS-adopt on total cost of ownership over a multi-year horizon, including ongoing maintenance/ownership for build and operations burden for self-hosted OSS — not just sticker price",
+        "Models the buy option at projected usage/growth, not only today's seat or flag count",
+        "Addresses lock-in and exit costs (data/config export, proprietary features, contract terms) and vendor or OSS project health",
+        "Concludes with a clear recommendation, the runner-up and what would flip it, and a revisit trigger — recorded in an ADR-like decision format"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our data team already spent two quarters building about 60% of an in-house analytics pipeline (ingestion works, transformation layer is half done). Meanwhile Fivetran + Snowflake + dbt Cloud would cover everything we planned for roughly $8k/month. Do we finish the build or switch? Leadership hates the idea of throwing away six months of work.",
+      "expected_output": "Treats the six months as sunk cost and evaluates only forward-looking costs: remaining build effort plus perpetual ownership (maintenance, on-call, feature parity) and the team's opportunity cost, versus migration effort plus the subscription at projected data volumes — including the vendor stack's lock-in/exit profile — and gives a clear recommendation with reasoning rather than an 'it depends' hedge",
+      "assertions": [
+        "Explicitly identifies the completed 60% as sunk cost and excludes it from the forward-looking comparison",
+        "Compares remaining-build-plus-ongoing-ownership cost (maintenance, on-call, opportunity cost of the data team) against migration-plus-subscription cost",
+        "Models the managed stack's subscription at projected data growth and examines its lock-in and exit costs, not just the $8k/month figure",
+        "Considers what the team would work on instead (opportunity cost) as a first-class factor in the decision",
+        "Delivers a clear, justified recommendation with a revisit trigger instead of an evasive 'it depends'"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Should our order service use event sourcing or a plain CRUD model, and is it time to split it out of the monolith into its own microservice?",
+      "expected_output": "Recognizes these as internal-structure architectural decisions about the team's own code — pattern choice and service boundaries — and refers to architecture-design for an ADR-driven trade-off analysis, without running a vendor/TCO evaluation",
+      "assertions": [
+        "Recognizes the request as internal architecture (pattern choice, service boundaries), not a build/buy/adopt sourcing decision",
+        "Refers to the architecture-design skill and its ADR workflow for the decision",
+        "Does not produce a vendor evaluation, TCO analysis, or lock-in assessment for this request",
+        "States or implies the boundary: build-vs-buy decides where a capability comes from; architecture-design decides how your own system is structured"
+      ]
+    }
+  ]
+}

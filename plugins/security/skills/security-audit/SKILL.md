@@ -1,6 +1,6 @@
 ---
 name: security-audit
-description: "Comprehensive security analysis — OWASP Top 10, auth/authz flows, injection vulnerabilities, data exposure, secrets detection, dependency CVEs, hardening recommendations. Triggers: security audit, vulnerability, is this secure, security review, pentest prep, OWASP, harden this, check for vulnerabilities, injection, XSS, CSRF, auth security."
+description: "Comprehensive security analysis — OWASP Top 10, auth/authz flows, injection vulnerabilities, data exposure, secrets detection, dependency CVEs, hardening recommendations. Triggers: security audit, vulnerability, is this secure, security review, pentest prep, OWASP, harden this, check for vulnerabilities, injection, XSS, CSRF, auth security. Reviews EXISTING code/config — design-time analysis of a system not yet built → threat-modeling."
 model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, WebFetch, WebSearch
 ---
@@ -11,7 +11,7 @@ Perform a structured security assessment of an application. This skill goes far 
 
 ## Scope Boundary
 
-This skill analyzes code, configuration, and architecture for security vulnerabilities through static analysis and design review. It does not replace penetration testing, but it prepares code for one by catching the issues a pentester would find.
+This skill analyzes code, configuration, and architecture for security vulnerabilities through static analysis and design review. It does not replace penetration testing, but it prepares code for one by catching the issues a pentester would find. It is the *reactive* half of the pair: for design-time analysis of a system that isn't built yet (trust boundaries, STRIDE, abuse cases), use `threat-modeling` — and when a threat model exists, use it as this audit's checklist.
 
 ## ⛔ The Iron Law
 

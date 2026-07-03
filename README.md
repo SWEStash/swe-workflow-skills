@@ -1,10 +1,10 @@
 # SWE Workflow Skills for Claude Code
 
 [![roles-check](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml/badge.svg)](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml)
-![skills](https://img.shields.io/badge/skills-49-blue)
+![skills](https://img.shields.io/badge/skills-53-blue)
 [![license: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
-A curated library of **49 Claude Code Agent Skills** that walk Claude through the
+A curated library of **53 Claude Code Agent Skills** that walk Claude through the
 software lifecycle the way a disciplined senior engineer would — planning, design,
 TDD, review, security, deployment, incidents, and the project-management work around
 them.
@@ -61,7 +61,7 @@ web, claude.ai chat, and Cowork):
 **Want the whole library with the orchestrator** (CLI) — no clone needed:
 
 ```bash
-npx swe-workflow-skills install --global   # all 49 skills + router + /role + the SessionStart hook
+npx swe-workflow-skills install --global   # all 53 skills + router + /role + the SessionStart hook
 ```
 
 Or from a clone: `node install.mjs --global`.
@@ -119,12 +119,12 @@ review) live in the `skill-router` skill and **[ROLES.md](docs/ROLES.md)**.
 
 ## What's included
 
-49 skills — **[full catalog → SKILLS.md](docs/SKILLS.md)**:
+53 skills — **[full catalog → SKILLS.md](docs/SKILLS.md)**:
 
 | Area | Count | Examples |
 |------|-------|----------|
-| Software Engineering | 23 | feature-planning, architecture-design, tdd-workflow, code-reviewing, security-audit, refactoring, incident-response |
-| Project Management | 6 | prd-writing, effort-estimation, metrics-and-okrs, retrospective, strategic-review |
+| Software Engineering | 25 | feature-planning, plan-execution, architecture-design, threat-modeling, tdd-workflow, code-reviewing, security-audit, incident-response |
+| Project Management | 8 | brainstorming, prd-writing, effort-estimation, build-vs-buy, metrics-and-okrs, retrospective, strategic-review |
 | DevOps | 6 | containerization, cicd-pipeline, release-management, infrastructure-as-code, gitops-delivery |
 | Design | 3 | ui-ux-design, frontend-architecture, accessibility-design |
 | MLOps | 3 | ml-pipeline-design, ml-experiment-tracking, ml-model-deployment |

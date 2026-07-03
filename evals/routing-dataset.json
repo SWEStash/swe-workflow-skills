@@ -100,6 +100,26 @@
       ]
     },
     {
+      "id": "positive:brainstorming:1",
+      "kind": "positive",
+      "skill": "brainstorming",
+      "prompt": "We want to improve developer onboarding at our company \u2014 new hires take about two months to ship their first meaningful change. I'm not sure where to start. Can we brainstorm?",
+      "accept": [
+        "brainstorming"
+      ]
+    },
+    {
+      "id": "boundary:brainstorming:3",
+      "kind": "boundary",
+      "skill": "brainstorming",
+      "prompt": "We've settled on building a CLI tool that syncs our design tokens to code. Break it into tasks with acceptance criteria and dependencies so the team can start next sprint.",
+      "accept": [
+        "brainstorming",
+        "feature-planning",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:bug-investigating:1",
       "kind": "positive",
       "skill": "bug-investigating",
@@ -115,6 +135,26 @@
       "prompt": "I'm getting this error intermittently: 'SequelizeConnectionError: Connection pool exhausted'. It happens about 10 times a day, always during peak hours. Restarting the server fixes it temporarily.",
       "accept": [
         "bug-investigating",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:build-vs-buy:1",
+      "kind": "positive",
+      "skill": "build-vs-buy",
+      "prompt": "We need feature flags for our product (SaaS, ~15 engineers, growing fast). Should we build our own flag service, buy LaunchDarkly, or self-host an open-source option like Unleash? Help me decide.",
+      "accept": [
+        "build-vs-buy"
+      ]
+    },
+    {
+      "id": "boundary:build-vs-buy:3",
+      "kind": "boundary",
+      "skill": "build-vs-buy",
+      "prompt": "Should our order service use event sourcing or a plain CRUD model, and is it time to split it out of the monolith into its own microservice?",
+      "accept": [
+        "build-vs-buy",
+        "architecture-design",
         "NONE"
       ]
     },
@@ -518,6 +558,26 @@
       ]
     },
     {
+      "id": "positive:plan-execution:1",
+      "kind": "positive",
+      "skill": "plan-execution",
+      "prompt": "Here's the approved implementation plan for the notifications feature \u2014 five phases: (1) DB schema for notification preferences, (2) event ingestion endpoint, (3) delivery worker with retry, (4) user preference UI, (5) docs + rollout flag. It's been reviewed and signed off. Start executing it.",
+      "accept": [
+        "plan-execution"
+      ]
+    },
+    {
+      "id": "boundary:plan-execution:3",
+      "kind": "boundary",
+      "skill": "plan-execution",
+      "prompt": "Plan this feature for me: we need CSV export on the reports page. Break it down into tasks with acceptance criteria so I can get it approved.",
+      "accept": [
+        "plan-execution",
+        "feature-planning",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:prd-writing:1",
       "kind": "positive",
       "skill": "prd-writing",
@@ -756,6 +816,26 @@
       "prompt": "Write tests for this function:\n\nfunction calculateShippingCost(order) {\n  if (!order.items || order.items.length === 0) return 0;\n  const weight = order.items.reduce((sum, item) => sum + item.weight * item.quantity, 0);\n  if (order.destination === 'domestic') {\n    if (weight < 1) return 5.99;\n    if (weight < 5) return 9.99;\n    return 14.99 + Math.ceil((weight - 5) / 5) * 4.99;\n  }\n  if (order.destination === 'international') {\n    return weight * 12.99;\n  }\n  throw new Error(`Unknown destination: ${order.destination}`);\n}",
       "accept": [
         "test-suite-design",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:threat-modeling:1",
+      "kind": "positive",
+      "skill": "threat-modeling",
+      "prompt": "We're designing a new file-sharing feature: users upload documents and can share them via public links, with optional password protection and expiry. Nothing is built yet. Can you threat model it before we start?",
+      "accept": [
+        "threat-modeling"
+      ]
+    },
+    {
+      "id": "boundary:threat-modeling:3",
+      "kind": "boundary",
+      "skill": "threat-modeling",
+      "prompt": "Here's our Express API that's been in production for a year \u2014 can you go through the code and check it for vulnerabilities like SQL injection, XSS, and broken auth?",
+      "accept": [
+        "threat-modeling",
+        "security-audit",
         "NONE"
       ]
     },

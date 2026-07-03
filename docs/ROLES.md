@@ -157,14 +157,18 @@ catalog it could read, it would only waste a listing slot).
 | `architect`| Architect / Staff Engineer       | technical |
 | `em`       | Engineering Manager / Tech Lead  | universal |
 | `pm`       | Product / Project Manager        | universal |
+| `strategy` | Strategy / Founder Review        | universal |
 | `qa`       | QA / Test Engineer               | technical |
 | `designer` | Designer / UX                    | universal |
 
 A role's working set = its **core** ∪ its own skills. Cores: **universal** =
-`skill-router`, `feature-planning`; **technical** = universal + `git-workflow`,
+`skill-router`, `brainstorming`, `feature-planning`; **technical** =
+`skill-router`, `feature-planning`, `plan-execution`, `git-workflow`,
 `code-reviewing`, `verification-before-completion`, `bug-investigating`,
 `project-documentation`. Inspect with `node scripts/resolve.mjs skills <role>`
-or list roles with `node scripts/resolve.mjs roles`.
+or list roles with `node scripts/resolve.mjs roles`. Promoted-set sizes stay at
+or under the ~20-description crop cap (`backend` sits exactly at 20; `devops`
+at 19 — additions to either core force a trim decision).
 
 ## Install (CLI — the full dynamic model)
 
@@ -253,37 +257,42 @@ Verified against the Claude Code / claude.ai docs, 2026-06.
 All need **new skills** first (build via the `writing-skills` RED→GREEN process),
 in planned order:
 
-1. **Ideation & execution** — `brainstorming` (upstream of prd-writing /
-   feature-planning), `plan-execution` (checkpointed execution of plans),
-   `threat-modeling` (STRIDE; → `security` role), `build-vs-buy` (→ `strategy` role).
-2. **Deferred skills** — subagent-orchestration, compliance-privacy (GDPR/SOC2),
+1. **Deferred skills** — subagent-orchestration, compliance-privacy (GDPR/SOC2),
    finops-cost-optimization, code-archaeology/legacy-comprehension,
    chaos/DR-resilience, dx-audit, mobile-engineering set.
-3. **Deferred roles** — **Data Scientist** (needs EDA / statistical-analysis /
+2. **Deferred roles** — **Data Scientist** (needs EDA / statistical-analysis /
    notebook-to-production skills), **Mobile Engineer** (needs the mobile set).
-4. **Machinery** — migrate all skills to the `description` + `when_to_use`
+3. **Machinery** — migrate all skills to the `description` + `when_to_use`
    frontmatter split as one coordinated change (catalog builder + routing
    re-baseline); apply `context: fork` to heavy read-only review skills; periodic
    obsolescence review (re-run evals RED; retire skills where RED ≈ GREEN).
 
 _Done 2026-07: **AI & data** — `ai-evaluation`, `llm-app-engineering`,
 `data-pipeline-design`, `data-quality` shipped with the new `ai` and `data`
-roles; `ml` extended with `ai-evaluation`._
+roles; `ml` extended with `ai-evaluation`. **Ideation & execution** —
+`brainstorming` (universal core), `plan-execution` (technical core, hardened),
+`threat-modeling` (→ `security`), `build-vs-buy` (→ `strategy`)._
 
 ## Open follow-ups
 
-- The two largest roles (`backend` 19, `devops` 18 with core) sit near the ~20
-  listing cap — `release-management` joined `devops` in place of
-  `dependency-impact-analysis` (still in `architect`, always routable) to stay
-  crop-safe; `backend` deliberately did NOT get it (route via `skill-router`).
-  Consider splitting these roles before adding more.
-- Pinned set reviewed 2026-07 (and re-reviewed with the Phase-2 AI/data additions):
-  unchanged. `release-management` is high-consequence but, like
-  `deployment-checklist` and `rollback-strategy`, it activates at a deliberate
-  moment the router catches reliably — pinning is reserved for skills that must
-  interrupt work the agent already believes is fine (verification, TDD, bugs,
-  incidents, review). The four AI/data skills are advisory design workflows and
-  clearly don't qualify.
+- The two largest roles (`backend` 20, `devops` 19 with core, after
+  `plan-execution` joined the technical core) now sit AT the ~20 listing cap —
+  `release-management` joined `devops` in place of `dependency-impact-analysis`
+  (still in `architect`, always routable) to stay crop-safe; `backend`
+  deliberately did NOT get it (route via `skill-router`). `backend` has no
+  headroom left: the next addition to it or to the technical core forces a trim
+  or a role split.
+- Pinned set reviewed 2026-07 (re-reviewed with the Phase-2 AI/data and Phase-3
+  ideation/execution additions): unchanged. `release-management` is
+  high-consequence but, like `deployment-checklist` and `rollback-strategy`, it
+  activates at a deliberate moment the router catches reliably — pinning is
+  reserved for skills that must interrupt work the agent already believes is
+  fine (verification, TDD, bugs, incidents, review). `plan-execution` was the
+  serious Phase-3 candidate (its Iron Law interrupts unverified "done"s), but
+  its entry moment ("execute this plan") is deliberate and router-visible, the
+  already-pinned `verification-before-completion` covers the false-"done"
+  failure mode per claim, and it now rides in the technical core for every
+  engineering role — pinning it would spend listing budget on redundancy.
 - Decide whether to keep committing generated `plugins/` + `catalog.json` or
   generate them at release.
 

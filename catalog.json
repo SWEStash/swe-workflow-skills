@@ -18,7 +18,7 @@
     },
     {
       "name": "architecture-design",
-      "description": "Guide architectural and structural decisions using Architecture Decision Records (ADRs) — new services, pattern choices, database selection, component boundaries, state management, costly-to-reverse decisions. Triggers: how should I architect, which pattern, design decision, should I use X or Y, system design, ADR, component design, architectural trade-off.",
+      "description": "Guide architectural and structural decisions using Architecture Decision Records (ADRs) — new services, pattern choices, database selection, component boundaries, state management, costly-to-reverse decisions. Triggers: how should I architect, which pattern, design decision, should I use X or Y, system design, ADR, component design, architectural trade-off. Owns internal-structure decisions — build vs buy/adopt a vendor or OSS capability → build-vs-buy.",
       "path": "architecture-design/SKILL.md"
     },
     {
@@ -27,9 +27,19 @@
       "path": "architecture-documentation/SKILL.md"
     },
     {
+      "name": "brainstorming",
+      "description": "Facilitate divergent ideation before committing to a spec — Socratic questioning, widening the option space, challenging assumptions and inherited constraints, then converging on candidates. Triggers: brainstorm, let's explore ideas, what are our options, help me think through, generate ideas, what could we build, not sure what I want, explore approaches, ideate. Once ideas converge, hand off to prd-writing (WHAT/WHY) or feature-planning (breakdown) — this skill opens options; those close them.",
+      "path": "brainstorming/SKILL.md"
+    },
+    {
       "name": "bug-investigating",
       "description": "Systematic debugging and root cause analysis using structured methodology — reproduce, isolate, hypothesize, verify. Triggers: this doesn't work, I'm getting an error, something is broken, bug, debug this, why is this happening, unexpected behavior, regression, root cause, stack trace, error message.",
       "path": "bug-investigating/SKILL.md"
+    },
+    {
+      "name": "build-vs-buy",
+      "description": "Decide whether to build in-house, buy a vendor/SaaS product, or adopt OSS — core-vs-commodity framing, multi-year total cost of ownership, integration and maintenance burden, vendor viability, lock-in and exit costs. Triggers: build vs buy, build or buy, vendor evaluation, SaaS vs in-house, should we adopt this open source, TCO, total cost of ownership, lock-in, exit cost, make or buy, off the shelf. Internal-structure decisions (patterns, service boundaries, ADRs for your own code) → architecture-design.",
+      "path": "build-vs-buy/SKILL.md"
     },
     {
       "name": "cicd-pipeline",
@@ -93,7 +103,7 @@
     },
     {
       "name": "feature-planning",
-      "description": "Break features into well-scoped tasks with acceptance criteria, risk assessment, and dependency mapping. Triggers: plan this, break this down, scope this feature, create tasks for, sprint planning, how should I implement this feature, user stories, acceptance criteria, dependency mapping, feature breakdown.",
+      "description": "Break features into well-scoped tasks with acceptance criteria, risk assessment, and dependency mapping. Triggers: plan this, break this down, scope this feature, create tasks for, sprint planning, how should I implement this feature, user stories, acceptance criteria, dependency mapping, feature breakdown. Creates the plan — executing an already-approved plan checkpoint by checkpoint → plan-execution.",
       "path": "feature-planning/SKILL.md"
     },
     {
@@ -157,6 +167,11 @@
       "path": "performance-optimization/SKILL.md"
     },
     {
+      "name": "plan-execution",
+      "description": "Execute an already-approved plan with discipline — batch tasks into verifiable checkpoints, verify each with fresh evidence before marking it done, log drift, and stop to re-plan when reality diverges from the plan's assumptions. Triggers: execute the plan, implement the approved plan, work through this plan, continue/resume the plan, next phase, checkpoint. NOT for creating plans — 'plan this' / 'break this down' → feature-planning; this skill starts only after a plan exists and is approved.",
+      "path": "plan-execution/SKILL.md"
+    },
+    {
       "name": "prd-writing",
       "description": "Write lightweight agile PRDs and technical RFCs that align stakeholders before implementation. Triggers: PRD, product requirements, RFC, request for comments, technical design doc, design document, tech spec, write requirements, what are we building, spec this out. Produces the WHAT and WHY — feature-planning handles HOW.",
       "path": "prd-writing/SKILL.md"
@@ -198,7 +213,7 @@
     },
     {
       "name": "security-audit",
-      "description": "Comprehensive security analysis — OWASP Top 10, auth/authz flows, injection vulnerabilities, data exposure, secrets detection, dependency CVEs, hardening recommendations. Triggers: security audit, vulnerability, is this secure, security review, pentest prep, OWASP, harden this, check for vulnerabilities, injection, XSS, CSRF, auth security.",
+      "description": "Comprehensive security analysis — OWASP Top 10, auth/authz flows, injection vulnerabilities, data exposure, secrets detection, dependency CVEs, hardening recommendations. Triggers: security audit, vulnerability, is this secure, security review, pentest prep, OWASP, harden this, check for vulnerabilities, injection, XSS, CSRF, auth security. Reviews EXISTING code/config — design-time analysis of a system not yet built → threat-modeling.",
       "path": "security-audit/SKILL.md"
     },
     {
@@ -230,6 +245,11 @@
       "name": "test-suite-design",
       "description": "Design comprehensive test suites for existing code — strategy across unit/integration/e2e, fixtures, factories, helpers. Triggers: add tests, write tests for, increase coverage, test this module, testing strategy, test plan, what tests do I need, test infrastructure, test helpers, this has no tests. Not for TDD — use tdd-workflow.",
       "path": "test-suite-design/SKILL.md"
+    },
+    {
+      "name": "threat-modeling",
+      "description": "Design-time security analysis of a system or feature before it's built — trust boundaries, attack surface, STRIDE per element, abuse cases, prioritized mitigations that become security requirements. Triggers: threat model, STRIDE, trust boundary, attack surface, what could go wrong security-wise, security design review, abuse case, secure this design, security requirements. Reviewing EXISTING code/config for vulnerabilities → security-audit; use this skill while the design is still on the whiteboard.",
+      "path": "threat-modeling/SKILL.md"
     },
     {
       "name": "ui-ux-design",

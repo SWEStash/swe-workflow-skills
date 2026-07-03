@@ -1,6 +1,6 @@
 ---
 name: feature-planning
-description: "Break features into well-scoped tasks with acceptance criteria, risk assessment, and dependency mapping. Triggers: plan this, break this down, scope this feature, create tasks for, sprint planning, how should I implement this feature, user stories, acceptance criteria, dependency mapping, feature breakdown."
+description: "Break features into well-scoped tasks with acceptance criteria, risk assessment, and dependency mapping. Triggers: plan this, break this down, scope this feature, create tasks for, sprint planning, how should I implement this feature, user stories, acceptance criteria, dependency mapping, feature breakdown. Creates the plan — executing an already-approved plan checkpoint by checkpoint → plan-execution."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
@@ -82,3 +82,7 @@ Output the complete plan using the template at [templates/plan.md](templates/pla
 If the feature involves architectural decisions (new services, database changes, API design), suggest using the `architecture-design` skill before finalizing the plan.
 
 If the feature requires data model changes, suggest using the `data-modeling` skill for that portion.
+
+If the idea itself is still fuzzy — the user is exploring what to build rather than how — run `brainstorming` first; this skill converges, that one diverges.
+
+Once the plan is approved and execution begins, the `plan-execution` skill takes over: checkpointed batches, verification evidence per checkpoint, and drift-triggered re-planning (which loops back here).

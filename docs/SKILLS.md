@@ -1,6 +1,6 @@
 # Skill Catalog
 
-All 49 skills in the library — 47 SDLC workflows plus two meta skills
+All 53 skills in the library — 51 SDLC workflows plus two meta skills
 (`skill-router`, the orchestrator, and `writing-skills`, the authoring guide).
 Every skill's full description lives in `catalog.json` (what the orchestrator
 routes on); this page is the human-readable index.
@@ -15,7 +15,7 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `skill-router` | Entry point and dispatcher — maps an intent to the right skill(s) and lays out the Golden Path workflow chains. Invoke it FIRST on any non-trivial task. Pairs with the optional [SessionStart hook](../hooks/README.md). |
 | `writing-skills` | How to author, edit, and pressure-test skills — description/budget rules, progressive disclosure, the 3-eval rule, TDD-for-docs. The installable companion to [AUTHORING.md](AUTHORING.md). |
 
-## Software Engineering (23)
+## Software Engineering (25)
 
 | Skill | Phase | Purpose |
 |-------|-------|---------|
@@ -23,6 +23,8 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `architecture-design` | Design | Make and document architectural decisions with ADRs |
 | `api-design` | Design | Design REST/GraphQL endpoints, contracts, errors, and pagination |
 | `data-modeling` | Design | Design schemas, relationships, and migration strategies |
+| `threat-modeling` | Design | Design-time security analysis — trust boundaries, STRIDE per element, abuse cases, prioritized mitigations |
+| `plan-execution` | Implementation | Execute an approved plan in verified checkpoints — evidence per checkpoint, drift log, re-planning triggers |
 | `tdd-workflow` | Implementation | Red-green-refactor cycle with test-first development |
 | `test-suite-design` | Quality | Add comprehensive test suites to existing code, plan test strategy |
 | `code-reviewing` | Quality | Structured reviews enforcing principles and best practices |
@@ -91,11 +93,13 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `observability-design` | SLI/SLO/SLA design, error budgets, OpenTelemetry, structured logging, alerting, dashboards |
 | `test-data-strategy` | Test data factories, synthetic data, property-based testing, boundary analysis, contract testing |
 
-## Project Management — Agile (6)
+## Project Management — Agile (8)
 
 | Skill | Purpose |
 |-------|---------|
+| `brainstorming` | Divergent Socratic ideation before a spec exists — widen options, test constraints, converge with criteria, hand off |
 | `project-proposal` | Business case, scope, budget estimate, risk assessment, go/no-go documents |
+| `build-vs-buy` | Build vs vendor/SaaS vs OSS adoption — core-vs-commodity, multi-year TCO, lock-in and exit costs |
 | `prd-writing` | Lightweight agile PRDs and technical RFCs for stakeholder alignment |
 | `effort-estimation` | Story points, t-shirt sizing, three-point estimation, capacity planning |
 | `metrics-and-okrs` | OKR design, KPI definition, DORA metrics, success measurement |

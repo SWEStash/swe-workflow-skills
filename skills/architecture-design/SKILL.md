@@ -1,6 +1,6 @@
 ---
 name: architecture-design
-description: "Guide architectural and structural decisions using Architecture Decision Records (ADRs) — new services, pattern choices, database selection, component boundaries, state management, costly-to-reverse decisions. Triggers: how should I architect, which pattern, design decision, should I use X or Y, system design, ADR, component design, architectural trade-off."
+description: "Guide architectural and structural decisions using Architecture Decision Records (ADRs) — new services, pattern choices, database selection, component boundaries, state management, costly-to-reverse decisions. Triggers: how should I architect, which pattern, design decision, should I use X or Y, system design, ADR, component design, architectural trade-off. Owns internal-structure decisions — build vs buy/adopt a vendor or OSS capability → build-vs-buy."
 model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
@@ -77,6 +77,8 @@ Produce an ADR using the template at [templates/adr.md](templates/adr.md). Save 
 ADRs are immutable records. If a decision is superseded, create a new ADR that references the old one — don't edit the original.
 
 For visual architecture documentation (system diagrams, runtime flows, infrastructure topology), see the `architecture-documentation` skill.
+
+When the decision is whether a capability should be built at all versus bought or adopted (vendor/SaaS/OSS, TCO, lock-in, exit costs), use `build-vs-buy` — it produces the same ADR-style record, but for sourcing rather than structure.
 
 ## When to Split Decisions
 

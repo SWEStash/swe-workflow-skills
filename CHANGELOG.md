@@ -8,6 +8,33 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- Four ideation & execution skills (Phase 3 of the expansion roadmap):
+  - `brainstorming` — divergent Socratic ideation upstream of `prd-writing` /
+    `feature-planning`: problem re-framing, real-vs-inherited constraints,
+    judgment-deferred generation, wildcard widening (do-nothing / 1/10-scope /
+    buy-instead-of-build), criteria-first convergence with a parking lot.
+  - `plan-execution` (hardened) — checkpointed execution of an approved plan:
+    verification declared per checkpoint before executing, evidence recorded
+    before marking done ("never mark a checkpoint done without fresh
+    verification evidence" Iron Law, pressure-tested), drift log, and explicit
+    re-planning triggers instead of silent improvisation.
+  - `threat-modeling` — design-time security analysis: trust boundaries,
+    attack-surface enumeration, STRIDE per element/boundary crossing (with a
+    per-category mitigation catalog in references/), abuse cases, and
+    mitigation decisions that become security requirements. Complements the
+    reactive `security-audit`.
+  - `build-vs-buy` — build vs vendor/SaaS vs OSS adoption: core-vs-commodity
+    framing, 3-year TCO (ownership, opportunity, exit), lock-in and vendor/OSS
+    viability, weighted decision matrix recorded ADR-style with a revisit
+    trigger. `architecture-design` keeps internal-structure decisions.
+- Role/core updates: `brainstorming` joins the **universal core** (em, pm,
+  strategy, designer), `plan-execution` joins the **technical core** (all
+  engineering roles; backend now sits exactly at the ~20-description crop cap),
+  `security` gains `threat-modeling`, `strategy` gains `build-vs-buy`.
+- `skill-router`: the four skills registered in the phase index; the "New
+  feature" Golden Path now starts at `brainstorming` (when the idea is fuzzy)
+  and runs `threat-modeling` (new trust boundaries) and `plan-execution` (work
+  the approved plan) at the right phases.
 - Four AI & data skills (Phase 2 of the expansion roadmap):
   - `ai-evaluation` — golden datasets, offline metrics, RAG evaluation
     (faithfulness / answer relevance / context precision-recall) with
@@ -40,6 +67,12 @@ All notable changes to this project are documented here. The format follows
   in docs/ROLES.md.
 
 ### Changed
+- Boundary notes added for the Phase-3 skills: `feature-planning` ("plan this /
+  break this down" stays here; executing an approved plan → `plan-execution`),
+  `security-audit` (existing code/config here; unbuilt designs →
+  `threat-modeling`), and `architecture-design` (internal structure here;
+  sourcing decisions → `build-vs-buy`) — instruction-style disambiguation per
+  the EVALS.md routing finding.
 - `ml` role gains `ai-evaluation`; `ml-pipeline-design` and
   `ml-experiment-tracking` descriptions now state their boundaries with the new
   `data-pipeline-design` and `ai-evaluation` skills.
