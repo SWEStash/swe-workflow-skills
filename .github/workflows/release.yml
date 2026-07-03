@@ -43,6 +43,11 @@ concurrency:
 
 jobs:
   release-please:
+    # Releases are only ever cut from the canonical repo. On a fork the whole
+    # release pipeline no-ops (no release PRs, no tags, no publish) even if the
+    # fork has Actions enabled — trusted publishing would reject a fork anyway,
+    # but this stops the noise before it starts.
+    if: ${{ github.repository == 'SWEStash/swe-workflow-skills' }}
     runs-on: ubuntu-latest
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
@@ -83,7 +88,7 @@ jobs:
 
   publish:
     needs: release-please
-    if: ${{ needs.release-please.outputs.release_created == 'true' }}
+    if: ${{ needs.release-please.outputs.release_created == 'true' && github.repository == 'SWEStash/swe-workflow-skills' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
