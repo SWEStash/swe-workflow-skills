@@ -1,0 +1,112 @@
+name: release
+
+# Automated release for the single `swe-workflow-skills` npm package, driven by
+# Conventional Commits via release-please.
+#
+# Flow (nothing publishes until a human merges the release PR — the deliberate
+# trigger; a release can also be nudged manually with workflow_dispatch):
+#   1. On push to main, release-please maintains a running "release PR" that bumps
+#      package.json, regenerates CHANGELOG.md, and (when merged) tags + cuts the
+#      GitHub release. Pre-1.0 policy (docs/RELEASING.md): breaking -> MINOR
+#      (bump-minor-pre-major), feat -> MINOR, fix -> PATCH.
+#   2. A sync step keeps that PR internally consistent: it fans the bumped version
+#      into the VERSION single-source-of-truth and regenerates the marketplace /
+#      per-role plugins / catalog (scripts/sync-version.mjs), so verify.mjs and
+#      `build-plugins.mjs --check` stay green on the PR and the merged commit.
+#   3. When the release PR merges and release-please creates the release, the
+#      publish job runs the verification gate (Iron Law: never publish without a
+#      fresh gate) and publishes to npm via OIDC trusted publishing (no token;
+#      provenance is generated automatically on public repos).
+#
+# One-time prerequisites before the first real release (Phase 7, not now):
+#   - Configure a trusted publisher for `swe-workflow-skills` on npmjs.com,
+#     pointing at this repo's `.github/workflows/release.yml` (until then the
+#     publish step cannot authenticate — the mechanism is inert by construction).
+#   - Optional but recommended: add a `RELEASE_PLEASE_TOKEN` secret (a fine-grained
+#     PAT or GitHub App token) so pushes to the release PR trigger its CI checks;
+#     GITHUB_TOKEN works but its pushes do not re-trigger workflows.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# release-please needs to open PRs and, on merge, create tags + releases.
+permissions:
+  contents: write
+  pull-requests: write
+
+# Never run two release passes over the same branch concurrently.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      # Keep the release PR consistent with the version release-please just wrote:
+      # VERSION (SSOT) + regenerated marketplace/plugins/catalog. Only runs while a
+      # release PR is open.
+      - if: ${{ steps.release.outputs.pr }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ fromJSON(steps.release.outputs.pr).headBranchName }}
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - if: ${{ steps.release.outputs.pr }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - if: ${{ steps.release.outputs.pr }}
+        name: Sync VERSION + regenerate artifacts on the release PR
+        run: |
+          node scripts/sync-version.mjs
+          if git diff --quiet; then
+            echo "Generated tree already in sync with the release version."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -am "chore: sync VERSION and generated artifacts to release version"
+            git push
+          fi
+
+  publish:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # OIDC for npm trusted publishing
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+      # Trusted publishing + provenance require npm >= 11.5.1; setup-node may ship older.
+      - name: Ensure npm supports trusted publishing
+        run: npm install -g npm@latest
+      # Iron Law — never publish without a fresh verification gate on the exact
+      # release commit. prepublishOnly re-runs this too; keeping it explicit fails
+      # fast and survives an accidental --ignore-scripts.
+      - name: Verification gate
+        run: node scripts/verify.mjs
+      # Inspect the artifact users will actually get before it is burned to the registry.
+      - name: Inspect the tarball
+        run: npm pack --dry-run
+      # OIDC trusted publishing: no NPM_TOKEN; provenance is attached automatically.
+      - name: Publish to npm
+        run: npm publish --access public
