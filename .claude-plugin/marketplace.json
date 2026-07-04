@@ -2,7 +2,7 @@
   "name": "swe-workflow",
   "displayName": "SWE Workflow Skills",
   "description": "Role-scoped SDLC workflow skills. Install the plugin(s) for your role.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "owner": {
     "name": "SWEStash"
   },
@@ -11,98 +11,98 @@
       "name": "swe-workflow-backend",
       "displayName": "Backend / Full-stack Engineer",
       "description": "Skills for service, API, and data work: design, test-first implementation, performance, and shipping. (19 skills)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/backend"
     },
     {
       "name": "swe-workflow-frontend",
       "displayName": "Frontend Engineer",
       "description": "Skills for UI/UX, component architecture, accessibility, and client-side performance. (16 skills)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/frontend"
     },
     {
       "name": "swe-workflow-devops",
       "displayName": "DevOps / SRE / Platform Engineer",
       "description": "Skills for CI/CD, containers, infrastructure-as-code, delivery, observability, and incidents. (19 skills)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/devops"
     },
     {
       "name": "swe-workflow-ml",
       "displayName": "ML Engineer / MLOps",
       "description": "Skills for ML pipelines, experiment tracking, evaluation, model deployment, and the data/observability around them. (14 skills)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/ml"
     },
     {
       "name": "swe-workflow-ai",
       "displayName": "AI Engineer",
       "description": "Skills for LLM-powered applications: prompt/RAG/agent design, evaluation, experiment tracking, model deployment, and the API around them. (12 skills)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/ai"
     },
     {
       "name": "swe-workflow-data",
       "displayName": "Data Engineer",
       "description": "Skills for data pipelines, analytics engineering, data quality/contracts, schema design, test data, and pipeline observability. (12 skills)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/data"
     },
     {
       "name": "swe-workflow-security",
       "displayName": "Security Engineer",
       "description": "Skills for design-time threat modeling, security audits, dependency/CVE management, blast-radius analysis, and incident handling. (15 skills)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/security"
     },
     {
       "name": "swe-workflow-architect",
       "displayName": "Architect / Staff Engineer",
       "description": "Skills for structural decisions, documentation, contracts, blast radius, and technical-debt strategy. (17 skills)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/architect"
     },
     {
       "name": "swe-workflow-em",
       "displayName": "Engineering Manager / Tech Lead",
       "description": "Skills for planning, estimation, metrics, retros, proposals, reviews, and steering reviews and incidents. (14 skills)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/em"
     },
     {
       "name": "swe-workflow-pm",
       "displayName": "Product / Project Manager",
       "description": "Skills for proposals, PRDs/specs, estimation, OKRs/metrics, retrospectives, and strategic reviews. (8 skills)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/pm"
     },
     {
       "name": "swe-workflow-strategy",
       "displayName": "Strategy / Founder Review",
       "description": "Skills for pre-public and strategic reviews: vision and positioning, market analysis, build-vs-buy decisions, execution-vs-roadmap, and go/no-go synthesis. (8 skills)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/strategy"
     },
     {
       "name": "swe-workflow-qa",
       "displayName": "QA / Test Engineer",
       "description": "Skills for test-first development, coverage strategy, test data, review, and systematic debugging. (11 skills)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/qa"
     },
     {
       "name": "swe-workflow-mobile",
       "displayName": "Mobile Engineer",
       "description": "Skills for native and cross-platform mobile apps: architecture, offline/sync, UI/UX, accessibility, performance, API contracts, and app-store releases. (13 skills)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/mobile"
     },
     {
       "name": "swe-workflow-designer",
       "displayName": "Designer / UX",
       "description": "Skills for user flows, accessibility, product requirements, and the frontend architecture that realizes them. (6 skills)",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/designer"
     }
   ]

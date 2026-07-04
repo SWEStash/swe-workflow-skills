@@ -2,7 +2,7 @@
   "name": "swe-workflow-pm",
   "displayName": "Product / Project Manager",
   "description": "Skills for proposals, PRDs/specs, estimation, OKRs/metrics, retrospectives, and strategic reviews.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "SWEStash"
   },

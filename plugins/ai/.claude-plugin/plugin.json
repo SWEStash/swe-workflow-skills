@@ -2,7 +2,7 @@
   "name": "swe-workflow-ai",
   "displayName": "AI Engineer",
   "description": "Skills for LLM-powered applications: prompt/RAG/agent design, evaluation, experiment tracking, model deployment, and the API around them.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "SWEStash"
   },
