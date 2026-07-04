@@ -5,6 +5,26 @@ All notable changes to this project are documented here. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as defined in
 [docs/RELEASING.md](docs/RELEASING.md).
 
+## [0.2.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.1.0...v0.2.0) (2026-07-04)
+
+
+### Added
+
+* **skills:** add AI & data skills + roles (Phase 2) ([6cc1530](https://github.com/SWEStash/swe-workflow-skills/commit/6cc15307b684f409b72a4d7fa0841cd2f1c7ca0e))
+* **skills:** add governance, DX, orchestration & mobile skills + mobile role (Phase 4) ([390b616](https://github.com/SWEStash/swe-workflow-skills/commit/390b6166d2bf372549164aae0bd9c6588030a6fb))
+* **skills:** add ideation & execution skills + role gaps (Phase 3) ([1d5870f](https://github.com/SWEStash/swe-workflow-skills/commit/1d5870f2a2a885fa97309f6e75b6ab9e93bc209f))
+* **skills:** add release-management skill + authoring refresh (Phase 1) ([698a9a4](https://github.com/SWEStash/swe-workflow-skills/commit/698a9a4e380f209b1ca30fb60c8b8a20e0d3ab0e))
+
+
+### Fixed
+
+* **docs:** use static license badge for reliability ([639f404](https://github.com/SWEStash/swe-workflow-skills/commit/639f4044e12697ea9844ff129f9cd475714c9169))
+
+
+### Changed
+
+* rewrite RELEASING.md for the automated release flow; add acknowledgements ([5c4c708](https://github.com/SWEStash/swe-workflow-skills/commit/5c4c708b0945376f87a0efa71c75532d11f6245f))
+
 ## [Unreleased]
 
 ### Added
