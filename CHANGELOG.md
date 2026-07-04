@@ -7,6 +7,14 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.1.0...v0.2.0) (2026-07-04)
+
+The skills-expansion release: 18 new skills (44 → 62), 3 new roles (ai, data,
+mobile — 14 total), and the automated release pipeline that shipped this very
+version. Every new skill carries 3 evals; the full expansion passed the
+RED/GREEN content harness (GREEN ≥ RED on all cases, pressure tests held) and
+the routing harness (top-1 1.00, zero confusion pairs) before release.
+
 ### Added
 - Nine Phase-4 skills across three groups:
   - Governance & ops: `compliance-privacy` (GDPR/CCPA/SOC 2 engineering — data
@@ -88,12 +96,25 @@ All notable changes to this project are documented here. The format follows
   release automation (release-please / changesets / semantic-release), with a
   pressure-tested "never publish without a fresh verification gate" Iron Law.
   Added to the `devops` and `em` roles and to a new "Ship a release" Golden Path.
+- Automated release pipeline, per the library's own `release-management` skill:
+  release-please maintains a release PR from the Conventional Commit history;
+  `scripts/sync-version.mjs` fans the computed version into the `VERSION` SSOT
+  and regenerates the marketplace / 14 plugins / catalog inside the release
+  commit; merging the PR tags, cuts the GitHub release, and publishes to npm
+  via OIDC trusted publishing behind a fresh `verify.mjs` gate. This release
+  (0.2.0) is the first cut by the pipeline.
 - README "Why this library" now showcases the measured strengths (routed activation,
-  eval harnesses with CI gates, hardened safety skills, full-SDLC breadth).
+  eval harnesses with CI gates, hardened safety skills, full-SDLC breadth), and a new
+  Acknowledgements section credits the projects this library builds on
+  (obra/superpowers, anthropics/skills, the Agent Skills docs, the community lists).
 - Roadmap of upcoming skills and roles (AI/data, ideation/execution, deferred sets)
   in docs/ROLES.md.
 
 ### Changed
+- docs/RELEASING.md rewritten for the automated flow: what release-please
+  automates, what stays manual (the semver sanity check, changelog curation on
+  the release PR, the merge as the deliberate trigger), how the
+  VERSION/package.json/marketplace lockstep works, and a manual-fallback recipe.
 - Boundary notes added for the Phase-3 skills: `feature-planning` ("plan this /
   break this down" stays here; executing an approved plan → `plan-execution`),
   `security-audit` (existing code/config here; unbuilt designs →
@@ -138,5 +159,5 @@ Initial release.
   `scripts/verify.mjs`.
 - Documentation: README, ROLES, INSTALL-MATRIX, SKILLS, AUTHORING, EVALS, RELEASING.
 
-[Unreleased]: https://github.com/SWEStash/swe-workflow-skills/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/SWEStash/swe-workflow-skills/compare/v0.2.0...HEAD
 [0.1.0]: https://github.com/SWEStash/swe-workflow-skills/releases/tag/v0.1.0
