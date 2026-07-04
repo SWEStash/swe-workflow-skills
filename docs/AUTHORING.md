@@ -196,7 +196,9 @@ the three evals: a scenario that tempts the agent to skip the skill's Iron Law u
 combined pressure (time, sunk cost, authority, exhaustion), with assertions that it
 doesn't capitulate. Bulletproof skills by capturing the exact rationalizations a fresh
 agent uses *without* the skill (RED), then writing the minimum that counters them
-(GREEN) — see [EVALS.md](EVALS.md) and the `writing-skills` skill.
+(GREEN) — see [EVALS.md](EVALS.md) and the `writing-skills` skill. This hardening
+pattern (Iron Law + rationalization table + pressure tests) is adopted from
+[obra/superpowers](https://github.com/obra/superpowers), which pioneered it.
 
 ## Common Mistakes
 

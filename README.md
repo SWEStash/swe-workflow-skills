@@ -39,8 +39,9 @@ full-SDLC breadth that popular collections don't cover:
 - **Full-SDLC breadth.** Planning, architecture/ADRs, API and data design, TDD, review,
   security, releases, deploys, GitOps, observability, incidents, MLOps, LLM apps
   and AI evaluation, data pipelines and data quality, and the PM/strategy work
-  around them — coverage the popular community collections (superpowers, the
-  awesome-lists) don't attempt.
+  around them — a wider slice of the lifecycle than the community collections we
+  know of aim for (they tend to go deep on the coding inner loop; see
+  [Acknowledgements](#acknowledgements)).
 - **Role-scoped.** `/role backend` (or `frontend`, `devops`, `ml`, `ai`, `data`,
   `security`, `architect`, `em`, `pm`, `strategy`, `qa`, `mobile`, `designer`) promotes
   a working set to auto-trigger; the rest stay one route away.
@@ -156,6 +157,27 @@ and judge each assertion with a skeptical LLM-as-judge: `evals/workflow-runner.m
 New or improved skills are welcome — start with **[AUTHORING.md](docs/AUTHORING.md)** (or
 install the `writing-skills` skill). The short version: descriptions are everything, keep
 SKILL.md concise with detail in `references/`, and ship exactly 3 evals.
+
+## Acknowledgements
+
+This library stands on ideas from projects we found genuinely useful:
+
+- **[obra/superpowers](https://github.com/obra/superpowers)** — the guardrail pattern
+  our hardened safety skills adopt (an Iron Law, a rationalization table distilled from
+  real failures, and pressure tests that try to talk the agent out of it) comes from
+  Jesse Vincent's work here, as does the idea of a Socratic brainstorming skill as the
+  entry point to a feature. Superpowers goes deeper on the coding inner loop than we do;
+  if that's what you want, use it.
+- **[anthropics/skills](https://github.com/anthropics/skills)** — Anthropic's official
+  skills (and `skill-creator` in particular) are the authoring practice we benchmark
+  ours against; the eval-first loop in [AUTHORING.md](docs/AUTHORING.md) follows the
+  same instinct.
+- **The [Agent Skills docs](https://code.claude.com/docs/en/skills) and Anthropic's
+  engineering posts** — progressive disclosure, the listing budget, and the
+  `name-only` + `skillOverrides` activation surface this library's routing model is
+  built on.
+- **The awesome-claude-skills community lists** — the ecosystem survey that shaped our
+  gap analysis of what a full-SDLC library should cover.
 
 ## License
 

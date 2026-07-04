@@ -1,19 +1,26 @@
 # Versioning & releasing
 
 The library is versioned with [Semantic Versioning](https://semver.org/) and released
-as git tags (and, later, an npm package). This page defines what a version *means* for
-a skills library and how to cut a release.
+automatically: [release-please](https://github.com/googleapis/release-please) turns the
+Conventional Commit history into a **release PR**, and merging that PR is the deliberate
+act that tags, cuts the GitHub release, and publishes to npm. This page defines what a
+version *means* for a skills library and how the automation works — including the parts
+that stay manual.
 
 ## Single source of truth
 
-The version lives in one file: **[`VERSION`](../VERSION)** (e.g. `0.1.0`).
+The version lives in one file: **[`VERSION`](../VERSION)** (e.g. `0.2.0`).
 `scripts/build-plugins.mjs` reads it and stamps it into every generated artifact —
 `.claude-plugin/marketplace.json` and each `plugins/<role>/.claude-plugin/plugin.json`.
-**Never hand-edit a version in a generated file.** Bump `VERSION`, regenerate, commit.
-
-`package.json`'s `version` is the one place that must be bumped **alongside** `VERSION`
-(npm reads it statically at publish time). `scripts/verify.mjs` asserts `VERSION`,
+**Never hand-edit a version in a generated file.** `package.json`'s `version` must match
+(npm reads it statically at publish time); `scripts/verify.mjs` asserts `VERSION`,
 `package.json`, and the marketplace all agree, so drift fails CI.
+
+During a release, **release-please bumps `package.json`** and
+**`scripts/sync-version.mjs` fans that version out**: it writes `VERSION`, then re-runs
+`build-plugins.mjs` so the marketplace, the 14 per-role plugins, and `catalog.json` are
+regenerated from it — all inside the release PR, so the merged release commit is
+internally consistent (the "lockstep" below).
 
 ## Lockstep
 
@@ -38,47 +45,73 @@ skills people route to.
 
 While the project is pre-1.0 (`0.y.z`), the public surface may still shift: treat
 **MINOR as the breaking-change lever and PATCH as everything else**, and don't promise
-1.0-level stability until `VERSION` reaches `1.0.0`.
+1.0-level stability until `VERSION` reaches `1.0.0`. The automation encodes this policy
+in [`release-please-config.json`](../release-please-config.json):
+`bump-minor-pre-major: true` + `bump-patch-for-minor-pre-major: false`, i.e.
+**breaking → MINOR, `feat` → MINOR, `fix` → PATCH** until 1.0.
 
-## Conventional commits → changelog
+## Conventional commits drive everything
 
 Commits follow [Conventional Commits](https://www.conventionalcommits.org/)
-(`feat:`, `fix:`, `docs:`, `refactor:`, `chore:`, …) — see the `git-workflow` skill. They
-map to changelog sections: `feat` → **Added**, `fix` → **Fixed**, behavior changes →
-**Changed**, `feat!`/`BREAKING CHANGE:` → a MAJOR bump. Keep
-[CHANGELOG.md](../CHANGELOG.md) in [Keep a Changelog](https://keepachangelog.com/) form;
-accumulate entries under `[Unreleased]` and promote them on release.
+(`feat:`, `fix:`, `docs:`, `refactor:`, `chore:`, …) — see the `git-workflow` skill.
+They are the *input* to the release automation: release-please computes the next version
+from the commit types since the last tag and maps them to changelog sections
+(`feat` → **Added**, `fix` → **Fixed**, `refactor`/`perf`/`docs` → **Changed**;
+`chore`/`ci`/`test` are hidden). A sloppy commit type is now a versioning bug, not just
+untidy history.
 
-## Cutting a release
+[CHANGELOG.md](../CHANGELOG.md) stays in [Keep a Changelog](https://keepachangelog.com/)
+form: accumulate rich, hand-written entries under `[Unreleased]` as you land work.
+Release-please generates its own section from the commit titles; the hand-written prose
+is folded into that section on the release PR before merging (see step 3 below) — the
+curated file, not the generated stub, is the canonical history.
 
-```bash
-# 1. Pick the new version per the rules above; bump BOTH single sources to match.
-echo "0.2.0" > VERSION
-npm version 0.2.0 --no-git-tag-version    # updates package.json without committing/tagging
+## How a release happens
 
-# 2. Regenerate the marketplace/plugins so they carry the new version.
-node scripts/build-plugins.mjs
+The machinery: [`release-please-config.json`](../release-please-config.json) +
+[`.release-please-manifest.json`](../.release-please-manifest.json) (tool config and
+last-released version), [`scripts/sync-version.mjs`](../scripts/sync-version.mjs) (the
+lockstep fan-out), and [`.github/workflows/release.yml`](../.github/workflows/release.yml)
+(two jobs: `release-please` and `publish`). None of these files ship in the npm package.
 
-# 3. Promote [Unreleased] → [0.2.0] in CHANGELOG.md, add the compare links.
+**Automated** (on every push to `main`, or a `workflow_dispatch` nudge):
 
-# 4. Verify everything still passes (version sync, no drift, install/hook/role/uninstall).
-node scripts/build-plugins.mjs --check
-node scripts/verify.mjs
+1. release-please opens or updates the **release PR**: bumps `package.json`, computes
+   the next version from the commits since the last tag, and regenerates the
+   `CHANGELOG.md` section for it.
+2. The workflow's sync step runs `scripts/sync-version.mjs` on the PR branch and commits
+   the result: `VERSION` + marketplace + plugins + catalog now carry the new version, so
+   `verify.mjs` and `build-plugins.mjs --check` are green on the PR *and* on the merged
+   release commit.
+3. When the PR merges, release-please tags `vX.Y.Z` (annotated, no component prefix) and
+   creates the GitHub release.
+4. The `publish` job (gated on the release actually being created) checks out the tag,
+   runs the **verification gate fresh** (`node scripts/verify.mjs` — the Iron Law: never
+   publish without a fresh gate; `prepublishOnly` re-runs it too), inspects the tarball
+   (`npm pack --dry-run`), and publishes to npm via **OIDC trusted publishing** — no
+   token; provenance is attached automatically (public repo, npm ≥ 11.5.1).
 
-# 5. Commit, tag, push.
-git add VERSION package.json CHANGELOG.md .claude-plugin plugins
-git commit -m "chore(release): v0.2.0"
-git tag -a v0.2.0 -m "v0.2.0"
-git push && git push --tags
+**Manual** (the human parts, in order):
 
-# 6. Publish to npm (see below), then cut the GitHub Release.
-npm publish
-gh release create v0.2.0 --notes-from-tag
-```
+1. **Sanity-check the computed version** on the release PR against the table above
+   before merging. The tool knows the commit types; you know whether a change was
+   actually contract-breaking. Disagreement means a mislabeled commit — fix the label
+   (or the config), don't hand-edit the version.
+2. **Curate the changelog on the PR branch**: fold the hand-written `[Unreleased]`
+   entries under the generated `## [X.Y.Z]` heading (keep the richer prose), leave
+   `[Unreleased]` empty for the next cycle, and update the link refs. Pushes to the PR
+   branch don't re-trigger the release workflow; a later push to `main` **regenerates
+   the PR**, so curate last.
+3. **Merge the release PR** — this is the deliberate release trigger. Nothing tags or
+   publishes until a human merges.
+4. **Verify the artifact like a user** (see below) before announcing.
 
-Tags are `vMAJOR.MINOR.PATCH` (annotated). The marketplace consumes the tagged commit;
-users on `/plugin marketplace add SWEStash/swe-workflow-skills` get whatever the default
-branch points at, so only tag from a green `main`.
+One-time npm-side prerequisite (already done for this repo): a **trusted publisher**
+configured on npmjs.com for `swe-workflow-skills`, pointing at
+`SWEStash/swe-workflow-skills` / `release.yml`. Optional: a `RELEASE_PLEASE_TOKEN`
+secret (fine-grained PAT) if you want CI checks to run on the release PR itself —
+`GITHUB_TOKEN`-pushed PRs don't trigger workflows; the publish-time gate runs
+regardless. Forks are inert: both jobs are guarded on the canonical repo name.
 
 ## npm package
 
@@ -88,11 +121,23 @@ install` works with no clone. `package.json`'s `bin` maps the command to `bin/cl
 bundles `skills/` plus the machinery the installer needs at runtime (`roles.json`,
 `catalog.json`, `hooks/session-start.mjs`, `scripts/resolve.mjs`, `commands/role.md`).
 
-Before publishing a new version, sanity-check the tarball actually installs:
+After a release publishes, verify the artifact users actually get:
 
 ```bash
-npm pack                                   # inspect the file list + size
+npm view swe-workflow-skills@<version> version dist.attestations   # registry + provenance
+npm pack swe-workflow-skills@<version>     # pull the published tarball
 tar xzf swe-workflow-skills-*.tgz -C /tmp  # extracts to /tmp/package
 node /tmp/package/bin/cli.mjs install --dir /tmp/pkgtest   # should install all skills (count = docs/SKILLS.md)
-npm publish                                # requires `npm login` first
 ```
+
+## Manual fallback
+
+If the automation is unavailable, a release is the same steps by hand — bump
+`package.json` (`npm version X.Y.Z --no-git-tag-version`), run
+`node scripts/sync-version.mjs`, promote `[Unreleased]` in CHANGELOG.md, run
+`node scripts/verify.mjs` + `node scripts/build-plugins.mjs --check`, commit as
+`chore(release): vX.Y.Z`, tag `vX.Y.Z` (annotated), push with tags, `npm publish`
+(the `prepublishOnly` gate still runs), and `gh release create vX.Y.Z --notes-from-tag`.
+Afterwards update `.release-please-manifest.json` to the released version so the bot's
+next PR computes from the right base. Tags only ever come from a green `main` — the
+marketplace consumes the tagged commit.
