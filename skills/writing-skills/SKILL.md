@@ -1,6 +1,7 @@
 ---
 name: writing-skills
-description: "Use when authoring, editing, or reviewing a skill in this library — a new SKILL.md, one that under-triggers, or hardening an existing one. Covers description and listing-budget rules, frontmatter, progressive disclosure, the 3-eval rule, and pressure-testing against rationalizations. Triggers: write a skill, new skill, edit a skill, skill isn't triggering."
+description: "Use when authoring, editing, or reviewing a skill in this library — a new SKILL.md, one that under-triggers, or hardening an existing one. Covers description and listing-budget rules, frontmatter, progressive disclosure, the 3-eval rule, and pressure-testing against rationalizations."
+when_to_use: "Triggers: write a skill, new skill, edit a skill, skill isn't triggering."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
@@ -96,11 +97,19 @@ Apply rigor where mistakes are expensive; keep freedom where judgment matters.
   architecture exploration, UX, estimation, proposals. Rigidity there produces
   worse outcomes, not better ones.
 
-## Retiring skills
+## Retiring skills (obsolescence review)
 
-As base models improve, a skill can become pure overhead. Periodically re-run a
-skill's evals RED (without the skill); if RED ≈ GREEN, slim or retire it rather
-than letting it spend listing budget and re-attachment tokens.
+As base models improve, a skill can become pure overhead. Once per release cycle
+— or on a major base-model update — re-run the skill's 3 evals RED on shipping
+models via `evals/workflow-runner.mjs`; re-sample ×3 on borderline scores and
+read the judge journal before calling a result variance (a "flaky" case is often
+a real content gap the skill causes). If RED ≈ GREEN across all 3 evals (0/0
+tool-dependent assertion pairs don't count), **slim first** — cut what the model
+does unaided; keep the Iron Law, boundaries, and cross-skill references — then
+re-run GREEN (gate: GREEN ≥ RED per case). Retire only after a slimmed skill
+stays RED ≈ GREEN a full cycle later, with a deprecation notice in
+CHANGELOG/ROLES.md first (removal is user-visible to role and plugin consumers).
+Full policy: docs/AUTHORING.md § Obsolescence review.
 
 ## See also
 

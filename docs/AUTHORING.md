@@ -177,11 +177,30 @@ lose their tails and older skills drop entirely. Two consequences:
 2. **Front-load what matters.** The Iron Law, the workflow, and the boundaries belong
    in the first screens of SKILL.md; deep detail goes to `references/` anyway.
 
-Skills also need **retirement review**: as base models improve, a skill can become
-pure overhead (the model already does it well unaided). Periodically re-run a skill's
-evals RED (without the skill) — if RED ≈ GREEN across the board, retire or slim the
-skill rather than letting it spend budget. This mirrors the obsolescence detection the
-official skill-creator now practices.
+### Obsolescence review (slim first, retire late)
+
+As base models improve, a skill can become pure overhead: the model already does the
+work well unaided, and the skill just spends listing budget and re-attachment tokens.
+This mirrors the obsolescence detection the official skill-creator practices, made
+concrete for this library:
+
+- **Cadence** — once per release cycle, or when the shipping base models change
+  materially (a new default model family or tier).
+- **Procedure** — re-run the skill's 3 evals RED (without the skill) on shipping
+  models via `evals/workflow-runner.mjs`; its generators and judges are pinned to
+  the shipping model line precisely so this baseline means something. Re-sample ×3
+  on borderline scores, and **read the judge journal before writing a gap off as
+  variance** — a "flaky" case is often a real content gap the skill itself causes.
+- **Decision rule** — RED ≈ GREEN across **all three evals** (ignore assertion pairs
+  that score 0/0 on both sides because they depend on tools the harness withholds) →
+  **slim first**: cut what the model now does unaided; keep the Iron Law, the
+  boundaries, and the cross-skill references — those carry routing and safety value
+  even when the domain content has gone generic. Re-run GREEN after slimming; the
+  gate is GREEN ≥ RED per case.
+- **Retirement** — only after a slimmed skill stays RED ≈ GREEN for a full further
+  cycle. Removal is user-visible (roles and plugins ship the skill), so it needs a
+  deprecation notice in CHANGELOG.md and ROLES.md before the skill is dropped from
+  `roles.json` and the router's phase index.
 
 ## Token Economy and Progressive Disclosure
 
