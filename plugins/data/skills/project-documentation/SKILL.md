@@ -1,6 +1,7 @@
 ---
 name: project-documentation
-description: "Write and maintain project docs — README, contributing guides, API docs, changelogs, inline docs. Triggers: write a README, document this project, create documentation, contributing guide, changelog, API docs, how do I document, this needs docs, onboarding docs, JSDoc, docstrings."
+description: "Write and maintain project docs — README, contributing guides, API docs, changelogs, inline docs."
+when_to_use: "Triggers: write a README, document this project, create documentation, contributing guide, changelog, API docs, how do I document, this needs docs, onboarding docs, JSDoc, docstrings."
 model: haiku
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
@@ -87,9 +88,11 @@ Follow Keep a Changelog conventions:
 
 See [templates/changelog.md](templates/changelog.md) for the format.
 
-Accumulate entries under `[Unreleased]` as changes land; promoting them to a version
-heading happens at release time — version choice, tagging, and automated changelog
-generation are `release-management`'s domain.
+Accumulate entries under `[Unreleased]` as changes land. Writing the entries is this
+skill's work even when they must be reconstructed from git history — read the log
+since the last tag, drop trivial commits (merges, typo fixes), and translate the rest
+into user-perspective entries under the sections above. Hand off only the release
+mechanics (version choice, tagging, publish automation) to `release-management`.
 
 ## Workflow: Inline Documentation
 
