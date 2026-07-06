@@ -7,6 +7,52 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+Phase 8a — library-machinery modernization: the toolchain is now
+`when_to_use`-aware (lazy per-skill migration, no big-bang), the four heavy
+review skills run as forked subagents, and the two diff-driven skills load
+their diff at skill-load time.
+
+### Added
+- `description`/`when_to_use` split support: `build-plugins.mjs` reads the
+  `when_to_use` frontmatter field (single-line and block scalars) and emits
+  `description` + `when_to_use` concatenated into each `catalog.json` entry
+  (schema unchanged), so migrated and unmigrated skills are equivalent to the
+  `skill-router` and the routing evals. New guards: `description` > 1,024 chars
+  errors (platform cap), combined listing > 1,536 errors (platform listing
+  cap), combined > 600 warns. Migration policy is **lazy**: new skills use the
+  split natively; existing skills migrate whenever next touched, as a pure
+  move with boundary instructions staying in `description` (docs/AUTHORING.md).
+- `context: fork` + `agent: general-purpose` on `project-review`,
+  `technical-debt-review`, `security-audit`, `strategic-review`: the heavy
+  reads happen in an isolated subagent; each skill now writes its full report
+  to a file and records anything needing user input in an **Open questions**
+  section (forked skills cannot ask mid-run). Smoke-tested 4/4.
+- Dynamic context injection: `git-workflow` opens its commit and PR workflows
+  with live `git diff --stat` / `git log` output (failure-tolerant, `main` →
+  `master` fallback); `code-reviewing` opens with a guarded `git diff --stat`
+  and proceeds with the provided code when it's empty or irrelevant.
+- `verify.mjs`: fixture assertions for the `when_to_use` concatenation and a
+  corrupt-settings regression check.
+
+### Changed
+- First six skills migrated to the `description`/`when_to_use` split (the
+  fork quartet + `git-workflow` + `code-reviewing`); routing neighborhood
+  re-verified 17/17 with zero confusion pairs.
+- `git-workflow`'s small-team branching guidance now names squash-merge as the
+  default, explicit branch naming, and a review bar — a gap its own evals
+  exposed (GREEN 6/6 after the fix).
+- Content-eval generators and judges are pinned to opus in
+  `evals/workflow-runner.mjs` for cross-session score comparability.
+
+### Fixed
+- Corrupt (hand-edited) `settings.local.json` no longer reads as empty — the
+  SessionStart hook would rebuild it and silently destroy the user's local
+  settings. It now throws; the hook skips the write and leaves the file alone.
+- `resolvedSkills` was implemented twice (resolve.mjs and build-plugins.mjs)
+  and had drifted; the builder now imports the single implementation.
+- npm package description still advertised "44 skills" (stale since Phase 1,
+  shipped in 0.2.0); now number-free.
+
 ## [0.2.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.1.0...v0.2.0) (2026-07-04)
 
 The skills-expansion release: 18 new skills (44 → 62), 3 new roles (ai, data,
