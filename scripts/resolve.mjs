@@ -104,10 +104,15 @@ function sortKeysDeep(value) {
 
 export function loadSettings(settingsPath) {
   if (existsSync(settingsPath) && statSync(settingsPath).isFile()) {
+    const text = readFileSync(settingsPath, "utf-8");
     try {
-      return JSON.parse(readFileSync(settingsPath, "utf-8")) || {};
-    } catch {
-      return {};
+      return JSON.parse(text) || {};
+    } catch (e) {
+      // A corrupt (e.g. hand-edited) file must NOT read as empty: downstream
+      // writers would rebuild it from {} and silently destroy the user's
+      // settings. Throw so callers skip the write (the SessionStart hook
+      // catches this and leaves the file alone; the CLI surfaces it).
+      throw new Error(`unparseable JSON in ${settingsPath} — fix or remove it (${e.message})`);
     }
   }
   return {};
