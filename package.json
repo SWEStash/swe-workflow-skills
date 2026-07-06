@@ -1,7 +1,7 @@
 {
   "name": "swe-workflow-skills",
   "version": "0.2.0",
-  "description": "A curated library of 44 Claude Code Agent Skills for the software lifecycle, with orchestrator-routed activation that scales past the skill-listing budget.",
+  "description": "A curated library of Claude Code Agent Skills covering the full software lifecycle, with orchestrator-routed activation that scales past the skill-listing budget.",
   "type": "module",
   "bin": {
     "swe-workflow-skills": "bin/cli.mjs"
