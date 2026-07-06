@@ -1,7 +1,10 @@
 ---
 name: security-audit
-description: "Comprehensive security analysis — OWASP Top 10, auth/authz flows, injection vulnerabilities, data exposure, secrets detection, dependency CVEs, hardening recommendations. Triggers: security audit, vulnerability, is this secure, security review, pentest prep, OWASP, harden this, check for vulnerabilities, injection, XSS, CSRF, auth security. Reviews EXISTING code/config — design-time analysis of a system not yet built → threat-modeling."
+description: "Comprehensive security analysis — OWASP Top 10, auth/authz flows, injection vulnerabilities, data exposure, secrets detection, dependency CVEs, hardening recommendations. Reviews EXISTING code/config — design-time analysis of a system not yet built → threat-modeling."
+when_to_use: "Triggers: security audit, vulnerability, is this secure, security review, pentest prep, OWASP, harden this, check for vulnerabilities, injection, XSS, CSRF, auth security."
 model: opus
+context: fork
+agent: general-purpose
 allowed-tools: Read, Grep, Glob, Write, Edit, WebFetch, WebSearch
 ---
 
@@ -31,7 +34,7 @@ Before reviewing code line by line, map what's exposed:
 - **External integrations**: Third-party APIs, OAuth providers, payment processors
 - **Infrastructure**: Cloud services, databases, caches, queues
 
-Present the attack surface map to the user. Gaps in understanding here mean gaps in the audit.
+Record the attack surface map as the first section of the report — gaps in understanding here mean gaps in the audit, so anything you could not map (unreachable config, undocumented integrations) goes under Open questions rather than being assumed safe.
 
 ### Step 2: Assess by OWASP Top 10
 
@@ -112,6 +115,14 @@ Suggest using the `dependency-management` skill for remediation planning.
 ### Step 7: Produce the Report
 
 Output the audit report using the template at [templates/security-report.md](templates/security-report.md). Organize findings by severity, with Critical and High items first.
+
+**Write the full report to a file** (default a gitignored location, e.g.
+`.local/security-audit-<date>.md`) and state its path in your final summary — this
+skill runs in a forked context: only the summary returns, everything unwritten is
+lost. The summary must lead with the Critical/High count. Judgment calls that need
+user input (unclear trust boundary, whether a data store is in scope, unverifiable
+control) go in an **Open questions** section of the report — never silently assumed
+safe.
 
 ## What This Skill Does NOT Cover
 

@@ -1,6 +1,7 @@
 ---
 name: git-workflow
-description: "Write commit messages, PR descriptions, and manage branching strategy following conventional commits. Triggers: write a commit message, commit this, PR description, pull request, branching strategy, git workflow, squash commits, rebase, conventional commits, how should I commit this, review staged changes."
+description: "Write commit messages, PR descriptions, and manage branching strategy following conventional commits."
+when_to_use: "Triggers: write a commit message, commit this, PR description, pull request, branching strategy, git workflow, squash commits, rebase, conventional commits, how should I commit this, review staged changes."
 model: haiku
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
@@ -13,11 +14,13 @@ Help write clear commit messages, structured PR descriptions, and manage branchi
 
 ### Step 1: Analyze the Changes
 
-Read the staged changes to understand what was done:
+Currently staged (live at skill load; empty when nothing is staged, this isn't a
+git repo, or injection is disabled):
 
-```bash
-git diff --staged
-```
+!`git diff --staged --stat 2>/dev/null || true`
+
+If the summary above is empty or not enough to understand the change, run
+`git diff --staged` yourself for the full diff.
 
 Identify:
 - **What changed?** (files modified, functions added/removed, logic altered)
@@ -68,14 +71,17 @@ Before committing, check:
 
 ### Step 1: Analyze the Branch
 
-Read the changes in the branch:
+Branch state vs the default branch (live at skill load; tries `main` then
+`master`):
 
-```bash
-git log main..HEAD --oneline
-git diff main...HEAD --stat
-```
+!`git log main..HEAD --oneline 2>/dev/null || git log master..HEAD --oneline 2>/dev/null || true`
 
-Understand the full scope of changes across all commits.
+!`git diff main...HEAD --stat 2>/dev/null || git diff master...HEAD --stat 2>/dev/null || true`
+
+If the output above is empty or the repo uses a different default branch, run the
+equivalents against the actual base branch. Understand the full scope of changes
+across all commits — run the full `git diff <base>...HEAD` when the stat summary
+isn't enough.
 
 ### Step 2: Write the PR Description
 
@@ -106,9 +112,10 @@ Help set up or improve branching conventions. Ask about team size and release ca
 
 **For small teams (1-5 devs) or continuous deployment:**
 - `main` — always deployable
-- `feat/description` — feature branches, short-lived (1-3 days)
-- `fix/description` — bug fix branches
-- Merge to main via PR, deploy from main
+- Branch naming: `feat/<description>`, `fix/<description>` — short-lived (1-3 days)
+- Merge to main via PR — **squash-merge by default** (one clean commit per logical
+  change on main); one approval is the right review bar at this size
+- Deploy from main
 
 **For medium teams (5-15 devs) or scheduled releases:**
 - `main` — production

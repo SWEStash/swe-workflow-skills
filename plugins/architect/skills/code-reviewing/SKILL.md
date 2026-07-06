@@ -1,6 +1,7 @@
 ---
 name: code-reviewing
-description: "Structured code reviews enforcing DRY, KISS, YAGNI, SRP, best practices, and project conventions. Triggers: review this code, code review, check my code, what do you think of this implementation, review this PR, is this code good, feedback on my code, review staged changes before commit."
+description: "Structured code reviews enforcing DRY, KISS, YAGNI, SRP, best practices, and project conventions."
+when_to_use: "Triggers: review this code, code review, check my code, what do you think of this implementation, review this PR, is this code good, feedback on my code, review staged changes before commit."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
@@ -13,10 +14,19 @@ Perform thorough, constructive code reviews that catch bugs, enforce principles,
 
 ### Step 1: Understand the Context
 
-Before reviewing line-by-line, understand the big picture:
+Working-tree changes right now (live at skill load; empty when the tree is clean,
+this isn't a git repo, or the review targets something else — e.g. pasted code or
+a PR):
+
+!`git diff --stat 2>/dev/null || true`
+
+If the summary above is empty or irrelevant to what you were asked to review,
+proceed with the code as provided. Before reviewing line-by-line, understand the
+big picture:
 
 - **What is this code supposed to do?** Read the PR description, linked issue, or ask the user.
-- **What changed?** If reviewing a diff, understand the scope of changes.
+- **What changed?** If reviewing a diff, understand the scope of changes — run the
+  full `git diff` (or `git diff --staged`) when the stat summary isn't enough.
 - **What's the surrounding code like?** Read adjacent files for conventions and patterns.
 
 ### Step 2: First Pass — Structural Review

@@ -1,7 +1,10 @@
 ---
 name: project-review
-description: "Review a built project's execution health before a milestone — scope alignment, roadmap / execution-plan adherence, implementation maturity (what's production-ready vs stub/deferred), and the evidence it actually works (tests, coverage, validation results, changelog). Triggers: project review, execution review, are we on track, implementation vs roadmap, scope drift, readiness review, what's actually built, validation results review, pre-launch review. Use strategic-review for vision/positioning/market; technical-debt-review for a pure code-health audit."
+description: "Review a built project's execution health before a milestone — scope alignment, roadmap / execution-plan adherence, implementation maturity (what's production-ready vs stub/deferred), and the evidence it actually works (tests, coverage, validation results, changelog). Use strategic-review for vision/positioning/market; technical-debt-review for a pure code-health audit."
+when_to_use: "Triggers: project review, execution review, are we on track, implementation vs roadmap, scope drift, readiness review, what's actually built, validation results review, pre-launch review."
 model: opus
+context: fork
+agent: general-purpose
 allowed-tools: Read, Grep, Glob, WebFetch, Write, Edit
 ---
 
@@ -90,9 +93,16 @@ Produce ranked, severity-tagged findings, each tied to its evidence:
 - **An execution scorecard** — maturity, roadmap-adherence, evidence-strength,
   each rated with a one-line justification, so the reader gets the picture at a glance.
 
+**Write the full report to a file** — default a gitignored location (e.g.
+`.local/project-review-<date>.md`) unless told otherwise — and state its path in
+your final summary. This skill runs in a forked context: only the summary returns
+to the main conversation, so anything not written to disk is lost. If a judgment
+call needs user input (ambiguous scope boundary, missing baseline docs, which
+milestone to measure against), do **not** guess silently — record it in an
+**Open questions** section of the report and mention it in the summary.
+
 For the rendered deliverable (interactive HTML report, dashboards, sortable
-findings table), hand off to `artifact-design`. Default to writing it to a
-gitignored location (e.g. `.local/`) unless told otherwise.
+findings table), hand off to `artifact-design`.
 
 ## Principles Applied
 

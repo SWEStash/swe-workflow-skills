@@ -1,7 +1,10 @@
 ---
 name: technical-debt-review
-description: "Strategic codebase health assessment — identify hotspots, categorize debt, produce remediation roadmap. Triggers: technical debt, tech debt, debt review, codebase health, hotspots, debt assessment, remediation plan, what should we fix first, debt roadmap, code rot, legacy code audit."
+description: "Strategic codebase health assessment — identify hotspots, categorize debt, produce remediation roadmap."
+when_to_use: "Triggers: technical debt, tech debt, debt review, codebase health, hotspots, debt assessment, remediation plan, what should we fix first, debt roadmap, code rot, legacy code audit."
 model: opus
+context: fork
+agent: general-purpose
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
@@ -34,7 +37,7 @@ Don't try to review everything. Focus on where pain is concentrated.
 - Tests that only test happy paths (no edge cases, no error cases)
 - Test files significantly longer than the code they test (over-specified tests that break on refactoring)
 
-Ask the user: Where do engineers slow down? What parts of the codebase do people avoid touching? Where do bugs keep appearing?
+If the request came with team pain points (where engineers slow down, code people avoid touching, where bugs keep appearing), weight those hotspots first. This skill runs in a forked context and cannot ask mid-run — when that input is missing, proceed on the code signals above and list "where does the team actually hurt?" under Open questions in the report.
 
 ## Step 2: Categorize by Debt Type and Severity
 
@@ -98,6 +101,13 @@ Output a prioritized action plan:
 - [Items acknowledged but explicitly not worth fixing] — revisit if severity changes
 
 Use [templates/debt-audit.md](templates/debt-audit.md) for the full audit format.
+
+**Write the full audit to a file** (default a gitignored location, e.g.
+`.local/debt-review-<date>.md`) and state its path in your final summary — this
+skill runs in a forked context: only the summary returns, everything unwritten is
+lost. Judgment calls that need user input (e.g. which subsystem matters most,
+unknown team pain points) go in an **Open questions** section of the report, never
+guessed silently.
 
 ## Principles Applied
 

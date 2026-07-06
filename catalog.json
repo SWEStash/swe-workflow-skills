@@ -223,7 +223,7 @@
     },
     {
       "name": "project-review",
-      "description": "Review a built project's execution health before a milestone — scope alignment, roadmap / execution-plan adherence, implementation maturity (what's production-ready vs stub/deferred), and the evidence it actually works (tests, coverage, validation results, changelog). Triggers: project review, execution review, are we on track, implementation vs roadmap, scope drift, readiness review, what's actually built, validation results review, pre-launch review. Use strategic-review for vision/positioning/market; technical-debt-review for a pure code-health audit.",
+      "description": "Review a built project's execution health before a milestone — scope alignment, roadmap / execution-plan adherence, implementation maturity (what's production-ready vs stub/deferred), and the evidence it actually works (tests, coverage, validation results, changelog). Use strategic-review for vision/positioning/market; technical-debt-review for a pure code-health audit. Triggers: project review, execution review, are we on track, implementation vs roadmap, scope drift, readiness review, what's actually built, validation results review, pre-launch review.",
       "path": "project-review/SKILL.md"
     },
     {
@@ -253,7 +253,7 @@
     },
     {
       "name": "security-audit",
-      "description": "Comprehensive security analysis — OWASP Top 10, auth/authz flows, injection vulnerabilities, data exposure, secrets detection, dependency CVEs, hardening recommendations. Triggers: security audit, vulnerability, is this secure, security review, pentest prep, OWASP, harden this, check for vulnerabilities, injection, XSS, CSRF, auth security. Reviews EXISTING code/config — design-time analysis of a system not yet built → threat-modeling.",
+      "description": "Comprehensive security analysis — OWASP Top 10, auth/authz flows, injection vulnerabilities, data exposure, secrets detection, dependency CVEs, hardening recommendations. Reviews EXISTING code/config — design-time analysis of a system not yet built → threat-modeling. Triggers: security audit, vulnerability, is this secure, security review, pentest prep, OWASP, harden this, check for vulnerabilities, injection, XSS, CSRF, auth security.",
       "path": "security-audit/SKILL.md"
     },
     {
@@ -263,7 +263,7 @@
     },
     {
       "name": "strategic-review",
-      "description": "Review a project's strategic position before going public, launching, or raising — vision, mission, value proposition, scope positioning, the defensible wedge, and a live competitive / market comparative analysis. Triggers: strategic review, positioning, go public, go-to-market, market analysis, competitive landscape, value proposition, is there a moat, who are our competitors, platform absorption risk, market positioning, comparable products. Use project-review for execution/roadmap/implementation health; delegates deep market scans to deep-research.",
+      "description": "Review a project's strategic position before going public, launching, or raising — vision, mission, value proposition, scope positioning, the defensible wedge, and a live competitive / market comparative analysis. Use project-review for execution/roadmap/implementation health; delegates deep market scans to deep-research. Triggers: strategic review, positioning, go public, go-to-market, market analysis, competitive landscape, value proposition, is there a moat, who are our competitors, platform absorption risk, market positioning, comparable products.",
       "path": "strategic-review/SKILL.md"
     },
     {
