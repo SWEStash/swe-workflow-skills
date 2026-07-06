@@ -211,6 +211,27 @@ check(
 );
 pass(`default installs hook + applies ${NAME_ONLY} name-only baseline; --no-hook keeps baseline, skips hook`);
 
+// 5b — installer hardening: positional args are exact skill names; hook snippet is shell-safe
+step("installer rejects path-traversal args + shell-escapes the hook snippet");
+const trav = join(TMP, "trav");
+let travFailed = false;
+try {
+  execFileSync(NODE, [join(ROOT, "install.mjs"), "--dir", trav, "../.."], { stdio: "ignore" });
+} catch {
+  travFailed = true;
+}
+check(travFailed, "install must reject a path-traversal positional arg");
+check(!existsSync(trav), "rejected install must not create the destination");
+const single = join(TMP, "single");
+install(["--dir", single, "feature-planning"]);
+check(isDir(join(single, "skills", "feature-planning")), "exact skill names must still install");
+// A config dir containing `$(pwd)` must come out backslash-escaped in the printed
+// hook snippet, or the command substitution would run at session start.
+const evil = join(TMP, "evil-$(pwd)");
+const evilOut = execFileSync(NODE, [join(ROOT, "install.mjs"), "--dir", evil], { encoding: "utf-8" });
+check(evilOut.includes("\\\\$(pwd)"), "hook snippet must shell-escape $ in the config path");
+pass("traversal args rejected before any copy; $(...) in the config path is escaped in the snippet");
+
 // 6 — SessionStart hook writes baseline + reloadSkills (preserving keys)
 step("SessionStart hook writes baseline + reloadSkills (preserving keys)");
 writeFileSync(join(inst, "settings.local.json"), JSON.stringify({ model: "x" }));

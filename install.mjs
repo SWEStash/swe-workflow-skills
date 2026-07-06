@@ -161,6 +161,17 @@ if (role) {
   }
 }
 
+// Positional args must be exact skill names, never paths: a traversal like
+// `install.mjs ../..` would pass the isDir guard below and the clean-copy rmSync
+// would then delete outside the destination. Reject before touching anything.
+if (selected.length > 0) {
+  const known = new Set(listSkillDirs());
+  const bad = selected.filter((s) => !known.has(s));
+  if (bad.length > 0) {
+    fatal(`unknown skill(s): ${bad.join(", ")}. Run 'install.mjs --list' to see skills.`);
+  }
+}
+
 // ---- resolve destination ---------------------------------------------------
 
 let claudeDir;
@@ -298,15 +309,24 @@ function copyIfExists(src, destPath) {
   if (existsSync(src)) cpSync(src, destPath);
 }
 
-// The SessionStart block to merge into settings.json. JSON.stringify keeps the path
-// correctly escaped on every OS (Windows backslashes included).
+// Double-quote a path for the POSIX shell that runs the hook command, escaping the
+// chars that stay active inside double quotes (\ $ ` "). Without the $/` escapes, a
+// config path containing e.g. `$(cmd)` would run that command substitution at every
+// session start. For \ and " this produces exactly what JSON.stringify used to (so
+// Windows paths render unchanged); cmd.exe keeps the backslash before $/`, but paths
+// with those chars are effectively POSIX-only.
+function shellQuote(p) {
+  return '"' + p.replace(/[\\$`"]/g, (c) => "\\" + c) + '"';
+}
+
+// The SessionStart block to merge into settings.json.
 function hookSnippet(path) {
   const block = {
     hooks: {
       SessionStart: [
         {
           matcher: "startup|resume|clear|compact",
-          hooks: [{ type: "command", command: `node ${JSON.stringify(path)}` }],
+          hooks: [{ type: "command", command: `node ${shellQuote(path)}` }],
         },
       ],
     },
