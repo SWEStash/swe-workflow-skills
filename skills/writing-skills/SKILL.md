@@ -51,24 +51,31 @@ description over the body, so get it right.
 - **Write WHEN to use, not WHAT it does.** A description that summarizes the
   internal workflow ("reviews code in two passes") triggers worse than one that
   lists situations ("review this PR, check my code before commit").
-- **Our format is a compliant hybrid:** `<when/purpose>. Triggers: <keywords>. <boundary>`.
-  The `Triggers:` list *is* the when-to-use expressed as the phrases a user
-  actually types — keep casting that net wide.
-- **Keep the hybrid format for now** (don't move triggers to `when_to_use` yet):
-  the catalog builder reads only `description`, so the router would lose the
-  trigger phrases. The `when_to_use` migration is a coordinated roadmap change
-  (builder + skills + routing re-baseline together).
-- **~350 chars** for `description` (listing-budget constraint; hard cap 1024).
-  Over budget, the *least-invoked* skills' descriptions drop silently — `/doctor`
-  reports it. See AUTHORING.md "Listing Budget".
+- **The listing is `description` + `when_to_use`.** The `Triggers:` list *is* the
+  when-to-use expressed as the phrases a user actually types — keep casting that
+  net wide. **New skills put it in `when_to_use`; existing skills migrate lazily**
+  (whenever next touched). A migration must be a **pure move**: triggers go to
+  `when_to_use`, the **boundary/delegation instructions STAY in `description`**
+  (they're what steers haiku routing — EVALS.md). The catalog builder concatenates
+  both fields — check with `node scripts/build-plugins.mjs` + `git diff
+  catalog.json` that content is unchanged (a trailing boundary reorders ahead of
+  the triggers; that's fine). No re-baseline needed.
+- **~350 chars** combined listing target (hard caps: `description` 1024, combined
+  1536 — the builder errors above either). Over the listing budget, the
+  *least-invoked* skills' descriptions drop silently — `/doctor` reports it. See
+  AUTHORING.md "Listing Budget".
 - **Anti-pattern:** describing mechanics/steps instead of triggering situations.
 
 ## Structure and budget (brief — see AUTHORING.md for detail)
 
-- Frontmatter: `name`, `description`, `model` (haiku/sonnet/opus by reasoning
-  need), `allowed-tools`. Newer fields where they fit: `when_to_use`,
-  `context: fork` + `agent` (heavy read-only skills), `paths` (file-scoped),
-  `disable-model-invocation` (deliberate-only workflows), `effort`.
+- Frontmatter: `name`, `description`, `when_to_use`, `model` (haiku/sonnet/opus
+  by reasoning need), `allowed-tools`. Newer fields where they fit:
+  `context: fork` + `agent` (heavy report-producing skills — must write the full
+  report to a file and put anything needing user input in an "Open questions"
+  section, since a fork returns only a summary and can't ask the user),
+  `paths` (file-scoped), `disable-model-invocation` (deliberate-only workflows),
+  `effort`. Dynamic `` !`cmd` `` injection: cheap `--stat`-style commands only,
+  `|| true` failure-tolerant — see AUTHORING.md's injection rules.
 - Progressive disclosure: keep SKILL.md tight (aim < 300 lines); push deep
   domain knowledge to `references/`, output formats to `templates/`. On
   compaction only a skill's first ~5k tokens are re-attached — front-load the

@@ -56,16 +56,26 @@ summarizes the workflow ("reviews code in two passes") triggers worse than one t
 lists situations. The `Triggers:` keyword list is the when-to-use expressed as the
 phrases a user actually types — that's what makes this format SDO-compliant.
 
-**`when_to_use` (newer frontmatter field):** Claude Code now supports a dedicated
+**`when_to_use` (newer frontmatter field):** Claude Code supports a dedicated
 `when_to_use` field; the listing shows `description` + `when_to_use` together
 (truncated at 1,536 chars, configurable via `skillListingMaxDescChars`). The natural
 split is `description` = purpose + boundary/delegation, `when_to_use` = the trigger
 phrases (what our `Triggers:` list encodes today), with the key use case first —
-truncation cuts from the end. **In this library, keep the hybrid single-`description`
-format for now**: `scripts/build-plugins.mjs` builds `catalog.json` from `description`
-only, so trigger phrases moved to `when_to_use` would become invisible to the
-`skill-router`. Migrating (builder + all skills + routing-eval re-baseline) is a
-tracked roadmap item; do it as one coordinated change, not per-skill.
+truncation cuts from the end. **This library migrates lazily**: the toolchain is
+split-aware (`scripts/build-plugins.mjs` concatenates `description` + `when_to_use`
+into the catalog entry, so the `skill-router` and the routing evals see the same
+combined text either way), which makes migrated and unmigrated skills equivalent
+downstream. Rules: **new skills use the split; existing skills migrate whenever
+they're next touched; a migration must be a pure move** — relocate the `Triggers:`
+phrases to `when_to_use`, but the **boundary/delegation instructions STAY in
+`description`** (the haiku routing finding in [EVALS.md](EVALS.md): instruction-style
+boundaries are what steer routing; keywords barely move it). Verify with `node
+scripts/build-plugins.mjs` + `git diff catalog.json`: when the triggers were the
+description's tail the entry is byte-identical; when a boundary sentence followed
+them, the combined entry keeps identical content but reorders (boundary now precedes
+triggers) — acceptable, since haiku routes on the instructions, not keyword order;
+confirm with the routing harness when the skill sits in a known confusion
+neighborhood. No big-bang migration and no routing re-baseline is needed.
 
 ## Listing Budget
 
@@ -110,8 +120,8 @@ Newer fields worth knowing (adopt where they fit; see the
 
 | Field | Purpose | When to use here |
 |---|---|---|
-| `when_to_use` | Trigger phrases, listed alongside `description` (combined 1,536-char listing cap) | Preferred home for the `Triggers:` list on **new** skills |
-| `context: fork` + `agent` | Run the skill in a forked subagent context (Explore/Plan/general-purpose/custom) instead of the main conversation | Heavy read-only review skills (project-review, technical-debt-review, security-audit, strategic-review) — keeps their large intermediate reads out of the main context |
+| `when_to_use` | Trigger phrases, listed alongside `description` (combined 1,536-char listing cap) | Required on **new** skills; existing skills migrate lazily when touched (see the migration rules above) |
+| `context: fork` + `agent` | Run the skill in a forked subagent context (Explore/Plan/general-purpose/custom) instead of the main conversation | Heavy read-only review skills (project-review, technical-debt-review, security-audit, strategic-review) — keeps their large intermediate reads out of the main context. See the fork rules below |
 | `paths` | Glob-gated activation — the skill only auto-loads when work touches matching files | File-type-specific skills (e.g. a future IaC or mobile skill scoped to `*.tf`, `ios/**`) |
 | `disable-model-invocation` | Skill can only be invoked by the user (`/name`), never auto-selected | Side-effectful workflows that must be deliberate (e.g. a publish/release runbook) |
 | `user-invocable: false` | Model-only skill, hidden from the `/` menu | Internal helpers |
@@ -123,6 +133,18 @@ None of these count toward the listing budget — only `name` + `description` +
 `when_to_use` do. (Custom slash commands are now the same mechanism as skills —
 `.claude/commands/x.md` ≡ `.claude/skills/x/SKILL.md`.)
 
+**Fork rules (`context: fork`).** A forked skill runs in an isolated subagent: only
+its final summary returns to the main conversation, and it **cannot use
+`AskUserQuestion`** — so fork only skills that take a target, work to completion, and
+never need a mid-run user decision. Two body requirements for every forked skill:
+(1) **write the full report to a file** and state its path in the final summary —
+the summary is all the main session gets, everything else is discarded with the
+subagent; (2) **never guess silently on a judgment call that needs user input** —
+record it in an "Open questions" section of the written report (and mention it in
+the summary) for the main session to resolve. Pick `agent` by tool needs:
+`general-purpose` when the skill writes files or fetches the web; `Explore` only for
+purely read-only work.
+
 ## Dynamic Context Injection and Arguments
 
 SKILL.md bodies support substitutions resolved at load time: `$ARGUMENTS` (or `$1`,
@@ -133,7 +155,15 @@ can open with `` !`git diff --stat` `` so the diff is present without a tool cal
 Use sparingly: it runs on every invocation, costs tokens, and admins can disable it
 (`disableSkillShellExecution`). Our workflow skills mostly guide thinking and rarely
 need it; it shines for skills that always start from the same live state (a diff, a
-PR, test output).
+PR, test output). Injection rules for this library: substitution is preprocessing
+over the **whole file on every invocation** (a command in section 5 runs even when
+the user needed section 1), so (1) inject only **cheap summary forms** (`--stat`,
+`--oneline`, `--short`) and keep expensive full output as an explicit instruction
+step; (2) make every command **failure-tolerant** — end with `|| true` and don't
+assume a branch name (`main` vs `master`) or even a git repo, so the skill degrades
+to its manual instructions when the output is empty; (3) the body must read sensibly
+when the placeholder resolves to nothing (hosts can disable injection) — say what to
+do "if the output above is empty or irrelevant."
 
 ## Content Lifecycle — Write Standing Instructions
 
