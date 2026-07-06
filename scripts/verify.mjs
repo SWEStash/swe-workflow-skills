@@ -27,6 +27,7 @@ import {
   validate,
   installedSkills,
 } from "./resolve.mjs";
+import { parseFrontmatter, listingOf } from "./build-plugins.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const NODE = process.execPath;
@@ -115,8 +116,28 @@ check(
   catNames.size === diskNames.size && [...catNames].every((n) => diskNames.has(n)),
   "catalog != skills on disk",
 );
-check(catalog.every((s) => s.description), "catalog has an empty description");
-pass("marketplace + catalog.json valid; catalog covers every skill");
+check(catalog.every((s) => s.description), "catalog has an empty description (listing = description + when_to_use)");
+// when_to_use awareness: a skill using the description/when_to_use split must land
+// concatenated in the catalog, for both single-line and block-scalar values.
+const fx = join(TMP, "fixture-SKILL.md");
+writeFileSync(
+  fx,
+  `---\nname: fixture\ndescription: "Does X. Boundary: not Y."\nwhen_to_use: "Triggers: do x, run x."\n---\nbody\n`,
+);
+check(
+  listingOf(parseFrontmatter(fx)) === "Does X. Boundary: not Y. Triggers: do x, run x.",
+  "when_to_use (single-line) not concatenated into the listing",
+);
+writeFileSync(
+  fx,
+  `---\nname: fixture\ndescription: Does X.\nwhen_to_use: >-\n  Triggers: do x,\n  run x.\nmodel: haiku\n---\nbody\n`,
+);
+check(
+  listingOf(parseFrontmatter(fx)) === "Does X. Triggers: do x, run x.",
+  "when_to_use (block scalar) not folded into the listing",
+);
+check(listingOf(parseFrontmatter(fx, "fb")) !== "", "fixture parse produced an empty listing");
+pass("marketplace + catalog.json valid; catalog covers every skill; when_to_use concatenation verified");
 
 // 3 — override computation
 step("override computation");
@@ -139,7 +160,22 @@ check(d4.model === "opus", "preserve unrelated key");
 check(d4.skillOverrides.external === "off", "preserve unmanaged override");
 check(!("prd-writing" in d4.skillOverrides), "pm skill should be on");
 check(d4.skillOverrides["api-design"] === "name-only", "out-of-role should be name-only");
-pass("settings merge preserves other keys + unmanaged overrides");
+// Corrupt settings must throw (not read as {}): a silent {} would let the next
+// write rebuild the file and destroy the user's settings.
+const sCorrupt = join(TMP, "apply", "corrupt.json");
+writeFileSync(sCorrupt, '{ "model": "opus", }');
+let corruptThrew = false;
+try {
+  applyBaseline(data, sCorrupt, skillsDir4, null);
+} catch {
+  corruptThrew = true;
+}
+check(corruptThrew, "applyBaseline must throw on a corrupt settings file");
+check(
+  readFileSync(sCorrupt, "utf-8") === '{ "model": "opus", }',
+  "corrupt settings file must be left untouched",
+);
+pass("settings merge preserves other keys + unmanaged overrides; corrupt file throws untouched");
 
 // 5 — install (default = all + machinery + hook + baseline applied)
 step("install (default = all + machinery + hook + baseline applied)");
