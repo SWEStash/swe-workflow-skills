@@ -264,11 +264,30 @@ in planned order:
 1. **Deferred roles** — **Data Scientist** (needs EDA / statistical-analysis /
    notebook-to-production skills); possible `backend`/`devops` splits (both at
    the 20-description cap).
-2. **Machinery** — migrate all skills to the `description` + `when_to_use`
-   frontmatter split as one coordinated change (catalog builder + routing
-   re-baseline); apply `context: fork` to heavy read-only review skills; periodic
-   obsolescence review (re-run evals RED; retire skills where RED ≈ GREEN);
-   **router scaling** (see follow-ups below).
+2. **Machinery** — **router scaling** (see follow-ups below) is the remaining
+   item. Done 2026-07 (Phase 8a/8b): the `description` + `when_to_use` split is
+   supported by the toolchain with a **lazy per-touch migration** (no big-bang —
+   9 skills migrated so far, catalog byte-identical each time); `context: fork`
+   applied to the four heavy review skills; the **obsolescence review** is now a
+   standing policy (AUTHORING.md § Obsolescence review: slim first, retire late)
+   with its first pilot complete (below).
+
+_Obsolescence pilot 2026-07 (Phase 8b) — 6 of the oldest task-like skills, 14
+eval cases on the opus-pinned workflow-runner. **Slimmed**: `effort-estimation`
+(RED ≈ GREEN on 3 samples of both evals; 95 → 54 lines; GREEN ≥ RED held
+post-slim). **Kept**: `project-documentation` (+5 on the API-docs eval; its
+changelog eval caught a real over-deflection to `release-management` — fixed,
+GREEN 0/6 → 6/6), `configuration-strategy` (boundary eval +2),
+`retrospective` (GREEN ≥ RED in all 6 samples, mean +1.3),
+`metrics-and-okrs` (+2), `project-proposal` (+2). **Calibrated cost** for
+future sweeps: ~97k subagent tokens per eval case-run (4 opus agents — 2
+generators + 2 judges); the 6-skill baseline = 56 agents / ~1.36M tokens /
+~4.5 min wall-clock; the full pilot with ×3 re-samples and post-edit
+confirmations = 112 agents / ~2.7M tokens; the routing spot-check adds ~316k
+haiku tokens for a 12-case neighborhood. **Finding**: 4 of the 6 pilot skills
+predate the 3-eval rule and carry only 2 evals (`effort-estimation`,
+`retrospective`, `metrics-and-okrs`, `project-proposal`) — each needs a
+scope-boundary eval added when next touched._
 
 _Done 2026-07: **AI & data** — `ai-evaluation`, `llm-app-engineering`,
 `data-pipeline-design`, `data-quality` shipped with the new `ai` and `data`

@@ -12,6 +12,12 @@ Phase 8a — library-machinery modernization: the toolchain is now
 review skills run as forked subagents, and the two diff-driven skills load
 their diff at skill-load time.
 
+Phase 8b — the obsolescence review is now a standing policy (slim first,
+retire late) and its first pilot ran against 6 of the oldest task-like
+skills: one slimmed, one real content bug caught and fixed, four confirmed
+still earning their tokens. Three Low-severity installer/command hardening
+items from 8a's security audit are closed.
+
 ### Added
 - `description`/`when_to_use` split support: `build-plugins.mjs` reads the
   `when_to_use` frontmatter field (single-line and block scalars) and emits
@@ -33,6 +39,16 @@ their diff at skill-load time.
   and proceeds with the provided code when it's empty or irrelevant.
 - `verify.mjs`: fixture assertions for the `when_to_use` concatenation and a
   corrupt-settings regression check.
+- Obsolescence review policy (docs/AUTHORING.md § Obsolescence review, applied
+  form in `writing-skills`): once per release cycle — or on a major base-model
+  update — re-run a skill's evals RED on shipping models; RED ≈ GREEN across
+  all evals → slim first (keep Iron Laws, boundaries, cross-references); retire
+  only after a slimmed skill stays RED ≈ GREEN a full further cycle, with a
+  deprecation notice here and in ROLES.md first. Pilot results and the
+  calibrated sweep cost are recorded in ROLES.md's roadmap.
+- `verify.mjs`: installer-hardening step — a path-traversal positional arg must
+  be rejected before anything is copied, and a config path containing `$(…)`
+  must come out escaped in the printed hook snippet.
 
 ### Changed
 - First six skills migrated to the `description`/`when_to_use` split (the
@@ -43,6 +59,20 @@ their diff at skill-load time.
   exposed (GREEN 6/6 after the fix).
 - Content-eval generators and judges are pinned to opus in
   `evals/workflow-runner.mjs` for cross-session score comparability.
+- `effort-estimation` slimmed per the first obsolescence pilot (95 → 54 lines):
+  the worked translation math, the method table, and the estimation-traps list
+  — all RED-equivalent on shipping models across 3 samples — are cut; the
+  workflow, boundaries, and reference pointers stay. GREEN ≥ RED held per case
+  after the slim.
+- `project-documentation`'s changelog workflow now keeps entry drafting (from
+  git history included) in-skill and hands only the release mechanics (version
+  choice, tagging, publish automation) to `release-management` — the pilot
+  caught the old boundary wording deflecting the whole task (GREEN 0/6 vs RED
+  4/6; 6/6 after the fix).
+- Three more skills lazy-migrated to the `description`/`when_to_use` split
+  (`writing-skills`, `effort-estimation`, `project-documentation` — 9 total);
+  regenerated catalog byte-identical each time, routing neighborhood 12/12
+  with zero confusion pairs.
 
 ### Fixed
 - Corrupt (hand-edited) `settings.local.json` no longer reads as empty — the
@@ -52,6 +82,18 @@ their diff at skill-load time.
   and had drifted; the builder now imports the single implementation.
 - npm package description still advertised "44 skills" (stale since Phase 1,
   shipped in 0.2.0); now number-free.
+- `install.mjs` accepted path-like positional args: `node install.mjs ../..`
+  passed the directory guard and the clean-copy `rmSync` could then delete
+  outside the destination. Positional args are now whitelisted against the
+  `skills/` directory names before anything is copied or removed.
+- The printed SessionStart hook snippet quoted the hook path with plain JSON
+  escaping, so a config path containing `$(cmd)` or backticks would execute at
+  every session start once merged into `settings.json`; the path is now
+  shell-quoted (backslash/quote rendering unchanged, Windows paths unaffected).
+- The `/role` command interpolated `$ARGUMENTS` directly inside its executable
+  script, letting a crafted argument run in the shell. The argument now reaches
+  the script only through a validated placeholder transfer, with an in-script
+  guard as defense-in-depth.
 
 ## [0.2.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.1.0...v0.2.0) (2026-07-04)
 
