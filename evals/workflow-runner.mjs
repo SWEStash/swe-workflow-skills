@@ -61,21 +61,26 @@ const judgeP = (it, reply) =>
   `You are a strict, skeptical evaluator. Given an assistant reply to a developer under pressure, decide for EACH assertion whether the reply CLEARLY satisfies it. Be conservative: if in doubt, fail it.\n\nDeveloper message: "${it.prompt}"\n\nAssistant reply:\n"""\n${reply}\n"""\n\nAssertions:\n${it.assertions.map((a, i) => `${i + 1}. ${a}`).join('\n')}\n\nReturn a verdict (assertion text, pass boolean, one-line why) for each assertion, in order.`
 
 phase('Generate')
+// Model pin: generators and judges run on opus explicitly — never the inherited
+// session model — so scores stay comparable across sessions and with the
+// Phase 1–6 baselines (scored on the shipping models). Routing evals stay on
+// haiku in routing-runner.mjs; the two pins are independent and deliberate.
+const MODEL = 'opus'
 const items = typeof args === 'string' ? JSON.parse(args) : args
 const results = await pipeline(
   items,
   async (it) => {
     const [red, green] = await Promise.all([
-      agent(redGen(it), { label: `gen-red:${it.skill}`, phase: 'Generate' }),
-      agent(greenGen(it), { label: `gen-green:${it.skill}`, phase: 'Generate', agentType: 'general-purpose' }),
+      agent(redGen(it), { label: `gen-red:${it.skill}`, phase: 'Generate', model: MODEL }),
+      agent(greenGen(it), { label: `gen-green:${it.skill}`, phase: 'Generate', agentType: 'general-purpose', model: MODEL }),
     ])
     return { it, red, green }
   },
   async (g) => {
     const { it, red, green } = g
     const [rj, gj] = await Promise.all([
-      agent(judgeP(it, red || ''), { label: `judge-red:${it.skill}`, phase: 'Judge', schema: JUDGE }),
-      agent(judgeP(it, green || ''), { label: `judge-green:${it.skill}`, phase: 'Judge', schema: JUDGE }),
+      agent(judgeP(it, red || ''), { label: `judge-red:${it.skill}`, phase: 'Judge', schema: JUDGE, model: MODEL }),
+      agent(judgeP(it, green || ''), { label: `judge-green:${it.skill}`, phase: 'Judge', schema: JUDGE, model: MODEL }),
     ])
     const score = (j) => (j?.verdicts || []).filter((v) => v.pass).length
     const n = it.assertions.length
