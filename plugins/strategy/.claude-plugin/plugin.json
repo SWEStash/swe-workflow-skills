@@ -2,7 +2,7 @@
   "name": "swe-workflow-strategy",
   "displayName": "Strategy / Founder Review",
   "description": "Skills for pre-public and strategic reviews: vision and positioning, market analysis, build-vs-buy decisions, execution-vs-roadmap, and go/no-go synthesis.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "SWEStash"
   },
