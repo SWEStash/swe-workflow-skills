@@ -1,6 +1,7 @@
 ---
 name: skill-router
-description: "Orchestrator and entry point for the swe-workflow skills library — consult FIRST when starting any non-trivial software task; most skills load name-only and only activate when invoked here. Triggers: starting a feature, planning, an architecture or design decision, implementing, debugging, reviewing, refactoring, testing, security, deployment, an incident, shipping, or unsure which skill fits. Routes intent to the right skill(s) and invokes them by name; shows the Golden Path chains."
+description: "Orchestrator and entry point for the swe-workflow skills library — consult FIRST when starting any non-trivial software task; most skills load name-only and only activate when invoked here. Routes intent to the right skill(s) and invokes them by name; shows the Golden Path chains."
+when_to_use: "Triggers: starting a feature, planning, an architecture or design decision, implementing, debugging, reviewing, refactoring, testing, security, deployment, an incident, shipping, or unsure which skill fits."
 model: haiku
 allowed-tools: Read, Grep, Glob, Skill
 ---
@@ -167,6 +168,11 @@ installed skill by name, regardless of role.
 - **data-pipeline-design** — batch/streaming ELT, dbt layering, Airflow/Dagster, idempotency, backfill
 - **data-quality** — dbt tests, expectations, data contracts, freshness, lineage / blast radius
 
+### Data Science
+- **exploratory-data-analysis** — profile an unfamiliar dataset: missingness structure, distributions, leakage, hypotheses
+- **statistical-analysis** — hypothesis tests, experiment design/power, confidence intervals, multiple-comparison discipline
+- **notebook-to-production** — refactor analysis notebooks to tested, parameterized, scheduled production code
+
 ## Golden Path workflow chains
 
 When work spans phases, chain skills rather than improvising:
@@ -201,6 +207,10 @@ App-store releases (signing, review, staged rollout) → `mobile-release`.
 `data-pipeline-design` (ELT, layering, orchestration) → `data-modeling`
 (marts schema) → `data-quality` (tests, contracts, freshness) →
 `observability-design` (pipeline SLOs, alerting).
+Notebook to production: `exploratory-data-analysis` (understand the data) →
+`statistical-analysis` (test the hypotheses) → `notebook-to-production`
+(modules, tests, scheduling); if the notebook trains a model →
+`ml-pipeline-design` instead.
 
 **Pre-public / pre-milestone review**
 `strategic-review` (vision, positioning, market) → `project-review` (scope,

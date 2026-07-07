@@ -1,0 +1,43 @@
+{
+  "skill_name": "statistical-analysis",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We ran an experiment: 2,400 users saw the new checkout flow and converted at 6.8%; 2,350 saw the old one and converted at 5.9%. My PM wants to ship it today — is this difference real? How confident can we be?",
+      "expected_output": "Should treat this as a two-proportion hypothesis test: state the null, run or outline the test with the actual numbers, report a confidence interval on the difference, ask whether the sample size was fixed in advance (peeking), and separate statistical from practical significance before giving a ship recommendation.",
+      "assertions": [
+        "Frames the question as a hypothesis test (two-proportion z-test or equivalent) and states the null hypothesis",
+        "Works the actual numbers given (or sets up the exact computation) rather than answering qualitatively",
+        "Reports uncertainty as a confidence interval on the difference, not only a p-value or a yes/no verdict",
+        "Asks or checks whether the sample size was fixed in advance and flags the peeking/optional-stopping problem",
+        "Distinguishes statistical significance from practical/business significance",
+        "States the assumptions behind the chosen test (independent samples, adequate counts)",
+        "Gives a clear ship/don't-ship framing with the statistical caveats attached"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We measured 20 different metrics in our experiment and 2 came out significant at p < 0.05. Which ones should we report as wins?",
+      "expected_output": "Should identify the multiple-comparisons problem (about one false positive is expected by chance at that rate), recommend a correction (Holm/Bonferroni or FDR), distinguish pre-registered primary metrics from exploratory ones, and treat the 2 hits as hypotheses for a confirmatory follow-up — not report them as wins.",
+      "assertions": [
+        "Identifies the multiple-comparisons problem explicitly — with 20 tests, roughly one false positive at p < 0.05 is expected by chance",
+        "Recommends a concrete correction (Bonferroni, Holm, or FDR / Benjamini-Hochberg) and notes the trade-off between them",
+        "Warns against reporting the 2 nominal hits as wins (p-hacking / cherry-picking)",
+        "Distinguishes pre-registered primary metrics from exploratory findings",
+        "Recommends treating the surviving hits as hypotheses for a follow-up confirmatory experiment",
+        "Does not simply declare the two significant metrics real effects"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We're about to launch a new system prompt for our support chatbot and want to A/B test it live against the current one to see which gives better answers. Can you set this up?",
+      "expected_output": "Should recognize this as online A/B evaluation of an LLM app and hand off to the ai-evaluation skill for the evaluation design (answer-quality metrics, LLM-as-judge or human feedback, eval gates); statistical-analysis contributes at most the underlying experiment statistics (sample size, significance), not the AI evaluation design.",
+      "assertions": [
+        "Recognizes this as AI-app evaluation territory and hands off to or invokes the ai-evaluation skill",
+        "Raises AI-specific measurement concerns (defining answer quality, LLM-as-judge or human feedback signals) rather than treating it as a pure two-sample statistics problem",
+        "Does not respond with only a generic A/B test design ignoring how answer quality gets measured",
+        "If it retains anything, retains only the experiment statistics (sample size, significance testing) as this skill's contribution"
+      ]
+    }
+  ]
+}

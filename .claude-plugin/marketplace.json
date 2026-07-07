@@ -50,6 +50,13 @@
       "source": "./plugins/data"
     },
     {
+      "name": "swe-workflow-data-scientist",
+      "displayName": "Data Scientist",
+      "description": "Skills for exploratory data analysis, statistical rigor, notebook productionization, and the experiment-tracking/data-quality/modeling work around them. (14 skills)",
+      "version": "0.2.0",
+      "source": "./plugins/data-scientist"
+    },
+    {
       "name": "swe-workflow-security",
       "displayName": "Security Engineer",
       "description": "Skills for design-time threat modeling, security audits, dependency/CVE management, blast-radius analysis, and incident handling. (15 skills)",

@@ -1,0 +1,32 @@
+{
+  "skill_name": "ml-experiment-tracking",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm training a text classification model using scikit-learn. I want to compare TF-IDF + Logistic Regression vs TF-IDF + Random Forest vs sentence-transformers + XGBoost. Set up experiment tracking so I can compare them properly.",
+      "expected_output": "Should set up MLflow or W&B tracking, define what to log for each run, ensure all three experiments are comparable, and provide the tracking code.",
+      "assertions": [
+        "Sets up experiment tracking infrastructure (MLflow or W&B)",
+        "Defines consistent metrics across all three approaches",
+        "Logs hyperparameters, dataset version, and git commit for each run",
+        "Logs model artifacts for later loading",
+        "Shows how to compare runs after completion",
+        "Emphasizes changing one variable at a time where possible",
+        "Includes reproducibility measures (random seed, environment capture)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I've been training models in Jupyter notebooks for 3 months and I have results scattered across 40+ notebooks. How do I get organized?",
+      "expected_output": "Should recommend setting up tracking infrastructure, then systematically re-running or cataloging key experiments. Should be practical about not re-running everything.",
+      "assertions": [
+        "Does NOT suggest re-running all 40 notebooks",
+        "Recommends setting up tracking for all future experiments",
+        "Suggests cataloging the best results from notebooks into the tracker manually",
+        "Recommends extracting reusable training code from notebooks into scripts",
+        "Suggests data versioning to prevent future dataset ambiguity",
+        "Provides a practical migration path, not an all-or-nothing approach"
+      ]
+    }
+  ]
+}

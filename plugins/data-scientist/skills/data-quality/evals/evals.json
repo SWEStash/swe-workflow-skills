@@ -1,0 +1,39 @@
+{
+  "skill_name": "data-quality",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Stakeholders keep finding bad numbers in our dashboards — null customer IDs, duplicated orders, and data that's a day stale. We're on dbt + Snowflake. Set up data quality checks.",
+      "expected_output": "Maps each symptom to a concrete check (not_null/unique dbt tests, source freshness), places checks at the ingestion boundary first and critical marts second, assigns severity (error blocks, warn alerts), routes failures to an owner, and uses lineage to scope which downstream models and dashboards a failure affects",
+      "assertions": [
+        "Maps each reported symptom to a concrete check: not_null/unique dbt tests for the IDs and duplicates, and source freshness checks for the staleness",
+        "Places checks at the right layers: the source/ingestion boundary first, then critical marts — not only on the final dashboards",
+        "Assigns severity levels (error vs warn) and defines what blocks the pipeline versus what only alerts",
+        "Sets up alerting and ownership so failures reach someone who acts, instead of failing silently",
+        "Uses lineage to scope blast radius — which downstream models or dashboards a failing check affects"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "An upstream team owns the events we ingest and keeps renaming columns and changing types without telling us. Our pipeline breaks silently every few weeks. What should we put in place?",
+      "expected_output": "Proposes a producer/consumer data contract (schema, types, semantics, SLA) enforced at the ingestion boundary so violations fail loudly at entry; shifts validation left into the producer's CI or publish path; adds versioning/deprecation windows for breaking changes; and backstops enforcement with schema-drift and volume/distribution anomaly detection",
+      "assertions": [
+        "Proposes an explicit data contract between producer and consumer (schema, types, semantics, SLAs), not just more downstream tests",
+        "Enforces the schema at the ingestion boundary so violations fail loudly at entry instead of propagating silently",
+        "Shifts checks left: contract validation in the producer's CI or at publish time",
+        "Covers change management for breaking changes: contract versioning or a deprecation window",
+        "Adds detection for what enforcement misses: schema-drift alerts or anomaly checks on volume/distributions"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We need realistic but fake customer data to seed staging so QA can test the checkout flow — GDPR means we can't copy production.",
+      "expected_output": "Recognizes this as generating synthetic/test data, not validating production data — hands off to test-data-strategy (factories, synthetic generation, anonymization) rather than proposing expectations, contracts, or freshness checks",
+      "assertions": [
+        "Recognizes this is about generating test/synthetic data, not validating production data quality",
+        "Refers to the test-data-strategy skill for factories, synthetic data generation, and GDPR-safe anonymization",
+        "Does not answer with data-quality machinery (expectations, contracts, freshness checks) as the solution"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "skill_name": "data-modeling",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm building an e-commerce platform and need to design the schema for products, categories, orders, and inventory. Products can belong to multiple categories. We're using PostgreSQL with Django ORM. Estimated scale: 10K products, 1K orders/day.",
+      "expected_output": "Should start with conceptual model (entities + relationships), then produce normalized schema with proper foreign keys, indexes for common queries, and Django model definitions.",
+      "assertions": [
+        "Identifies M:N relationship between products and categories",
+        "Creates a join table for product-category relationship",
+        "Schema is at least 3NF normalized",
+        "Includes indexes for common access patterns (order lookup by user, product search)",
+        "Foreign keys have explicit ON DELETE behavior",
+        "Includes created_at/updated_at timestamps",
+        "Validates schema against likely access patterns"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to add a comments feature to our blog. Users can comment on posts and reply to other comments. We need to track who edited comments and when. Using Prisma with PostgreSQL.",
+      "expected_output": "Should model the self-referential relationship for threaded comments, include audit fields, and produce Prisma schema.",
+      "assertions": [
+        "Models the self-referential parent_comment_id relationship",
+        "Includes ON DELETE strategy for nested comments",
+        "Tracks edit history (edited_at or separate edit_history table)",
+        "Produces Prisma schema syntax, not raw SQL",
+        "Considers soft delete for comment moderation"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We need to rename our 'username' column to 'display_name' in the users table. We have 2M users and the column is used in about 15 places in the codebase. We can't have downtime. How should I approach this?",
+      "expected_output": "Should recommend the expand-contract migration pattern, not a simple column rename. Should produce multiple migration steps with deployment coordination.",
+      "assertions": [
+        "Does NOT suggest a simple ALTER TABLE RENAME",
+        "Recommends expand-contract (add new column, dual-write, backfill, cut over, drop old)",
+        "Addresses the zero-downtime requirement explicitly",
+        "Warns about table locking on 2M rows",
+        "Produces reversible migration steps"
+      ]
+    }
+  ]
+}

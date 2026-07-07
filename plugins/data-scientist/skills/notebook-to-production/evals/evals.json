@@ -1,0 +1,42 @@
+{
+  "skill_name": "notebook-to-production",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "My analysis notebook pulls monthly sales data, cleans it, computes KPI aggregates, and generates charts for a report. Management wants this delivered automatically every Monday morning. It's 800 lines of cells with hardcoded dates and file paths. How do I productionize it?",
+      "expected_output": "Should refactor incrementally: extract the logic into importable modules, parameterize the hardcoded dates/paths, add tests for the transformations, pin the environment for reproducibility, schedule the Monday run with failure alerting — not rewrite from scratch.",
+      "assertions": [
+        "Extracts notebook logic into importable modules/functions rather than leaving everything in cells",
+        "Parameterizes the hardcoded dates and paths (config file, CLI args, or papermill-style notebook parameters)",
+        "Adds tests for the extracted transformation logic",
+        "Pins the environment for reproducibility (lock file, pinned requirements, or a container)",
+        "Sets up scheduling for the Monday run sized to the team (cron or CI schedule before reaching for a heavy orchestrator)",
+        "Addresses failure handling and alerting for the unattended run",
+        "Proposes an incremental refactor path rather than a from-scratch rewrite"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our team has 30+ research notebooks accumulated over two years. Some are one-off explorations, some get re-run every quarter by hand. We can't productionize everything — what should we do?",
+      "expected_output": "Should triage rather than migrate everything: productionize the recurring high-impact notebooks first, archive one-offs with enough context to be reproducible, extract shared utilities for duplicated logic, and set a lightweight standard for future notebooks.",
+      "assertions": [
+        "Triages the notebooks instead of proposing to productionize all 30+ — one-off explorations stay notebooks",
+        "Prioritizes by re-run frequency and business impact (the quarterly hand-run ones first)",
+        "Recommends archiving one-offs with enough context to reproduce them later (data snapshot or query, pinned environment)",
+        "Proposes extracting shared utilities for logic duplicated across notebooks",
+        "Suggests a lightweight convention for future notebooks that are likely to need productionizing",
+        "Does not propose a big-bang migration of everything"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I have a notebook that does feature engineering on our user events and trains a ranking model. I want to turn it into a pipeline that retrains automatically every week.",
+      "expected_output": "Should recognize this notebook feeds model TRAINING — feature engineering, training, evaluation, scheduled retraining — and hand off to the ml-pipeline-design skill for the training-pipeline DAG, rather than doing a general notebook-to-module refactor.",
+      "assertions": [
+        "Recognizes the notebook feeds model training and hands off to or invokes the ml-pipeline-design skill",
+        "Names training-pipeline concerns (pipeline DAG stages, data validation, evaluation gate, retraining schedule) as ml-pipeline-design territory",
+        "Does not respond with only a generic notebook-to-module refactor as the primary answer"
+      ]
+    }
+  ]
+}

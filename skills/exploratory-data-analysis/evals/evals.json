@@ -1,0 +1,43 @@
+{
+  "skill_name": "exploratory-data-analysis",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I just got a CSV export of our customer orders — about 200k rows, 30 columns — and I've never seen this data before. We eventually want a churn model out of it. Where do I start?",
+      "expected_output": "Should run a structured EDA workflow: profile columns first, examine missingness patterns and distributions, look at the target definition and class balance, flag potential leakage columns, and turn findings into explicit hypotheses — not jump to modeling.",
+      "assertions": [
+        "Profiles the dataset first (column types, ranges, cardinality, summary statistics) before giving any modeling advice",
+        "Examines missingness patterns and distinguishes random gaps from structural ones (e.g., a column only populated for some segment)",
+        "Checks distributions and flags outliers or skew with concrete methods (quantiles, histograms, IQR or similar)",
+        "Warns about target leakage — columns that would not be available at prediction time must be identified and excluded",
+        "Examines how the churn target would be defined and its class balance before any modeling",
+        "Looks at relationships between candidate features and the target, not just univariate profiles",
+        "Produces explicit hypotheses or follow-up questions from the findings rather than only reporting statistics"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to understand a warehouse extract with 400 columns and 3 million rows by Friday, and pandas kills my laptop when I load it. What's the plan?",
+      "expected_output": "Should scale the EDA workflow instead of abandoning it: triage columns cheaply first, work on a representative sample or push aggregations to the warehouse, and prioritize by the analysis goal rather than exhaustively profiling everything.",
+      "assertions": [
+        "Recommends sampling or chunked/out-of-core processing instead of loading everything into memory",
+        "Notes the sample must be representative (random or stratified) and flags the caveat that rare events and outliers can be missed under sampling",
+        "Triages the 400 columns cheaply (types, null rates, cardinality) before deep-diving any of them",
+        "Prioritizes columns by relevance to the stated goal rather than profiling all 400 equally",
+        "Suggests pushing heavy aggregations down to the warehouse via SQL, or using a lazy/out-of-core engine (e.g., Polars, DuckDB, Dask)",
+        "Still covers the core EDA checklist (types, missingness, distributions, key relationships) on the reduced view"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our finance dashboard has shown wrong revenue numbers all week — the nightly job loads orders into the warehouse and something is off upstream. Can you help me analyze the data and find the problem?",
+      "expected_output": "Should recognize this as a pipeline-level data-trust problem, not exploration of an unfamiliar dataset — hand off to the data-quality skill (dbt tests, freshness, schema drift, contracts, lineage) rather than starting a dataset-profiling workflow.",
+      "assertions": [
+        "Recognizes this as a data-quality / pipeline-trust problem rather than exploratory analysis of a new dataset",
+        "Hands off to or invokes the data-quality skill instead of running a generic EDA workflow",
+        "Points at concrete data-quality directions (dbt tests, source freshness, schema drift, upstream contract, lineage/blast radius) as the right path",
+        "Does not respond with a dataset-profiling/distributions workflow as the primary answer"
+      ]
+    }
+  ]
+}

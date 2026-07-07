@@ -127,6 +127,20 @@
         "observability-design"
       ]
     },
+    "data-scientist": {
+      "label": "Data Scientist",
+      "description": "Skills for exploratory data analysis, statistical rigor, notebook productionization, and the experiment-tracking/data-quality/modeling work around them.",
+      "core": "technical",
+      "skills": [
+        "exploratory-data-analysis",
+        "statistical-analysis",
+        "notebook-to-production",
+        "ml-experiment-tracking",
+        "data-quality",
+        "data-modeling",
+        "ai-evaluation"
+      ]
+    },
     "security": {
       "label": "Security Engineer",
       "description": "Skills for design-time threat modeling, security audits, dependency/CVE management, blast-radius analysis, and incident handling.",

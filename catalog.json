@@ -122,6 +122,11 @@
       "path": "effort-estimation/SKILL.md"
     },
     {
+      "name": "exploratory-data-analysis",
+      "description": "Explore and profile an unfamiliar dataset before modeling or analysis — structural profiling, missingness structure, distributions and outliers, feature–target relationships, leakage awareness, and explicit hypothesis generation. Pipeline-level data trust (broken dashboards, tests, contracts, freshness) → data-quality; formal inference on the hypotheses → statistical-analysis. Triggers: explore this dataset, EDA, profile the data, what's in this data, first look at the data, understand this CSV, distributions, outliers, missing values, correlation, data leakage.",
+      "path": "exploratory-data-analysis/SKILL.md"
+    },
+    {
       "name": "feature-planning",
       "description": "Break features into well-scoped tasks with acceptance criteria, risk assessment, and dependency mapping. Triggers: plan this, break this down, scope this feature, create tasks for, sprint planning, how should I implement this feature, user stories, acceptance criteria, dependency mapping, feature breakdown. Creates the plan — executing an already-approved plan checkpoint by checkpoint → plan-execution.",
       "path": "feature-planning/SKILL.md"
@@ -192,6 +197,11 @@
       "path": "mobile-release/SKILL.md"
     },
     {
+      "name": "notebook-to-production",
+      "description": "Refactor analysis notebooks into production-grade code — triage what deserves productionizing, extract modules with tests, parameterize hardcoded values, pin environments for reproducibility, and schedule unattended runs with alerting. Owns general analysis/reporting notebooks; notebooks that feed model TRAINING (feature engineering + training DAGs, scheduled retraining) → ml-pipeline-design. Triggers: productionize this notebook, notebook to script, notebook to module, refactor my notebook, parameterize notebook, papermill, schedule this analysis, reproducible analysis, notebook is a mess.",
+      "path": "notebook-to-production/SKILL.md"
+    },
+    {
       "name": "observability-design",
       "description": "Design production observability — SLIs, SLOs, SLAs, error budgets, OpenTelemetry traces/metrics/logs, structured logging, alerting, dashboards. Triggers: SLO, SLI, SLA, error budget, observability, monitoring, OpenTelemetry, OTel, tracing, distributed tracing, structured logging, alerting, dashboard, metrics, correlation ID, alert fatigue.",
       "path": "observability-design/SKILL.md"
@@ -258,8 +268,13 @@
     },
     {
       "name": "skill-router",
-      "description": "Orchestrator and entry point for the swe-workflow skills library — consult FIRST when starting any non-trivial software task; most skills load name-only and only activate when invoked here. Triggers: starting a feature, planning, an architecture or design decision, implementing, debugging, reviewing, refactoring, testing, security, deployment, an incident, shipping, or unsure which skill fits. Routes intent to the right skill(s) and invokes them by name; shows the Golden Path chains.",
+      "description": "Orchestrator and entry point for the swe-workflow skills library — consult FIRST when starting any non-trivial software task; most skills load name-only and only activate when invoked here. Routes intent to the right skill(s) and invokes them by name; shows the Golden Path chains. Triggers: starting a feature, planning, an architecture or design decision, implementing, debugging, reviewing, refactoring, testing, security, deployment, an incident, shipping, or unsure which skill fits.",
       "path": "skill-router/SKILL.md"
+    },
+    {
+      "name": "statistical-analysis",
+      "description": "Design and analyze experiments and statistical tests — test selection with stated assumptions, sample size and power, effect sizes and confidence intervals over bare p-values, and pitfall discipline (multiple comparisons, p-hacking, peeking/optional stopping). Owns experiment statistics generally; live A/B evaluation of AI/LLM apps (quality metrics, judges, feedback) → ai-evaluation. Triggers: hypothesis test, t-test, chi-square, p-value, statistical significance, confidence interval, sample size, power analysis, design an experiment, A/B test, multiple comparisons, is this difference real.",
+      "path": "statistical-analysis/SKILL.md"
     },
     {
       "name": "strategic-review",
