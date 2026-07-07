@@ -153,6 +153,7 @@ catalog it could read, it would only waste a listing slot).
 | `ml`       | ML Engineer / MLOps              | technical |
 | `ai`       | AI Engineer (LLM apps)           | technical |
 | `data`     | Data Engineer                    | technical |
+| `data-scientist` | Data Scientist             | technical |
 | `security` | Security Engineer                | technical |
 | `architect`| Architect / Staff Engineer       | technical |
 | `em`       | Engineering Manager / Tech Lead  | universal |
@@ -261,9 +262,16 @@ Verified against the Claude Code / claude.ai docs, 2026-06.
 All need **new skills** first (build via the `writing-skills` RED→GREEN process),
 in planned order:
 
-1. **Deferred roles** — **Data Scientist** (needs EDA / statistical-analysis /
-   notebook-to-production skills); possible `backend`/`devops` splits (both at
-   the 20-description cap).
+1. **Deferred roles** — possible `backend`/`devops` splits (both at the
+   20-description cap). Done 2026-07 (Phase 8c): **Data Scientist** shipped as
+   the 15th role — `exploratory-data-analysis`, `statistical-analysis`,
+   `notebook-to-production` authored natively in the description/`when_to_use`
+   split (RED captured before authoring; GREEN ≥ RED on all 9 cases, opus
+   runner), plus `ml-experiment-tracking`, `data-quality`, `data-modeling`,
+   `ai-evaluation` (15 skills, crop-safe). Boundary landmines defused:
+   `ml-pipeline-design`'s trigger narrowed to "notebook to *training*
+   pipeline" (+ its missing scope-boundary eval added), `ai-evaluation` gained
+   the reciprocal `statistical-analysis` boundary.
 2. **Machinery** — **router scaling** (see follow-ups below) is the remaining
    item. Done 2026-07 (Phase 8a/8b): the `description` + `when_to_use` split is
    supported by the toolchain with a **lazy per-touch migration** (no big-bang —
@@ -312,7 +320,7 @@ roles; `ml` extended with `ai-evaluation`. **Ideation & execution** —
   core, forces a trim or a role split.
 - **Router scaling (haiku)**: `skill-router` runs on haiku and reads the whole
   `catalog.json` per routing call — the catalog is a context budget of its own.
-  At 62 skills it's ~32k chars (~8k tokens): no window pressure (200k), but a
+  At 65 skills it's ~35k chars (~9k tokens): no window pressure (200k), but a
   real per-call cost and a growing candidate set. Standing mitigations:
   the ~350–550-char description discipline (now machine-checked —
   `build-plugins.mjs` errors above the 1,024 platform cap, warns above 600
@@ -325,8 +333,17 @@ roles; `ml` extended with `ai-evaluation`. **Ideation & execution** —
   shortlisted skills' full descriptions instead of the whole catalog. Haiku
   routes mostly on names (EVALS.md finding), so the compact first stage should
   hold accuracy; verify with the routing harness before switching.
+- **Routing baseline refresh**: `evals/routing-baseline.json` predates the
+  Phase 7/8 skills — cases added since (including the 8c data-science cases)
+  have no baseline entry, so they can't regress in CI but also don't gate yet.
+  Next keyed run: `python evals/routing.py --run --update-baseline -k 3`
+  (needs `ANTHROPIC_API_KEY`; the 8c in-session full run is the interim
+  reference — see EVALS.md results).
 - Pinned set reviewed 2026-07 (re-reviewed with the Phase-2 AI/data and Phase-3
-  ideation/execution additions): unchanged. `release-management` is
+  ideation/execution additions; re-confirmed at Phase 8c — the three
+  data-science skills are deliberate-moment, router-visible activations, and
+  `code-reviewing`'s 8a diff injection left its listing budget unchanged):
+  unchanged. `release-management` is
   high-consequence but, like `deployment-checklist` and `rollback-strategy`, it
   activates at a deliberate moment the router catches reliably — pinning is
   reserved for skills that must interrupt work the agent already believes is

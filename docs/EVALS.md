@@ -147,8 +147,8 @@ The three layers from the original design:
 ### Dataset — mined from the existing evals
 
 `routing.py --build-dataset` writes `evals/routing-dataset.json` (GENERATED,
-committed, drift-checked via `--check-dataset` like `catalog.json`). Today: **48
-positive + 35 boundary + 8 trivial = 91 cases**. It stays in sync — every new
+committed, drift-checked via `--check-dataset` like `catalog.json`). Today: **64
+positive + 52 boundary + 8 trivial = 124 cases**. It stays in sync — every new
 skill's 3 evals yield 2 new routing cases.
 
 - **Happy-path** prompt (eval #1) → positive: `accept = {that skill}`.
@@ -186,7 +186,7 @@ python evals/routing.py --build-dataset          # mine → routing-dataset.json
 python evals/routing.py --check-dataset          # CI: fail if dataset is stale (offline)
 
 export ANTHROPIC_API_KEY=...
-python evals/routing.py --run                     # route all 77 cases on haiku
+python evals/routing.py --run                     # route all 124 cases on haiku
 python evals/routing.py --run -k 3                # majority-of-3 per case
 python evals/routing.py --run --changed --base origin/main   # CI: changed skills only
 python evals/routing.py --run --update-baseline   # record routing-baseline.json
@@ -206,33 +206,41 @@ the API key is absent — like `skill-evals.yml`).
 
 ### Results (haiku) and the haiku recommendation
 
-Full in-session run on `claude-haiku-4-5` over all 77 cases (`routing-baseline.json`):
+Full in-session run on `claude-haiku-4-5` over all 124 cases (2026-07, Phase 8c,
+65-skill catalog):
 
 | Layer 2 metric | Result |
 |---|---|
-| Top-1 routing accuracy (positives) | **41/41 = 1.00** |
-| Boundary pass rate ("no wild misroute") | **28/28 = 1.00** |
+| Top-1 routing accuracy (positives) | **64/64 = 1.00** |
+| Boundary pass rate ("no wild misroute") | **52/52 = 1.00** |
 | False-activation rate (trivial → NONE) | **0/8 = 0.00** |
 | Confusion pairs | **none — zero misroutes** |
 
-Layer 3 (behavioral, 16 cases): router-invocation rate **0.75** (6/8 substantial
-prompts invoked a skill; the other 2 chose to answer directly), correct-invoke
-6/6, over-route **0/8**. Boundary behavior was nuanced and correct — e.g.
-`rollback-strategy`'s boundary ("roll back, users seeing 500s") → `incident-response`,
-`dependency-impact-analysis`'s ("add auth to this endpoint") → `api-design`, and
-`incident-response`/`refactoring`/`verification-before-completion` boundaries → `NONE`.
+Layer 3 (behavioral, 16 cases): router-invocation rate **1.00** (8/8 substantial
+prompts invoked a skill), correct-invoke 8/8, over-route **0/8**. Boundary
+behavior stayed nuanced and correct — the 8c data-science boundaries held in
+both directions (`ml-pipeline-design`'s reporting-notebook boundary →
+`notebook-to-production`, `notebook-to-production`'s training-notebook boundary
+→ `ml-pipeline-design`, `statistical-analysis`'s chatbot-A/B boundary →
+`ai-evaluation`), alongside the established ones (`rollback-strategy` →
+`incident-response`, `incident-response`/`refactoring`/`strategic-review`
+boundaries → `NONE`).
+
+(`routing-baseline.json` still records the earlier 77-case keyed run; cases
+added since can't regress in CI until the next
+`python evals/routing.py --run --update-baseline -k 3` refresh — see the
+ROLES.md follow-ups. The earlier 41-skill baseline run scored the same clean
+sweep on layer 2 with a 0.75 layer-3 invocation rate.)
 
 **Haiku recommendation: keep haiku.** A clean sweep of layer 2 — perfect top-1,
-perfect boundary discrimination, zero false activations, zero confusion — across the
-full 41-skill catalog says haiku is more than adequate for this routing task;
-nothing argues for sonnet. The one watch-item is the layer-3 invocation rate (0.75):
-on 2 of 8 substantial prompts the orchestrator chose to answer directly rather than
-fire a skill. That's the *"does the router fire"* question (not a *mis*-route), it's
-a small sample, and it's exactly what layer 3 exists to surface — worth re-checking
-as the catalog grows. If misroutes ever appear, the first lever is **improving
-catalog descriptions** (which helps both models and the pinned/role-promoted
-auto-trigger path); promoting the router to sonnet is the fallback only if
-descriptions don't close the gap.
+perfect boundary discrimination, zero false activations, zero confusion — now
+across the full 65-skill catalog says haiku is more than adequate for this
+routing task; nothing argues for sonnet. The earlier watch-item (layer-3
+invocation rate 0.75 on the 41-skill catalog) cleared at 8/8 in the Phase-8c
+run — worth re-checking as the catalog grows. If misroutes ever appear, the
+first lever is **improving catalog descriptions** (which helps both models and
+the pinned/role-promoted auto-trigger path); promoting the router to sonnet is
+the fallback only if descriptions don't close the gap.
 
 ### TDD loop for routing (RED → GREEN)
 

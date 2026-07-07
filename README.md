@@ -1,10 +1,10 @@
 # SWE Workflow Skills for Claude Code
 
 [![roles-check](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml/badge.svg)](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml)
-![skills](https://img.shields.io/badge/skills-62-blue)
+![skills](https://img.shields.io/badge/skills-65-blue)
 [![license: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
-A curated library of **62 Claude Code Agent Skills** that walk Claude through the
+A curated library of **65 Claude Code Agent Skills** that walk Claude through the
 software lifecycle the way a disciplined senior engineer would — planning, design,
 TDD, review, security, deployment, incidents, and the project-management work around
 them.
@@ -43,8 +43,8 @@ full-SDLC breadth that popular collections don't cover:
   know of aim for (they tend to go deep on the coding inner loop; see
   [Acknowledgements](#acknowledgements)).
 - **Role-scoped.** `/role backend` (or `frontend`, `devops`, `ml`, `ai`, `data`,
-  `security`, `architect`, `em`, `pm`, `strategy`, `qa`, `mobile`, `designer`) promotes
-  a working set to auto-trigger; the rest stay one route away.
+  `data-scientist`, `security`, `architect`, `em`, `pm`, `strategy`, `qa`, `mobile`,
+  `designer`) promotes a working set to auto-trigger; the rest stay one route away.
 - **Cross-platform install.** The installer and SessionStart hook are **pure Node** — the
   one runtime Claude Code already requires — so they run identically on Linux, macOS, and
   Windows (no bash, Python, or `sed`).
@@ -62,7 +62,7 @@ web, claude.ai chat, and Cowork):
 **Want the whole library with the orchestrator** (CLI) — no clone needed:
 
 ```bash
-npx swe-workflow-skills install --global   # all 62 skills + router + /role + the SessionStart hook
+npx swe-workflow-skills install --global   # all 65 skills + router + /role + the SessionStart hook
 ```
 
 Or from a clone: `node install.mjs --global`.
@@ -120,7 +120,7 @@ review) live in the `skill-router` skill and **[ROLES.md](docs/ROLES.md)**.
 
 ## What's included
 
-62 skills — **[full catalog → SKILLS.md](docs/SKILLS.md)**:
+65 skills — **[full catalog → SKILLS.md](docs/SKILLS.md)**:
 
 | Area | Count | Examples |
 |------|-------|----------|
@@ -130,6 +130,7 @@ review) live in the `skill-router` skill and **[ROLES.md](docs/ROLES.md)**.
 | Design | 3 | ui-ux-design, frontend-architecture, accessibility-design |
 | MLOps | 3 | ml-pipeline-design, ml-experiment-tracking, ml-model-deployment |
 | AI Engineering | 2 | llm-app-engineering, ai-evaluation |
+| Data Science | 3 | exploratory-data-analysis, statistical-analysis, notebook-to-production |
 | Data Engineering | 2 | data-pipeline-design, data-quality |
 | Mobile | 2 | mobile-architecture, mobile-release |
 | Evaluation & Monitoring | 2 | observability-design, test-data-strategy |

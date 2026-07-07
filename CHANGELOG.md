@@ -18,7 +18,34 @@ skills: one slimmed, one real content bug caught and fixed, four confirmed
 still earning their tokens. Three Low-severity installer/command hardening
 items from 8a's security audit are closed.
 
+Phase 8c — the Data Scientist expansion: three new data-science skills
+(62 → 65) and the 15th role, with the notebook-productionization boundary
+between the new skills and `ml-pipeline-design` designed and eval-gated in
+both directions.
+
 ### Added
+- Three data-science skills, authored natively in the `description`/
+  `when_to_use` split with RED baselines captured before authoring
+  (GREEN ≥ RED on all 9 eval cases, opus runner):
+  - `exploratory-data-analysis` — profile an unfamiliar dataset: missingness
+    structure (random vs structural), distributions/outliers, feature–target
+    relationships, target leakage, explicit hypothesis generation; hands
+    pipeline-level data trust to `data-quality`.
+  - `statistical-analysis` — hypothesis tests with stated assumptions,
+    experiment design and power, effect sizes and confidence intervals over
+    bare p-values, multiple-comparisons/peeking discipline; hands live A/B of
+    AI apps to `ai-evaluation`.
+  - `notebook-to-production` — triage-first refactor of analysis notebooks to
+    tested, parameterized, environment-pinned, scheduled production code;
+    hands model-training notebooks to `ml-pipeline-design`.
+- `data-scientist` role (15th): technical core + the three new skills +
+  `ml-experiment-tracking`, `data-quality`, `data-modeling`, `ai-evaluation`
+  (15 skills, crop-safe), with its own `swe-workflow-data-scientist` plugin.
+- `skill-router`: new Data Science catalog section and a notebook-to-production
+  chain on the Analytics Golden Path.
+- `ml-pipeline-design` gained its missing scope-boundary eval (a reporting
+  notebook must hand off to `notebook-to-production`) — the first of the
+  two-eval skills flagged in the 8b pilot to be topped up at touch time.
 - `description`/`when_to_use` split support: `build-plugins.mjs` reads the
   `when_to_use` frontmatter field (single-line and block scalars) and emits
   `description` + `when_to_use` concatenated into each `catalog.json` entry
@@ -73,6 +100,15 @@ items from 8a's security audit are closed.
   (`writing-skills`, `effort-estimation`, `project-documentation` — 9 total);
   regenerated catalog byte-identical each time, routing neighborhood 12/12
   with zero confusion pairs.
+- `ml-pipeline-design`'s "notebook to pipeline" trigger narrowed to "notebook
+  to **training** pipeline" with an explicit scope check in the body — general
+  analysis/reporting notebooks now route to `notebook-to-production`
+  (GREEN ≥ RED held on all 3 of its evals after the change).
+- `ai-evaluation` gained the reciprocal boundary: general experiment
+  statistics → `statistical-analysis`.
+- Three more skills lazy-migrated to the split at touch time
+  (`ml-pipeline-design`, `ai-evaluation`, `skill-router` — 12 total;
+  `skill-router`'s catalog entry proven content-equal, 488 → 488 chars).
 
 ### Fixed
 - Corrupt (hand-edited) `settings.local.json` no longer reads as empty — the

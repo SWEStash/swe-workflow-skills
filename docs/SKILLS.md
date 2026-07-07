@@ -1,6 +1,6 @@
 # Skill Catalog
 
-All 62 skills in the library — 60 SDLC workflows plus two meta skills
+All 65 skills in the library — 63 SDLC workflows plus two meta skills
 (`skill-router`, the orchestrator, and `writing-skills`, the authoring guide).
 Every skill's full description lives in `catalog.json` (what the orchestrator
 routes on); this page is the human-readable index.
@@ -85,6 +85,14 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 |-------|---------|
 | `llm-app-engineering` | Prompt/context engineering, RAG architecture (chunking, hybrid retrieval, reranking, grounding), agent design, memory |
 | `ai-evaluation` | Golden datasets, offline metrics, RAG evaluation (ragas/deepeval/promptfoo), LLM-as-judge design and calibration, eval gates in CI, online A/B |
+
+## Data Science (3)
+
+| Skill | Purpose |
+|-------|---------|
+| `exploratory-data-analysis` | Profile an unfamiliar dataset — missingness structure, distributions/outliers, feature–target relationships, leakage, hypotheses |
+| `statistical-analysis` | Hypothesis tests with stated assumptions, experiment design/power, confidence intervals, multiple-comparison discipline |
+| `notebook-to-production` | Refactor analysis notebooks to tested, parameterized, scheduled production code — with triage of what deserves it |
 
 ## Data Engineering (2)
 
