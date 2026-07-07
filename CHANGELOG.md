@@ -7,34 +7,14 @@ All notable changes to this project are documented here. The format follows
 
 ## [0.3.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.2.0...v0.3.0) (2026-07-07)
 
-
-### Added
-
-* **machinery:** when_to_use-aware catalog builder and verify gates ([2644219](https://github.com/SWEStash/swe-workflow-skills/commit/2644219d91d260615596d5405f6c91a3f9266c15))
-* **skills:** add exploratory-data-analysis, statistical-analysis, notebook-to-production + data-scientist role ([66d705f](https://github.com/SWEStash/swe-workflow-skills/commit/66d705fc513ff2d7a33b25b4a48775a287cbd9d8))
-* **skills:** context-fork for the review quartet, live git-diff injection, first when_to_use migrations ([7b2e184](https://github.com/SWEStash/swe-workflow-skills/commit/7b2e1846e9d287bbfad61c7ef6f0310cecc8a4c8))
-* **skills:** narrow ml-pipeline-design's notebook trigger + reciprocal ai-evaluation boundary ([8327978](https://github.com/SWEStash/swe-workflow-skills/commit/83279782cfea4d4c1240b72387606b110dde07ce))
-
-
-### Fixed
-
-* **commands:** keep $ARGUMENTS out of /role's executable script ([f8043d9](https://github.com/SWEStash/swe-workflow-skills/commit/f8043d9e567d0da689e0ca0e9872f15a116133f4))
-* correct the npm package description ([25592b4](https://github.com/SWEStash/swe-workflow-skills/commit/25592b422e328a942ddaa2bcb0c5a963c39a5a34))
-* **installer:** reject path-traversal skill args and shell-escape the hook snippet ([6dc4e8e](https://github.com/SWEStash/swe-workflow-skills/commit/6dc4e8edc6a2e56a8b92653315f5512fdbacf1bb))
-* **installer:** treat corrupt settings.local.json as an error, not as empty ([45a0057](https://github.com/SWEStash/swe-workflow-skills/commit/45a0057b32dd2b581fe4c72e60be8002cf6ca84b))
-* **skills:** project-documentation owns changelog drafting, hands off only release mechanics ([c2ea433](https://github.com/SWEStash/swe-workflow-skills/commit/c2ea433a2c457f6a5fded685ed9be564a25556f8))
-
-
-### Changed
-
-* 8b obsolescence-pilot results + calibrated eval cost in ROLES.md; changelog entries ([2bf66a4](https://github.com/SWEStash/swe-workflow-skills/commit/2bf66a4c71f02280b287cdc7cfc0fe092e16217a))
-* 8c stale-doc sweep — 65 skills / 15 roles, routing results, changelog ([7df5cd2](https://github.com/SWEStash/swe-workflow-skills/commit/7df5cd20e2a36d41423a5254b5bf73ac392145cf))
-* **authoring:** lazy when_to_use migration policy, fork rules, injection rules ([1a1ebb1](https://github.com/SWEStash/swe-workflow-skills/commit/1a1ebb11a0c1edbdb055246ebb60a4caa3d7a22b))
-* **authoring:** obsolescence review policy — slim first, retire late ([14b15f1](https://github.com/SWEStash/swe-workflow-skills/commit/14b15f1352315de09e784277c480ff02ee656437))
-* **changelog:** hand-written [Unreleased] entries for Phase 8a ([ba72a16](https://github.com/SWEStash/swe-workflow-skills/commit/ba72a16fe7416d1be2a769c884047fd5d2b0af87))
-* **skills:** slim effort-estimation per obsolescence pilot ([4fc204d](https://github.com/SWEStash/swe-workflow-skills/commit/4fc204d967e40071d5774cf68506772e9f63bdfc))
-
-## [Unreleased]
+The Phase-8 release: library-machinery modernization plus the Data Scientist
+expansion — 3 new skills (62 → 65) and the 15th role. The toolchain is now
+`when_to_use`-aware with lazy per-skill migration, the heavy review skills run
+as forked subagents, the diff-driven skills inject their diff at load time, the
+obsolescence review is a standing policy with its first pilot done, and three
+installer/command hardening items are closed. Everything gated before release:
+GREEN ≥ RED on every touched skill's evals (opus runner) and a routing layer-2
+clean sweep — 124 cases, positive 64/64, boundary 52/52, zero confusion pairs.
 
 Phase 8a — library-machinery modernization: the toolchain is now
 `when_to_use`-aware (lazy per-skill migration, no big-bang), the four heavy
@@ -312,5 +292,5 @@ Initial release.
   `scripts/verify.mjs`.
 - Documentation: README, ROLES, INSTALL-MATRIX, SKILLS, AUTHORING, EVALS, RELEASING.
 
-[Unreleased]: https://github.com/SWEStash/swe-workflow-skills/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/SWEStash/swe-workflow-skills/compare/v0.3.0...HEAD
 [0.1.0]: https://github.com/SWEStash/swe-workflow-skills/releases/tag/v0.1.0
