@@ -8,7 +8,7 @@
     },
     {
       "name": "ai-evaluation",
-      "description": "Define how to evaluate ML models and GenAI/LLM apps — golden datasets, offline metrics, RAG evaluation (faithfulness, answer relevance, context precision/recall) with ragas/deepeval/promptfoo, LLM-as-judge design and calibration, eval regression gates in CI, online A/B and human feedback. Triggers: evaluate the model, eval my chatbot, RAG evals, ragas, LLM as judge, golden dataset, eval suite, is the new prompt better, hallucination rate, benchmark our AI app. Logging/comparing runs → ml-experiment-tracking; building the app → llm-app-engineering.",
+      "description": "Define how to evaluate ML models and GenAI/LLM apps — golden datasets, offline metrics, RAG evaluation (faithfulness, relevance, context precision/recall) with ragas/deepeval/promptfoo, LLM-as-judge design and calibration, eval regression gates in CI, online A/B and human feedback. Logging/comparing runs → ml-experiment-tracking; building the app → llm-app-engineering; general experiment statistics → statistical-analysis. Triggers: evaluate the model, eval my chatbot, RAG evals, ragas, LLM as judge, golden dataset, eval suite, is the new prompt better, hallucination rate, benchmark our AI app.",
       "path": "ai-evaluation/SKILL.md"
     },
     {
@@ -183,7 +183,7 @@
     },
     {
       "name": "ml-pipeline-design",
-      "description": "Design reproducible ML training and data pipelines — ingestion, validation, feature engineering, training, evaluation, continuous training orchestration. Triggers: training pipeline, ML data pipeline, feature engineering, ETL for ML, continuous training, data validation, feature store, preprocessing, notebook to pipeline, orchestrate training, Kubeflow, pipeline DAG, point-in-time features. Analytics/BI ELT and dbt warehouse pipelines → data-pipeline-design.",
+      "description": "Design reproducible ML training and data pipelines — ingestion, validation, feature engineering, training, evaluation, continuous training orchestration. Analytics/BI ELT and dbt warehouse pipelines → data-pipeline-design; refactoring general analysis/reporting notebooks (no model training) to production code → notebook-to-production. Triggers: training pipeline, ML data pipeline, feature engineering, ETL for ML, continuous training, data validation, feature store, preprocessing, notebook to training pipeline, orchestrate training, Kubeflow, pipeline DAG, point-in-time features.",
       "path": "ml-pipeline-design/SKILL.md"
     },
     {

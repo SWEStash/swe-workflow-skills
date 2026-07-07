@@ -29,6 +29,16 @@
         "Recommends the pipeline should FAIL on bad data, not train on it",
         "Provides concrete implementation (Great Expectations or Pandera)"
       ]
+    },
+    {
+      "id": 3,
+      "prompt": "I have a Jupyter notebook that pulls last month's sales from the warehouse, computes exec KPIs, and emails a report. I want it to run on a schedule instead of me running it by hand — how do I turn this notebook into production code?",
+      "expected_output": "Should recognize there is no model training involved — this is a general analysis/reporting notebook — and hand off to the notebook-to-production skill (modules, tests, parameterization, scheduling) rather than designing an ML training pipeline.",
+      "assertions": [
+        "Recognizes no model training is involved, so this is not an ML training pipeline",
+        "Hands off to or invokes the notebook-to-production skill for the refactor",
+        "Does not propose ML-specific machinery (feature stores, training DAGs, model evaluation gates) for a reporting notebook"
+      ]
     }
   ]
 }

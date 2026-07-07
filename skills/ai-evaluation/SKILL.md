@@ -1,6 +1,7 @@
 ---
 name: ai-evaluation
-description: "Define how to evaluate ML models and GenAI/LLM apps — golden datasets, offline metrics, RAG evaluation (faithfulness, answer relevance, context precision/recall) with ragas/deepeval/promptfoo, LLM-as-judge design and calibration, eval regression gates in CI, online A/B and human feedback. Triggers: evaluate the model, eval my chatbot, RAG evals, ragas, LLM as judge, golden dataset, eval suite, is the new prompt better, hallucination rate, benchmark our AI app. Logging/comparing runs → ml-experiment-tracking; building the app → llm-app-engineering."
+description: "Define how to evaluate ML models and GenAI/LLM apps — golden datasets, offline metrics, RAG evaluation (faithfulness, relevance, context precision/recall) with ragas/deepeval/promptfoo, LLM-as-judge design and calibration, eval regression gates in CI, online A/B and human feedback. Logging/comparing runs → ml-experiment-tracking; building the app → llm-app-engineering; general experiment statistics → statistical-analysis."
+when_to_use: "Triggers: evaluate the model, eval my chatbot, RAG evals, ragas, LLM as judge, golden dataset, eval suite, is the new prompt better, hallucination rate, benchmark our AI app."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
