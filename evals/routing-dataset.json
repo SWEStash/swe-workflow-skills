@@ -447,6 +447,26 @@
       ]
     },
     {
+      "id": "positive:exploratory-data-analysis:1",
+      "kind": "positive",
+      "skill": "exploratory-data-analysis",
+      "prompt": "I just got a CSV export of our customer orders \u2014 about 200k rows, 30 columns \u2014 and I've never seen this data before. We eventually want a churn model out of it. Where do I start?",
+      "accept": [
+        "exploratory-data-analysis"
+      ]
+    },
+    {
+      "id": "boundary:exploratory-data-analysis:3",
+      "kind": "boundary",
+      "skill": "exploratory-data-analysis",
+      "prompt": "Our finance dashboard has shown wrong revenue numbers all week \u2014 the nightly job loads orders into the warehouse and something is off upstream. Can you help me analyze the data and find the problem?",
+      "accept": [
+        "exploratory-data-analysis",
+        "data-quality",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:feature-planning:1",
       "kind": "positive",
       "skill": "feature-planning",
@@ -621,6 +641,17 @@
       ]
     },
     {
+      "id": "boundary:ml-pipeline-design:3",
+      "kind": "boundary",
+      "skill": "ml-pipeline-design",
+      "prompt": "I have a Jupyter notebook that pulls last month's sales from the warehouse, computes exec KPIs, and emails a report. I want it to run on a schedule instead of me running it by hand \u2014 how do I turn this notebook into production code?",
+      "accept": [
+        "ml-pipeline-design",
+        "notebook-to-production",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:mobile-architecture:1",
       "kind": "positive",
       "skill": "mobile-architecture",
@@ -657,6 +688,26 @@
       "accept": [
         "mobile-release",
         "release-management",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:notebook-to-production:1",
+      "kind": "positive",
+      "skill": "notebook-to-production",
+      "prompt": "My analysis notebook pulls monthly sales data, cleans it, computes KPI aggregates, and generates charts for a report. Management wants this delivered automatically every Monday morning. It's 800 lines of cells with hardcoded dates and file paths. How do I productionize it?",
+      "accept": [
+        "notebook-to-production"
+      ]
+    },
+    {
+      "id": "boundary:notebook-to-production:3",
+      "kind": "boundary",
+      "skill": "notebook-to-production",
+      "prompt": "I have a notebook that does feature engineering on our user events and trains a ranking model. I want to turn it into a pipeline that retrains automatically every week.",
+      "accept": [
+        "notebook-to-production",
+        "ml-pipeline-design",
         "NONE"
       ]
     },
@@ -882,6 +933,26 @@
       "prompt": "We're about to launch our SaaS product and our CTO wants a security review before the launch. We don't know where to start. Can you help?",
       "accept": [
         "security-audit",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:statistical-analysis:1",
+      "kind": "positive",
+      "skill": "statistical-analysis",
+      "prompt": "We ran an experiment: 2,400 users saw the new checkout flow and converted at 6.8%; 2,350 saw the old one and converted at 5.9%. My PM wants to ship it today \u2014 is this difference real? How confident can we be?",
+      "accept": [
+        "statistical-analysis"
+      ]
+    },
+    {
+      "id": "boundary:statistical-analysis:3",
+      "kind": "boundary",
+      "skill": "statistical-analysis",
+      "prompt": "We're about to launch a new system prompt for our support chatbot and want to A/B test it live against the current one to see which gives better answers. Can you set this up?",
+      "accept": [
+        "statistical-analysis",
+        "ai-evaluation",
         "NONE"
       ]
     },
