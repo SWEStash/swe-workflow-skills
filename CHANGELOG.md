@@ -5,7 +5,16 @@ All notable changes to this project are documented here. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as defined in
 [docs/RELEASING.md](docs/RELEASING.md).
 
-## [Unreleased]
+## [0.3.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.2.0...v0.3.0) (2026-07-07)
+
+The Phase-8 release: library-machinery modernization plus the Data Scientist
+expansion — 3 new skills (62 → 65) and the 15th role. The toolchain is now
+`when_to_use`-aware with lazy per-skill migration, the heavy review skills run
+as forked subagents, the diff-driven skills inject their diff at load time, the
+obsolescence review is a standing policy with its first pilot done, and three
+installer/command hardening items are closed. Everything gated before release:
+GREEN ≥ RED on every touched skill's evals (opus runner) and a routing layer-2
+clean sweep — 124 cases, positive 64/64, boundary 52/52, zero confusion pairs.
 
 Phase 8a — library-machinery modernization: the toolchain is now
 `when_to_use`-aware (lazy per-skill migration, no big-bang), the four heavy
@@ -283,5 +292,5 @@ Initial release.
   `scripts/verify.mjs`.
 - Documentation: README, ROLES, INSTALL-MATRIX, SKILLS, AUTHORING, EVALS, RELEASING.
 
-[Unreleased]: https://github.com/SWEStash/swe-workflow-skills/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/SWEStash/swe-workflow-skills/compare/v0.3.0...HEAD
 [0.1.0]: https://github.com/SWEStash/swe-workflow-skills/releases/tag/v0.1.0
