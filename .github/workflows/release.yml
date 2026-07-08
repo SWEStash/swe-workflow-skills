@@ -30,6 +30,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      publish_tag:
+        description: "Re-publish an existing tag to npm (e.g. v0.4.0) — recovery path when a release was tagged but the publish job failed. Leave blank for a normal release run."
+        required: false
+        default: ""
 
 # release-please needs to open PRs and, on merge, create tags + releases.
 permissions:
@@ -72,7 +77,7 @@ jobs:
       - if: ${{ steps.release.outputs.pr }}
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
       - if: ${{ steps.release.outputs.pr }}
         name: Sync VERSION + regenerate artifacts on the release PR
         run: |
@@ -88,7 +93,9 @@ jobs:
 
   publish:
     needs: release-please
-    if: ${{ needs.release-please.outputs.release_created == 'true' && github.repository == 'SWEStash/swe-workflow-skills' }}
+    # Runs on a normal release (release-please cut a new release) OR when re-publishing
+    # an existing tag via workflow_dispatch (recovery when a prior publish failed).
+    if: ${{ github.repository == 'SWEStash/swe-workflow-skills' && (needs.release-please.outputs.release_created == 'true' || inputs.publish_tag != '') }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -96,10 +103,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.release-please.outputs.tag_name }}
+          ref: ${{ needs.release-please.outputs.tag_name || inputs.publish_tag }}
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           registry-url: "https://registry.npmjs.org"
       # Trusted publishing + provenance require npm >= 11.5.1; setup-node may ship older.
       - name: Ensure npm supports trusted publishing
