@@ -19,18 +19,11 @@ on:
       - "commands/**"
       - "plugins/**"
       - ".claude-plugin/**"
+  # No paths filter on PRs: drift + verify are REQUIRED status checks, so they must
+  # report on every PR (a docs- or CI-only PR that never runs them can never satisfy
+  # the branch-protection gate). They are fast and offline. The push filter below stays
+  # narrow — pushes to main only refresh the badge when the relevant SSOT/tree changes.
   pull_request:
-    paths:
-      - "roles.json"
-      - "catalog.json"
-      - "skills/**"
-      - "scripts/**"
-      - "install.mjs"
-      - "uninstall.mjs"
-      - "hooks/**"
-      - "commands/**"
-      - "plugins/**"
-      - ".claude-plugin/**"
   workflow_dispatch:
 
 permissions:
@@ -45,7 +38,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
       - name: Marketplace tree is committed and up to date
         run: node scripts/build-plugins.mjs --check
 
@@ -61,6 +54,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
       - name: Integrity + behavior checks
         run: node scripts/verify.mjs
