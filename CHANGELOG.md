@@ -5,6 +5,13 @@ All notable changes to this project are documented here. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as defined in
 [docs/RELEASING.md](docs/RELEASING.md).
 
+## [0.4.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.3.0...v0.4.0) (2026-07-08)
+
+
+### Added
+
+* harden installer provenance, /role, and CI; add SECURITY.md ([#4](https://github.com/SWEStash/swe-workflow-skills/issues/4)) ([e20e292](https://github.com/SWEStash/swe-workflow-skills/commit/e20e29252508034f060514bfb499e463508a4d84))
+
 ## [0.3.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.2.0...v0.3.0) (2026-07-07)
 
 The Phase-8 release: library-machinery modernization plus the Data Scientist
