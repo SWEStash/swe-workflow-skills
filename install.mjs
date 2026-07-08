@@ -52,6 +52,9 @@ Options:
   -p, --prune      After installing the selected set, remove previously-installed
                    library skills that are NOT in the new selection (never touches
                    your own custom skills). Use to narrow a prior all-skills install.
+  -f, --force      Overwrite a same-named skill directory that this installer did
+                   not create (by default such a collision is skipped, so your own
+                   custom skill with a library name is never clobbered).
   -k, --hook       (default) Install the SessionStart hook that re-asserts the
                    name-only baseline each session + injects the router nudge
                    (prints the settings snippet; never edits settings)
@@ -106,6 +109,7 @@ function toPosix(p) {
 let global = false;
 let hook = true;
 let prune = false;
+let force = false;
 let configDir = "";
 let role = "";
 const selected = [];
@@ -125,6 +129,7 @@ for (let i = 0; i < argv.length; i++) {
     if (role === undefined) fatal("--role requires a role name");
   } else if (a.startsWith("--role=")) role = a.slice("--role=".length);
   else if (a === "-p" || a === "--prune") prune = true;
+  else if (a === "-f" || a === "--force") force = true;
   else if (a === "-k" || a === "--hook") hook = true;
   else if (a === "--no-hook") hook = false;
   else if (a === "-l" || a === "--list") {
@@ -192,9 +197,45 @@ if (skillSet.length === 0) {
   skillSet = role ? resolvedSkills(rolesData, role) : listSkillDirs();
 }
 
+// ---- provenance manifest ---------------------------------------------------
+// Records which skill directories THIS installer created, so uninstall/--prune
+// only ever remove our own skills and a re-install never clobbers a user's custom
+// skill that happens to share a library name. See docs SECURITY.md (LOW-003).
+const MANIFEST = join(dest, ".swe-workflow-manifest.json");
+
+function readManifestSkills() {
+  if (existsSync(MANIFEST)) {
+    try {
+      const m = JSON.parse(readFileSync(MANIFEST, "utf-8"));
+      if (Array.isArray(m.skills)) return new Set(m.skills);
+    } catch {
+      /* unreadable manifest -> treat as absent */
+    }
+  }
+  return null; // null = no manifest present
+}
+
+const priorManifest = readManifestSkills();
+// A prior swe-workflow install (any version) leaves these machinery markers even
+// before manifests existed. If neither a manifest nor a marker is present, the dest
+// is not one we've installed into, so a same-named dir there must be the user's.
+const priorInstall =
+  priorManifest !== null ||
+  existsSync(join(dest, ".roles.json")) ||
+  existsSync(join(claudeDir, "hooks", "resolve.mjs"));
+
+// Do we own the skill dir currently at dest? Manifest is authoritative when present;
+// otherwise fall back to "is this dest a prior swe install at all?" so pre-manifest
+// upgrades still overwrite our own skills rather than skipping them.
+function installerOwns(skill) {
+  if (priorManifest !== null) return priorManifest.has(skill);
+  return priorInstall;
+}
+
 // ---- copy skills -----------------------------------------------------------
 
 let errors = 0;
+const installedNow = [];
 for (const skill of skillSet) {
   const src = join(SKILLS_DIR, skill);
   if (!isDir(src)) {
@@ -202,22 +243,56 @@ for (const skill of skillSet) {
     errors++;
     continue;
   }
+  const destPath = join(dest, skill);
+  // Never clobber a same-named directory we didn't create unless --force.
+  if (isDir(destPath) && !force && !installerOwns(skill)) {
+    warn(
+      `skipping '${skill}': a skill of that name already exists and was not installed ` +
+        `by swe-workflow-skills. Use --force to overwrite it.`,
+    );
+    continue;
+  }
   // Clean copy: drop any prior version first so files removed upstream don't linger.
-  rmSync(join(dest, skill), { recursive: true, force: true });
-  cpSync(src, join(dest, skill), { recursive: true });
-  log(`Installed: ${skill} -> ${join(dest, skill)}`);
+  rmSync(destPath, { recursive: true, force: true });
+  cpSync(src, destPath, { recursive: true });
+  installedNow.push(skill);
+  log(`Installed: ${skill} -> ${destPath}`);
 }
 
 // --prune: narrow a prior install to the current selection. Only ever removes skills
-// that exist in our source tree (so the user's own custom skills are never touched).
+// that exist in our source tree AND that this installer created (so the user's own
+// custom skills — including any that share a library name — are never touched).
+const pruned = new Set();
 if (prune) {
   const keep = new Set(skillSet);
   for (const s of listSkillDirs()) {
-    if (!keep.has(s) && isDir(join(dest, s))) {
+    if (!keep.has(s) && isDir(join(dest, s)) && installerOwns(s)) {
       rmSync(join(dest, s), { recursive: true, force: true });
+      pruned.add(s);
       log(`Pruned: ${s} (not in selection)`);
     }
   }
+}
+
+// Rewrite the provenance manifest: every library skill we own that is still present.
+// = (what we owned before) ∪ (installed this run) − (pruned this run), intersected
+// with library skill dirs actually on disk. Skipped collisions never enter it.
+const libNames = new Set(listSkillDirs());
+const ownedSkills = new Set([...(priorManifest || []), ...installedNow]);
+const manifestSkills = [...ownedSkills]
+  .filter((s) => !pruned.has(s) && libNames.has(s) && isDir(join(dest, s)))
+  .sort();
+if (installedNow.length > 0 || priorManifest !== null || prune) {
+  let manifestVersion = "";
+  try {
+    manifestVersion = readFileSync(join(REPO_ROOT, "VERSION"), "utf-8").trim();
+  } catch {
+    /* VERSION is optional metadata in the manifest */
+  }
+  writeFileSync(
+    MANIFEST,
+    JSON.stringify({ installer: "swe-workflow-skills", version: manifestVersion, skills: manifestSkills }, null, 2) + "\n",
+  );
 }
 
 // ---- orchestrator machinery (only when skill-router is in the set) ---------

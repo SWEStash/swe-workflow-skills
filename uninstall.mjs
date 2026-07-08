@@ -12,7 +12,7 @@
 //   node uninstall.mjs --global         # remove from the user config dir
 //   node uninstall.mjs --dir DIR --dry-run
 
-import { existsSync, statSync, readdirSync, rmSync, rmdirSync } from "node:fs";
+import { existsSync, statSync, readdirSync, readFileSync, rmSync, rmdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { homedir } from "node:os";
@@ -96,16 +96,38 @@ if (!isDir(claudeDir)) {
 
 const settingsLocal = join(claudeDir, "settings.local.json");
 
-// Build the removal list: only library skills present on disk, plus the machinery.
-const libSkills = readdirSync(SKILLS_DIR)
-  .filter((s) => isDir(join(SKILLS_DIR, s)) && isDir(join(dest, s)))
-  .sort();
+// Build the removal list: only library skills THIS installer created, plus the
+// machinery. The provenance manifest is authoritative when present, so a user's own
+// custom skill that shares a library name is never removed. Pre-manifest installs
+// have no manifest — fall back to matching source-tree skill names (the historical
+// behavior) so they can still be uninstalled.
+const manifestPath = join(dest, ".swe-workflow-manifest.json");
+let manifestSkills = null;
+if (existsSync(manifestPath)) {
+  try {
+    const m = JSON.parse(readFileSync(manifestPath, "utf-8"));
+    if (Array.isArray(m.skills)) manifestSkills = m.skills;
+  } catch {
+    /* unreadable manifest -> fall back to name-match below */
+  }
+}
+
+let libSkills;
+if (manifestSkills !== null) {
+  const srcSkills = new Set(readdirSync(SKILLS_DIR).filter((s) => isDir(join(SKILLS_DIR, s))));
+  libSkills = manifestSkills.filter((s) => srcSkills.has(s) && isDir(join(dest, s))).sort();
+} else {
+  libSkills = readdirSync(SKILLS_DIR)
+    .filter((s) => isDir(join(SKILLS_DIR, s)) && isDir(join(dest, s)))
+    .sort();
+}
 
 const targets = [...libSkills.map((s) => join(dest, s))];
 for (const f of [
   join(dest, ".roles.json"),
   join(dest, ".catalog.json"),
   join(dest, ".active-role"),
+  join(dest, ".swe-workflow-manifest.json"),
   join(claudeDir, "hooks", "resolve.mjs"),
   join(claudeDir, "hooks", "session-start.mjs"),
   join(claudeDir, "commands", "role.md"),
