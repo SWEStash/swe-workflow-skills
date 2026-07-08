@@ -106,11 +106,26 @@ jobs:
           ref: ${{ needs.release-please.outputs.tag_name || inputs.publish_tag }}
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          # Node 24 bundles a complete npm 11.x (>= 11.5.1) that already supports OIDC
+          # trusted publishing + provenance, so the common case needs no self-upgrade.
+          node-version: "24"
           registry-url: "https://registry.npmjs.org"
-      # Trusted publishing + provenance require npm >= 11.5.1; setup-node may ship older.
-      - name: Ensure npm supports trusted publishing
-        run: npm install -g npm@latest
+      # Trusted publishing + provenance need npm >= 11.5.1. Prefer the Node-bundled npm
+      # (a complete install that includes the `sigstore` dep provenance signing needs);
+      # only self-upgrade if it is somehow older, and stay on the 11.x line — npm 12.0.0
+      # ships a broken bundled `sigstore`, so `npm publish --provenance` dies with
+      # "Cannot find module 'sigstore'".
+      - name: Ensure npm supports trusted publishing (>= 11.5.1)
+        run: |
+          need=11.5.1
+          have=$(npm --version)
+          if [ "$(printf '%s\n%s\n' "$need" "$have" | sort -V | head -n1)" != "$need" ]; then
+            echo "Bundled npm $have < $need — upgrading within 11.x."
+            npm install -g "npm@^11.5.1"
+          else
+            echo "Using bundled npm $have (satisfies >= $need)."
+          fi
+          npm --version
       # Iron Law — never publish without a fresh verification gate on the exact
       # release commit. prepublishOnly re-runs this too; keeping it explicit fails
       # fast and survives an accidental --ignore-scripts.
