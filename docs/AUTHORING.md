@@ -115,6 +115,14 @@ set on every skill:
 | `model` | Pin a default model when the skill activates | `haiku` for cheap formatting/lookup skills, `sonnet` for most design/review work, `opus` for deep multi-step reasoning (architecture, security audit, debt review, RCA) |
 | `allowed-tools` | Restrict tools the skill can call | Most skills use `Read, Grep, Glob, Write, Edit`. Implementation- or infra-adjacent skills add `Bash`. Research-oriented skills (dependency-management, security-audit) add `WebFetch, WebSearch`. |
 
+**Security rule for tool grants:** do not combine reading *untrusted content* (an
+arbitrary repo, a fetched page, a user-supplied file) with network tools
+(`WebFetch`/`WebSearch`) unless the skill genuinely needs it — that pairing is a
+read-then-exfiltrate channel if the content carries prompt injection. When a skill
+must have both (e.g. `security-audit` reads a repo *and* looks up CVEs), keep the
+grant but note the exposure in the skill and record it as an accepted risk in
+[SECURITY.md](../SECURITY.md). Prefer the narrowest grant that still does the job.
+
 Newer fields worth knowing (adopt where they fit; see the
 [skill settings docs](https://code.claude.com/docs/en/skills) for the full set):
 

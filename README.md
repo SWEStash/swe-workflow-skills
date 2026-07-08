@@ -144,6 +144,7 @@ review) live in the `skill-router` skill and **[ROLES.md](docs/ROLES.md)**.
 - **[EVALS.md](docs/EVALS.md)** — how the skills are tested (RED/GREEN, pressure tests, CI gate).
 - **[AUTHORING.md](docs/AUTHORING.md)** — write or modify a skill (descriptions, budget, progressive disclosure, evals).
 - **[RELEASING.md](docs/RELEASING.md)** — versioning policy and how to cut a release. Changes are tracked in **[CHANGELOG.md](CHANGELOG.md)**.
+- **[SECURITY.md](SECURITY.md)** — the security model: trust boundaries, what runs automatically, supply-chain guarantees, and how to report a vulnerability.
 
 ## Evaluation
 
