@@ -2,7 +2,7 @@
   "name": "swe-workflow-em",
   "displayName": "Engineering Manager / Tech Lead",
   "description": "Skills for planning, estimation, metrics, retros, proposals, reviews, and steering reviews and incidents.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": {
     "name": "SWEStash"
   },

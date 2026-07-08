@@ -2,7 +2,7 @@
   "name": "swe-workflow-data-scientist",
   "displayName": "Data Scientist",
   "description": "Skills for exploratory data analysis, statistical rigor, notebook productionization, and the experiment-tracking/data-quality/modeling work around them.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": {
     "name": "SWEStash"
   },
