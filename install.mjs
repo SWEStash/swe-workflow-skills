@@ -236,6 +236,7 @@ function installerOwns(skill) {
 
 let errors = 0;
 const installedNow = [];
+const skippedCollisions = [];
 for (const skill of skillSet) {
   const src = join(SKILLS_DIR, skill);
   if (!isDir(src)) {
@@ -250,6 +251,7 @@ for (const skill of skillSet) {
       `skipping '${skill}': a skill of that name already exists and was not installed ` +
         `by swe-workflow-skills. Use --force to overwrite it.`,
     );
+    skippedCollisions.push(skill);
     continue;
   }
   // Clean copy: drop any prior version first so files removed upstream don't linger.
@@ -376,6 +378,15 @@ if (hook) {
     log("Start a new session and run /doctor to confirm the hook is registered.");
     log("(Prefer no hook? Re-run with --no-hook; the baseline still applies.)");
   }
+}
+
+// Per-skill collision warnings scroll away during a full install; restate them once
+// at the end so an unowned same-named skill that was left in place is not missed.
+if (skippedCollisions.length > 0) {
+  warn(
+    `left ${skippedCollisions.length} existing skill(s) untouched (not installed by ` +
+      `swe-workflow-skills): ${skippedCollisions.join(", ")}. Re-run with --force to overwrite.`,
+  );
 }
 
 if (errors !== 0) process.exit(1);
