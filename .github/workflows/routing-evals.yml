@@ -59,7 +59,11 @@ jobs:
         if: steps.guard.outputs.run == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Route GitHub context through env vars, never inline ${{ }} into the
+          # run: script (that is the Actions script-injection sink).
+          BASE_REF: ${{ github.base_ref || 'main' }}
+          K: ${{ github.event.inputs.k || '3' }}
         run: |
           python evals/routing.py --run \
-            --changed --base "origin/${{ github.base_ref || 'main' }}" \
-            -k "${{ github.event.inputs.k || '3' }}"
+            --changed --base "origin/$BASE_REF" \
+            -k "$K"

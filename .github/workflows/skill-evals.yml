@@ -49,8 +49,12 @@ jobs:
         if: steps.guard.outputs.run == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Route GitHub context through env vars, never inline ${{ }} into the
+          # run: script (that is the Actions script-injection sink).
+          BASE_REF: ${{ github.base_ref || 'main' }}
+          MODE: ${{ github.event.inputs.mode || 'green' }}
         run: |
           python evals/run.py \
-            --changed --base "origin/${{ github.base_ref || 'main' }}" \
-            --mode "${{ github.event.inputs.mode || 'green' }}" \
+            --changed --base "origin/$BASE_REF" \
+            --mode "$MODE" \
             -k 3

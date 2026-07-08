@@ -89,7 +89,8 @@ lockstep fan-out), and [`.github/workflows/release.yml`](../.github/workflows/re
    runs the **verification gate fresh** (`node scripts/verify.mjs` — the Iron Law: never
    publish without a fresh gate; `prepublishOnly` re-runs it too), inspects the tarball
    (`npm pack --dry-run`), and publishes to npm via **OIDC trusted publishing** — no
-   token; provenance is attached automatically (public repo, npm ≥ 11.5.1).
+   token; provenance is attached automatically (public repo, npm ≥ 11.5.1). See
+   [SECURITY.md](../SECURITY.md) for the full supply-chain trust model.
 
 **Manual** (the human parts, in order):
 

@@ -232,6 +232,49 @@ const evilOut = execFileSync(NODE, [join(ROOT, "install.mjs"), "--dir", evil], {
 check(evilOut.includes("\\\\$(pwd)"), "hook snippet must shell-escape $ in the config path");
 pass("traversal args rejected before any copy; $(...) in the config path is escaped in the snippet");
 
+// 5c — collision safety: a user's own skill sharing a library name is neither
+// clobbered on install nor removed on uninstall (provenance manifest, LOW-003).
+step("collision safety: a user skill named like a library skill survives install + uninstall");
+const coll = join(TMP, "coll");
+mkdirSync(join(coll, "skills", "refactoring"), { recursive: true });
+writeFileSync(join(coll, "skills", "refactoring", "SKILL.md"), "USER OWNED\n");
+install(["--dir", coll]); // full install; 'refactoring' collides with the user's dir
+check(
+  readFileSync(join(coll, "skills", "refactoring", "SKILL.md"), "utf-8") === "USER OWNED\n",
+  "install must not clobber a user skill sharing a library name",
+);
+const collManifest = readJSON(join(coll, "skills", ".swe-workflow-manifest.json"));
+check(!collManifest.skills.includes("refactoring"), "a skipped collision must not enter the manifest");
+check(collManifest.skills.includes("feature-planning"), "manifest must list an actually-installed skill");
+uninstall(["--yes", "--dir", coll]);
+check(
+  isDir(join(coll, "skills", "refactoring")) &&
+    readFileSync(join(coll, "skills", "refactoring", "SKILL.md"), "utf-8") === "USER OWNED\n",
+  "uninstall must not remove a user skill it never installed",
+);
+check(!existsSync(join(coll, "skills", "feature-planning")), "uninstall must remove an installed library skill");
+check(!existsSync(join(coll, "skills", ".swe-workflow-manifest.json")), "uninstall must remove the manifest");
+// --force must overwrite an unowned collision when the user explicitly asks.
+const collF = join(TMP, "collf");
+mkdirSync(join(collF, "skills", "refactoring"), { recursive: true });
+writeFileSync(join(collF, "skills", "refactoring", "SKILL.md"), "USER OWNED\n");
+install(["--force", "--dir", collF, "refactoring"]);
+check(
+  readFileSync(join(collF, "skills", "refactoring", "SKILL.md"), "utf-8") !== "USER OWNED\n",
+  "--force must overwrite an unowned same-named skill",
+);
+pass("user skill with a library name is preserved on install (skipped) + uninstall (not owned); --force overrides");
+
+// 5d — pre-manifest install (no manifest) is still fully uninstallable (backward-compat).
+step("pre-manifest install (no manifest) remains uninstallable via name-match fallback");
+const legacy = join(TMP, "legacy");
+install(["--dir", legacy]);
+rmSync(join(legacy, "skills", ".swe-workflow-manifest.json"), { force: true });
+uninstall(["--yes", "--dir", legacy]);
+check(!existsSync(join(legacy, "skills", "feature-planning")), "manifest-less uninstall must still remove library skills");
+check(!existsSync(join(legacy, "hooks", "session-start.mjs")), "manifest-less uninstall must still remove machinery");
+pass("a manifest-less (legacy) install falls back to name-match and uninstalls cleanly");
+
 // 6 — SessionStart hook writes baseline + reloadSkills (preserving keys)
 step("SessionStart hook writes baseline + reloadSkills (preserving keys)");
 writeFileSync(join(inst, "settings.local.json"), JSON.stringify({ model: "x" }));
