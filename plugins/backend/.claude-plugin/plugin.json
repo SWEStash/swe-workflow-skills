@@ -2,7 +2,7 @@
   "name": "swe-workflow-backend",
   "displayName": "Backend / Full-stack Engineer",
   "description": "Skills for service, API, and data work: design, test-first implementation, performance, and shipping.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "author": {
     "name": "SWEStash"
   },
