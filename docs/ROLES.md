@@ -256,10 +256,23 @@ npx swe-workflow-skills enable  data-modeling   # undo
 npx swe-workflow-skills list-disabled           # see what's disabled
 ```
 
-By default a disabled skill becomes **`user-invocable-only`**: the router will no
-longer select it, but you can still run it deliberately as `/data-modeling`. Add
-`--off` to hide it completely (not routable and not user-invocable). `--global` /
-`--dir` target the same config dir as `install`.
+Both forms stop the skill from being routed or auto-triggered — that's the shared
+"disable" behavior. `--off` is the stronger variant; the only thing it changes is
+whether the manual `/<skill>` escape hatch survives:
+
+| | `disable <skill>` (default) | `disable <skill> --off` |
+|---|---|---|
+| `skillOverrides` value written | `user-invocable-only` | `off` |
+| Router / model can auto-select it | no | no |
+| You can still run it manually as `/<skill>` | **yes** | no |
+| Appears in the `/` menu | yes | hidden |
+
+So the default keeps the skill out of the automatic workflow but reachable when you
+deliberately ask for it (`/data-modeling`); `--off` removes it entirely until you
+`enable` it again. Flags combine as you'd expect — `--off` is independent of the
+target dir, e.g. `disable data-modeling --off --global`; only `--global` and `--dir`
+are mutually exclusive (they both name where to install/target). `enable <skill>`
+reverses either one back to the name-only baseline.
 
 This is an **advanced opt-out** — it bypasses the router's method enforcement for
 that skill, so reach for it only when a skill genuinely doesn't fit how you work.

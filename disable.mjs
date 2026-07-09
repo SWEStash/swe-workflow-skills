@@ -32,6 +32,13 @@ import {
   DEFAULT_DISABLE_STATE,
 } from "./scripts/resolve.mjs";
 
+// Exit cleanly when stdout is closed early (e.g. piped to `head`/`grep`) instead
+// of throwing an EPIPE stack trace.
+process.stdout.on("error", (e) => {
+  if (e && e.code === "EPIPE") process.exit(0);
+  throw e;
+});
+
 const REPO_ROOT = dirname(fileURLToPath(import.meta.url));
 
 const USAGE = `Usage: disable.mjs <disable|enable|list> [skill] [options]

@@ -5,9 +5,9 @@
 //
 //   npx swe-workflow-skills install [--global|--dir DIR|--role R|--no-hook|...]
 //   npx swe-workflow-skills uninstall [--global|--dir DIR|--dry-run|--yes]
-//   npx swe-workflow-skills disable <skill> [--off|--global|--dir DIR]
-//   npx swe-workflow-skills enable  <skill> [--global|--dir DIR]
-//   npx swe-workflow-skills list-disabled  [--global|--dir DIR]
+//   npx swe-workflow-skills disable <skill> [--off] [--global | --dir DIR]
+//   npx swe-workflow-skills enable  <skill> [--global | --dir DIR]
+//   npx swe-workflow-skills list-disabled   [--global | --dir DIR]
 
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
