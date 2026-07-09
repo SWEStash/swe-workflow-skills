@@ -5,6 +5,13 @@ All notable changes to this project are documented here. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as defined in
 [docs/RELEASING.md](docs/RELEASING.md).
 
+## [0.5.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.4.0...v0.5.0) (2026-07-09)
+
+
+### Added
+
+* add disable/enable command and clean docs for public launch ([#8](https://github.com/SWEStash/swe-workflow-skills/issues/8)) ([7ef998b](https://github.com/SWEStash/swe-workflow-skills/commit/7ef998b3d48953d41ba30f08ba5f5bf4ae05189a))
+
 ## [Unreleased]
 
 ### Added
