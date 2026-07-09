@@ -26,6 +26,9 @@ import {
   pruneSettings,
   validate,
   installedSkills,
+  writeDisabled,
+  loadDisabled,
+  DEFAULT_DISABLE_STATE,
 } from "./resolve.mjs";
 import { parseFrontmatter, listingOf } from "./build-plugins.mjs";
 
@@ -176,6 +179,33 @@ check(
   "corrupt settings file must be left untouched",
 );
 pass("settings merge preserves other keys + unmanaged overrides; corrupt file throws untouched");
+
+// 4b — disabled-skills marker survives baseline re-assertion (the hook re-asserts
+// the baseline every session; a disable must persist, not get reverted).
+step("disabled-skills marker overrides + survives re-assertion");
+const skillsDir4b = fakeSkillTree(join(TMP, "disable"));
+const s4b = join(TMP, "disable", "s.json");
+// Disable one ordinary skill (default state) and one PINNED skill (must beat "on").
+const pinnedSkill = (data.pinned || []).find((s) => SKILL_DIRS.includes(s));
+writeDisabled(skillsDir4b, new Map([["api-design", DEFAULT_DISABLE_STATE], [pinnedSkill, "off"]]));
+check(loadDisabled(skillsDir4b).size === 2, "loadDisabled should read both disabled skills");
+applyBaseline(data, s4b, skillsDir4b, null);
+let ov4b = readJSON(s4b).skillOverrides;
+check(ov4b["api-design"] === "user-invocable-only", "disabled skill must be user-invocable-only, not name-only");
+check(ov4b[pinnedSkill] === "off", "disabled PINNED skill must be off, not on");
+// Re-assert (simulates the next session boundary) — the disable must hold.
+applyBaseline(data, s4b, skillsDir4b, null);
+ov4b = readJSON(s4b).skillOverrides;
+check(ov4b["api-design"] === "user-invocable-only", "disable must survive re-assertion (hook clobber guard)");
+check(ov4b[pinnedSkill] === "off", "pinned disable must survive re-assertion");
+// Enable (empty marker) — back to the baseline; api-design name-only, pinned back on.
+writeDisabled(skillsDir4b, new Map());
+check(!existsSync(join(skillsDir4b, ".disabled-skills")), "writeDisabled must remove an empty marker");
+applyBaseline(data, s4b, skillsDir4b, null);
+ov4b = readJSON(s4b).skillOverrides;
+check(ov4b["api-design"] === "name-only", "re-enabled skill returns to name-only");
+check(!(pinnedSkill in ov4b), "re-enabled pinned skill returns to on (absent)");
+pass("disable => user-invocable-only/off, beats pinned, survives re-assertion, reverts on enable");
 
 // 5 — install (default = all + machinery + hook + baseline applied)
 step("install (default = all + machinery + hook + baseline applied)");

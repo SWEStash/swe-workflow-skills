@@ -53,14 +53,29 @@ the **per-role plugin** for your hat. Simplest, and it works everywhere.
 /plugin install swe-workflow-pm@swe-workflow
 ```
 
-Roles: `backend`, `frontend`, `devops`, `ml`, `security`, `architect`, `em`, `pm`,
-`qa`, `designer`.
+Roles: `backend`, `frontend`, `devops`, `ml`, `ai`, `data`, `data-scientist`,
+`security`, `architect`, `em`, `pm`, `strategy`, `qa`, `mobile`, `designer`.
 
 **You want the whole library with the orchestrator, on the CLI:** run the **installer**.
 
 ```bash
 node install.mjs --global        # all skills + orchestrator + /role + the session hook
 ```
+
+**This is a two-step setup — wiring the hook is a required manual step.** The installer
+copies the hook script and applies the name-only baseline, then **prints a `SessionStart`
+snippet for you to merge into `settings.json`** (it never edits `settings.json` — that's a
+[trust boundary](../SECURITY.md)). What you keep vs lose if you skip the merge:
+
+- **Keep** — the skills are installed and the baseline is applied, so nothing crops.
+- **Lose** — the **router nudge** (Claude won't be prompted to consult `skill-router` first,
+  so skills won't auto-route) and the **post-`/compact` re-assert**. `--no-hook` is the
+  explicit "I'm opting out of auto-routing" choice; auto-routing stays off until a hook is
+  wired. After merging, start a new session and run `/doctor` to confirm the hook registered.
+
+**Don't want a specific skill routed?** `node disable.mjs disable <skill>` (or
+`npx swe-workflow-skills disable <skill>`) opts it out durably — see
+[disable a skill from routing](ROLES.md#advanced-disable-a-skill-from-routing).
 
 **Teams:** run the installer into your project's `.claude/` and commit it.
 

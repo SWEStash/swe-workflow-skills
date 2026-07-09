@@ -202,6 +202,14 @@ hook (on by default) **re-asserts** the baseline on every session boundary
 nudge — needed because the skill listing isn't re-injected after `/compact`. The
 installer prints the `settings.json` snippet to enable it; it never edits your settings.
 
+> **Wire the hook (required for auto-routing).** Installing is two steps: the baseline
+> makes the install crop-safe immediately, but the **router nudge only fires once the hook
+> is wired**. Until you merge the printed `SessionStart` snippet into `settings.json`,
+> Claude isn't prompted to consult `skill-router` first, so skills won't auto-route and the
+> baseline isn't re-asserted after `/compact`. Merge the block, start a new session, and run
+> `/doctor` to confirm the hook is registered. `--no-hook` is the explicit opt-out (baseline
+> still applies; auto-routing stays off). The per-role **plugins** need no hook.
+
 Re-running install is idempotent: each skill is re-copied cleanly (no stale
 leftover files). `--prune` additionally removes previously-installed library skills
 outside the new selection (never your own custom skills). `--global` resolves to
@@ -234,6 +242,37 @@ never edits. The `.active-role` marker is only written by `--role` (and rewritte
 `/role` rewrites `settings.local.json` (hot-reloads) and records the choice in an
 `.active-role` marker so the hook re-asserts it across compaction.
 
+### Advanced: disable a skill from routing
+
+Routing every skill is the point of this library — the orchestrator enforces a
+consistent SDLC method. But the workflow is personal, and you may not want a
+particular skill in the mix. You can opt a skill **out** of routing and
+auto-trigger:
+
+```bash
+npx swe-workflow-skills disable data-modeling   # from a clone: node disable.mjs disable data-modeling
+npx swe-workflow-skills disable data-modeling --off   # fully hide it
+npx swe-workflow-skills enable  data-modeling   # undo
+npx swe-workflow-skills list-disabled           # see what's disabled
+```
+
+By default a disabled skill becomes **`user-invocable-only`**: the router will no
+longer select it, but you can still run it deliberately as `/data-modeling`. Add
+`--off` to hide it completely (not routable and not user-invocable). `--global` /
+`--dir` target the same config dir as `install`.
+
+This is an **advanced opt-out** — it bypasses the router's method enforcement for
+that skill, so reach for it only when a skill genuinely doesn't fit how you work.
+It even works on a pinned safety skill, which just means giving up that guardrail.
+
+Why a command instead of editing `settings.local.json` by hand: the SessionStart
+hook rewrites every installed skill's `skillOverrides` entry each session, so a
+manual `off` edit is reverted at the next session boundary. The command records
+your choice in a `.disabled-skills` marker beside the skills, which the hook folds
+into the baseline every time — so the disable **persists**. (No hook installed?
+The command still writes the marker and applies it immediately; the marker is
+honored whenever the baseline is next applied.)
+
 ## Install (plugins — the recommended, cross-surface path)
 
 For everywhere hooks don't run — **Claude Code on the web, claude.ai chat, and
@@ -256,105 +295,3 @@ web**, plugins and skills load but **hooks don't run** — which is exactly why 
 are per-role subsets rather than one full-library plugin (see
 [Why plugins can't carry the baseline](#why-plugins-cant-carry-the-baseline)).
 Verified against the Claude Code / claude.ai docs, 2026-06.
-
-## Roadmap: roles and skills (future iterations)
-
-All need **new skills** first (build via the `writing-skills` RED→GREEN process),
-in planned order:
-
-1. **Deferred roles** — possible `backend`/`devops` splits (both at the
-   20-description cap). Done 2026-07 (Phase 8c): **Data Scientist** shipped as
-   the 15th role — `exploratory-data-analysis`, `statistical-analysis`,
-   `notebook-to-production` authored natively in the description/`when_to_use`
-   split (RED captured before authoring; GREEN ≥ RED on all 9 cases, opus
-   runner), plus `ml-experiment-tracking`, `data-quality`, `data-modeling`,
-   `ai-evaluation` (15 skills, crop-safe). Boundary landmines defused:
-   `ml-pipeline-design`'s trigger narrowed to "notebook to *training*
-   pipeline" (+ its missing scope-boundary eval added), `ai-evaluation` gained
-   the reciprocal `statistical-analysis` boundary.
-2. **Machinery** — **router scaling** (see follow-ups below) is the remaining
-   item. Done 2026-07 (Phase 8a/8b): the `description` + `when_to_use` split is
-   supported by the toolchain with a **lazy per-touch migration** (no big-bang —
-   9 skills migrated so far, catalog byte-identical each time); `context: fork`
-   applied to the four heavy review skills; the **obsolescence review** is now a
-   standing policy (AUTHORING.md § Obsolescence review: slim first, retire late)
-   with its first pilot complete (below).
-
-_Obsolescence pilot 2026-07 (Phase 8b) — 6 of the oldest task-like skills, 14
-eval cases on the opus-pinned workflow-runner. **Slimmed**: `effort-estimation`
-(RED ≈ GREEN on 3 samples of both evals; 95 → 54 lines; GREEN ≥ RED held
-post-slim). **Kept**: `project-documentation` (+5 on the API-docs eval; its
-changelog eval caught a real over-deflection to `release-management` — fixed,
-GREEN 0/6 → 6/6), `configuration-strategy` (boundary eval +2),
-`retrospective` (GREEN ≥ RED in all 6 samples, mean +1.3),
-`metrics-and-okrs` (+2), `project-proposal` (+2). **Calibrated cost** for
-future sweeps: ~97k subagent tokens per eval case-run (4 opus agents — 2
-generators + 2 judges); the 6-skill baseline = 56 agents / ~1.36M tokens /
-~4.5 min wall-clock; the full pilot with ×3 re-samples and post-edit
-confirmations = 112 agents / ~2.7M tokens; the routing spot-check adds ~316k
-haiku tokens for a 12-case neighborhood. **Finding**: 4 of the 6 pilot skills
-predate the 3-eval rule and carry only 2 evals (`effort-estimation`,
-`retrospective`, `metrics-and-okrs`, `project-proposal`) — each needs a
-scope-boundary eval added when next touched._
-
-_Done 2026-07: **AI & data** — `ai-evaluation`, `llm-app-engineering`,
-`data-pipeline-design`, `data-quality` shipped with the new `ai` and `data`
-roles; `ml` extended with `ai-evaluation`. **Ideation & execution** —
-`brainstorming` (universal core), `plan-execution` (technical core, hardened),
-`threat-modeling` (→ `security`), `build-vs-buy` (→ `strategy`).
-**Governance & ops** — `compliance-privacy` (→ `security`),
-`finops-cost-optimization` (→ `strategy`), `code-archaeology` (→ `architect`),
-`resilience-engineering` (→ `devops`). **DX & verification** — `dx-audit`
-(→ `em`), `browser-verification` (→ `frontend`, `qa`), `subagent-orchestration`
-(meta_only). **Mobile** — `mobile-architecture` + `mobile-release` with the new
-`mobile` role._
-
-## Open follow-ups
-
-- The two largest roles (`backend` 20 after `plan-execution` joined the
-  technical core; `devops` 20 after `resilience-engineering`) both sit AT the
-  ~20 listing cap — `release-management` joined `devops` in place of
-  `dependency-impact-analysis` (still in `architect`, always routable) to stay
-  crop-safe; `backend` deliberately did NOT get it (route via `skill-router`).
-  Neither has headroom left: the next addition to either, or to the technical
-  core, forces a trim or a role split.
-- **Router scaling (haiku)**: `skill-router` runs on haiku and reads the whole
-  `catalog.json` per routing call — the catalog is a context budget of its own.
-  At 65 skills it's ~35k chars (~9k tokens): no window pressure (200k), but a
-  real per-call cost and a growing candidate set. Standing mitigations:
-  the ~350–550-char description discipline (now machine-checked —
-  `build-plugins.mjs` errors above the 1,024 platform cap, warns above 600
-  chars/description and above 48k chars total catalog), terse one-line phase-index
-  entries in the router, and role-scoped routing (lead with the active role's
-  set). **Adaptation trigger**: when the total-catalog warning fires (~90+
-  skills at current discipline) or routing accuracy degrades in the eval
-  baseline, implement two-stage routing — the router shortlists from its
-  compact phase index (or a generated name+gist index), then reads only the
-  shortlisted skills' full descriptions instead of the whole catalog. Haiku
-  routes mostly on names (EVALS.md finding), so the compact first stage should
-  hold accuracy; verify with the routing harness before switching.
-- **Routing baseline refresh**: `evals/routing-baseline.json` predates the
-  Phase 7/8 skills — cases added since (including the 8c data-science cases)
-  have no baseline entry, so they can't regress in CI but also don't gate yet.
-  Next keyed run: `python evals/routing.py --run --update-baseline -k 3`
-  (needs `ANTHROPIC_API_KEY`; the 8c in-session full run is the interim
-  reference — see EVALS.md results).
-- Pinned set reviewed 2026-07 (re-reviewed with the Phase-2 AI/data and Phase-3
-  ideation/execution additions; re-confirmed at Phase 8c — the three
-  data-science skills are deliberate-moment, router-visible activations, and
-  `code-reviewing`'s 8a diff injection left its listing budget unchanged):
-  unchanged. `release-management` is
-  high-consequence but, like `deployment-checklist` and `rollback-strategy`, it
-  activates at a deliberate moment the router catches reliably — pinning is
-  reserved for skills that must interrupt work the agent already believes is
-  fine (verification, TDD, bugs, incidents, review). `plan-execution` was the
-  serious Phase-3 candidate (its Iron Law interrupts unverified "done"s), but
-  its entry moment ("execute this plan") is deliberate and router-visible, the
-  already-pinned `verification-before-completion` covers the false-"done"
-  failure mode per claim, and it now rides in the technical core for every
-  engineering role — pinning it would spend listing budget on redundancy.
-- Decide whether to keep committing generated `plugins/` + `catalog.json` or
-  generate them at release.
-
-_Resolved: per-role plugins no longer bundle `skill-router` (it can't route without a
-catalog or baseline); the `claude.ai/code` + chat plugin story is verified above._

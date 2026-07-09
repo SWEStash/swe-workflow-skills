@@ -5,6 +5,29 @@ All notable changes to this project are documented here. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as defined in
 [docs/RELEASING.md](docs/RELEASING.md).
 
+## [Unreleased]
+
+### Added
+- `disable` / `enable` / `list-disabled` CLI commands (`npx swe-workflow-skills
+  disable <skill>`, also `node disable.mjs …`) — an advanced opt-out that hides a
+  skill from routing and auto-trigger. Default state `user-invocable-only` (still
+  runnable as `/<skill>`), `--off` to hide it entirely. The choice is recorded in a
+  `.disabled-skills` marker beside the skills and folded into the baseline by
+  `applyBaseline`, so the SessionStart hook re-asserts it instead of reverting a
+  manual `settings.local.json` edit. Documented in docs/ROLES.md; covered by a new
+  `verify.mjs` fixture.
+
+### Changed
+- Documentation cleanup for the public launch: removed internal planning naming
+  (milestone/phase codes, the roadmap and open-follow-ups sections, and the
+  obsolescence-pilot cost log) from the public docs — internal planning now lives in
+  `.local/` (gitignored). Fixed stale counts (INSTALL-MATRIX role list → 15).
+- Clarified that the CLI installer is a **two-step** setup: wiring the printed
+  `SessionStart` hook snippet is required for auto-routing. README, INSTALL-MATRIX,
+  ROLES.md, and the installer's own output now call this out (skipping it keeps
+  crop-safety but disables the router nudge and post-`/compact` re-assert).
+- README: added an npm version badge and a pointer to the disable command.
+
 ## [0.4.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.3.0...v0.4.0) (2026-07-08)
 
 
@@ -14,30 +37,29 @@ All notable changes to this project are documented here. The format follows
 
 ## [0.3.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.2.0...v0.3.0) (2026-07-07)
 
-The Phase-8 release: library-machinery modernization plus the Data Scientist
+This release: library-machinery modernization plus the Data Scientist
 expansion — 3 new skills (62 → 65) and the 15th role. The toolchain is now
 `when_to_use`-aware with lazy per-skill migration, the heavy review skills run
 as forked subagents, the diff-driven skills inject their diff at load time, the
-obsolescence review is a standing policy with its first pilot done, and three
+obsolescence review is a standing policy with its first pass done, and three
 installer/command hardening items are closed. Everything gated before release:
 GREEN ≥ RED on every touched skill's evals (opus runner) and a routing layer-2
 clean sweep — 124 cases, positive 64/64, boundary 52/52, zero confusion pairs.
 
-Phase 8a — library-machinery modernization: the toolchain is now
-`when_to_use`-aware (lazy per-skill migration, no big-bang), the four heavy
-review skills run as forked subagents, and the two diff-driven skills load
-their diff at skill-load time.
+Library-machinery modernization: the toolchain is now `when_to_use`-aware
+(lazy per-skill migration, no big-bang), the four heavy review skills run as
+forked subagents, and the two diff-driven skills load their diff at
+skill-load time.
 
-Phase 8b — the obsolescence review is now a standing policy (slim first,
-retire late) and its first pilot ran against 6 of the oldest task-like
-skills: one slimmed, one real content bug caught and fixed, four confirmed
-still earning their tokens. Three Low-severity installer/command hardening
-items from 8a's security audit are closed.
+The obsolescence review is now a standing policy (slim first, retire late) and
+its first pass reviewed 6 of the oldest task-like skills: one slimmed, one real
+content bug caught and fixed, four confirmed still earning their tokens. Three
+Low-severity installer/command hardening items from the security audit are
+closed.
 
-Phase 8c — the Data Scientist expansion: three new data-science skills
-(62 → 65) and the 15th role, with the notebook-productionization boundary
-between the new skills and `ml-pipeline-design` designed and eval-gated in
-both directions.
+The Data Scientist expansion: three new data-science skills (62 → 65) and the
+15th role, with the notebook-productionization boundary between the new skills
+and `ml-pipeline-design` designed and eval-gated in both directions.
 
 ### Added
 - Three data-science skills, authored natively in the `description`/
@@ -61,7 +83,7 @@ both directions.
   chain on the Analytics Golden Path.
 - `ml-pipeline-design` gained its missing scope-boundary eval (a reporting
   notebook must hand off to `notebook-to-production`) — the first of the
-  two-eval skills flagged in the 8b pilot to be topped up at touch time.
+  two-eval skills flagged in the obsolescence review to be topped up at touch time.
 - `description`/`when_to_use` split support: `build-plugins.mjs` reads the
   `when_to_use` frontmatter field (single-line and block scalars) and emits
   `description` + `when_to_use` concatenated into each `catalog.json` entry
@@ -87,8 +109,7 @@ both directions.
   update — re-run a skill's evals RED on shipping models; RED ≈ GREEN across
   all evals → slim first (keep Iron Laws, boundaries, cross-references); retire
   only after a slimmed skill stays RED ≈ GREEN a full further cycle, with a
-  deprecation notice here and in ROLES.md first. Pilot results and the
-  calibrated sweep cost are recorded in ROLES.md's roadmap.
+  deprecation notice here and in ROLES.md first.
 - `verify.mjs`: installer-hardening step — a path-traversal positional arg must
   be rejected before anything is copied, and a config path containing `$(…)`
   must come out escaped in the printed hook snippet.
@@ -102,15 +123,15 @@ both directions.
   exposed (GREEN 6/6 after the fix).
 - Content-eval generators and judges are pinned to opus in
   `evals/workflow-runner.mjs` for cross-session score comparability.
-- `effort-estimation` slimmed per the first obsolescence pilot (95 → 54 lines):
+- `effort-estimation` slimmed per the obsolescence review (95 → 54 lines):
   the worked translation math, the method table, and the estimation-traps list
   — all RED-equivalent on shipping models across 3 samples — are cut; the
   workflow, boundaries, and reference pointers stay. GREEN ≥ RED held per case
   after the slim.
 - `project-documentation`'s changelog workflow now keeps entry drafting (from
   git history included) in-skill and hands only the release mechanics (version
-  choice, tagging, publish automation) to `release-management` — the pilot
-  caught the old boundary wording deflecting the whole task (GREEN 0/6 vs RED
+  choice, tagging, publish automation) to `release-management` — the obsolescence
+  review caught the old boundary wording deflecting the whole task (GREEN 0/6 vs RED
   4/6; 6/6 after the fix).
 - Three more skills lazy-migrated to the `description`/`when_to_use` split
   (`writing-skills`, `effort-estimation`, `project-documentation` — 9 total);
@@ -132,8 +153,8 @@ both directions.
   settings. It now throws; the hook skips the write and leaves the file alone.
 - `resolvedSkills` was implemented twice (resolve.mjs and build-plugins.mjs)
   and had drifted; the builder now imports the single implementation.
-- npm package description still advertised "44 skills" (stale since Phase 1,
-  shipped in 0.2.0); now number-free.
+- npm package description still advertised "44 skills" (stale since the initial
+  release, shipped in 0.2.0); now number-free.
 - `install.mjs` accepted path-like positional args: `node install.mjs ../..`
   passed the directory guard and the clean-copy `rmSync` could then delete
   outside the destination. Positional args are now whitelisted against the
@@ -156,7 +177,7 @@ RED/GREEN content harness (GREEN ≥ RED on all cases, pressure tests held) and
 the routing harness (top-1 1.00, zero confusion pairs) before release.
 
 ### Added
-- Nine Phase-4 skills across three groups:
+- Nine skills across three groups:
   - Governance & ops: `compliance-privacy` (GDPR/CCPA/SOC 2 engineering — data
     mapping, minimization/retention, DSR machinery, control evidence; →
     `security` role), `finops-cost-optimization` (allocation, unit economics,
@@ -183,7 +204,7 @@ the routing harness (top-1 1.00, zero confusion pairs) before release.
   routing adaptation documented in docs/ROLES.md.
 - `skill-router`: nine new phase-index entries, a new "Mobile" section, and an
   app-store branch on the "Ship a release" Golden Path.
-- Four ideation & execution skills (Phase 3 of the expansion roadmap):
+- Four ideation & execution skills:
   - `brainstorming` — divergent Socratic ideation upstream of `prd-writing` /
     `feature-planning`: problem re-framing, real-vs-inherited constraints,
     judgment-deferred generation, wildcard widening (do-nothing / 1/10-scope /
@@ -210,7 +231,7 @@ the routing harness (top-1 1.00, zero confusion pairs) before release.
   feature" Golden Path now starts at `brainstorming` (when the idea is fuzzy)
   and runs `threat-modeling` (new trust boundaries) and `plan-execution` (work
   the approved plan) at the right phases.
-- Four AI & data skills (Phase 2 of the expansion roadmap):
+- Four AI & data skills:
   - `ai-evaluation` — golden datasets, offline metrics, RAG evaluation
     (faithfulness / answer relevance / context precision-recall) with
     ragas / deepeval / promptfoo, LLM-as-judge design and calibration, eval
@@ -247,15 +268,13 @@ the routing harness (top-1 1.00, zero confusion pairs) before release.
   eval harnesses with CI gates, hardened safety skills, full-SDLC breadth), and a new
   Acknowledgements section credits the projects this library builds on
   (obra/superpowers, anthropics/skills, the Agent Skills docs, the community lists).
-- Roadmap of upcoming skills and roles (AI/data, ideation/execution, deferred sets)
-  in docs/ROLES.md.
 
 ### Changed
 - docs/RELEASING.md rewritten for the automated flow: what release-please
   automates, what stays manual (the semver sanity check, changelog curation on
   the release PR, the merge as the deliberate trigger), how the
   VERSION/package.json/marketplace lockstep works, and a manual-fallback recipe.
-- Boundary notes added for the Phase-3 skills: `feature-planning` ("plan this /
+- Boundary notes added for the ideation/execution skills: `feature-planning` ("plan this /
   break this down" stays here; executing an approved plan → `plan-execution`),
   `security-audit` (existing code/config here; unbuilt designs →
   `threat-modeling`), and `architecture-design` (internal structure here;
@@ -299,5 +318,5 @@ Initial release.
   `scripts/verify.mjs`.
 - Documentation: README, ROLES, INSTALL-MATRIX, SKILLS, AUTHORING, EVALS, RELEASING.
 
-[Unreleased]: https://github.com/SWEStash/swe-workflow-skills/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/SWEStash/swe-workflow-skills/compare/v0.4.0...HEAD
 [0.1.0]: https://github.com/SWEStash/swe-workflow-skills/releases/tag/v0.1.0

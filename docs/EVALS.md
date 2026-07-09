@@ -206,7 +206,7 @@ the API key is absent — like `skill-evals.yml`).
 
 ### Results (haiku) and the haiku recommendation
 
-Full in-session run on `claude-haiku-4-5` over all 124 cases (2026-07, Phase 8c,
+Full in-session run on `claude-haiku-4-5` over all 124 cases (2026-07,
 65-skill catalog):
 
 | Layer 2 metric | Result |
@@ -218,7 +218,7 @@ Full in-session run on `claude-haiku-4-5` over all 124 cases (2026-07, Phase 8c,
 
 Layer 3 (behavioral, 16 cases): router-invocation rate **1.00** (8/8 substantial
 prompts invoked a skill), correct-invoke 8/8, over-route **0/8**. Boundary
-behavior stayed nuanced and correct — the 8c data-science boundaries held in
+behavior stayed nuanced and correct — the data-science boundaries held in
 both directions (`ml-pipeline-design`'s reporting-notebook boundary →
 `notebook-to-production`, `notebook-to-production`'s training-notebook boundary
 → `ml-pipeline-design`, `statistical-analysis`'s chatbot-A/B boundary →
@@ -226,17 +226,18 @@ both directions (`ml-pipeline-design`'s reporting-notebook boundary →
 `incident-response`, `incident-response`/`refactoring`/`strategic-review`
 boundaries → `NONE`).
 
-(`routing-baseline.json` still records the earlier 77-case keyed run; cases
-added since can't regress in CI until the next
-`python evals/routing.py --run --update-baseline -k 3` refresh — see the
-ROLES.md follow-ups. The earlier 41-skill baseline run scored the same clean
-sweep on layer 2 with a 0.75 layer-3 invocation rate.)
+(`routing-baseline.json` still records an earlier keyed run; cases added since
+can't regress in CI until the next
+`python evals/routing.py --run --update-baseline -k 3` refresh, so the
+in-session full run above is the interim reference. An earlier, smaller-catalog
+baseline run scored the same clean sweep on layer 2 with a 0.75 layer-3
+invocation rate.)
 
 **Haiku recommendation: keep haiku.** A clean sweep of layer 2 — perfect top-1,
 perfect boundary discrimination, zero false activations, zero confusion — now
 across the full 65-skill catalog says haiku is more than adequate for this
 routing task; nothing argues for sonnet. The earlier watch-item (layer-3
-invocation rate 0.75 on the 41-skill catalog) cleared at 8/8 in the Phase-8c
+invocation rate 0.75 on the earlier, smaller catalog) cleared at 8/8 in this
 run — worth re-checking as the catalog grows. If misroutes ever appear, the
 first lever is **improving catalog descriptions** (which helps both models and
 the pinned/role-promoted auto-trigger path); promoting the router to sonnet is

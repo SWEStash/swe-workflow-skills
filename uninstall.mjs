@@ -127,6 +127,7 @@ for (const f of [
   join(dest, ".roles.json"),
   join(dest, ".catalog.json"),
   join(dest, ".active-role"),
+  join(dest, ".disabled-skills"),
   join(dest, ".swe-workflow-manifest.json"),
   join(claudeDir, "hooks", "resolve.mjs"),
   join(claudeDir, "hooks", "session-start.mjs"),

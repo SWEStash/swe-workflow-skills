@@ -28,7 +28,7 @@
 //
 // roles.json is read from $ROLES_JSON if set, else ../roles.json relative to this file.
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync, readdirSync, rmSync } from "node:fs";
 import { dirname, join, resolve as resolvePath } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -88,6 +88,73 @@ export function installedSkills(skillsDir) {
     .sort();
 }
 
+// ---- disabled-skills marker ------------------------------------------------
+//
+// Lets a user opt a skill OUT of routing/auto-trigger and have it *survive* the
+// SessionStart hook. A plain settings.local.json edit can't: applyBaseline owns
+// every installed skill's entry and rewrites it each session. Instead the choice
+// lives in a `.disabled-skills` marker beside the skills (like `.active-role`),
+// which applyBaseline folds in on every write — so the hook re-asserts the
+// disable rather than reverting it.
+//
+// Format: one skill per line, optional state after whitespace; `#` comments and
+// blank lines ignored. Valid states are the two that hide a skill from the model:
+//   data-modeling                 -> user-invocable-only (default; human /name still works)
+//   data-modeling off             -> off (fully hidden)
+
+export const DISABLE_STATES = new Set(["user-invocable-only", "off"]);
+export const DEFAULT_DISABLE_STATE = "user-invocable-only";
+
+export function disabledMarkerPath(skillsDir) {
+  return join(skillsDir, ".disabled-skills");
+}
+
+// Parse the marker into Map<skill, state>. Best-effort: a missing or unreadable
+// file yields an empty map (never throws — the hook must not fail on it).
+export function readDisabled(skillsDir) {
+  const path = disabledMarkerPath(skillsDir);
+  const map = new Map();
+  if (!(existsSync(path) && statSync(path).isFile())) return map;
+  let text = "";
+  try {
+    text = readFileSync(path, "utf-8");
+  } catch {
+    return map;
+  }
+  for (const raw of text.split("\n")) {
+    const line = raw.trim();
+    if (!line || line.startsWith("#")) continue;
+    const [name, state] = line.split(/\s+/);
+    if (!name) continue;
+    map.set(name, DISABLE_STATES.has(state) ? state : DEFAULT_DISABLE_STATE);
+  }
+  return map;
+}
+
+// Same, but restricted to skills actually installed here (stale names dropped).
+export function loadDisabled(skillsDir) {
+  const installed = new Set(installedSkills(skillsDir));
+  const map = new Map();
+  for (const [name, state] of readDisabled(skillsDir)) {
+    if (installed.has(name)) map.set(name, state);
+  }
+  return map;
+}
+
+// Persist Map<skill, state>, sorted. Removes the marker entirely when empty so an
+// enabled-everything state leaves no file behind (mirrors pruneSettings dropping
+// an empty skillOverrides).
+export function writeDisabled(skillsDir, map) {
+  const path = disabledMarkerPath(skillsDir);
+  const names = [...map.keys()].sort();
+  if (names.length === 0) {
+    if (existsSync(path)) rmSync(path);
+    return;
+  }
+  const lines = names.map((n) => (map.get(n) === DEFAULT_DISABLE_STATE ? n : `${n} ${map.get(n)}`));
+  writeFileSync(path, lines.join("\n") + "\n");
+}
+
 // ---- settings I/O ----------------------------------------------------------
 
 // Recursively sort object keys so output is deterministic (mirrors Python's
@@ -143,11 +210,19 @@ export function applyBaseline(data, settingsPath, skillsDir, role) {
   const merged = {};
   for (const [k, v] of Object.entries(existing)) if (!installedSet.has(k)) merged[k] = v;
   Object.assign(merged, desired);
+
+  // User-disabled skills override the baseline: an explicit opt-out wins over
+  // name-only AND over a pinned/role-promoted "on" (a pinned skill the user
+  // disabled becomes user-invocable-only, not on). Read from the marker each
+  // call so the hook re-asserts the disable instead of reverting it.
+  const disabled = loadDisabled(skillsDir);
+  for (const [s, state] of disabled) merged[s] = state;
+
   settings.skillOverrides = merged;
 
   writeSettings(settingsPath, settings);
   const nameOnly = Object.keys(desired).length;
-  return { nameOnly, on: installed.length - nameOnly, role };
+  return { nameOnly, on: installed.length - nameOnly, role, disabled: disabled.size };
 }
 
 // Remove the given skills from a settings file's skillOverrides. Returns removed count.
