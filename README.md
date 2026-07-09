@@ -1,5 +1,6 @@
 # SWE Workflow Skills for Claude Code
 
+[![npm](https://img.shields.io/npm/v/swe-workflow-skills)](https://www.npmjs.com/package/swe-workflow-skills)
 [![roles-check](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml/badge.svg)](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml)
 ![skills](https://img.shields.io/badge/skills-65-blue)
 [![license: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
@@ -59,11 +60,27 @@ web, claude.ai chat, and Cowork):
 /plugin install swe-workflow-pm@swe-workflow
 ```
 
-**Want the whole library with the orchestrator** (CLI) — no clone needed:
+**Want the whole library with the orchestrator** (CLI) — no clone needed. This is a
+**two-step** setup:
 
 ```bash
-npx swe-workflow-skills install --global   # all 65 skills + router + /role + the SessionStart hook
+# 1. Install all 65 skills + router + /role + the hook script, and apply the baseline
+npx swe-workflow-skills install --global
 ```
+
+```jsonc
+// 2. Wire the hook: merge the snippet the installer prints into your settings.json
+//    (the installer never edits settings.json for you — it just prints the block).
+//    Then start a new session; /doctor should show the hook registered.
+{ "hooks": { "SessionStart": [ /* ...the printed block... */ ] } }
+```
+
+> ⚠️ **Don't skip step 2.** Step 1 alone installs the skills and prevents cropping, but
+> the hook is what nudges Claude to consult `skill-router` first — **without it, skills
+> won't auto-route** (the whole point of the library) and the baseline isn't re-asserted
+> after `/compact`. If you deliberately want no hook, pass `--no-hook`; auto-routing stays
+> off until a hook is wired. The **per-role plugin** path above needs no hook — it's
+> self-contained.
 
 Or from a clone: `node install.mjs --global`.
 
@@ -97,7 +114,9 @@ for every method × surface, and **[ROLES.md](docs/ROLES.md)** for the activatio
 On any non-trivial task, Claude consults **`skill-router`** first; it reads the full
 catalog and invokes the matching skill(s) by name, re-routing as the work changes phase.
 The default SessionStart hook nudges Claude to do this automatically; you can also route
-explicitly ("use the security-audit skill") or switch the promoted set with `/role`.
+explicitly ("use the security-audit skill") or switch the promoted set with `/role`. Don't
+want a particular skill routed at all? `npx swe-workflow-skills disable <skill>` opts it out
+durably — see [disable a skill from routing](docs/ROLES.md#advanced-disable-a-skill-from-routing).
 
 **A routed chain, by phase** — e.g. *"add OAuth login"*:
 

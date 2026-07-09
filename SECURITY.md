@@ -23,9 +23,9 @@ default, `~/.claude/` with `--global`, or `--dir`):
   automatically (`node …/session-start.mjs`) on every session boundary.**
 - **The `/role` command** — `<claude>/commands/role.md`, run through Claude Code's
   Bash tool when you type `/role`.
-- **Data files** — `.roles.json`, `.catalog.json`, `.active-role`, and
-  `.swe-workflow-manifest.json` under `<claude>/skills/`, read by the hook and the
-  `/role` command.
+- **Data files** — `.roles.json`, `.catalog.json`, `.active-role`,
+  `.disabled-skills`, and `.swe-workflow-manifest.json` under `<claude>/skills/`, read
+  by the hook and the `/role` command.
 
 ## Trust boundaries
 
@@ -40,8 +40,8 @@ default, `~/.claude/` with `--global`, or `--dir`):
 ## Files that execute automatically — treat as trusted-integrity
 
 Anything that can write `<claude>/hooks/session-start.mjs`, `<claude>/hooks/resolve.mjs`,
-or the `.roles.json` / `.active-role` data files the hook reads gains **code execution
-or instruction injection at your next session boundary.** This is inherent to the
+or the `.roles.json` / `.active-role` / `.disabled-skills` data files the hook reads gains
+**code execution or instruction injection at your next session boundary.** This is inherent to the
 SessionStart-hook feature (the same posture as any Claude Code hook), not a defect —
 the hook's own logic is data-only, fails safe (best-effort `try/catch`, never blocks a
 session), and refuses to rebuild a corrupt `settings.local.json` from scratch.

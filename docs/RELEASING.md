@@ -18,7 +18,7 @@ The version lives in one file: **[`VERSION`](../VERSION)** (e.g. `0.2.0`).
 
 During a release, **release-please bumps `package.json`** and
 **`scripts/sync-version.mjs` fans that version out**: it writes `VERSION`, then re-runs
-`build-plugins.mjs` so the marketplace, the 14 per-role plugins, and `catalog.json` are
+`build-plugins.mjs` so the marketplace, the per-role plugins, and `catalog.json` are
 regenerated from it — all inside the release PR, so the merged release commit is
 internally consistent (the "lockstep" below).
 

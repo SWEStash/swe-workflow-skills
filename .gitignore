@@ -1,6 +1,9 @@
 # Local Claude Code config / self-install artifacts (this repo dogfoods its own skills)
 .claude/
 
+# Private working notes: internal roadmap, planning, drafts — never published
+.local/
+
 # Python
 __pycache__/
 *.py[cod]

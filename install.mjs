@@ -369,14 +369,22 @@ if (hook) {
     hookPath = join(hookDestDir, "session-start.mjs");
     log(`Installed hook script -> ${hookPath}`);
     log("");
-    log("The name-only baseline is already applied. To have it re-asserted every");
-    log("session (and the router nudge injected), merge this into");
-    log(`${join(claudeDir, "settings.json")} (the installer does NOT edit settings for you):`);
+    log("========================================================================");
+    log("REQUIRED NEXT STEP — wire the router hook");
+    log("========================================================================");
+    log("Skills are installed and the name-only baseline is applied, so nothing");
+    log("will crop. But WITHOUT this step Claude won't be nudged to consult");
+    log("skill-router first, so skills won't auto-route — you lose the whole point");
+    log("of the library. The hook also re-asserts the baseline after /compact.");
+    log("");
+    log(`Merge this into ${join(claudeDir, "settings.json")}`);
+    log("(for your safety the installer does NOT edit settings.json for you):");
     log("");
     log(hookSnippet(hookPath));
     log("");
-    log("Start a new session and run /doctor to confirm the hook is registered.");
-    log("(Prefer no hook? Re-run with --no-hook; the baseline still applies.)");
+    log("Then start a new session and run /doctor to confirm the hook is registered.");
+    log("(Deliberately not using the hook? Re-run with --no-hook; the baseline still");
+    log(" applies, but auto-routing stays off until you wire a hook.)");
   }
 }
 

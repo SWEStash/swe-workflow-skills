@@ -10,6 +10,7 @@
     "bin/cli.mjs",
     "install.mjs",
     "uninstall.mjs",
+    "disable.mjs",
     "scripts/resolve.mjs",
     "hooks/session-start.mjs",
     "commands/role.md",
