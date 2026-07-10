@@ -5,6 +5,13 @@ All notable changes to this project are documented here. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as defined in
 [docs/RELEASING.md](docs/RELEASING.md).
 
+## [0.5.1](https://github.com/SWEStash/swe-workflow-skills/compare/v0.5.0...v0.5.1) (2026-07-10)
+
+
+### Fixed
+
+* **skills:** drop model pins so skills inherit the session model ([#10](https://github.com/SWEStash/swe-workflow-skills/issues/10)) ([896cb3b](https://github.com/SWEStash/swe-workflow-skills/commit/896cb3bdd363634b86e3852a21eca64f95ca8c74))
+
 ## [0.5.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.4.0...v0.5.0) (2026-07-09)
 
 
