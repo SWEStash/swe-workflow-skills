@@ -59,7 +59,10 @@ NONE = "NONE"
 # both the choices and the mined cases.
 ROUTER = "skill-router"
 
-# skill-router ships `model: haiku`; route on the shipping model. Haiku 4.5.
+# Skills carry no model pin (inline pins are ignored at runtime — see
+# docs/AUTHORING.md), so the router runs on whatever session model the user has.
+# Evaluate on Haiku as the conservative floor: routing that holds on Haiku 4.5
+# holds on every stronger model, and the recorded baseline was sampled on it.
 ROUTING_MODEL = os.environ.get("EVAL_ROUTING_MODEL", "claude-haiku-4-5")
 
 

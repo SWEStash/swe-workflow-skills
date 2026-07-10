@@ -1,7 +1,6 @@
 ---
 name: observability-design
 description: "Design production observability — SLIs, SLOs, SLAs, error budgets, OpenTelemetry traces/metrics/logs, structured logging, alerting, dashboards. Triggers: SLO, SLI, SLA, error budget, observability, monitoring, OpenTelemetry, OTel, tracing, distributed tracing, structured logging, alerting, dashboard, metrics, correlation ID, alert fatigue."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

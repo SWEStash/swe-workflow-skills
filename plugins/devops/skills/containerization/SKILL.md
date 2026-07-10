@@ -1,7 +1,6 @@
 ---
 name: containerization
 description: "Write production-grade Dockerfiles, docker-compose, and Kubernetes manifests following security and reliability best practices. Triggers: Dockerfile, docker-compose, containerize, Docker image, Kubernetes, k8s manifest, container, pod, deployment yaml, multi-stage build, docker build, image size, container security."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

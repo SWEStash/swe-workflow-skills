@@ -1,7 +1,6 @@
 ---
 name: build-vs-buy
 description: "Decide whether to build in-house, buy a vendor/SaaS product, or adopt OSS — core-vs-commodity framing, multi-year total cost of ownership, integration and maintenance burden, vendor viability, lock-in and exit costs. Triggers: build vs buy, build or buy, vendor evaluation, SaaS vs in-house, should we adopt this open source, TCO, total cost of ownership, lock-in, exit cost, make or buy, off the shelf. Internal-structure decisions (patterns, service boundaries, ADRs for your own code) → architecture-design."
-model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, WebFetch, WebSearch
 ---
 

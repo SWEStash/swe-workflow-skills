@@ -1,7 +1,6 @@
 ---
 name: infrastructure-as-code
 description: "Write and review IaC with Terraform, CloudFormation, Pulumi, or CDK — modularity, security, state management. Triggers: Terraform, CloudFormation, Pulumi, infrastructure as code, IaC, provision, cloud resources, terraform module, state management, terraform plan, CDK, drift, remote state."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

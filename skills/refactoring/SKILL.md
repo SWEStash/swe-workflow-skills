@@ -1,7 +1,6 @@
 ---
 name: refactoring
 description: "Systematic code improvement via design principles, smell detection, and safe transformation patterns. Triggers: refactor this, clean this up, simplify this code, reduce complexity, extract this, this code is messy, tech debt, improve this code, code smell, rename, extract function, dead code."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

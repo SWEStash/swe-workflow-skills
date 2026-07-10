@@ -1,7 +1,6 @@
 ---
 name: bug-investigating
 description: "Systematic debugging and root cause analysis using structured methodology — reproduce, isolate, hypothesize, verify. Triggers: this doesn't work, I'm getting an error, something is broken, bug, debug this, why is this happening, unexpected behavior, regression, root cause, stack trace, error message."
-model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

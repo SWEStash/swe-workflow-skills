@@ -1,7 +1,6 @@
 ---
 name: brainstorming
 description: "Facilitate divergent ideation before committing to a spec — Socratic questioning, widening the option space, challenging assumptions and inherited constraints, then converging on candidates. Triggers: brainstorm, let's explore ideas, what are our options, help me think through, generate ideas, what could we build, not sure what I want, explore approaches, ideate. Once ideas converge, hand off to prd-writing (WHAT/WHY) or feature-planning (breakdown) — this skill opens options; those close them."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

@@ -2,7 +2,6 @@
 name: security-audit
 description: "Comprehensive security analysis — OWASP Top 10, auth/authz flows, injection vulnerabilities, data exposure, secrets detection, dependency CVEs, hardening recommendations. Reviews EXISTING code/config — design-time analysis of a system not yet built → threat-modeling."
 when_to_use: "Triggers: security audit, vulnerability, is this secure, security review, pentest prep, OWASP, harden this, check for vulnerabilities, injection, XSS, CSRF, auth security."
-model: opus
 context: fork
 agent: general-purpose
 allowed-tools: Read, Grep, Glob, Write, Edit, WebFetch, WebSearch

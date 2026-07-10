@@ -1,7 +1,6 @@
 ---
 name: accessibility-design
 description: "Design and implement accessible web/mobile apps to WCAG 2.1/2.2 — semantic HTML, ARIA patterns, keyboard navigation, focus management, color contrast, screen readers, accessible forms. Triggers: accessibility, a11y, WCAG, screen reader, keyboard navigation, ARIA, focus management, color contrast, alt text, semantic HTML, tab order, focus trap, skip link, announce. Build it in, don't bolt it on."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

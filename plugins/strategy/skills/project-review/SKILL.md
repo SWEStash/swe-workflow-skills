@@ -2,7 +2,6 @@
 name: project-review
 description: "Review a built project's execution health before a milestone — scope alignment, roadmap / execution-plan adherence, implementation maturity (what's production-ready vs stub/deferred), and the evidence it actually works (tests, coverage, validation results, changelog). Use strategic-review for vision/positioning/market; technical-debt-review for a pure code-health audit."
 when_to_use: "Triggers: project review, execution review, are we on track, implementation vs roadmap, scope drift, readiness review, what's actually built, validation results review, pre-launch review."
-model: opus
 context: fork
 agent: general-purpose
 allowed-tools: Read, Grep, Glob, WebFetch, Write, Edit

@@ -1,7 +1,6 @@
 ---
 name: compliance-privacy
 description: "Engineer for regulatory and privacy obligations — GDPR/CCPA privacy-by-design, PII data mapping and minimization, retention and deletion (right to erasure), data subject requests, consent, SOC 2 controls (access, change management, audit logging). Triggers: GDPR, CCPA, SOC 2, HIPAA, compliance, privacy review, PII, personal data, data retention, right to be forgotten, DSR, audit requirements, are we compliant. Vulnerabilities in code → security-audit; attack analysis of a design → threat-modeling."
-model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, WebFetch, WebSearch
 ---
 

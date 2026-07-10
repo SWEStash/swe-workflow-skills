@@ -1,7 +1,6 @@
 ---
 name: verification-before-completion
 description: "Evidence gate before claiming work is done, passing, fixed, or deployed. Use before saying 'done', 'it works', or 'tests pass', or before committing, pushing, or opening a PR. Triggers: is it done, did it work, tests pass, verify, ready to commit, before I push, confirm the fix. Run the proving command fresh and read its output first."
-model: haiku
 allowed-tools: Read, Grep, Glob, Bash
 ---
 

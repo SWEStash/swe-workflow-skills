@@ -1,7 +1,6 @@
 ---
 name: threat-modeling
 description: "Design-time security analysis of a system or feature before it's built — trust boundaries, attack surface, STRIDE per element, abuse cases, prioritized mitigations that become security requirements. Triggers: threat model, STRIDE, trust boundary, attack surface, what could go wrong security-wise, security design review, abuse case, secure this design, security requirements. Reviewing EXISTING code/config for vulnerabilities → security-audit; use this skill while the design is still on the whiteboard."
-model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

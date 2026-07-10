@@ -1,7 +1,6 @@
 ---
 name: architecture-documentation
 description: "Design and maintain architecture documentation with multi-level diagrams (C4) and docs-as-code. Triggers: architecture diagram, document the architecture, C4 diagram, system context, container diagram, component diagram, architecture docs, docs-as-code, PlantUML, Structurizr, D2, Mermaid architecture, infrastructure diagram, runtime flow. Use architecture-design for ADRs."
-model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

@@ -1,7 +1,6 @@
 ---
 name: ui-ux-design
 description: "Design user experiences from an engineer's perspective — user flows, wireframes, interaction patterns, responsive strategy, navigation, loading/error/empty states. Triggers: design the UI, user flow, wireframe, how should this screen look, loading state, error state, empty state, responsive design, navigation, page layout, form design, mockup."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

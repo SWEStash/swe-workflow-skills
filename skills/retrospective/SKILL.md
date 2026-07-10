@@ -1,7 +1,6 @@
 ---
 name: retrospective
 description: "Facilitate sprint retros, project post-mortems, and incident post-mortems with actionable, owned improvements. Triggers: retrospective, retro, post-mortem, postmortem, lessons learned, what went wrong, what went well, incident review, blameless, action items, sprint review, after action review."
-model: haiku
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

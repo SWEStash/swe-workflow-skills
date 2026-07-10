@@ -1,7 +1,6 @@
 ---
 name: llm-app-engineering
 description: "Design and build LLM-powered applications — prompt and context engineering, RAG architecture (chunking, hybrid retrieval, reranking, grounded prompts), agent design (tool surfaces, planning, sub-agents), and memory. Triggers: build a chatbot, LLM app, AI assistant, prompt engineering, system prompt, RAG design, chunking, embeddings, vector database, semantic search, AI agent, tool calling, agent memory, context window, hallucinations. Measuring quality → ai-evaluation; model serving/inference infra → ml-model-deployment."
-model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

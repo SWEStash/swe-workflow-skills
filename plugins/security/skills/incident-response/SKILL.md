@@ -1,7 +1,6 @@
 ---
 name: incident-response
 description: "Structured production incident workflow — triage, mitigation, investigation, recovery, comms. Triggers: production is down, site is down, incident, outage, users seeing errors, on-call, alert fired, p0, p1, sev1, sev2, broken in prod, rollback, emergency deploy. For active incidents under time pressure."
-model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

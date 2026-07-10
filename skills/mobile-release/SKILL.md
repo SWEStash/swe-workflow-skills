@@ -1,7 +1,6 @@
 ---
 name: mobile-release
 description: "Ship mobile apps through the app stores — signing and provisioning, store review and rejection handling, phased/staged rollouts with halt criteria, crash monitoring, versioning and build numbers, beta channels (TestFlight, Play tracks), forced updates, and the no-instant-rollback reality of mobile. Triggers: app store release, publish to App Store, Play Store, TestFlight, staged rollout, app review rejected, code signing, provisioning profile, mobile release, hotfix a mobile bug. General semver/registry/library publishing → release-management."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash, WebFetch, WebSearch
 ---
 

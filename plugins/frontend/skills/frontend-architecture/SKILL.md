@@ -1,7 +1,6 @@
 ---
 name: frontend-architecture
 description: "Design frontend architecture — React component hierarchy, state management, design tokens, data fetching, routing, error boundaries, code organization. Triggers: component architecture, state management, design system, design tokens, component library, React structure, folder structure, Zustand vs Redux, React Query, code splitting, error boundary, compound component."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

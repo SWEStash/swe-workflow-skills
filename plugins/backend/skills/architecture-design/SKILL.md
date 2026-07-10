@@ -1,7 +1,6 @@
 ---
 name: architecture-design
 description: "Guide architectural and structural decisions using Architecture Decision Records (ADRs) — new services, pattern choices, database selection, component boundaries, state management, costly-to-reverse decisions. Triggers: how should I architect, which pattern, design decision, should I use X or Y, system design, ADR, component design, architectural trade-off. Owns internal-structure decisions — build vs buy/adopt a vendor or OSS capability → build-vs-buy."
-model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

@@ -2,7 +2,6 @@
 name: code-reviewing
 description: "Structured code reviews enforcing DRY, KISS, YAGNI, SRP, best practices, and project conventions."
 when_to_use: "Triggers: review this code, code review, check my code, what do you think of this implementation, review this PR, is this code good, feedback on my code, review staged changes before commit."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

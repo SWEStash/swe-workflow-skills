@@ -1,7 +1,6 @@
 ---
 name: ml-model-deployment
 description: "Deploy ML models to production — serving infrastructure, monitoring, drift detection, safe rollouts. Triggers: deploy model, serve model, model API, model monitoring, data drift, concept drift, model degradation, A/B test model, canary model, inference endpoint, prediction API, retrain trigger."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

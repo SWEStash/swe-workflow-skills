@@ -107,13 +107,20 @@ is preferred.)
 
 ## Frontmatter Fields
 
-All fields are optional except that `description` is strongly recommended. The two we
+All fields are optional except that `description` is strongly recommended. The one we
 set on every skill:
 
 | Field | Purpose | Used in this repo |
 |---|---|---|
-| `model` | Pin a default model when the skill activates | `haiku` for cheap formatting/lookup skills, `sonnet` for most design/review work, `opus` for deep multi-step reasoning (architecture, security audit, debt review, RCA) |
 | `allowed-tools` | Restrict tools the skill can call | Most skills use `Read, Grep, Glob, Write, Edit`. Implementation- or infra-adjacent skills add `Bash`. Research-oriented skills (dependency-management, security-audit) add `WebFetch, WebSearch`. |
+
+**Do not set `model`.** For inline skills the frontmatter `model` field is ignored at
+runtime (anthropics/claude-code#45191, closed not-planned), so a pin is dead metadata.
+For `context: fork` skills the pin *is* applied to the subagent — which is worse: it
+overrides the user's session-model choice, ties the fork to that model's per-model
+quota bucket (an `opus` pin can be refused on the monthly spend limit while the main
+session still has quota), and fails outright for plans or org allowlists without that
+model. Omit the field; skills inherit the session model everywhere.
 
 **Security rule for tool grants:** do not combine reading *untrusted content* (an
 arbitrary repo, a fetched page, a user-supplied file) with network tools

@@ -1,7 +1,6 @@
 ---
 name: project-proposal
 description: "Write lightweight project proposals for budget approval and go/no-go decisions — problem, business case, scope, rough estimates, risks, success criteria. Triggers: project proposal, project brief, business case, budget estimate, should we build this, go/no-go, risk assessment, cost-benefit, ROI, justify this project, stakeholder approval."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

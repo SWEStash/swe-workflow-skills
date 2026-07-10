@@ -1,7 +1,6 @@
 ---
 name: finops-cost-optimization
 description: "Understand and reduce cloud spend — cost visibility and allocation (tagging, ownership), unit economics, rightsizing, autoscaling, commitment discounts (reserved instances, savings plans), storage/egress traps, architecture cost review, budgets and anomaly alerts. Triggers: cloud costs, AWS bill, cut costs, cost optimization, FinOps, why is our bill so high, rightsizing, reserved instances, savings plan, egress fees, cost per customer. Whether to build or buy a capability → build-vs-buy; making code faster → performance-optimization."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash, WebFetch, WebSearch
 ---
 

@@ -1,7 +1,6 @@
 ---
 name: subagent-orchestration
 description: "Decompose big or parallelizable work across subagents — when to fan out vs stay solo, scoping self-contained sub-tasks, prompting agents that don't share your context, isolating parallel edits (git worktrees), skeptically verifying and synthesizing results you didn't produce. Triggers: use subagents, parallelize this, fan out, orchestrate agents, multi-agent, spawn agents, worktree, delegate to agents, split this across agents, agent team. Sequencing checkpoints of an approved plan → plan-execution (orchestration parallelizes within its batches)."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

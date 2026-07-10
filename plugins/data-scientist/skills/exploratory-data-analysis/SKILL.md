@@ -2,7 +2,6 @@
 name: exploratory-data-analysis
 description: "Explore and profile an unfamiliar dataset before modeling or analysis — structural profiling, missingness structure, distributions and outliers, feature–target relationships, leakage awareness, and explicit hypothesis generation. Pipeline-level data trust (broken dashboards, tests, contracts, freshness) → data-quality; formal inference on the hypotheses → statistical-analysis."
 when_to_use: "Triggers: explore this dataset, EDA, profile the data, what's in this data, first look at the data, understand this CSV, distributions, outliers, missing values, correlation, data leakage."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

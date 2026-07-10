@@ -1,7 +1,6 @@
 ---
 name: data-pipeline-design
 description: "Design batch and streaming data pipelines — ELT into a warehouse/lakehouse, dbt and analytics engineering (staging/intermediate/marts layers), orchestration with Airflow or Dagster, idempotent loads, incremental models, backfills, CDC ingestion. Triggers: data pipeline, ELT, ETL, dbt models, data warehouse, Snowflake, BigQuery, ingest into the warehouse, Airflow DAG, Dagster, Kafka streaming, backfill, incremental load, nightly job duplicates rows. ML training/feature pipelines → ml-pipeline-design; validating the data → data-quality."
-model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

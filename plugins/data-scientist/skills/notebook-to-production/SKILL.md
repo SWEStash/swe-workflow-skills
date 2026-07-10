@@ -2,7 +2,6 @@
 name: notebook-to-production
 description: "Refactor analysis notebooks into production-grade code — triage what deserves productionizing, extract modules with tests, parameterize hardcoded values, pin environments for reproducibility, and schedule unattended runs with alerting. Owns general analysis/reporting notebooks; notebooks that feed model TRAINING (feature engineering + training DAGs, scheduled retraining) → ml-pipeline-design."
 when_to_use: "Triggers: productionize this notebook, notebook to script, notebook to module, refactor my notebook, parameterize notebook, papermill, schedule this analysis, reproducible analysis, notebook is a mess."
-model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

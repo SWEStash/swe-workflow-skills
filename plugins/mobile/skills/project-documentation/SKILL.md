@@ -2,7 +2,6 @@
 name: project-documentation
 description: "Write and maintain project docs — README, contributing guides, API docs, changelogs, inline docs."
 when_to_use: "Triggers: write a README, document this project, create documentation, contributing guide, changelog, API docs, how do I document, this needs docs, onboarding docs, JSDoc, docstrings."
-model: haiku
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

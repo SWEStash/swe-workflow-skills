@@ -1,7 +1,6 @@
 ---
 name: deployment-repo
 description: "Design a deployment (GitOps) repo that orchestrates multiple services in a polyrepo — version pinning, environment promotion, compatibility matrices, system config. Triggers: deployment repo, GitOps repo, polyrepo, multi-repo, version pinning, compatibility matrix, environment promotion, multi-service deployment, orchestration repo, which versions work together."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

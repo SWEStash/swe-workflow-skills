@@ -1,7 +1,6 @@
 ---
 name: release-management
 description: "Cut and publish software releases right-sized to the project — semver decisions, changelogs, tagging, automated version bumps (release-please, changesets, semantic-release), publishing gates, npm/PyPI/container registry publishing, pre-release channels, monorepo versioning. Triggers: cut a release, release this, publish to npm, publish to PyPI, publish this package, version bump, what version should this be, semver, changelog, tag a release, release notes, GitHub release, prerelease, release automation, release PR. Deploy-time safety → deployment-checklist; commit/PR hygiene → git-workflow."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
