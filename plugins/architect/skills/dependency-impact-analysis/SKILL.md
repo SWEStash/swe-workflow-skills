@@ -1,7 +1,6 @@
 ---
 name: dependency-impact-analysis
 description: "Map the blast radius of a change before implementing — find dependents, classify breaking vs additive, identify coordination needs, produce a propagation plan. Triggers: what will break if I change this, blast radius, impact analysis, breaking change, who depends on this, downstream impact, safe to rename, shared schema change, dependency graph."
-model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

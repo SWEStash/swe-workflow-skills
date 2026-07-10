@@ -2,7 +2,6 @@
 name: technical-debt-review
 description: "Strategic codebase health assessment — identify hotspots, categorize debt, produce remediation roadmap."
 when_to_use: "Triggers: technical debt, tech debt, debt review, codebase health, hotspots, debt assessment, remediation plan, what should we fix first, debt roadmap, code rot, legacy code audit."
-model: opus
 context: fork
 agent: general-purpose
 allowed-tools: Read, Grep, Glob, Write, Edit

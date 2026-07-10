@@ -1,7 +1,6 @@
 ---
 name: mobile-architecture
 description: "Design mobile app architecture — native (Swift/Kotlin) vs cross-platform (React Native/Flutter) selection, navigation and deep linking, state management, offline-first design and data sync, local persistence, push notifications, platform constraints (background work, battery, permissions). Triggers: mobile app architecture, iOS app, Android app, React Native or Flutter, offline first, data sync, mobile state management, deep linking, push notifications, app structure. Web SPA component architecture → frontend-architecture."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

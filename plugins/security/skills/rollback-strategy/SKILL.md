@@ -1,7 +1,6 @@
 ---
 name: rollback-strategy
 description: "Design safe rollback plans before deploying — identify irreversible changes, classify rollback complexity, create tested undo procedures. Triggers: rollback plan, rollback strategy, how do I undo this, can we revert, what if the deploy fails, safe to deploy, feature flag rollout, blue-green, database migration rollback, irreversible change."
-model: haiku
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

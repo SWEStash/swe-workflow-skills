@@ -1,7 +1,6 @@
 ---
 name: cicd-pipeline
 description: "Design CI/CD pipelines for automated build, test, deploy — GitHub Actions, GitLab CI, quality gates. Triggers: CI/CD, pipeline, GitHub Actions, GitLab CI, workflow, automated deployment, build pipeline, continuous integration, continuous deployment, automate tests on PR, deploy automatically, quality gate."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

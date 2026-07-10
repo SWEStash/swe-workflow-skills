@@ -1,7 +1,6 @@
 ---
 name: browser-verification
 description: "Verify a web app change by driving the real UI in a browser — reproduce the user flow end to end, watch console errors and network failures, exercise loading/error/empty states, capture screenshots as evidence. Use before claiming a UI change works. Triggers: check it in the browser, verify the UI, click through the flow, console errors, test it like a user, smoke test the frontend. Designing persistent test suites → test-suite-design; the generic done-gate → verification-before-completion (this is its browser-specific practice)."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

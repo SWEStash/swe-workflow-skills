@@ -1,7 +1,6 @@
 ---
 name: code-archaeology
 description: "Understand unfamiliar or legacy code before changing it — map entry points, mine git history (blame, churn, log -S), trace data flow, recover the why behind odd code, pin current behavior with characterization tests, find seams for safe change. Triggers: understand this codebase, legacy code, inherited this project, what does this code do, why is it written this way, nobody knows how this works, onboard to this repo, is it safe to change this. Prioritizing debt → technical-debt-review; improving code you already understand → refactoring."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

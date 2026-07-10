@@ -1,7 +1,6 @@
 ---
 name: performance-optimization
 description: "Identify and resolve performance bottlenecks via static analysis — N+1 queries, algorithmic complexity, query optimization, caching, memory leaks, bundle size, connection management. Triggers: this is slow, optimize, performance, N+1, query optimization, caching, bundle size, memory leak, latency, response time, scale, bottleneck."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

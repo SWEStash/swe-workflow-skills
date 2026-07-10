@@ -1,7 +1,6 @@
 ---
 name: data-quality
 description: "Keep warehouse and pipeline data trustworthy — dbt tests, expectations (Great Expectations/Soda), data contracts with upstream producers, source freshness, schema-drift and volume anomaly detection, lineage and blast radius, severity and alerting. Triggers: data quality, bad data in dashboards, data validation, dbt tests, data contract, schema drift, stale data, freshness check, duplicate rows, nulls in the warehouse, data lineage, data SLA, upstream schema change broke us. Generating test/synthetic data → test-data-strategy; schema design → data-modeling."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

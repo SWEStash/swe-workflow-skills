@@ -1,7 +1,6 @@
 ---
 name: prd-writing
 description: "Write lightweight agile PRDs and technical RFCs that align stakeholders before implementation. Triggers: PRD, product requirements, RFC, request for comments, technical design doc, design document, tech spec, write requirements, what are we building, spec this out. Produces the WHAT and WHY — feature-planning handles HOW."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

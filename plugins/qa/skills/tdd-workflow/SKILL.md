@@ -1,7 +1,6 @@
 ---
 name: tdd-workflow
 description: "Guide test-driven development with red-green-refactor. Triggers: use tdd, test first, write the tests, red green refactor, test-driven, what should I test, write tests before code, failing test, implement using TDD. For NEW code via test-first — use test-suite-design for adding tests to existing code."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

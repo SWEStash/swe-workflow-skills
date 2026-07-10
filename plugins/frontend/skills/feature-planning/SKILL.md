@@ -1,7 +1,6 @@
 ---
 name: feature-planning
 description: "Break features into well-scoped tasks with acceptance criteria, risk assessment, and dependency mapping. Triggers: plan this, break this down, scope this feature, create tasks for, sprint planning, how should I implement this feature, user stories, acceptance criteria, dependency mapping, feature breakdown. Creates the plan — executing an already-approved plan checkpoint by checkpoint → plan-execution."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

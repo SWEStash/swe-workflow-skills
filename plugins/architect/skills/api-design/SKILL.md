@@ -1,7 +1,6 @@
 ---
 name: api-design
 description: "Design RESTful and GraphQL APIs — endpoint naming, request/response contracts, error handling, pagination, versioning, auth patterns, OpenAPI specs. Triggers: design the API, API contract, REST API, GraphQL schema, error response format, pagination, API versioning, OpenAPI, swagger, endpoints. Use architecture-design for REST-vs-GraphQL or monolith-vs-microservices decisions."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

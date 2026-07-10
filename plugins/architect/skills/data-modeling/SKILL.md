@@ -1,7 +1,6 @@
 ---
 name: data-modeling
 description: "Design database schemas, relationships, indexes, and migration strategies — relational and document stores. Triggers: data model, schema design, ER diagram, database schema, table design, foreign key, index strategy, normalization, denormalization, migration plan, document model, partition key."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

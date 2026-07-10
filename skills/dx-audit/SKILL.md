@@ -1,7 +1,6 @@
 ---
 name: dx-audit
 description: "Audit and improve developer experience — inner-loop feedback (build/test/reload times), CI wait and queue times, flaky tests, local environment setup, onboarding time-to-first-PR, tooling friction, docs discoverability; produce a prioritized remediation plan. Triggers: developer experience, DX audit, devex, builds are slow, CI takes forever, flaky tests, onboarding takes weeks, tooling friction, developer productivity, engineers are frustrated. Code health/debt hotspots → technical-debt-review; designing one pipeline → cicd-pipeline."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

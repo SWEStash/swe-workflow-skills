@@ -1,7 +1,6 @@
 ---
 name: deployment-checklist
 description: "Pre-deploy verification and release safety checks — config, migrations, monitoring, rollback readiness, comms. Triggers: deployment checklist, ready to deploy, pre-deploy, release checklist, go-live, ship checklist, deploy safety, is this safe to ship, release readiness."
-model: haiku
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

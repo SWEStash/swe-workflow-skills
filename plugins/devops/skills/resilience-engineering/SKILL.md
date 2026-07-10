@@ -1,7 +1,6 @@
 ---
 name: resilience-engineering
 description: "Design systems that survive failure — failure-mode analysis, resilience patterns (timeouts, retries with backoff, circuit breakers, bulkheads, load shedding, graceful degradation), chaos experiments, disaster recovery with RTO/RPO, backup restore testing, game days. Triggers: chaos engineering, disaster recovery, DR plan, what if the database goes down, single point of failure, failover, circuit breaker, RTO, RPO, game day, high availability. An incident happening NOW → incident-response; undoing a bad deploy → rollback-strategy."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

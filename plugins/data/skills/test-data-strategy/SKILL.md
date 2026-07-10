@@ -1,7 +1,6 @@
 ---
 name: test-data-strategy
 description: "Design and generate test data — factories, synthetic data, property-based testing, boundary analysis, contract testing, load scenarios, GDPR-safe data. Triggers: test data, synthetic data, fake data, factory, seed data, fixtures, property-based testing, fuzz testing, boundary values, contract testing, Pact, load test data, anonymize, GDPR test data."
-model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

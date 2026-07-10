@@ -2,7 +2,6 @@
 name: effort-estimation
 description: "Estimate engineering effort with agile techniques — story points, t-shirt sizing, three-point estimation, capacity planning."
 when_to_use: "Triggers: estimate this, how long will this take, story points, t-shirt sizing, effort estimation, capacity planning, sprint planning, budget estimate, forecast, velocity, when will this be done."
-model: haiku
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

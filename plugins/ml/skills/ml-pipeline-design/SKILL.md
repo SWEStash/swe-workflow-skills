@@ -2,7 +2,6 @@
 name: ml-pipeline-design
 description: "Design reproducible ML training and data pipelines — ingestion, validation, feature engineering, training, evaluation, continuous training orchestration. Analytics/BI ELT and dbt warehouse pipelines → data-pipeline-design; refactoring general analysis/reporting notebooks (no model training) to production code → notebook-to-production."
 when_to_use: "Triggers: training pipeline, ML data pipeline, feature engineering, ETL for ML, continuous training, data validation, feature store, preprocessing, notebook to training pipeline, orchestrate training, Kubeflow, pipeline DAG, point-in-time features."
-model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

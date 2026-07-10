@@ -2,7 +2,6 @@
 name: strategic-review
 description: "Review a project's strategic position before going public, launching, or raising — vision, mission, value proposition, scope positioning, the defensible wedge, and a live competitive / market comparative analysis. Use project-review for execution/roadmap/implementation health; delegates deep market scans to deep-research."
 when_to_use: "Triggers: strategic review, positioning, go public, go-to-market, market analysis, competitive landscape, value proposition, is there a moat, who are our competitors, platform absorption risk, market positioning, comparable products."
-model: opus
 context: fork
 agent: general-purpose
 allowed-tools: Read, Grep, Glob, WebFetch, WebSearch, Write, Edit

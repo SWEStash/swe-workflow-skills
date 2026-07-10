@@ -2,7 +2,6 @@
 name: statistical-analysis
 description: "Design and analyze experiments and statistical tests — test selection with stated assumptions, sample size and power, effect sizes and confidence intervals over bare p-values, and pitfall discipline (multiple comparisons, p-hacking, peeking/optional stopping). Owns experiment statistics generally; live A/B evaluation of AI/LLM apps (quality metrics, judges, feedback) → ai-evaluation."
 when_to_use: "Triggers: hypothesis test, t-test, chi-square, p-value, statistical significance, confidence interval, sample size, power analysis, design an experiment, A/B test, multiple comparisons, is this difference real."
-model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

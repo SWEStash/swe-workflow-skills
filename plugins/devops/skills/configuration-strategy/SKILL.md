@@ -1,7 +1,6 @@
 ---
 name: configuration-strategy
 description: "Design environment configuration, secrets management, and feature-flag hierarchy for a service or feature. Triggers: config strategy, environment variables, .env, secrets management, feature flag, config hierarchy, config precedence, twelve-factor config, environment-specific settings."
-model: haiku
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

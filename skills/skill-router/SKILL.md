@@ -2,7 +2,6 @@
 name: skill-router
 description: "Orchestrator and entry point for the swe-workflow skills library — consult FIRST when starting any non-trivial software task; most skills load name-only and only activate when invoked here. Routes intent to the right skill(s) and invokes them by name; shows the Golden Path chains."
 when_to_use: "Triggers: starting a feature, planning, an architecture or design decision, implementing, debugging, reviewing, refactoring, testing, security, deployment, an incident, shipping, or unsure which skill fits."
-model: haiku
 allowed-tools: Read, Grep, Glob, Skill
 ---
 

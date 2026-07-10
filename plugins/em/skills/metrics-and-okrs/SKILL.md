@@ -1,7 +1,6 @@
 ---
 name: metrics-and-okrs
 description: "Define OKRs, KPIs, success metrics, and engineering health metrics (DORA). Triggers: OKR, KPI, metrics, success metrics, key results, objectives, measure success, DORA metrics, engineering metrics, velocity, cycle time, deployment frequency, how do we measure, what should we track."
-model: haiku
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 

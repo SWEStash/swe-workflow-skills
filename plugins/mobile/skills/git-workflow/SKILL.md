@@ -2,7 +2,6 @@
 name: git-workflow
 description: "Write commit messages, PR descriptions, and manage branching strategy following conventional commits."
 when_to_use: "Triggers: write a commit message, commit this, PR description, pull request, branching strategy, git workflow, squash commits, rebase, conventional commits, how should I commit this, review staged changes."
-model: haiku
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
