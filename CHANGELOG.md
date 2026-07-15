@@ -5,6 +5,13 @@ All notable changes to this project are documented here. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as defined in
 [docs/RELEASING.md](docs/RELEASING.md).
 
+## [0.5.2](https://github.com/SWEStash/swe-workflow-skills/compare/v0.5.1...v0.5.2) (2026-07-15)
+
+
+### Changed
+
+* truth-up positioning + routing benchmark (competitive-analysis follow-through) ([#12](https://github.com/SWEStash/swe-workflow-skills/issues/12)) ([dfb6e29](https://github.com/SWEStash/swe-workflow-skills/commit/dfb6e293e1eba33e7e36911f4b4e82105c96c0f6))
+
 ## [0.5.1](https://github.com/SWEStash/swe-workflow-skills/compare/v0.5.0...v0.5.1) (2026-07-10)
 
 
