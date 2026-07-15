@@ -206,8 +206,8 @@ the API key is absent — like `skill-evals.yml`).
 
 ### Results (haiku) and the haiku recommendation
 
-Full in-session run on `claude-haiku-4-5` over all 124 cases (2026-07,
-65-skill catalog):
+Full run on `claude-haiku-4-5` over all 124 cases (2026-07, 65-skill catalog) —
+this is the committed CI baseline (`evals/routing-baseline.json`):
 
 | Layer 2 metric | Result |
 |---|---|
@@ -226,12 +226,10 @@ both directions (`ml-pipeline-design`'s reporting-notebook boundary →
 `incident-response`, `incident-response`/`refactoring`/`strategic-review`
 boundaries → `NONE`).
 
-(`routing-baseline.json` still records an earlier keyed run; cases added since
-can't regress in CI until the next
-`python evals/routing.py --run --update-baseline -k 3` refresh, so the
-in-session full run above is the interim reference. An earlier, smaller-catalog
-baseline run scored the same clean sweep on layer 2 with a 0.75 layer-3
-invocation rate.)
+(`routing-baseline.json` now records exactly this full 124-case run — refreshed
+2026-07 via the in-session runner — so every case gates in CI. An earlier,
+smaller-catalog baseline scored the same clean sweep on layer 2 but only a 0.75
+layer-3 invocation rate; this run clears layer 3 at 8/8.)
 
 **Haiku recommendation: keep haiku.** A clean sweep of layer 2 — perfect top-1,
 perfect boundary discrimination, zero false activations, zero confusion — now
@@ -252,8 +250,8 @@ routing eval until GREEN. This is the `writing-skills` baseline→counter loop w
 routing accuracy as the metric; descriptions are the shared tuning surface for both
 routing (the catalog) and direct auto-trigger, so one improvement pays twice.
 
-The current suite has **zero natural misroutes** (41/41, 28/28, 0 confusion), so
-there is no live RED to fix. Exercising the loop synthetically (degrade one skill's
+The current suite has **zero natural misroutes** (64/64 positive, 52/52 boundary,
+0 confusion — the committed CI baseline), so there is no live RED to fix. Exercising the loop synthetically (degrade one skill's
 `description`, regenerate the catalog, re-run that case) surfaced a finding worth
 recording:
 
@@ -275,3 +273,38 @@ when-to-use / when-NOT-to-use instructions in the description are the lever that
 actually steers it**. Descriptions still matter more for the pinned/auto-trigger
 path and for genuinely ambiguous-named skills; for routing on haiku, prefer
 instruction-style disambiguation over keyword stuffing.
+
+## Interop with Anthropic's skill-creator
+
+Anthropic's official `skill-creator` plugin (`claude-plugins-official`) now ships a
+per-skill eval loop, and it overlaps ours by design — both keep test cases in
+`evals/evals.json` *inside the skill directory*, both compare the skill loaded vs
+absent, and both judge with an LLM. The two are complementary, not competing: use
+skill-creator to author and tune one skill; use this harness to **gate a whole catalog
+in CI**. The overlap and the gaps:
+
+| Capability | skill-creator | this repo |
+|---|---|---|
+| Eval cases in `evals/evals.json` inside the skill dir | yes | yes (fixed 3: happy / edge / scope-boundary) |
+| With-skill vs without-skill comparison | `benchmark.json` (pass rate, time, tokens) | RED/GREEN gap in `run.py` (GREEN ≥ RED) |
+| LLM-as-judge grading | per-run `grading.json` | centralized in `run.py`, **majority-of-k** voting |
+| Description / trigger tuning | generates should/should-not-trigger prompts, measures hit rate, proposes edits | mined into the **routing** dataset (positive + boundary cases) |
+| Blind A/B of two skill versions | yes | no (out of scope) |
+| **CI regression-vs-baseline gate** | **no** (validate is structural only) | **yes** — content *and* routing, gated in CI |
+| **Catalog-level routing evals** ("which of N skills activates") | **no** (per-skill only) | **yes** — the routing harness above |
+| Pressure tests (adversarial rationalization) | no | yes, on hardened skills |
+
+**Schema mapping.** Our `evals.json` is a superset-compatible shape: `{ skill_name,
+evals: [{ id, prompt, expected_output, assertions[] }], pressure_tests? }`. `prompt`
+maps directly to skill-creator's test prompt; `expected_output` is the "what good looks
+like" prose; `assertions` are the binary judge criteria (skill-creator folds both into
+its grading rubric). We deliberately keep **no** `grading.json` / `benchmark.json` in the
+repo — grading logic lives in `run.py` so it can enforce regression-vs-baseline rather
+than an absolute threshold (see [Metrics & gate](#metrics--gate)). A skill authored here
+runs under skill-creator unchanged; the reverse needs only the 3-eval happy/edge/boundary
+contract and (for hardened skills) a `pressure_tests` block.
+
+**Positioning.** skill-creator is the better *authoring* and single-skill tuning tool;
+this harness is the **CI regression gate and catalog-level routing evaluator it doesn't
+provide**. The natural division of labor: tune a skill's description with skill-creator,
+then let `run.py` + `routing.py` keep it — and the other 64 — from regressing on every PR.

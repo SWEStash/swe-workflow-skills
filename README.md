@@ -18,25 +18,34 @@ LLM-as-judge eval harness.
 
 ## Why this library
 
-Not just a pile of skills — an activation architecture, an eval discipline, and
-full-SDLC breadth that popular collections don't cover:
+Not just a pile of skills — a routing layer over Claude Code's native skill
+activation, an eval discipline, and full-SDLC breadth that popular collections
+don't cover:
 
 - **An orchestrator, not auto-trigger roulette.** A `skill-router` skill maps your
-  intent to the right skill(s) and chains them across phases. Activation is *routed and
-  deterministic*, not left to fuzzy auto-triggering — the routing eval harness measures
-  it (top-1 accuracy 1.00, zero misroutes on the current baseline, regression-gated in
-  CI).
-- **Scales past Claude's skill-listing budget.** Claude Code only injects skill
-  descriptions up to ~1% of context, so large libraries silently stop triggering past
-  ~20–40 skills. This library keeps only the router + safety skills "loud" and lists the
-  rest **name-only** — the mechanism Claude Code's own docs now recommend for large
-  installs — so the router can invoke every skill by name, with no cropping and without
-  making you pre-pick a subset ([how it works](docs/ROLES.md)).
+  intent to the right skill(s) and chains them across phases. Community measurements put
+  Claude's own description-based auto-triggering at roughly a coin flip to ~84%; here
+  activation is *routed and deterministic* instead, and the routing eval harness measures
+  it (top-1 accuracy 1.00, zero misroutes on the committed baseline, regression-gated in
+  CI) — see the [routing benchmark](docs/ROUTING-BENCHMARK.md). This is the one thing the
+  platform still doesn't do for you.
+- **Every skill stays reachable, no pre-picking.** Claude Code injects skill descriptions
+  only up to ~1% of context, so large libraries silently stop auto-triggering past ~20–40
+  skills. The fix is Claude Code's own **`name-only`** state (its docs recommend it for
+  low-priority skills); this library just applies it wholesale — keeping the router +
+  safety skills "loud" and listing the rest name-only — so the router can still invoke
+  every skill by name, with no cropping and without making you pre-pick a subset
+  ([how it works](docs/ROLES.md)).
 - **Tested like code, not prose.** Every skill ships 3 evals; two LLM-as-judge
   harnesses (content quality and routing accuracy) replay them with skill loaded vs
   absent and gate regressions in CI. Safety-critical skills (deploys, releases, tests,
   incidents, security) are **hardened**: an Iron Law, a rationalization table distilled
   from real baseline failures, and pressure tests that try to talk the agent out of it.
+- **Curated, not a mega-catalog.** First-party skills, versioned and eval-gated in the
+  repo — no arbitrary third-party skills pulled from a hub, and nothing that executes on
+  its own (the content is instructions and templates; the only code is the open Node
+  installer). In an ecosystem where researchers have flagged hundreds of malicious
+  community skills, curated-and-reviewed is itself a feature — see [SECURITY.md](SECURITY.md).
 - **Full-SDLC breadth.** Planning, architecture/ADRs, API and data design, TDD, review,
   security, releases, deploys, GitOps, observability, incidents, MLOps, LLM apps
   and AI evaluation, data pipelines and data quality, and the PM/strategy work
@@ -161,6 +170,7 @@ review) live in the `skill-router` skill and **[ROLES.md](docs/ROLES.md)**.
 - **[INSTALL-MATRIX.md](docs/INSTALL-MATRIX.md)** — every install method × surface, side by side.
 - **[SKILLS.md](docs/SKILLS.md)** — the full skill catalog by area.
 - **[EVALS.md](docs/EVALS.md)** — how the skills are tested (RED/GREEN, pressure tests, CI gate).
+- **[ROUTING-BENCHMARK.md](docs/ROUTING-BENCHMARK.md)** — the routing reliability numbers, methodology, and how to reproduce them.
 - **[AUTHORING.md](docs/AUTHORING.md)** — write or modify a skill (descriptions, budget, progressive disclosure, evals).
 - **[RELEASING.md](docs/RELEASING.md)** — versioning policy and how to cut a release. Changes are tracked in **[CHANGELOG.md](CHANGELOG.md)**.
 - **[SECURITY.md](SECURITY.md)** — the security model: trust boundaries, what runs automatically, supply-chain guarantees, and how to report a vulnerability.

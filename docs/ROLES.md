@@ -28,7 +28,10 @@ unreliable and uncontrolled.
   `tdd-workflow`, `bug-investigating`, `incident-response`, `code-reviewing`.
 - **Every other skill is `name-only`**: listed by name, still invocable, but it
   does **not** auto-trigger and its description costs ~nothing. The listing never
-  overflows, so the window size is irrelevant.
+  overflows, so the window size is irrelevant. `name-only` is Claude Code's own
+  state — its docs recommend it for low-priority skills; the library's contribution
+  is applying it *wholesale* across the catalog and re-asserting it every session,
+  not the state itself.
 - **The orchestrator activates the rest.** `skill-router` reads the generated
   `catalog.json` (every skill's full description, with no budget pressure), matches
   your intent, and **invokes the chosen skill by name**. This replaces ~40 fragile
@@ -278,11 +281,13 @@ This is an **advanced opt-out** — it bypasses the router's method enforcement 
 that skill, so reach for it only when a skill genuinely doesn't fit how you work.
 It even works on a pinned safety skill, which just means giving up that guardrail.
 
-Why a command instead of editing `settings.local.json` by hand: the SessionStart
-hook rewrites every installed skill's `skillOverrides` entry each session, so a
-manual `off` edit is reverted at the next session boundary. The command records
-your choice in a `.disabled-skills` marker beside the skills, which the hook folds
-into the baseline every time — so the disable **persists**. (No hook installed?
+Why a command instead of editing `settings.local.json` by hand (or cycling the
+state in Claude Code's native `/skills` menu): the SessionStart hook rewrites every
+installed skill's `skillOverrides` entry each session, so a manual `off` edit — or a
+`/skills` change — is reverted at the next session boundary. The command is the
+**persistent form of what `/skills` does**: it records your choice in a
+`.disabled-skills` marker beside the skills, which the hook folds into the baseline
+every time — so the disable **persists**. (No hook installed?
 The command still writes the marker and applies it immediately; the marker is
 honored whenever the baseline is next applied.)
 
