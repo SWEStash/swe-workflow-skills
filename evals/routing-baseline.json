@@ -1,12 +1,12 @@
 {
-  "_note": "Full haiku routing baseline recorded by evals/routing-runner.mjs (in-session, Workflow tool). Refresh with `python evals/routing.py --run --update-baseline` (needs ANTHROPIC_API_KEY) or re-run the in-session runner. The gate (routing.py / routing-evals.yml) fails if any case that passed here later misroutes.",
+  "_note": "Full haiku routing baseline recorded by evals/routing-runner.mjs (in-session, Workflow tool) over the current 124-case dataset (64 positive / 52 boundary / 8 trivial). Refresh with `python evals/routing.py --run --update-baseline` (needs ANTHROPIC_API_KEY) or re-run the in-session runner. The gate (routing.py / routing-evals.yml) fails if any case that passed here later misroutes.",
   "model": "claude-haiku-4-5",
   "k": 1,
   "summary": {
     "model": "claude-haiku-4-5",
     "layer2": {
-      "n_positive": 41,
-      "n_boundary": 28,
+      "n_positive": 64,
+      "n_boundary": 52,
       "n_trivial": 8,
       "positive_accuracy": 1,
       "boundary_pass_rate": 1,
@@ -16,8 +16,8 @@
     "layer3": {
       "n_positive": 8,
       "n_trivial": 8,
-      "router_invocation_rate": 0.75,
-      "correct_invoke": 6,
+      "router_invocation_rate": 1,
+      "correct_invoke": 8,
       "over_route": 0
     }
   },
@@ -28,6 +28,14 @@
     },
     "boundary:accessibility-design:3": {
       "chosen": "accessibility-design",
+      "pass": true
+    },
+    "positive:ai-evaluation:1": {
+      "chosen": "ai-evaluation",
+      "pass": true
+    },
+    "boundary:ai-evaluation:3": {
+      "chosen": "ml-experiment-tracking",
       "pass": true
     },
     "positive:api-design:1": {
@@ -54,6 +62,22 @@
       "chosen": "architecture-design",
       "pass": true
     },
+    "positive:brainstorming:1": {
+      "chosen": "brainstorming",
+      "pass": true
+    },
+    "boundary:brainstorming:3": {
+      "chosen": "feature-planning",
+      "pass": true
+    },
+    "positive:browser-verification:1": {
+      "chosen": "browser-verification",
+      "pass": true
+    },
+    "boundary:browser-verification:3": {
+      "chosen": "test-suite-design",
+      "pass": true
+    },
     "positive:bug-investigating:1": {
       "chosen": "bug-investigating",
       "pass": true
@@ -62,8 +86,24 @@
       "chosen": "bug-investigating",
       "pass": true
     },
+    "positive:build-vs-buy:1": {
+      "chosen": "build-vs-buy",
+      "pass": true
+    },
+    "boundary:build-vs-buy:3": {
+      "chosen": "architecture-design",
+      "pass": true
+    },
     "positive:cicd-pipeline:1": {
       "chosen": "cicd-pipeline",
+      "pass": true
+    },
+    "positive:code-archaeology:1": {
+      "chosen": "code-archaeology",
+      "pass": true
+    },
+    "boundary:code-archaeology:3": {
+      "chosen": "technical-debt-review",
       "pass": true
     },
     "positive:code-reviewing:1": {
@@ -72,6 +112,14 @@
     },
     "boundary:code-reviewing:3": {
       "chosen": "code-reviewing",
+      "pass": true
+    },
+    "positive:compliance-privacy:1": {
+      "chosen": "compliance-privacy",
+      "pass": true
+    },
+    "boundary:compliance-privacy:3": {
+      "chosen": "security-audit",
       "pass": true
     },
     "positive:configuration-strategy:1": {
@@ -92,6 +140,22 @@
     },
     "boundary:data-modeling:3": {
       "chosen": "data-modeling",
+      "pass": true
+    },
+    "positive:data-pipeline-design:1": {
+      "chosen": "data-pipeline-design",
+      "pass": true
+    },
+    "boundary:data-pipeline-design:3": {
+      "chosen": "ml-pipeline-design",
+      "pass": true
+    },
+    "positive:data-quality:1": {
+      "chosen": "data-quality",
+      "pass": true
+    },
+    "boundary:data-quality:3": {
+      "chosen": "test-data-strategy",
       "pass": true
     },
     "positive:dependency-impact-analysis:1": {
@@ -126,8 +190,24 @@
       "chosen": "test-suite-design",
       "pass": true
     },
+    "positive:dx-audit:1": {
+      "chosen": "dx-audit",
+      "pass": true
+    },
+    "boundary:dx-audit:3": {
+      "chosen": "technical-debt-review",
+      "pass": true
+    },
     "positive:effort-estimation:1": {
       "chosen": "effort-estimation",
+      "pass": true
+    },
+    "positive:exploratory-data-analysis:1": {
+      "chosen": "exploratory-data-analysis",
+      "pass": true
+    },
+    "boundary:exploratory-data-analysis:3": {
+      "chosen": "data-quality",
       "pass": true
     },
     "positive:feature-planning:1": {
@@ -136,6 +216,14 @@
     },
     "boundary:feature-planning:3": {
       "chosen": "feature-planning",
+      "pass": true
+    },
+    "positive:finops-cost-optimization:1": {
+      "chosen": "finops-cost-optimization",
+      "pass": true
+    },
+    "boundary:finops-cost-optimization:3": {
+      "chosen": "performance-optimization",
       "pass": true
     },
     "positive:frontend-architecture:1": {
@@ -170,6 +258,14 @@
       "chosen": "infrastructure-as-code",
       "pass": true
     },
+    "positive:llm-app-engineering:1": {
+      "chosen": "llm-app-engineering",
+      "pass": true
+    },
+    "boundary:llm-app-engineering:3": {
+      "chosen": "ai-evaluation",
+      "pass": true
+    },
     "positive:metrics-and-okrs:1": {
       "chosen": "metrics-and-okrs",
       "pass": true
@@ -183,6 +279,34 @@
       "pass": true
     },
     "positive:ml-pipeline-design:1": {
+      "chosen": "ml-pipeline-design",
+      "pass": true
+    },
+    "boundary:ml-pipeline-design:3": {
+      "chosen": "notebook-to-production",
+      "pass": true
+    },
+    "positive:mobile-architecture:1": {
+      "chosen": "mobile-architecture",
+      "pass": true
+    },
+    "boundary:mobile-architecture:3": {
+      "chosen": "frontend-architecture",
+      "pass": true
+    },
+    "positive:mobile-release:1": {
+      "chosen": "mobile-release",
+      "pass": true
+    },
+    "boundary:mobile-release:3": {
+      "chosen": "release-management",
+      "pass": true
+    },
+    "positive:notebook-to-production:1": {
+      "chosen": "notebook-to-production",
+      "pass": true
+    },
+    "boundary:notebook-to-production:3": {
       "chosen": "ml-pipeline-design",
       "pass": true
     },
@@ -202,6 +326,14 @@
       "chosen": "performance-optimization",
       "pass": true
     },
+    "positive:plan-execution:1": {
+      "chosen": "plan-execution",
+      "pass": true
+    },
+    "boundary:plan-execution:3": {
+      "chosen": "feature-planning",
+      "pass": true
+    },
     "positive:prd-writing:1": {
       "chosen": "prd-writing",
       "pass": true
@@ -218,12 +350,36 @@
       "chosen": "project-proposal",
       "pass": true
     },
+    "positive:project-review:1": {
+      "chosen": "project-review",
+      "pass": true
+    },
+    "boundary:project-review:3": {
+      "chosen": "bug-investigating",
+      "pass": true
+    },
     "positive:refactoring:1": {
       "chosen": "refactoring",
       "pass": true
     },
     "boundary:refactoring:3": {
       "chosen": "NONE",
+      "pass": true
+    },
+    "positive:release-management:1": {
+      "chosen": "release-management",
+      "pass": true
+    },
+    "boundary:release-management:3": {
+      "chosen": "deployment-checklist",
+      "pass": true
+    },
+    "positive:resilience-engineering:1": {
+      "chosen": "resilience-engineering",
+      "pass": true
+    },
+    "boundary:resilience-engineering:3": {
+      "chosen": "incident-response",
       "pass": true
     },
     "positive:retrospective:1": {
@@ -244,6 +400,30 @@
     },
     "boundary:security-audit:3": {
       "chosen": "security-audit",
+      "pass": true
+    },
+    "positive:statistical-analysis:1": {
+      "chosen": "statistical-analysis",
+      "pass": true
+    },
+    "boundary:statistical-analysis:3": {
+      "chosen": "ai-evaluation",
+      "pass": true
+    },
+    "positive:strategic-review:1": {
+      "chosen": "strategic-review",
+      "pass": true
+    },
+    "boundary:strategic-review:3": {
+      "chosen": "NONE",
+      "pass": true
+    },
+    "positive:subagent-orchestration:1": {
+      "chosen": "subagent-orchestration",
+      "pass": true
+    },
+    "boundary:subagent-orchestration:3": {
+      "chosen": "plan-execution",
       "pass": true
     },
     "positive:tdd-workflow:1": {
@@ -276,6 +456,14 @@
     },
     "boundary:test-suite-design:3": {
       "chosen": "test-suite-design",
+      "pass": true
+    },
+    "positive:threat-modeling:1": {
+      "chosen": "threat-modeling",
+      "pass": true
+    },
+    "boundary:threat-modeling:3": {
+      "chosen": "security-audit",
       "pass": true
     },
     "positive:ui-ux-design:1": {
