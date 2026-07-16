@@ -207,39 +207,86 @@ the API key is absent — like `skill-evals.yml`).
 ### Results (haiku) and the haiku recommendation
 
 Full run on `claude-haiku-4-5` over all 124 cases (2026-07, 65-skill catalog) —
-this is the committed CI baseline (`evals/routing-baseline.json`):
+this is the committed CI baseline (`evals/routing-baseline.json`), recorded at
+**k=1** (one sample per case):
 
-| Layer 2 metric | Result |
+| Layer 2 metric | Result (k=1) |
 |---|---|
 | Top-1 routing accuracy (positives) | **64/64 = 1.00** |
 | Boundary pass rate ("no wild misroute") | **52/52 = 1.00** |
 | False-activation rate (trivial → NONE) | **0/8 = 0.00** |
-| Confusion pairs | **none — zero misroutes** |
+| Confusion pairs | **none** |
 
 Layer 3 (behavioral, 16 cases): router-invocation rate **1.00** (8/8 substantial
-prompts invoked a skill), correct-invoke 8/8, over-route **0/8**. Boundary
-behavior stayed nuanced and correct — the data-science boundaries held in
-both directions (`ml-pipeline-design`'s reporting-notebook boundary →
-`notebook-to-production`, `notebook-to-production`'s training-notebook boundary
-→ `ml-pipeline-design`, `statistical-analysis`'s chatbot-A/B boundary →
-`ai-evaluation`), alongside the established ones (`rollback-strategy` →
-`incident-response`, `incident-response`/`refactoring`/`strategic-review`
-boundaries → `NONE`).
+prompts invoked a skill), correct-invoke 8/8, over-route **0/8**.
 
-(`routing-baseline.json` now records exactly this full 124-case run — refreshed
-2026-07 via the in-session runner — so every case gates in CI. An earlier,
-smaller-catalog baseline scored the same clean sweep on layer 2 but only a 0.75
-layer-3 invocation rate; this run clears layer 3 at 8/8.)
+A single-draw 124/124 invites the obvious question — *is the dataset just crafted
+to pass?* Two checks say the result is real but should be stated precisely, not as
+"124 perfect".
 
-**Haiku recommendation: keep haiku.** A clean sweep of layer 2 — perfect top-1,
-perfect boundary discrimination, zero false activations, zero confusion — now
-across the full 65-skill catalog says haiku is more than adequate for this
-routing task; nothing argues for sonnet. The earlier watch-item (layer-3
-invocation rate 0.75 on the earlier, smaller catalog) cleared at 8/8 in this
-run — worth re-checking as the catalog grows. If misroutes ever appear, the
-first lever is **improving catalog descriptions** (which helps both models and
-the pinned/role-promoted auto-trigger path); promoting the router to sonnet is
-the fallback only if descriptions don't close the gap.
+**What the numbers actually establish.** Positive accept-sets are strict
+single-skill (`{home}`, top-1 exact), so 64/64 there is a genuine signal — and
+only 13/64 positive prompts even contain the skill's name as a phrase; the rest
+force intent inference from a scenario. The boundary sweep was *not* won on the
+`NONE` escape hatch: of 52 boundary cases only 4 routed to `NONE`; 18 hit home and
+30 chose a legitimate sibling — i.e. the router made real discriminations against a
+~60-skill wrong-answer space.
+
+**Stability at k=3.** Re-running every case with **3 independent haiku samples +
+majority vote** (2026-07, via the in-session runner) reproduces the sweep —
+positive 64/64, boundary 52/52, false-activation 0/8, **0 majority failures** — so
+k=1 was not a lucky draw. The finer signal is *unanimity*: **120/124 cases were
+unanimous** across the three samples, including all 64 positives and all 8
+trivials. The only wobble was **4/52 boundary cases**, and every split resolved
+*inside* the accept-set:
+
+| Boundary case | 3 votes | Majority |
+|---|---|---|
+| `architecture-documentation` | architecture-design ×2, architecture-documentation | architecture-design ✓ |
+| `gitops-delivery` | NONE ×2, gitops-delivery | NONE ✓ |
+| `test-suite-design` | NONE ×2, test-suite-design | NONE ✓ |
+| `project-review` | code-reviewing, bug-investigating, NONE | code-reviewing ✓ |
+
+The last is the honest edge: three identical prompts produced *three different*
+answers, all in-accept — the router has no stable opinion there and the accept-set
+absorbs the coin-flip. That is the design working as intended (boundary measures
+"no wild misroute," not a single gold answer), but it means **boundary 1.00 is a
+soft claim**: ~8% of boundary prompts are genuinely ambiguous within their
+accept-set. The defensible summary is therefore:
+
+> **Positive top-1 routing is stable and correct (64/64, unanimous over 3 samples);
+> trivial rejection is stable (8/8, unanimous NONE); boundary prompts never wildly
+> misroute but are genuinely ambiguous in ~8% of cases.**
+
+**Known limitations (what the sweep does *not* prove).** Coverage is one positive
++ one boundary prompt per skill, all mined from each skill's own `evals.json` and
+written by the same hand as the descriptions — so this measures routing on
+author-anticipated phrasings, not held-out or adversarial ones (a mild
+teaching-to-the-test risk), and a skill can ace its single prompt yet misroute on
+paraphrases. Boundary accept-sets include `NONE` by construction. Closing these is
+a tracked follow-up: an **independent held-out / paraphrase prompt set not written
+by the skill authors**, graded with the same accept-set logic.
+
+Data-science boundaries held in both directions (`ml-pipeline-design` ↔
+`notebook-to-production`, `statistical-analysis`'s chatbot-A/B → `ai-evaluation`),
+alongside the established ones (`rollback-strategy` → `incident-response`;
+`incident-response` / `refactoring` / `strategic-review` boundaries → `NONE`).
+
+(`routing-baseline.json` records the **k=1** full 124-case run — refreshed 2026-07
+via the in-session runner — so every case gates in CI; the k=3 pass above is a
+stability probe, not the committed gate. An earlier, smaller-catalog baseline
+scored the same layer-2 sweep but only a 0.75 layer-3 invocation rate; this run
+clears layer 3 at 8/8.)
+
+**Haiku recommendation: keep haiku.** Stable top-1 accuracy, no wild misroutes,
+and zero false activations across the full 65-skill catalog — reproduced at k=3 —
+say haiku is more than adequate for this routing task; nothing argues for sonnet.
+The earlier watch-item (layer-3 invocation rate 0.75 on the earlier, smaller
+catalog) cleared at 8/8 in this run — worth re-checking as the catalog grows. If
+misroutes ever appear, the first lever is **improving catalog descriptions**
+(which helps both models and the pinned/role-promoted auto-trigger path);
+promoting the router to sonnet is the fallback only if descriptions don't close
+the gap.
 
 ### TDD loop for routing (RED → GREEN)
 
