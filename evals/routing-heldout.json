@@ -1,0 +1,228 @@
+{
+  "_comment": "INDEPENDENT held-out routing probe — HAND-AUTHORED, not generated. Unlike routing-dataset.json (mined from each skill's own evals/evals.json), these prompts were written without copying phrasing from any skill's evals and deliberately avoid each skill's own Triggers: keywords. Goal: test whether skill-router's perfect in-dataset routing generalizes to held-out/adversarial phrasings. Same case shape as the mined dataset { id, kind, skill, prompt, accept[] }. Authoring category is encoded in the id prefix: para: (paraphrase positive, accept={home}), confuse: (between adjacent skills; single-gold where decidable, 2-skill boundary when truly ambiguous), trap: (names a skill's keywords but routes elsewhere/NONE), trivial: (conversational/question, needs no workflow → NONE). kind ∈ {positive,boundary,trivial} drives accept-set grading exactly like routing.py. Run via evals/routing-heldout-runner.mjs (haiku, k=3). This file is NOT wired into --build-dataset/--check-dataset and does NOT gate CI — see docs/EVALS.md.",
+  "version": 1,
+  "model": "claude-haiku-4-5",
+  "cases": [
+    { "id": "para:accessibility-design:1", "kind": "positive", "skill": "accessibility-design", "prompt": "A customer who navigates entirely without a mouse and relies on a speech-output tool says our checkout buttons are unreachable and unlabeled for them. How do I build the page so everyone can operate it?", "accept": ["accessibility-design"] },
+
+    { "id": "para:ai-evaluation:1", "kind": "positive", "skill": "ai-evaluation", "prompt": "We rewrote the support bot's instructions and everyone has a different gut feeling about whether answers got better. How do I set up a repeatable, objective way to score answer quality instead of arguing about vibes?", "accept": ["ai-evaluation"] },
+    { "id": "para:ai-evaluation:2", "kind": "positive", "skill": "ai-evaluation", "prompt": "Our retrieval assistant sometimes states things the source docs don't support. I want a scoring harness that measures how well its replies stay tied to the retrieved passages, and I want it to run as a merge gate.", "accept": ["ai-evaluation"] },
+
+    { "id": "para:api-design:1", "kind": "positive", "skill": "api-design", "prompt": "Two frontend teams keep guessing what fields our service returns and how failures are signaled. I want to nail down the request and response shapes, and the error format, before they build against it.", "accept": ["api-design"] },
+    { "id": "para:api-design:2", "kind": "positive", "skill": "api-design", "prompt": "Our mobile client needs to walk through a long list of orders a chunk at a time without refetching everything, and we need to evolve the response shape later without breaking older apps. How should the service expose that?", "accept": ["api-design"] },
+
+    { "id": "para:architecture-design:1", "kind": "positive", "skill": "architecture-design", "prompt": "We're torn between one big deployable and several small services for the new billing platform, and it'll be painful to change our minds later. How do I make this call well and leave a written trail for why?", "accept": ["architecture-design"] },
+    { "id": "para:architecture-design:2", "kind": "positive", "skill": "architecture-design", "prompt": "Should we reach for a relational store or a document store for the events feature? I want a defensible, recorded rationale I can point back to in six months.", "accept": ["architecture-design"] },
+
+    { "id": "para:architecture-documentation:1", "kind": "positive", "skill": "architecture-documentation", "prompt": "New hires can't picture how our services fit together. I want a set of layered pictures — from a bird's-eye view down to the pieces inside each service — kept in the repo and updated like code.", "accept": ["architecture-documentation"] },
+
+    { "id": "para:brainstorming:1", "kind": "positive", "skill": "brainstorming", "prompt": "I have a fuzzy hunch about something for power users but no concrete shape yet. Can you help me widen the possibilities and poke holes in my assumptions before I commit to anything?", "accept": ["brainstorming"] },
+    { "id": "para:brainstorming:2", "kind": "positive", "skill": "brainstorming", "prompt": "We keep defaulting to the obvious answer for onboarding. Push me toward directions we haven't considered, then help me narrow to a couple worth pursuing.", "accept": ["brainstorming"] },
+
+    { "id": "para:browser-verification:1", "kind": "positive", "skill": "browser-verification", "prompt": "I changed the signup form's validation. Before I claim it works, actually drive it like a real user in a live page and watch for red messages in the dev console and any failed network calls.", "accept": ["browser-verification"] },
+
+    { "id": "para:bug-investigating:1", "kind": "positive", "skill": "bug-investigating", "prompt": "Some users' invoices come out a few cents off, but only sometimes and I can't tell when. I need to track down what's actually causing it rather than papering over the symptom.", "accept": ["bug-investigating"] },
+    { "id": "para:bug-investigating:2", "kind": "positive", "skill": "bug-investigating", "prompt": "Ever since yesterday's merge, a handful of requests occasionally hand back another account's data. Help me work through it methodically and pin down exactly where it goes wrong.", "accept": ["bug-investigating"] },
+
+    { "id": "para:build-vs-buy:1", "kind": "positive", "skill": "build-vs-buy", "prompt": "We need full-text search. I could stand it up in-house or pay a hosted provider. Walk me through weighing the long-run cost and commitment of each so we pick deliberately rather than by reflex.", "accept": ["build-vs-buy"] },
+
+    { "id": "para:cicd-pipeline:1", "kind": "positive", "skill": "cicd-pipeline", "prompt": "Right now a person runs the checks by hand and pushes to prod manually. I want every push to automatically compile, run its checks, and ship through a defined set of stages.", "accept": ["cicd-pipeline"] },
+
+    { "id": "para:code-archaeology:1", "kind": "positive", "skill": "code-archaeology", "prompt": "I just took over a service nobody here wrote, and there's a gnarly uncommented function at its center. Before I touch anything, help me work out what it does and why it ended up shaped this way.", "accept": ["code-archaeology"] },
+
+    { "id": "para:code-reviewing:1", "kind": "positive", "skill": "code-reviewing", "prompt": "I finished the discount-calculation change and pushed the branch. Go over the diff and tell me where it breaks our conventions or could be tightened up before a teammate looks.", "accept": ["code-reviewing"] },
+    { "id": "para:code-reviewing:2", "kind": "positive", "skill": "code-reviewing", "prompt": "Here's my implementation of the retry wrapper. Give it a critical read for maintainability and correctness problems before I merge it.", "accept": ["code-reviewing"] },
+
+    { "id": "para:compliance-privacy:1", "kind": "positive", "skill": "compliance-privacy", "prompt": "A European customer asked us to erase everything we hold about them. Do we even know all the places their details live, and how do we honor that request in a way that holds up to the regulators?", "accept": ["compliance-privacy"] },
+    { "id": "para:compliance-privacy:2", "kind": "positive", "skill": "compliance-privacy", "prompt": "We keep users' home addresses and phone numbers indefinitely, just in case. What are our obligations for how long we're allowed to hold that, and for proving we control who can see it?", "accept": ["compliance-privacy"] },
+
+    { "id": "para:configuration-strategy:1", "kind": "positive", "skill": "configuration-strategy", "prompt": "Our service pulls settings from three places that sometimes disagree, and an access token is sitting in the repo. Help me lay out where settings and secrets should live and which source wins.", "accept": ["configuration-strategy"] },
+
+    { "id": "para:containerization:1", "kind": "positive", "skill": "containerization", "prompt": "Our Node service ships as a 1.4 GB image and runs as root. I want it packaged properly so it's lean and locked down before it goes onto the cluster.", "accept": ["containerization"] },
+
+    { "id": "para:data-modeling:1", "kind": "positive", "skill": "data-modeling", "prompt": "We're adding subscriptions with plans, invoices, and refunds. How should I lay out the underlying storage and the links between records so queries stay quick and the data stays consistent?", "accept": ["data-modeling"] },
+    { "id": "para:data-modeling:2", "kind": "positive", "skill": "data-modeling", "prompt": "Lookups on our biggest table are getting slow as it grows past a hundred million rows. How should I organize the storage and keys so retrieving a customer's records stays fast?", "accept": ["data-modeling"] },
+
+    { "id": "para:data-pipeline-design:1", "kind": "positive", "skill": "data-pipeline-design", "prompt": "Every night we copy raw events out of the app database into our analytics store and reshape them into tidy reporting layers, but reruns duplicate rows. How should this be built so it's safe to run again?", "accept": ["data-pipeline-design"] },
+    { "id": "para:data-pipeline-design:2", "kind": "positive", "skill": "data-pipeline-design", "prompt": "Analysts want order data in the reporting store refreshed hourly instead of one giant nightly dump. How do I move to loading only what changed and sequencing the steps reliably?", "accept": ["data-pipeline-design"] },
+
+    { "id": "para:data-quality:1", "kind": "positive", "skill": "data-quality", "prompt": "Our revenue dashboard quietly showed wrong numbers for a week because a source table changed shape and nobody noticed. How do I catch that kind of thing automatically before people see it?", "accept": ["data-quality"] },
+    { "id": "para:data-quality:2", "kind": "positive", "skill": "data-quality", "prompt": "I want guarantees that the tables feeding our reports aren't stale, half-empty, or full of duplicates — and a way to hold the upstream team accountable when they are.", "accept": ["data-quality"] },
+
+    { "id": "para:dependency-impact-analysis:1", "kind": "positive", "skill": "dependency-impact-analysis", "prompt": "I want to change the shape of a payload that several teams consume. Before I do, map out everyone who'd be affected and what would have to change alongside it.", "accept": ["dependency-impact-analysis"] },
+
+    { "id": "para:dependency-management:1", "kind": "positive", "skill": "dependency-management", "prompt": "We're four major versions behind on our ORM and there's a flagged advisory in one of its transitive libraries. Help me plan the upgrade and judge whether these libraries are even worth keeping.", "accept": ["dependency-management"] },
+
+    { "id": "para:deployment-checklist:1", "kind": "positive", "skill": "deployment-checklist", "prompt": "We push the payments change to prod in an hour. Walk me through everything I should confirm first — data migrations, monitoring, a way back out — so we're not caught off guard.", "accept": ["deployment-checklist"] },
+    { "id": "para:deployment-checklist:2", "kind": "positive", "skill": "deployment-checklist", "prompt": "Before we flip the new release live tonight, give me the pre-flight list to run through so nothing obvious slips past us.", "accept": ["deployment-checklist"] },
+
+    { "id": "para:deployment-repo:1", "kind": "positive", "skill": "deployment-repo", "prompt": "We have eight services in separate repos and no single place that records which versions run together in staging versus prod. How do I set up one coordinating repo and move whole sets of versions between environments?", "accept": ["deployment-repo"] },
+
+    { "id": "para:dx-audit:1", "kind": "positive", "skill": "dx-audit", "prompt": "Engineers gripe that the local build is glacial, checks fail at random, and it takes new folks two weeks to ship their first change. I want a prioritized plan to make working here less painful.", "accept": ["dx-audit"] },
+
+    { "id": "para:effort-estimation:1", "kind": "positive", "skill": "effort-estimation", "prompt": "Leadership wants a credible date for the reporting revamp. Help me size the pieces and turn that into a realistic delivery window given how much the team actually gets through.", "accept": ["effort-estimation"] },
+
+    { "id": "para:exploratory-data-analysis:1", "kind": "positive", "skill": "exploratory-data-analysis", "prompt": "Someone handed me a spreadsheet of churn records I've never laid eyes on. Before I model anything, help me get a feel for what's in it, what's absent, and what looks off.", "accept": ["exploratory-data-analysis"] },
+    { "id": "para:exploratory-data-analysis:2", "kind": "positive", "skill": "exploratory-data-analysis", "prompt": "I've got a fresh export of sensor readings. Walk me through a first pass — how the values spread out, the odd spikes, the gaps — and flag anything that might quietly contaminate a later prediction.", "accept": ["exploratory-data-analysis"] },
+
+    { "id": "para:feature-planning:1", "kind": "positive", "skill": "feature-planning", "prompt": "We've committed to building saved searches. Now chop it into concrete, well-scoped work items with clear conditions for done, and note which ones depend on which.", "accept": ["feature-planning"] },
+    { "id": "para:feature-planning:2", "kind": "positive", "skill": "feature-planning", "prompt": "The spec for team invitations is signed off. Turn it into an ordered set of tasks I can hand to two engineers, each with its own conditions for being complete.", "accept": ["feature-planning"] },
+
+    { "id": "para:finops-cost-optimization:1", "kind": "positive", "skill": "finops-cost-optimization", "prompt": "Our monthly cloud spend jumped 40% and nobody can say which team or feature drove it. Help me get visibility into where the money goes and find the biggest levers to pull it back down.", "accept": ["finops-cost-optimization"] },
+
+    { "id": "para:frontend-architecture:1", "kind": "positive", "skill": "frontend-architecture", "prompt": "Our React app has grown into a tangle — shared UI is copy-pasted everywhere and app-wide data is threaded through props by hand. How should I structure the pieces and where should shared state actually live?", "accept": ["frontend-architecture"] },
+
+    { "id": "para:git-workflow:1", "kind": "positive", "skill": "git-workflow", "prompt": "I've got a messy pile of local changes for the auth fix. Help me phrase the commit and write up the merge request the way our team likes them.", "accept": ["git-workflow"] },
+
+    { "id": "para:gitops-delivery:1", "kind": "positive", "skill": "gitops-delivery", "prompt": "I want the cluster's live state to always track what's committed in git, quietly heal itself when someone hand-edits a resource, and roll new versions out gradually. What's the setup for that?", "accept": ["gitops-delivery"] },
+
+    { "id": "para:incident-response:1", "kind": "positive", "skill": "incident-response", "prompt": "Checkout is throwing errors for everyone right this second and customers are complaining publicly. I'm the one on call — what do I do, in order, to stop the bleeding?", "accept": ["incident-response"] },
+    { "id": "para:incident-response:2", "kind": "positive", "skill": "incident-response", "prompt": "The pager just went off: our API is timing out across the board and it's live in front of users. Walk me through handling this while it's actively on fire.", "accept": ["incident-response"] },
+
+    { "id": "para:infrastructure-as-code:1", "kind": "positive", "skill": "infrastructure-as-code", "prompt": "Right now we click around the cloud console to spin up databases and queues, and nobody can reproduce an environment reliably. I want all of it defined in versioned code instead.", "accept": ["infrastructure-as-code"] },
+
+    { "id": "para:llm-app-engineering:1", "kind": "positive", "skill": "llm-app-engineering", "prompt": "I want to build an assistant that answers questions from our internal handbook, pulling in the right passages so it stays grounded. How should I architect the retrieval and the prompt around the model?", "accept": ["llm-app-engineering"] },
+    { "id": "para:llm-app-engineering:2", "kind": "positive", "skill": "llm-app-engineering", "prompt": "We're adding a feature where the model can call our internal functions and remember earlier turns of a conversation. How do I design the tool surface and how it carries memory across turns?", "accept": ["llm-app-engineering"] },
+
+    { "id": "para:metrics-and-okrs:1", "kind": "positive", "skill": "metrics-and-okrs", "prompt": "The team wants clear, measurable goals for next quarter plus a couple of health indicators for how well we're shipping. Help me define what good looks like in numbers.", "accept": ["metrics-and-okrs"] },
+
+    { "id": "para:ml-experiment-tracking:1", "kind": "positive", "skill": "ml-experiment-tracking", "prompt": "I've trained a dozen variants of the churn model this week and I've lost track of which settings produced which score. How do I record runs so I can compare them and reproduce the good one?", "accept": ["ml-experiment-tracking"] },
+    { "id": "para:ml-experiment-tracking:2", "kind": "positive", "skill": "ml-experiment-tracking", "prompt": "Every time I nudge the learning rate I overwrite my last results. I need a disciplined way to version each training run and its inputs so I can come back and reproduce the winner.", "accept": ["ml-experiment-tracking"] },
+
+    { "id": "para:ml-model-deployment:1", "kind": "positive", "skill": "ml-model-deployment", "prompt": "My fraud classifier works fine in a notebook. How do I stand it up behind a live endpoint, keep an eye on its predictions getting worse over time, and roll a new version out safely?", "accept": ["ml-model-deployment"] },
+    { "id": "para:ml-model-deployment:2", "kind": "positive", "skill": "ml-model-deployment", "prompt": "We shipped a recommender and its quality quietly decayed as user behavior shifted underneath it. How do I serve it so I notice that shift and know when it's time to retrain?", "accept": ["ml-model-deployment"] },
+
+    { "id": "para:ml-pipeline-design:1", "kind": "positive", "skill": "ml-pipeline-design", "prompt": "My model training is a pile of scripts I run by hand in a specific order. I want a reproducible flow that pulls the data, builds the input signals, trains, and evaluates — and can rerun on a schedule as new labeled data lands.", "accept": ["ml-pipeline-design"] },
+    { "id": "para:ml-pipeline-design:2", "kind": "positive", "skill": "ml-pipeline-design", "prompt": "We compute the same input signals differently at training time and at prediction time and it keeps burning us. How do I design the signal-building and training steps so they stay consistent and properly orchestrated?", "accept": ["ml-pipeline-design"] },
+
+    { "id": "para:mobile-architecture:1", "kind": "positive", "skill": "mobile-architecture", "prompt": "We're starting a phone app that has to keep working underground with no signal and reconcile once it's back online. Should we go native or cross-platform, and how do we structure the offline data?", "accept": ["mobile-architecture"] },
+
+    { "id": "para:mobile-release:1", "kind": "positive", "skill": "mobile-release", "prompt": "Apple bounced our last submission and we can't instantly yank a bad build once it's on people's phones. How do we handle the store submission and roll it out to users gradually with a way to halt partway?", "accept": ["mobile-release"] },
+
+    { "id": "para:notebook-to-production:1", "kind": "positive", "skill": "notebook-to-production", "prompt": "My monthly revenue report lives in a Jupyter file full of hardcoded dates that I run by hand. There's no model involved — I just want it turned into real, tested code that runs on its own each month.", "accept": ["notebook-to-production"] },
+    { "id": "para:notebook-to-production:2", "kind": "positive", "skill": "notebook-to-production", "prompt": "This analysis file works on my laptop but nobody else can run it and the values are baked in. Help me pull the logic into proper modules with inputs and pin the environment so it's reproducible.", "accept": ["notebook-to-production"] },
+
+    { "id": "para:observability-design:1", "kind": "positive", "skill": "observability-design", "prompt": "When something's slow in prod we're basically blind — we can't follow a single request across services or even say what healthy looks like. Help me set up request traces, meaningful logs, and alerts that fire on the things that matter.", "accept": ["observability-design"] },
+
+    { "id": "para:performance-optimization:1", "kind": "positive", "skill": "performance-optimization", "prompt": "Our product listing page takes four seconds because it fires one database call per item in a loop. How do I find the worst offenders and fix them?", "accept": ["performance-optimization"] },
+    { "id": "para:performance-optimization:2", "kind": "positive", "skill": "performance-optimization", "prompt": "The dashboard's JavaScript download is enormous and the app gets sluggish after an hour of use. Help me hunt down what's bloating the payload and what's slowly eating memory.", "accept": ["performance-optimization"] },
+
+    { "id": "para:plan-execution:1", "kind": "positive", "skill": "plan-execution", "prompt": "We already signed off on the migration plan last week. Now let's actually work through it stage by stage, proving each part is genuinely finished before moving to the next.", "accept": ["plan-execution"] },
+
+    { "id": "para:prd-writing:1", "kind": "positive", "skill": "prd-writing", "prompt": "Before engineering starts on notifications, I need a short written document that pins down what we're building and why, so the stakeholders are aligned. Help me draft it.", "accept": ["prd-writing"] },
+    { "id": "para:prd-writing:2", "kind": "positive", "skill": "prd-writing", "prompt": "Can you help me write up the problem, goals, and scope for the new export capability as a document others can review and comment on?", "accept": ["prd-writing"] },
+
+    { "id": "para:project-documentation:1", "kind": "positive", "skill": "project-documentation", "prompt": "Our repo has no front-page explanation and new contributors have no idea how to run it or submit a change. Help me write the intro and the guide for contributing.", "accept": ["project-documentation"] },
+
+    { "id": "para:project-proposal:1", "kind": "positive", "skill": "project-proposal", "prompt": "I want the company to fund a six-month effort to rebuild search. Help me write the short pitch — the problem, rough cost, the risks, and the payoff — to get a yes from the people who hold the budget.", "accept": ["project-proposal"] },
+
+    { "id": "para:project-review:1", "kind": "positive", "skill": "project-review", "prompt": "We're a month out from launch. I want an honest read on how much of the roadmap is truly built versus stubbed out, and whether the evidence says it actually works.", "accept": ["project-review"] },
+    { "id": "para:project-review:2", "kind": "positive", "skill": "project-review", "prompt": "Are we genuinely on track against what we said we'd deliver? Take stock of what's production-ready, what's half-done, and where we've quietly drifted from the plan.", "accept": ["project-review"] },
+
+    { "id": "para:refactoring:1", "kind": "positive", "skill": "refactoring", "prompt": "This 300-line function does five different things and I keep breaking it whenever I touch it. I understand it fine — I just want to restructure it into something sane without changing what it does.", "accept": ["refactoring"] },
+    { "id": "para:refactoring:2", "kind": "positive", "skill": "refactoring", "prompt": "The order module works but it's a swamp of duplicated logic. Help me tidy up the structure and pull the repeated bits into one place safely.", "accept": ["refactoring"] },
+
+    { "id": "para:release-management:1", "kind": "positive", "skill": "release-management", "prompt": "Our library is ready to go out to users. What version number does this warrant, and how do I get it tagged, write up the notes, and push it to the package registry — ideally with that automated?", "accept": ["release-management"] },
+
+    { "id": "para:resilience-engineering:1", "kind": "positive", "skill": "resilience-engineering", "prompt": "I'm worried the whole system topples if the payments provider so much as hiccups. How do I design it to degrade gracefully and keep serving when a dependency dies under it?", "accept": ["resilience-engineering"] },
+    { "id": "para:resilience-engineering:2", "kind": "positive", "skill": "resilience-engineering", "prompt": "What happens if our primary datacenter simply vanishes one day? I want a tested recovery plan with target restore times, plus a way to deliberately rehearse failures on purpose.", "accept": ["resilience-engineering"] },
+
+    { "id": "para:retrospective:1", "kind": "positive", "skill": "retrospective", "prompt": "That rough sprint is behind us now. I want to gather the team for an honest, no-blame look back at what helped, what hurt, and the concrete follow-ups we'll own.", "accept": ["retrospective"] },
+
+    { "id": "para:rollback-strategy:1", "kind": "positive", "skill": "rollback-strategy", "prompt": "Before we push tomorrow's storage change, I want a tested way to get back to today's state if it goes sideways — and to know upfront which parts simply can't be reversed.", "accept": ["rollback-strategy"] },
+    { "id": "para:rollback-strategy:2", "kind": "positive", "skill": "rollback-strategy", "prompt": "This upcoming deploy drops a column. If it blows up, how do we reverse it cleanly? I want the undo procedure worked out and rehearsed ahead of time, not improvised.", "accept": ["rollback-strategy"] },
+
+    { "id": "para:security-audit:1", "kind": "positive", "skill": "security-audit", "prompt": "We built a login and file-upload flow and I'm nervous it has holes. Comb through the code we already wrote for ways an attacker could get in or read data they shouldn't.", "accept": ["security-audit"] },
+    { "id": "para:security-audit:2", "kind": "positive", "skill": "security-audit", "prompt": "Can you go over our existing request handlers and flag anything an attacker could exploit — unsafe queries, leaked credentials, weak access checks — before an outside firm pokes at it?", "accept": ["security-audit"] },
+
+    { "id": "para:statistical-analysis:1", "kind": "positive", "skill": "statistical-analysis", "prompt": "We ran two versions of the pricing page and B looks a little better. How many visitors do I need before I trust that, and how do I tell whether the gap is real or just noise?", "accept": ["statistical-analysis"] },
+
+    { "id": "para:strategic-review:1", "kind": "positive", "skill": "strategic-review", "prompt": "Before we announce this to the world, I want a hard look at where we sit versus the alternatives, what makes us genuinely hard to copy, and whether the story we're telling actually lands.", "accept": ["strategic-review"] },
+
+    { "id": "para:subagent-orchestration:1", "kind": "positive", "skill": "subagent-orchestration", "prompt": "This migration touches forty files across independent areas. Can we split the work across several helpers running at once without them clobbering each other, then reconcile the results?", "accept": ["subagent-orchestration"] },
+
+    { "id": "para:tdd-workflow:1", "kind": "positive", "skill": "tdd-workflow", "prompt": "I'm about to build a new discount-rules engine, and I want to drive it by writing the checks first, watching them fail, then making them pass one at a time.", "accept": ["tdd-workflow"] },
+
+    { "id": "para:technical-debt-review:1", "kind": "positive", "skill": "technical-debt-review", "prompt": "Our codebase has piled up a lot of cruft and leadership wants to know where it hurts most and what to tackle first. Give me a health assessment and a prioritized cleanup roadmap.", "accept": ["technical-debt-review"] },
+
+    { "id": "para:test-data-strategy:1", "kind": "positive", "skill": "test-data-strategy", "prompt": "My integration checks need realistic-but-fake customers, orders, and awkward edge-case values, and I don't want to clone real user records to get them. How should I generate all that?", "accept": ["test-data-strategy"] },
+
+    { "id": "para:test-suite-design:1", "kind": "positive", "skill": "test-suite-design", "prompt": "This payment module has no coverage at all and I need to protect it before I start restructuring. What mix of checks should I put around it, and how do I set up the shared scaffolding?", "accept": ["test-suite-design"] },
+    { "id": "para:test-suite-design:2", "kind": "positive", "skill": "test-suite-design", "prompt": "I inherited working code with no safety net whatsoever. Help me plan out a sensible spread of fast, mid, and full end-to-end coverage for it.", "accept": ["test-suite-design"] },
+
+    { "id": "para:threat-modeling:1", "kind": "positive", "skill": "threat-modeling", "prompt": "We're sketching a new payments flow on the whiteboard — nothing's built yet. Before we write any code, help me reason through how someone might abuse it and what protections it needs baked in from the start.", "accept": ["threat-modeling"] },
+    { "id": "para:threat-modeling:2", "kind": "positive", "skill": "threat-modeling", "prompt": "For the file-sharing feature we're about to design but haven't built, walk the proposed design and work out where trust gets crossed and what an attacker could attempt, so we turn those into requirements.", "accept": ["threat-modeling"] },
+
+    { "id": "para:ui-ux-design:1", "kind": "positive", "skill": "ui-ux-design", "prompt": "I'm about to build the new settings screen and I want to think through how a person moves through it, and what it shows while data is loading or when there's nothing there yet, before I code the layout.", "accept": ["ui-ux-design"] },
+
+    { "id": "para:verification-before-completion:1", "kind": "positive", "skill": "verification-before-completion", "prompt": "I think I fixed the caching bug and I'm about to call it finished and push. Hold me to actually proving it works first instead of taking my word for it.", "accept": ["verification-before-completion"] },
+
+    { "id": "para:writing-skills:1", "kind": "positive", "skill": "writing-skills", "prompt": "I'm adding a new workflow module to this library, and one of my existing ones never activates when it should. Help me author the description and structure so they fire reliably.", "accept": ["writing-skills"] },
+
+    { "id": "confuse:c1:1", "kind": "positive", "skill": "data-modeling", "prompt": "For the new loyalty feature, I need to decide how points, tiers, and redemptions are stored and related in the database so nothing drifts out of sync.", "accept": ["data-modeling"] },
+    { "id": "confuse:c1:2", "kind": "positive", "skill": "api-design", "prompt": "Two client teams need to agree on exactly what the loyalty service accepts and returns over HTTP, including how errors and paged results come back.", "accept": ["api-design"] },
+    { "id": "confuse:c1:3", "kind": "positive", "skill": "data-modeling", "prompt": "I'm designing the backend for product reviews. Mostly I care about how the records are laid out and which columns to index for fast reads.", "accept": ["data-modeling"] },
+    { "id": "confuse:c1:4", "kind": "positive", "skill": "api-design", "prompt": "I'm designing the backend for product reviews. Mostly I need the endpoint shapes and the response contract other teams will build against.", "accept": ["api-design"] },
+
+    { "id": "confuse:c2:1", "kind": "positive", "skill": "ml-pipeline-design", "prompt": "I need a repeatable flow that builds the model's input signals, trains it, and evaluates it, rerunning automatically as fresh labeled data arrives.", "accept": ["ml-pipeline-design"] },
+    { "id": "confuse:c2:2", "kind": "positive", "skill": "data-pipeline-design", "prompt": "I need to move raw app events into the analytics warehouse each night and reshape them into clean reporting tables the BI team queries.", "accept": ["data-pipeline-design"] },
+    { "id": "confuse:c2:3", "kind": "positive", "skill": "notebook-to-production", "prompt": "My ad-hoc analysis notebook produces a weekly report; there's no model anywhere in it — I just need it to run reliably on its own instead of me babysitting it.", "accept": ["notebook-to-production"] },
+    { "id": "confuse:c2:4", "kind": "boundary", "skill": "ml-pipeline-design", "prompt": "My prototype notebook trains a classifier end to end. I want it turned into a scheduled, reproducible training workflow.", "accept": ["ml-pipeline-design", "notebook-to-production"] },
+
+    { "id": "confuse:c3:1", "kind": "positive", "skill": "security-audit", "prompt": "Go through the authentication code we already shipped and find concrete weaknesses an attacker could exploit right now.", "accept": ["security-audit"] },
+    { "id": "confuse:c3:2", "kind": "positive", "skill": "threat-modeling", "prompt": "We're whiteboarding a document-sharing feature that isn't built yet. Help me anticipate how it could be attacked and what safeguards we should require before anyone codes it.", "accept": ["threat-modeling"] },
+    { "id": "confuse:c3:3", "kind": "positive", "skill": "compliance-privacy", "prompt": "We handle EU users' personal details. Help me map what we collect, how long we keep it, and how we'd satisfy an erasure request under the regulations.", "accept": ["compliance-privacy"] },
+    { "id": "confuse:c3:4", "kind": "boundary", "skill": "compliance-privacy", "prompt": "Auditors are coming and I need to demonstrate that access to personal data in our running system is restricted and logged.", "accept": ["compliance-privacy", "security-audit"] },
+
+    { "id": "confuse:c4:1", "kind": "positive", "skill": "bug-investigating", "prompt": "One specific report intermittently shows the wrong totals. Help me track down the actual cause.", "accept": ["bug-investigating"] },
+    { "id": "confuse:c4:2", "kind": "positive", "skill": "code-reviewing", "prompt": "I just finished a change and I want a careful read of the diff for quality and convention issues before it merges.", "accept": ["code-reviewing"] },
+    { "id": "confuse:c4:3", "kind": "positive", "skill": "project-review", "prompt": "We're approaching a milestone. Assess how much of the planned scope is genuinely built and whether the evidence shows it works.", "accept": ["project-review"] },
+    { "id": "confuse:c4:4", "kind": "boundary", "skill": "bug-investigating", "prompt": "Something feels off in this module and I want a thorough look — I honestly can't tell if it's an actual defect or just sloppily written.", "accept": ["bug-investigating", "code-reviewing"] },
+
+    { "id": "confuse:c5:1", "kind": "positive", "skill": "incident-response", "prompt": "The API is down for everyone right now and I'm the one holding the pager. What do I do first?", "accept": ["incident-response"] },
+    { "id": "confuse:c5:2", "kind": "positive", "skill": "rollback-strategy", "prompt": "We deploy tomorrow. I want a tested way to reverse it if it fails, all worked out in advance.", "accept": ["rollback-strategy"] },
+    { "id": "confuse:c5:3", "kind": "positive", "skill": "resilience-engineering", "prompt": "Nothing is wrong yet, but I want the system built to ride out a dependency outage gracefully, with failover designed in ahead of time.", "accept": ["resilience-engineering"] },
+    { "id": "confuse:c5:4", "kind": "boundary", "skill": "incident-response", "prompt": "Prod started misbehaving right after this afternoon's release and I'm deciding whether to pull it back this instant.", "accept": ["incident-response", "rollback-strategy"] },
+
+    { "id": "confuse:c6:1", "kind": "positive", "skill": "brainstorming", "prompt": "I don't know what we should build for retention yet. Help me open up the possibilities and challenge the assumptions I'm carrying in.", "accept": ["brainstorming"] },
+    { "id": "confuse:c6:2", "kind": "positive", "skill": "prd-writing", "prompt": "We've settled on the direction. Now I need a written statement of what we're building and why, for stakeholders to sign off on.", "accept": ["prd-writing"] },
+    { "id": "confuse:c6:3", "kind": "positive", "skill": "feature-planning", "prompt": "The spec is approved. Break it into scoped tasks with conditions for done and the dependencies between them.", "accept": ["feature-planning"] },
+    { "id": "confuse:c6:4", "kind": "boundary", "skill": "prd-writing", "prompt": "We've roughly agreed on the feature. I need to write down what it is and start slicing it into work.", "accept": ["prd-writing", "feature-planning"] },
+
+    { "id": "trap:1", "kind": "positive", "skill": "rollback-strategy", "prompt": "The database layout is already frozen — don't touch that. I just need a safe, tested procedure to roll the column change out to prod with a clean way back if it fails.", "accept": ["rollback-strategy"] },
+    { "id": "trap:2", "kind": "trivial", "skill": null, "prompt": "I'm not asking you to build the retrieval assistant — just tell me what 'chunking' means in that context.", "accept": ["NONE"] },
+    { "id": "trap:3", "kind": "trivial", "skill": null, "prompt": "Skip the security audit; I only want to know what the letters in OWASP stand for.", "accept": ["NONE"] },
+    { "id": "trap:4", "kind": "positive", "skill": "data-modeling", "prompt": "Don't design the endpoint surface — the contract is already fixed. I need the database tables sitting behind it laid out.", "accept": ["data-modeling"] },
+    { "id": "trap:5", "kind": "trivial", "skill": null, "prompt": "We're not running a retrospective — just reformat these three action items I already wrote into our tracker's markdown.", "accept": ["NONE"] },
+    { "id": "trap:6", "kind": "positive", "skill": "test-data-strategy", "prompt": "I don't need a whole test suite designed — I just need a pile of realistic fake customers and orders to seed my dev database.", "accept": ["test-data-strategy"] },
+    { "id": "trap:7", "kind": "positive", "skill": "code-archaeology", "prompt": "Forget cleaning it up for now — before I touch anything I first need to understand what this inherited function actually does and why.", "accept": ["code-archaeology"] },
+    { "id": "trap:8", "kind": "trivial", "skill": null, "prompt": "Don't optimize anything — just remind me what 'p99 latency' actually refers to.", "accept": ["NONE"] },
+    { "id": "trap:9", "kind": "positive", "skill": "plan-execution", "prompt": "The plan is already written and approved — I'm not asking you to plan. Help me actually carry out the next phase and verify it's done.", "accept": ["plan-execution"] },
+    { "id": "trap:10", "kind": "positive", "skill": "resilience-engineering", "prompt": "This isn't an incident — production is perfectly fine right now. I want to design for the day the primary database does fall over.", "accept": ["resilience-engineering"] },
+    { "id": "trap:11", "kind": "positive", "skill": "security-audit", "prompt": "Don't threat-model the design — the feature already shipped weeks ago. I need the real code combed for injection holes.", "accept": ["security-audit"] },
+    { "id": "trap:12", "kind": "positive", "skill": "notebook-to-production", "prompt": "There's no training pipeline here — it's a plain reporting notebook with no model at all. I just need it to run unattended every month.", "accept": ["notebook-to-production"] },
+    { "id": "trap:13", "kind": "positive", "skill": "brainstorming", "prompt": "Don't write the requirements doc yet. We're still fuzzy — help me generate and pressure-test possible directions first.", "accept": ["brainstorming"] },
+    { "id": "trap:14", "kind": "positive", "skill": "dependency-impact-analysis", "prompt": "This isn't a code review — the code's fine. I need to know everyone downstream who breaks if I rename this shared field.", "accept": ["dependency-impact-analysis"] },
+    { "id": "trap:15", "kind": "positive", "skill": "data-quality", "prompt": "Leave the schema design alone — the tables already exist. I need to catch when the upstream job sends nulls and stale rows into our warehouse.", "accept": ["data-quality"] },
+    { "id": "trap:16", "kind": "positive", "skill": "git-workflow", "prompt": "I don't want a deployment checklist. Just write me a clean, conventional commit message for this staged change.", "accept": ["git-workflow"] },
+    { "id": "trap:17", "kind": "trivial", "skill": null, "prompt": "Don't containerize anything — just explain, conceptually, the difference between a Docker image and a running container.", "accept": ["NONE"] },
+    { "id": "trap:18", "kind": "positive", "skill": "project-review", "prompt": "We're not launching yet, so hold off on any market or positioning review. But are we actually on track against the roadmap, and is the evidence there that it works?", "accept": ["project-review"] },
+
+    { "id": "trivial:1", "kind": "trivial", "skill": null, "prompt": "what does idempotent actually mean for an HTTP endpoint?", "accept": ["NONE"] },
+    { "id": "trivial:2", "kind": "trivial", "skill": null, "prompt": "quick q — is a foreign key the same thing as a primary key?", "accept": ["NONE"] },
+    { "id": "trivial:3", "kind": "trivial", "skill": null, "prompt": "thanks, the rollback plan you outlined earlier is exactly what I needed.", "accept": ["NONE"] },
+    { "id": "trivial:4", "kind": "trivial", "skill": null, "prompt": "out of curiosity, what does SLO stand for again?", "accept": ["NONE"] },
+    { "id": "trivial:5", "kind": "trivial", "skill": null, "prompt": "morning! did the deploy last night go through okay?", "accept": ["NONE"] },
+    { "id": "trivial:6", "kind": "trivial", "skill": null, "prompt": "is Kubernetes basically just Docker with extra steps?", "accept": ["NONE"] },
+    { "id": "trivial:7", "kind": "trivial", "skill": null, "prompt": "what's the actual difference between authentication and authorization?", "accept": ["NONE"] },
+    { "id": "trivial:8", "kind": "trivial", "skill": null, "prompt": "can you remind me which port Postgres listens on by default?", "accept": ["NONE"] },
+    { "id": "trivial:9", "kind": "trivial", "skill": null, "prompt": "does 'p95 latency' just mean 95% of requests are faster than that number?", "accept": ["NONE"] },
+    { "id": "trivial:10", "kind": "trivial", "skill": null, "prompt": "what year did GDPR actually come into effect?", "accept": ["NONE"] },
+    { "id": "trivial:11", "kind": "trivial", "skill": null, "prompt": "nice, that explanation of the refactor cleared it right up — appreciate it.", "accept": ["NONE"] },
+    { "id": "trivial:12", "kind": "trivial", "skill": null, "prompt": "is a 'flaky test' just one that fails at random?", "accept": ["NONE"] },
+    { "id": "trivial:13", "kind": "trivial", "skill": null, "prompt": "what does the acronym RAG stand for in the AI world?", "accept": ["NONE"] },
+    { "id": "trivial:14", "kind": "trivial", "skill": null, "prompt": "curious — do people say 'S-Q-L' or 'sequel'?", "accept": ["NONE"] },
+    { "id": "trivial:15", "kind": "trivial", "skill": null, "prompt": "roughly, what's a normal default page size people use for paginated endpoints?", "accept": ["NONE"] },
+    { "id": "trivial:16", "kind": "trivial", "skill": null, "prompt": "just so I'm clear, does the CI in CI/CD stand for continuous integration?", "accept": ["NONE"] }
+  ]
+}
