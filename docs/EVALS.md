@@ -263,9 +263,11 @@ accept-set. The defensible summary is therefore:
 written by the same hand as the descriptions — so this measures routing on
 author-anticipated phrasings, not held-out or adversarial ones (a mild
 teaching-to-the-test risk), and a skill can ace its single prompt yet misroute on
-paraphrases. Boundary accept-sets include `NONE` by construction. Closing these is
-a tracked follow-up: an **independent held-out / paraphrase prompt set not written
-by the skill authors**, graded with the same accept-set logic.
+paraphrases. Boundary accept-sets include `NONE` by construction. Closing these
+was a tracked follow-up — **now done**: an independent held-out / paraphrase
+prompt set, not mined from the skills' own evals, graded with the same accept-set
+logic. See [Held-out generalization probe](#held-out-generalization-probe-independent)
+below.
 
 Data-science boundaries held in both directions (`ml-pipeline-design` ↔
 `notebook-to-production`, `statistical-analysis`'s chatbot-A/B → `ai-evaluation`),
@@ -287,6 +289,55 @@ misroutes ever appear, the first lever is **improving catalog descriptions**
 (which helps both models and the pinned/role-promoted auto-trigger path);
 promoting the router to sonnet is the fallback only if descriptions don't close
 the gap.
+
+### Held-out generalization probe (independent)
+
+The mined sweep above measures routing on *author-anticipated* phrasings. To close
+the teaching-to-the-test gap, `evals/routing-heldout.json` is a **separate,
+hand-authored 150-case set** written **without** copying phrasing from any skill's
+`evals.json` and deliberately **avoiding each skill's own `Triggers:` keywords**
+(0/92 paraphrases contain an own-trigger phrase). Same `{ id, kind, skill, prompt,
+accept[] }` shape; the authoring category is encoded in the `id` prefix:
+
+- **92 paraphrase positives** — every routable skill restated in a foreign
+  register, `accept = {home}` (strict top-1);
+- **24 confusables** across 6 adjacent clusters (`data-modeling`↔`api-design`;
+  `ml-pipeline-design`↔`data-pipeline-design`↔`notebook-to-production`;
+  `security-audit`↔`threat-modeling`↔`compliance-privacy`;
+  `bug-investigating`↔`code-reviewing`↔`project-review`;
+  `incident-response`↔`rollback-strategy`↔`resilience-engineering`;
+  `brainstorming`↔`prd-writing`↔`feature-planning`) — single-gold where decidable,
+  5 two-skill boundary accepts where genuinely ambiguous;
+- **18 scope/negation traps** — name a skill's keywords but route elsewhere/`NONE`;
+- **16 harder trivials** — conversational/factual prompts carrying domain keywords
+  → `NONE` (double the mined set's 8, pushing harder on false activation).
+
+Run key-free via the Workflow tool at k=3 (majority of 3 independent haiku
+samples), the in-session sibling of the mined runner:
+
+```
+Workflow({ scriptPath: "evals/routing-heldout-runner.mjs", args: {
+  dataset: "<abs>/evals/routing-heldout.json", catalog: "<abs>/catalog.json" }})
+```
+
+**Result (`claude-haiku-4-5`, k=3, 2026-07 — 451 route agents, 0 errors):** a
+perfect, fully-stable sweep — paraphrase **92/92**, confusable **24/24** (all 6
+clusters cleanly separated, **zero confusion pairs**), trap **18/18**, trivial
+**16/16**, false-activation **0/21**, and **150/150 unanimous** across the three
+samples (0 split, 0 failures). The 5 genuinely-ambiguous boundary cases each landed
+unanimously on the *intended primary* — stronger than the mined k=3 pass, where 4
+boundary cases split inside their accept-set. So the mined suite's 64/64 is **not**
+an artifact of author-shared phrasing: routing survives when keywords are stripped
+and the wording is foreign. Honest limits: still a single-evaluator set with
+pre-decided golds and only 1–2 paraphrases per skill — it *lowers*, not eliminates,
+the generalization risk. Full write-up: `evals/routing-heldout-results.md`.
+
+This probe is a **periodic manual generalization check, not a CI gate** — held-out
+prompts are meant to find edges (a hard gate would be noisy), and ~450 agents/run
+is too expensive per-PR. Unlike `routing-dataset.json` it is **hand-authored, not
+generated**, so it is deliberately **not** wired into `--build-dataset` /
+`--check-dataset` and does **not** touch `routing-baseline.json` (the committed
+gate stays the mined 124-case k=1 run).
 
 ### TDD loop for routing (RED → GREEN)
 
