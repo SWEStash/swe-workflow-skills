@@ -124,6 +124,15 @@ python evals/routing.py --run -k 3
 - **This measures routing, not skill quality.** "The right skill activated" is a separate
   question from "the skill helped" — that's the RED/GREEN content harness (`run.py`). The
   realized value is the product of the two: *routing accuracy × (GREEN − RED gap)*.
+- **The committed set is mined from the skills' own evals — but cross-checked held-out.**
+  Positive/boundary cases are written by the same hand as the descriptions, so the 124-case
+  gate could in principle be teaching to the test. To probe that, a separate **hand-authored
+  150-case held-out set** (`evals/routing-heldout.json`) — no phrasing copied from any
+  `evals.json`, each skill's own trigger keywords deliberately avoided — was routed on haiku
+  at k=3: a perfect, fully-unanimous sweep (paraphrase 92/92, confusable 24/24 with zero
+  confusion pairs, trap 18/18, trivial 16/16, false-activation 0/21). So the clean sweep
+  isn't an artifact of shared author phrasing. It's a periodic manual probe, **not** a CI
+  gate (see [EVALS.md § Held-out generalization probe](EVALS.md#held-out-generalization-probe-independent)).
 - **The comparison isn't apples-to-apples.** The community numbers above measure native
   auto-triggering on small skill sets; ours measures orchestrator routing on a 65-skill
   catalog. They're different mechanisms — which is the point: routing is what makes a
