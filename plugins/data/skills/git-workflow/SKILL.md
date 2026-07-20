@@ -100,6 +100,7 @@ The PR description should let a reviewer understand the change without reading e
 Before requesting review:
 - [ ] Read through the entire diff one more time
 - [ ] Are there any debugging leftovers?
+- [ ] Any stray working artifacts (PLAN.md, NOTES.md, scratch files, one-off test scripts) that shouldn't ship?
 - [ ] Are there any changes that don't belong in this PR?
 - [ ] Is the PR a reasonable size? (Under 400 lines changed is ideal. Over 800 is a red flag.)
 
