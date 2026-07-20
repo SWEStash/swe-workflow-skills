@@ -25,6 +25,7 @@ Don't try to review everything. Focus on where pain is concentrated.
 - Files changed in almost every PR — high churn indicates poor separation of concerns or missing abstractions
 - Files that always require changes together — tight coupling that should be decoupled
 - Files with frequent bug fixes — instability indicates unclear ownership or poor test coverage
+- AI-assisted bulk commits — large multi-file commits landing at once and revised within days; churn-shortly-after-landing is the strongest slop signal
 
 **Structural signals:**
 - Circular dependencies between modules
@@ -48,9 +49,12 @@ For each hotspot, classify the debt:
 | **Complexity debt** | Functions/classes doing too much | Extract, decompose, simplify |
 | **Duplication debt** | Same logic in multiple places | Extract shared abstraction |
 | **Test debt** | Missing or low-quality tests | Add tests before refactoring anything else |
-| **Documentation debt** | Undocumented non-obvious behavior | Add comments, docstrings, decision records |
+| **Documentation debt** | Undocumented non-obvious behavior (docs *missing*) | Add comments, docstrings, decision records |
+| **Documentation drift** | Docs describing behavior, endpoints, or flags that no longer exist | Fix or delete the stale doc |
 | **Architecture debt** | Wrong abstraction at system level | Restructure, introduce proper boundaries |
 | **Dependency debt** | Outdated, vulnerable, or abandoned libraries | Upgrade or replace |
+| **Type debt** | `any`/casts silencing the checker, single-implementer interfaces "for testing", overly broad types | Restore real types; inline the interface |
+| **Config/scaffolding debt** | Unread config keys/flags, orphan `.env` entries, checked-in generated files, TODO scaffolds | Delete what nothing reads; regenerate instead of committing |
 | **Observability debt** | No logging, metrics, or traceability | Add instrumentation |
 
 **Severity:**
@@ -58,6 +62,19 @@ For each hotspot, classify the debt:
 - **High**: Slowing down every sprint. Blocking new features. Schedule for next quarter.
 - **Medium**: Painful but workable. Schedule when capacity allows.
 - **Low**: Noticeable but not impeding. Do it opportunistically when touching related code.
+
+For the AI-slop lens on these categories (per-pattern tells and when-it's-NOT-slop guidance), read the sibling skill's `code-slop-cleanup/references/slop-patterns.md` if installed.
+
+## Audit Integrity — do not generate slop while hunting it
+
+A wrong finding costs the audit more credibility than a missed one, and this skill runs in a forked context: the written report is the only artifact that survives, so an unevidenced finding is unfalsifiable downstream. Rules for every finding:
+
+- **Evidence or it didn't happen.** Cite `path:line-range` and quote the offending code minimally. No location, no finding.
+- **Argue it, don't label it.** State *why the specific instance is unjustified here* — what it costs and why the pattern lacks a reason that survives scrutiny. "I'd do it differently" is preference, not debt.
+- **Attempt to disprove before flagging.** Trace callers before declaring code dead (dynamic references, string-based lookups, DI, reflection, external consumers); check history before calling a config key unread. If a legitimate reason emerges, downgrade or drop.
+- **Confidence, not assertion.** Unverifiable usage claims get Confidence: Low with a note on what would confirm it — never asserted as fact.
+- **Record what you didn't flag.** An "Explicitly not flagged" section (items considered, reason they survived scrutiny) proves the audit was discerning and stops the team re-litigating.
+- **Log the method.** Tools/passes run with their commands, and anything not covered — unreadable files, missing test env — as named blind spots. If a tool wasn't available, say so; don't fabricate its results.
 
 ## Step 3: Estimate Effort and Risk
 

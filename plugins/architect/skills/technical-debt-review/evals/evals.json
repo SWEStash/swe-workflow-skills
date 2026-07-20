@@ -11,7 +11,8 @@
         "Categorizes debt by type (complexity, test, architecture, etc.) and severity",
         "Produces a prioritized roadmap with effort estimates",
         "Distinguishes between quick wins, quarterly investments, and strategic changes",
-        "Does not recommend a full rewrite without strong justification"
+        "Does not recommend a full rewrite without strong justification",
+        "States that findings must cite concrete evidence (file/line locations), with unverifiable claims marked low-confidence rather than asserted"
       ]
     },
     {
@@ -22,7 +23,7 @@
         "Recommends focusing on churn (frequently-changed files) rather than trying to address all debt",
         "Emphasizes that test debt must be addressed before structural debt",
         "Provides a concrete prioritization heuristic (not just 'prioritize by impact')",
-        "Acknowledges that low-impact debt can be accepted / deferred",
+        "Acknowledges that low-impact debt can be accepted / deferred (accepted or explicitly-not-flagged items are recorded, not silently dropped)",
         "Does not recommend addressing everything at once"
       ]
     },
