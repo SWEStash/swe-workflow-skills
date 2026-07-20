@@ -62,6 +62,11 @@
       "path": "code-reviewing/SKILL.md"
     },
     {
+      "name": "code-slop-cleanup",
+      "description": "Strip AI slop from a branch diff before PR — judge each hunk against the surrounding file's conventions, remove without changing behavior, re-run tests. Removal only: hunting bugs → code-reviewing; structural improvement → refactoring; repo-wide audit → technical-debt-review; pruning tests → test-suite-design. Triggers: deslop, AI slop, slop cleanup, tighten this diff, remove AI artifacts, clean the diff before PR, debug leftovers, stray PLAN.md, obvious comments, unnecessary try/catch, backwards-compat shim nobody asked for, diff hygiene.",
+      "path": "code-slop-cleanup/SKILL.md"
+    },
+    {
       "name": "compliance-privacy",
       "description": "Engineer for regulatory and privacy obligations — GDPR/CCPA privacy-by-design, PII data mapping and minimization, retention and deletion (right to erasure), data subject requests, consent, SOC 2 controls (access, change management, audit logging). Triggers: GDPR, CCPA, SOC 2, HIPAA, compliance, privacy review, PII, personal data, data retention, right to be forgotten, DSR, audit requirements, are we compliant. Vulnerabilities in code → security-audit; attack analysis of a design → threat-modeling.",
       "path": "compliance-privacy/SKILL.md"

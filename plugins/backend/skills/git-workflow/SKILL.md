@@ -141,4 +141,5 @@ See [references/conventions.md](references/conventions.md) for branch naming con
 
 - `release-management` — cutting the release these commits accumulate into: semver, changelog, tagging, publishing
 - `code-reviewing` — reviewing the PR the description introduces
+- `code-slop-cleanup` — tighten the diff (AI artifacts, debug leftovers, stray files) before the self-review
 - `verification-before-completion` — run the proving commands before pushing or opening the PR

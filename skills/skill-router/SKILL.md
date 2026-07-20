@@ -125,6 +125,7 @@ installed skill by name, regardless of role.
 - **security-audit** — OWASP Top 10, auth/authz, injection, secrets, dependency CVEs
 - **performance-optimization** — N+1, algorithmic complexity, caching, bundle size
 - **refactoring** — systematic, test-protected code improvement
+- **code-slop-cleanup** — strip AI slop from the branch diff before PR: comment slop, debug leftovers, defensive theater, stray working files, compat shims. Most slop cleanup is a micro-refactor: invoke this for the diff-scoped removal pass, `refactoring` when cleanup turns structural — chain both when a request spans them
 - **technical-debt-review** — codebase health, hotspots, remediation roadmap
 - **project-review** — whole-project execution health: scope alignment, roadmap adherence, implementation maturity, evidence-it-works
 - **code-archaeology** — understand unfamiliar/legacy code first: history mining, tracing, characterization tests
@@ -180,8 +181,8 @@ When work spans phases, chain skills rather than improvising:
 `brainstorming` (if the idea is still fuzzy) → `feature-planning` →
 `architecture-design` (if structural) → `data-modeling` (if schema) →
 `threat-modeling` (if new trust boundaries) → `plan-execution` (work the
-approved plan; wraps `tdd-workflow` per task) → `code-reviewing` →
-`deployment-checklist`
+approved plan; wraps `tdd-workflow` per task) → `code-slop-cleanup` (strip AI
+artifacts from the diff) → `code-reviewing` → `deployment-checklist`
 
 **Bug / incident**
 `incident-response` (if prod is down) → `bug-investigating` → `tdd-workflow`

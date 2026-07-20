@@ -127,6 +127,17 @@ After writing the suite, assess quality (not just line coverage percentage):
 
 Coverage percentage is a floor, not a ceiling. 80% meaningful coverage beats 100% shallow coverage.
 
+## Pruning Test Slop
+
+Suites accumulate tests that cost maintenance without buying protection — common in AI-assisted codebases, where generated tests pad coverage. Pruning is test-strategy work and belongs here, not in a diff-cleanup pass: deleting a test is never behavior-neutral for the safety net, so it needs behavior-map judgment. A test is a removal candidate when it:
+
+- **Asserts nothing meaningful** — `expect(true).toBe(true)` filler, or assertions that cannot fail
+- **Duplicates another test's coverage of the same behavior** — same arrange/act/assert in substance, differing only cosmetically
+- **Asserts on the mock rather than the code** — verifying that the mock returned what it was configured to return tests the mock, not the unit
+- **Mirrors the implementation line-for-line** — breaks on every refactor, catches no behavior change
+
+The discipline: map the behaviors first (Step 3), then remove one test at a time, verifying after each removal that every behavior in the map is still covered by a remaining test. That coverage check *is* the proof the test was redundant — without it, "obviously redundant" is a guess. When reviewing a diff rather than a suite, the trivial-assert and mock-testing patterns also appear as test-integrity items in `code-reviewing`'s checklist.
+
 ## Principles Applied
 
 - **DRY in tests**: Share setup through fixtures/factories, but keep each test readable on its own. A little repetition in tests is better than obscure shared state.

@@ -51,6 +51,7 @@
         "configuration-strategy",
         "security-audit",
         "refactoring",
+        "code-slop-cleanup",
         "deployment-checklist"
       ]
     },
@@ -67,7 +68,8 @@
         "test-suite-design",
         "browser-verification",
         "performance-optimization",
-        "refactoring"
+        "refactoring",
+        "code-slop-cleanup"
       ]
     },
     "devops": {
@@ -228,6 +230,7 @@
         "test-data-strategy",
         "browser-verification",
         "code-reviewing",
+        "code-slop-cleanup",
         "bug-investigating"
       ]
     },
