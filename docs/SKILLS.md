@@ -1,6 +1,6 @@
 # Skill Catalog
 
-All 65 skills in the library — 63 SDLC workflows plus two meta skills
+All 66 skills in the library — 64 SDLC workflows plus two meta skills
 (`skill-router`, the orchestrator, and `writing-skills`, the authoring guide).
 Every skill's full description lives in `catalog.json` (what the orchestrator
 routes on); this page is the human-readable index.
@@ -15,7 +15,7 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `skill-router` | Entry point and dispatcher — maps an intent to the right skill(s) and lays out the Golden Path workflow chains. Invoke it FIRST on any non-trivial task. Pairs with the optional [SessionStart hook](../hooks/README.md). |
 | `writing-skills` | How to author, edit, and pressure-test skills — description/budget rules, progressive disclosure, the 3-eval rule, TDD-for-docs. The installable companion to [AUTHORING.md](AUTHORING.md). |
 
-## Software Engineering (30)
+## Software Engineering (31)
 
 | Skill | Phase | Purpose |
 |-------|-------|---------|
@@ -33,6 +33,7 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `browser-verification` | Quality | Drive the real UI to prove a web change works — console/network/state evidence |
 | `performance-optimization` | Quality | Bottleneck detection, query optimization, caching strategy |
 | `refactoring` | Improvement | Systematic code improvement guided by design principles |
+| `code-slop-cleanup` | Improvement | Strip AI slop from a branch diff before PR — comments, debug leftovers, defensive theater, stray files |
 | `technical-debt-review` | Improvement | Codebase health assessment — hotspots, debt categories, remediation roadmap |
 | `project-review` | Improvement | Whole-project execution health — scope/roadmap alignment, implementation maturity, evidence it works |
 | `dependency-management` | Maintenance | Evaluate, audit, and upgrade project dependencies |

@@ -1,6 +1,7 @@
 ---
 name: tdd-workflow
-description: "Guide test-driven development with red-green-refactor. Triggers: use tdd, test first, write the tests, red green refactor, test-driven, what should I test, write tests before code, failing test, implement using TDD. For NEW code via test-first — use test-suite-design for adding tests to existing code."
+description: "Guide test-driven development with red-green-refactor. For NEW code via test-first — use test-suite-design for adding tests to existing code."
+when_to_use: "Triggers: use tdd, test first, write the tests, red green refactor, test-driven, what should I test, write tests before code, failing test, implement using TDD."
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
@@ -138,6 +139,7 @@ These are the excuses that lead to skipping the test. None of them hold up.
 - A new test passes the first time you run it (you never saw RED).
 - You can't explain why the test failed in the RED phase.
 - You're glancing at not-yet-deleted draft code while writing the "test-first" version.
+- You're editing the *test* to make it pass — the test was the spec; change the code, or escalate if the spec itself is wrong.
 
 ## Cross-Skill References
 

@@ -1,6 +1,7 @@
 ---
 name: dependency-management
-description: "Evaluate, audit, and upgrade project dependencies — assess libraries before adoption, audit CVEs, plan major upgrades, resolve conflicts. Triggers: should I use this library, npm audit, upgrade dependencies, dependency vulnerability, outdated packages, evaluate this package, is this library maintained, dependency conflict, lock file, breaking changes in upgrade."
+description: "Evaluate, audit, and upgrade project dependencies — assess libraries before adoption, audit CVEs, plan major upgrades, resolve conflicts."
+when_to_use: "Triggers: should I use this library, npm audit, upgrade dependencies, dependency vulnerability, outdated packages, evaluate this package, is this library maintained, dependency conflict, lock file, breaking changes in upgrade, slopsquatting, package hallucination, does this package exist, verify package name, AI suggested this library."
 allowed-tools: Read, Grep, Glob, Write, Edit, WebFetch, WebSearch
 ---
 
@@ -24,7 +25,16 @@ Before evaluating any library, check if the need can be met without one:
 
 A dependency is justified when it provides substantial, maintained functionality that would be costly and error-prone to build yourself (e.g., cryptography, date handling with timezones, database drivers, authentication).
 
-### Step 2: Evaluate the Library
+### Step 2: Verify the Package Exists (anti-slopsquatting)
+
+Before evaluating anything else, confirm the package is real and is the one you think it is. AI assistants hallucinate plausible package names at a measurable rate (~20% of AI package recommendations reference packages that don't exist), and attackers register those exact names to deliver malware — **slopsquatting**. A hallucinated name passes every traditional typo filter because it collides with nothing.
+
+- **Confirm the exact name exists in the registry** (`npm view <pkg>`, the PyPI project page) and that the registry entry's repository link points to the project you expect.
+- **Check adoption history over time** — steady downloads across months, not a package registered last week. A brand-new package with a burst of installs matching an AI-suggested name is the attack signature.
+- **Check typo-distance from a popular package.** Hallucinations often shadow a real name (e.g. `unused-imports` vs the real `eslint-plugin-unused-imports`). If a more popular near-neighbor exists, you probably want the neighbor.
+- **Treat any AI-suggested package name as unverified input.** Verify it the same way you'd verify a URL from an untrusted source — before it reaches `npm install`.
+
+### Step 3: Evaluate the Library
 
 For any library under consideration, assess these dimensions:
 
@@ -56,7 +66,7 @@ For any library under consideration, assess these dimensions:
 
 See [references/evaluation-checklist.md](references/evaluation-checklist.md) for the structured assessment template.
 
-### Step 3: Present the Recommendation
+### Step 4: Present the Recommendation
 
 For the user, summarize:
 - **Recommendation**: Use / Don't use / Consider alternative

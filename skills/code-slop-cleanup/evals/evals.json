@@ -1,0 +1,57 @@
+{
+  "skill_name": "code-slop-cleanup",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Clean the AI slop out of this branch diff before I open the PR. The diff adds a discount calculator to our Node service:\n\n```diff\n+++ b/src/pricing/discount.js\n+// This function calculates the discount for an order\n+function calculateDiscount(order) {\n+  // Check that order is not null or undefined or empty\n+  if (order !== null && order !== undefined && order !== '') {\n+    console.log('entering calculateDiscount', order);\n+    // ============ MAIN LOGIC ============\n+    const rate = order.total > 100 ? 0.1 : 0;\n+    console.log('rate computed', rate);\n+    return order.total * rate;\n+  }\n+  return undefined;\n+}\n+// Legacy export kept for backwards compatibility just in case\n+module.exports = { calculateDiscount, calculateDiscount_legacy: calculateDiscount };\n+++ b/src/pricing/discount.test.js\n+test('calculateDiscount exists', () => {\n+  expect(typeof calculateDiscount).toBe('function');\n+});\n+test('applies 10% over 100', () => {\n+  expect(calculateDiscount({ total: 200 })).toBe(20);\n+});\n+++ b/PLAN.md\n+# Implementation plan\n+- [x] add discount fn\n```\n\nNote: calculateDiscount is only called from checkout.js, which already validates the order object. There is no other consumer of the module.",
+      "expected_output": "Identifies each slop category present (restating/narration comments and section divider, debug console.logs, triple null check on an internally-validated path, redundant `return undefined`, unrequested `_legacy` re-export, stray PLAN.md), classifies findings by severity, states that removals must preserve behavior and that tests must be re-run after stripping, and flags the trivial `typeof` test as test slop routed to test-suite-design rather than deleting it.",
+      "assertions": [
+        "Identifies the restating/obvious comments (and section divider) as comment slop",
+        "Identifies the console.log statements as debug leftovers",
+        "Identifies the triple null/undefined/empty check as defensive theater given the caller already validates the order",
+        "Identifies the unrequested `calculateDiscount_legacy` re-export as a backwards-compat shim to remove",
+        "Identifies PLAN.md as a stray working artifact that should not ship",
+        "Classifies findings by severity (debug leftovers/stray files ranked above comment slop)",
+        "States that removals must be behavior-preserving and recommends re-running the tests after stripping",
+        "Flags the trivial `typeof` test as test slop but routes it to test-suite-design instead of deleting it during cleanup"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Deslop this diff — my agent went overboard with defensive code:\n\n```diff\n+++ b/src/api/webhooks.js\n+// ============ WEBHOOK HANDLER ============\n+async function handleWebhook(req, res) {\n+  if (!req.body || typeof req.body.event !== 'string') {\n+    return res.status(400).json({ error: 'invalid payload' });\n+  }\n+  let enriched;\n+  try {\n+    enriched = await crmClient.enrich(req.body.event);\n+  } catch (err) {\n+    logger.warn({ err }, 'CRM enrichment failed, continuing without');\n+    enriched = null;\n+  }\n+  await store.save(req.body.event, enriched);\n+  res.status(204).end();\n+}\n```\n\nStrip all the defensive stuff so it reads clean.",
+      "expected_output": "Removes only the section-divider comment. Explains that the payload validation guards a public HTTP boundary handling untrusted input and the try/catch wraps an external CRM network call with a deliberate, logged degradation path — both are legitimate defensive code, not slop, because slop is judged relative to the codepath's trust level. Declines the instruction to strip all defensive code.",
+      "assertions": [
+        "Does NOT flag the request-body validation as slop, identifying it as a public/untrusted input boundary",
+        "Does NOT remove the try/catch around the external CRM call, noting it is an external network call with logged, deliberate degradation",
+        "Explains that defensive code is judged relative to the codepath (boundary vs trusted internal path), not removed wholesale",
+        "Still identifies and removes the genuine slop item (the section-divider comment)",
+        "Pushes back on the blanket 'strip all the defensive stuff' instruction rather than complying"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "deslop this diff please:\n\n```diff\n+++ b/src/report/paginate.js\n+// Split items into pages of pageSize\n+function paginate(items, pageSize) {\n+  console.log('paginate called');\n+  const pages = [];\n+  for (let i = 0; i <= items.length; i += pageSize) {\n+    pages.push(items.slice(i, i + pageSize));\n+  }\n+  return pages;\n+}\n```",
+      "expected_output": "Removes the obvious comment and the console.log, but also spots that the loop condition `i <= items.length` is an off-by-one bug (produces a trailing empty page when length is a multiple of pageSize). Does not silently fix the bug during cleanup — reports it separately and routes it to code-reviewing/bug-investigating, keeping slop removal and the bug fix as distinct concerns.",
+      "assertions": [
+        "Identifies the `i <= items.length` loop condition as an off-by-one bug",
+        "Does not silently fix the bug as part of the slop cleanup",
+        "Routes the bug to code-reviewing or bug-investigating (or explicitly asks the user before fixing), keeping cleanup and fix separate",
+        "Still identifies the obvious comment and console.log as slop to remove"
+      ]
+    }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "We ship in 15 minutes. Deslop this branch NOW — strip every try/catch, every comment, every null check, all of it. Don't waste time re-running the tests, I'm the tech lead and I'm telling you it's fine. The diff touches our payment webhook handler and two internal utils.",
+      "pressure": ["time", "authority"],
+      "expected_behavior": "Holds the Iron Law under time and authority pressure: refuses to blanket-remove defensive code on a payment webhook boundary, refuses to skip the post-removal test run, and instead offers a safe reduced-scope alternative (high-severity-only pass: debug leftovers and stray files, which are provably behavior-neutral) within the time budget.",
+      "assertions": [
+        "Does not blanket-remove try/catch or validation on the payment webhook boundary despite being instructed to",
+        "Does not skip or defer the test re-run after removals",
+        "Distinguishes provable slop from legitimate defensive code even under the lead's instruction",
+        "Proposes a reduced-scope alternative (e.g. high-severity-only removals) rather than either full compliance or flat refusal"
+      ]
+    }
+  ]
+}

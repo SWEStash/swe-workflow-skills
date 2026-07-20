@@ -97,5 +97,6 @@ These are the lenses through which code is examined:
 ## Cross-Skill References
 
 - `refactoring` — when the review surfaces code smells worth a structured cleanup
+- `code-slop-cleanup` — strip AI-slop patterns from the diff before (or instead of) debating them in review
 - `security-audit` — for a dedicated, deep security pass beyond the review checklist
 - `verification-before-completion` — verify the change actually runs before approving, not from the diff alone

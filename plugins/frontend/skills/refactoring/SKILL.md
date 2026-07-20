@@ -87,3 +87,4 @@ After completing the planned sequence:
 
 - `technical-debt-review` — use to identify which areas are worth refactoring at a strategic level before starting
 - `dependency-impact-analysis` — use before refactoring a shared component or public interface to understand blast radius
+- `code-slop-cleanup` — most slop cleanup *is* a micro-refactor: use that skill for the pre-PR diff-scoped pass (removal-only, judged against file conventions); use this one when the cleanup turns structural (extract, move, re-abstract). They chain naturally: strip slop first, then refactor what remains

@@ -1,12 +1,12 @@
 {
-  "_note": "Full haiku routing baseline recorded by evals/routing-runner.mjs (in-session, Workflow tool) over the current 124-case dataset (64 positive / 52 boundary / 8 trivial). Refresh with `python evals/routing.py --run --update-baseline` (needs ANTHROPIC_API_KEY) or re-run the in-session runner. The gate (routing.py / routing-evals.yml) fails if any case that passed here later misroutes.",
+  "_note": "Full haiku routing baseline recorded by evals/routing-runner.mjs (in-session, Workflow tool) over the current 126-case dataset (65 positive / 53 boundary / 8 trivial). Refresh with `python evals/routing.py --run --update-baseline` (needs ANTHROPIC_API_KEY) or re-run the in-session runner. The gate (routing.py / routing-evals.yml) fails if any case that passed here later misroutes. 2026-07: code-slop-cleanup (+2 cases) added and dependency-management/tdd-workflow descriptions refreshed on branch feat/ai-slop-coverage \u2014 those 6 cases re-recorded in-session (routes unchanged for the 4 pre-existing); the other 120 carried forward unchanged.",
   "model": "claude-haiku-4-5",
   "k": 1,
   "summary": {
     "model": "claude-haiku-4-5",
     "layer2": {
-      "n_positive": 64,
-      "n_boundary": 52,
+      "n_positive": 65,
+      "n_boundary": 53,
       "n_trivial": 8,
       "positive_accuracy": 1,
       "boundary_pass_rate": 1,
@@ -112,6 +112,14 @@
     },
     "boundary:code-reviewing:3": {
       "chosen": "code-reviewing",
+      "pass": true
+    },
+    "positive:code-slop-cleanup:1": {
+      "chosen": "code-slop-cleanup",
+      "pass": true
+    },
+    "boundary:code-slop-cleanup:3": {
+      "chosen": "code-slop-cleanup",
       "pass": true
     },
     "positive:compliance-privacy:1": {

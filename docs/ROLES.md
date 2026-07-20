@@ -172,9 +172,12 @@ A role's working set = its **core** ∪ its own skills. Cores: **universal** =
 `code-reviewing`, `verification-before-completion`, `bug-investigating`,
 `project-documentation`. Inspect with `node scripts/resolve.mjs skills <role>`
 or list roles with `node scripts/resolve.mjs roles`. Promoted-set sizes stay at
-or under the ~20-description crop cap (`backend` and `devops` both sit exactly
-at 20 — any addition to either, or to the technical core, forces a trim or a
-role split first). `subagent-orchestration` is deliberately role-less
+or around the ~20-description crop cap (`devops` sits exactly at 20; `backend`
+sits at 21 since `code-slop-cleanup` joined — a deliberate cap-push: on modern
+context windows the ~20–22 soft range holds, and if `/doctor` reports cropping
+the lever is raising `skillListingBudgetFraction` in settings, not trimming the
+role. Further additions to either role, or to the technical core, still warrant
+a trim-or-split review first). `subagent-orchestration` is deliberately role-less
 (`meta_only`, like `writing-skills`): it's a way of working, not a hat — always
 one route away.
 

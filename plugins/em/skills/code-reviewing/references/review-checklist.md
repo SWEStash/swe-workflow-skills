@@ -95,6 +95,10 @@ Flag when you see:
 - [ ] No tests that merely re-verify third-party library behavior (e.g. asserting a compression lib's magic bytes or compression ratio, or that an ORM persists a row) — tests target our own logic and our boundary with the library, not what the vendor's own tests already cover
 - [ ] Mocks/stubs are used appropriately (not over-mocked)
 - [ ] Integration tests exist for cross-boundary interactions
+- [ ] No assertions weakened or removed relative to the base branch
+- [ ] No tests deleted or skipped without stated justification
+- [ ] No expected values special-cased to match current (possibly buggy) output
+- [ ] The unit under test is not itself mocked out
 
 ## Common Patterns to Flag
 
@@ -115,6 +119,18 @@ Flag when you see:
 **Middle man**: A class that delegates almost everything to another class without adding value. Inline the delegation.
 
 **Inappropriate intimacy**: Two classes that access each other's private details excessively. Restructure to restore proper boundaries.
+
+## AI-Generated Code Tells
+
+Patterns characteristic of AI-assisted diffs. Each is judged *relative to the surrounding code* — the same construct can be correct at one location and slop at another:
+
+- **Defensive checks abnormal for the codepath**: try/catch, null guards, or re-validation deep in trusted paths whose inputs were already validated upstream. (Legitimate at process boundaries, external calls, and user input.)
+- **Style inconsistent with the surrounding file**: naming, formatting, or idiom that doesn't match what the file already does.
+- **A new helper duplicating an existing one**: grep for an existing implementation before accepting any new utility — AI assistants generate rather than search.
+- **Unrequested backwards-compat shims**: `_legacy` wrappers, kept old code paths, re-exports nobody asked for — hedging instead of committing to the change.
+- **Stray working files in the diff**: PLAN.md, NOTES.md, scratch scripts, or other session artifacts that shouldn't ship.
+
+For the full taxonomy with severity levels and when-it's-NOT-slop guidance, see `code-slop-cleanup/references/slop-patterns.md` (if installed).
 
 ## Comments: Good vs Bad
 

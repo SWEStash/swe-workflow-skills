@@ -10,14 +10,14 @@
     {
       "name": "swe-workflow-backend",
       "displayName": "Backend / Full-stack Engineer",
-      "description": "Skills for service, API, and data work: design, test-first implementation, performance, and shipping. (19 skills)",
+      "description": "Skills for service, API, and data work: design, test-first implementation, performance, and shipping. (20 skills)",
       "version": "0.5.2",
       "source": "./plugins/backend"
     },
     {
       "name": "swe-workflow-frontend",
       "displayName": "Frontend Engineer",
-      "description": "Skills for UI/UX, component architecture, accessibility, and client-side performance. (16 skills)",
+      "description": "Skills for UI/UX, component architecture, accessibility, and client-side performance. (17 skills)",
       "version": "0.5.2",
       "source": "./plugins/frontend"
     },
@@ -94,7 +94,7 @@
     {
       "name": "swe-workflow-qa",
       "displayName": "QA / Test Engineer",
-      "description": "Skills for test-first development, coverage strategy, test data, review, and systematic debugging. (11 skills)",
+      "description": "Skills for test-first development, coverage strategy, test data, review, and systematic debugging. (12 skills)",
       "version": "0.5.2",
       "source": "./plugins/qa"
     },

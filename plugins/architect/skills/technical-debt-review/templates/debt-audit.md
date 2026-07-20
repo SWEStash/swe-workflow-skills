@@ -29,28 +29,38 @@
 
 ## Debt Inventory
 
+Every inventoried item cites evidence (`path:line-range`) and carries a confidence level — Low confidence means "what would confirm this" is stated in the description, not that the claim is asserted anyway.
+
 ### Critical — Address Immediately
 
-| Item | Type | Location | Description | Effort |
-|------|------|---------|-------------|--------|
-| | | | | |
+| Item | Type | Evidence (path:line) | Description | Confidence | Risk of fix | Effort |
+|------|------|---------------------|-------------|------------|-------------|--------|
+| | | | | | | |
 
 ### High — Schedule This Quarter
 
-| Item | Type | Location | Description | Effort | Prerequisite |
-|------|------|---------|-------------|--------|-------------|
-| | | | | | |
+| Item | Type | Evidence (path:line) | Description | Confidence | Risk of fix | Effort | Prerequisite |
+|------|------|---------------------|-------------|------------|-------------|--------|-------------|
+| | | | | | | | |
 
 ### Medium — Address Opportunistically
 
-| Item | Type | Location | Description |
-|------|------|---------|-------------|
-| | | | |
+| Item | Type | Evidence (path:line) | Description | Confidence |
+|------|------|---------------------|-------------|------------|
+| | | | | |
 
 ### Accepted Debt — Won't Address
 
 | Item | Reason for accepting |
 |------|---------------------|
+| | |
+
+### Explicitly Not Flagged
+
+Items considered and deliberately not flagged — proves the audit was discerning and prevents re-litigating.
+
+| Item considered | Why it survived scrutiny |
+|-----------------|--------------------------|
 | | |
 
 ---
@@ -77,6 +87,20 @@
 | Test coverage (critical paths) | [X%] | [Y%] | [How measured] |
 | Average function length (hotspot files) | [X lines] | [Y lines] | [How measured] |
 | Bug rate from [module] | [X/month] | [Y/month] | [How measured] |
+
+---
+
+## Method Log
+
+- **Passes run**: [map / static sweep / file-by-file / cross-file / history]
+- **Tools and commands**: [e.g. `npx depcheck`, linter, coverage — with observed output; "not available" if a tool couldn't run — never fabricated]
+- **Not covered → blind spots**: [unreadable files, skipped dirs, missing test env]
+
+---
+
+## Open Questions
+
+[Judgment calls that need user input — e.g. which subsystem matters most, unknown team pain points. Never guessed silently.]
 
 ---
 

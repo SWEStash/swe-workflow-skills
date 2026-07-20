@@ -5,6 +5,19 @@ All notable changes to this project are documented here. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as defined in
 [docs/RELEASING.md](docs/RELEASING.md).
 
+## [Unreleased]
+
+### Added
+
+* **code-slop-cleanup** skill — branch-diff AI-slop hygiene pass (scan diff vs base, judge each hunk against the surrounding file's conventions, classify by severity, strip behavior-preserving removals only, re-run tests), with the shared `slop-patterns.md` taxonomy consumed by both the diff and repo scopes (66 skills total)
+* anti-slopsquatting package verification step in `dependency-management` (registry existence, adoption history, typo-distance, AI-suggested names as unverified input)
+* "AI-Generated Code Tells" section and four test-integrity items (weakened assertions, deleted/skipped tests, special-cased expected values, mocked-out unit under test) in `code-reviewing`'s review checklist
+* slop debt categories (type debt, config/scaffolding debt, documentation drift) and Audit Integrity discipline (path:line evidence, attempt-to-disprove, confidence, explicitly-not-flagged, method log) in `technical-debt-review` + its audit template
+* test-slop pruning discipline (removal criteria + behavior-map proof) in `test-suite-design`
+* stray-artifact check in `git-workflow`'s pre-PR self-review
+* test-editing red flag in `tdd-workflow` (the test was the spec)
+* doc-slop warning in `project-documentation`'s YAGNI principle
+
 ## [0.5.2](https://github.com/SWEStash/swe-workflow-skills/compare/v0.5.1...v0.5.2) (2026-07-15)
 
 
