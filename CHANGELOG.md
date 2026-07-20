@@ -5,6 +5,13 @@ All notable changes to this project are documented here. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as defined in
 [docs/RELEASING.md](docs/RELEASING.md).
 
+## [0.6.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.5.2...v0.6.0) (2026-07-20)
+
+
+### Added
+
+* **skills:** close the AI-slop coverage gap — code-slop-cleanup skill + audit and review hardening ([#15](https://github.com/SWEStash/swe-workflow-skills/issues/15)) ([b4e585c](https://github.com/SWEStash/swe-workflow-skills/commit/b4e585c992824c640979cbf968b54e08bd979bc9))
+
 ## [Unreleased]
 
 ### Added
