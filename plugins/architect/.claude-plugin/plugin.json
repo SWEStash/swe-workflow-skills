@@ -2,7 +2,7 @@
   "name": "swe-workflow-architect",
   "displayName": "Architect / Staff Engineer",
   "description": "Skills for structural decisions, documentation, contracts, blast radius, and technical-debt strategy.",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "author": {
     "name": "SWEStash"
   },

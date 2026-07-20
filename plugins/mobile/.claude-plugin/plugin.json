@@ -2,7 +2,7 @@
   "name": "swe-workflow-mobile",
   "displayName": "Mobile Engineer",
   "description": "Skills for native and cross-platform mobile apps: architecture, offline/sync, UI/UX, accessibility, performance, API contracts, and app-store releases.",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "author": {
     "name": "SWEStash"
   },
