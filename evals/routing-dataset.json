@@ -229,6 +229,27 @@
       ]
     },
     {
+      "id": "positive:code-slop-cleanup:1",
+      "kind": "positive",
+      "skill": "code-slop-cleanup",
+      "prompt": "Clean the AI slop out of this branch diff before I open the PR. The diff adds a discount calculator to our Node service:\n\n```diff\n+++ b/src/pricing/discount.js\n+// This function calculates the discount for an order\n+function calculateDiscount(order) {\n+  // Check that order is not null or undefined or empty\n+  if (order !== null && order !== undefined && order !== '') {\n+    console.log('entering calculateDiscount', order);\n+    // ============ MAIN LOGIC ============\n+    const rate = order.total > 100 ? 0.1 : 0;\n+    console.log('rate computed', rate);\n+    return order.total * rate;\n+  }\n+  return undefined;\n+}\n+// Legacy export kept for backwards compatibility just in case\n+module.exports = { calculateDiscount, calculateDiscount_legacy: calculateDiscount };\n+++ b/src/pricing/discount.test.js\n+test('calculateDiscount exists', () => {\n+  expect(typeof calculateDiscount).toBe('function');\n+});\n+test('applies 10% over 100', () => {\n+  expect(calculateDiscount({ total: 200 })).toBe(20);\n+});\n+++ b/PLAN.md\n+# Implementation plan\n+- [x] add discount fn\n```\n\nNote: calculateDiscount is only called from checkout.js, which already validates the order object. There is no other consumer of the module.",
+      "accept": [
+        "code-slop-cleanup"
+      ]
+    },
+    {
+      "id": "boundary:code-slop-cleanup:3",
+      "kind": "boundary",
+      "skill": "code-slop-cleanup",
+      "prompt": "deslop this diff please:\n\n```diff\n+++ b/src/report/paginate.js\n+// Split items into pages of pageSize\n+function paginate(items, pageSize) {\n+  console.log('paginate called');\n+  const pages = [];\n+  for (let i = 0; i <= items.length; i += pageSize) {\n+    pages.push(items.slice(i, i + pageSize));\n+  }\n+  return pages;\n+}\n```",
+      "accept": [
+        "code-slop-cleanup",
+        "bug-investigating",
+        "code-reviewing",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:compliance-privacy:1",
       "kind": "positive",
       "skill": "compliance-privacy",

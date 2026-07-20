@@ -2,10 +2,10 @@
 
 [![npm](https://img.shields.io/npm/v/swe-workflow-skills)](https://www.npmjs.com/package/swe-workflow-skills)
 [![roles-check](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml/badge.svg)](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml)
-![skills](https://img.shields.io/badge/skills-65-blue)
+![skills](https://img.shields.io/badge/skills-66-blue)
 [![license: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
-A curated library of **65 Claude Code Agent Skills** that walk Claude through the
+A curated library of **66 Claude Code Agent Skills** that walk Claude through the
 software lifecycle the way a disciplined senior engineer would — planning, design,
 TDD, review, security, deployment, incidents, and the project-management work around
 them.
@@ -73,7 +73,7 @@ web, claude.ai chat, and Cowork):
 **two-step** setup:
 
 ```bash
-# 1. Install all 65 skills + router + /role + the hook script, and apply the baseline
+# 1. Install all 66 skills + router + /role + the hook script, and apply the baseline
 npx swe-workflow-skills install --global
 ```
 
@@ -148,7 +148,7 @@ review) live in the `skill-router` skill and **[ROLES.md](docs/ROLES.md)**.
 
 ## What's included
 
-65 skills — **[full catalog → SKILLS.md](docs/SKILLS.md)**:
+66 skills — **[full catalog → SKILLS.md](docs/SKILLS.md)**:
 
 | Area | Count | Examples |
 |------|-------|----------|

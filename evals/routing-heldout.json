@@ -33,6 +33,9 @@
     { "id": "para:code-reviewing:1", "kind": "positive", "skill": "code-reviewing", "prompt": "I finished the discount-calculation change and pushed the branch. Go over the diff and tell me where it breaks our conventions or could be tightened up before a teammate looks.", "accept": ["code-reviewing"] },
     { "id": "para:code-reviewing:2", "kind": "positive", "skill": "code-reviewing", "prompt": "Here's my implementation of the retry wrapper. Give it a critical read for maintainability and correctness problems before I merge it.", "accept": ["code-reviewing"] },
 
+    { "id": "para:code-slop-cleanup:1", "kind": "positive", "skill": "code-slop-cleanup", "prompt": "This branch is full of AI junk — pointless comments narrating every line and leftover print statements everywhere. Tidy the diff up before I open the PR.", "accept": ["code-slop-cleanup"] },
+    { "id": "confuse:code-slop-cleanup:1", "kind": "boundary", "skill": "code-slop-cleanup", "prompt": "This module got messy after the AI pass — clean it up.", "accept": ["code-slop-cleanup", "refactoring"] },
+
     { "id": "para:compliance-privacy:1", "kind": "positive", "skill": "compliance-privacy", "prompt": "A European customer asked us to erase everything we hold about them. Do we even know all the places their details live, and how do we honor that request in a way that holds up to the regulators?", "accept": ["compliance-privacy"] },
     { "id": "para:compliance-privacy:2", "kind": "positive", "skill": "compliance-privacy", "prompt": "We keep users' home addresses and phone numbers indefinitely, just in case. What are our obligations for how long we're allowed to hold that, and for proving we control who can see it?", "accept": ["compliance-privacy"] },
 
