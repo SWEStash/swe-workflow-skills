@@ -2,7 +2,7 @@
   "name": "swe-workflow-devops",
   "displayName": "DevOps / SRE / Platform Engineer",
   "description": "Skills for CI/CD, containers, infrastructure-as-code, delivery, observability, and incidents.",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "author": {
     "name": "SWEStash"
   },
