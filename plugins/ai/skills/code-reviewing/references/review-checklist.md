@@ -99,6 +99,9 @@ Flag when you see:
 - [ ] No tests deleted or skipped without stated justification
 - [ ] No expected values special-cased to match current (possibly buggy) output
 - [ ] The unit under test is not itself mocked out
+- [ ] Assertions target behavior, not cosmetics — not pinned to CSS class strings, emoji, exact copy, or rendered-prompt prose that a harmless reword would break (assert a stable data attribute or structure instead)
+- [ ] No hedged or non-falsifiable assertions (`is None or == []`, `x in ("a","b")` covering both branches, a name that claims more than the assertion checks) — each test can actually fail
+- [ ] The error/failure branch that's visible in the changed code has a test — happy-path fixtures that always feed valid input never exercise the branch just written
 
 ## Common Patterns to Flag
 
@@ -125,10 +128,16 @@ Flag when you see:
 Patterns characteristic of AI-assisted diffs. Each is judged *relative to the surrounding code* — the same construct can be correct at one location and slop at another:
 
 - **Defensive checks abnormal for the codepath**: try/catch, null guards, or re-validation deep in trusted paths whose inputs were already validated upstream. (Legitimate at process boundaries, external calls, and user input.)
+- **Fail-open on error**: a check or validator that, when it fails or can't run, emits a value that *reads as success* — a parse failure returning `{}` → "no issues", an error collapsed to `"exit code 1"` that drops the real message. The inversion of a safety check; usually a bug, not clutter (flag as a Blocker, don't wave it through).
 - **Style inconsistent with the surrounding file**: naming, formatting, or idiom that doesn't match what the file already does.
-- **A new helper duplicating an existing one**: grep for an existing implementation before accepting any new utility — AI assistants generate rather than search.
+- **A new helper duplicating an existing one**: grep for an existing implementation before accepting any new utility — AI assistants generate rather than search. Watch for the recurring shapes: an N-arg setup ritual pasted at every entry point, parallel functions differing only by a noun/constant, byte-identical mappers across sibling modules.
+- **Dead surface exported to silence the checker**: a newly-`export`ed symbol with no importer anywhere (the `_`-prefix + `export` tell), or a fully-built, tested module wired into nothing. Grep for consumers before accepting the export.
+- **Declared-but-unconsumed / speculative plumbing**: a schema field validated but never rendered, a prop threaded through layers but never set, a param carried "for symmetry", a value computed but never surfaced. Ask *who reads this / who sets this?* — if the answer is "nobody", it shouldn't land.
+- **Appending to an already-large unit**: a small hunk that grows an already-800-line function or file — how god-functions accrete one approved PR at a time. Judge the unit's total size after the change, not the hunk's.
+- **Type-checker silencing**: `any`/casts to make an error go away, a param widened to `object`/`unknown` so a `type: ignore` can reach a field, or a stale `type: ignore` that no longer matches any error.
+- **Library-layer function doing I/O or exit**: a domain/pure/pipeline-layer function that prints, logs to the console, or raises `SystemExit` — a presentation/process concern leaking into logic, which forces lossy error handling at every caller.
 - **Unrequested backwards-compat shims**: `_legacy` wrappers, kept old code paths, re-exports nobody asked for — hedging instead of committing to the change.
-- **Stray working files in the diff**: PLAN.md, NOTES.md, scratch scripts, or other session artifacts that shouldn't ship.
+- **Stray working files in the diff**: PLAN.md, NOTES.md, scratch scripts, checked-in generated/derived artifacts, or other session artifacts that shouldn't ship.
 
 For the full taxonomy with severity levels and when-it's-NOT-slop guidance, see `code-slop-cleanup/references/slop-patterns.md` (if installed).
 

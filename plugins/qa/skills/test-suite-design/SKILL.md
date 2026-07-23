@@ -69,6 +69,13 @@ For each piece of code to test, create a behavior map — not a line-by-line mir
 
 When mapping behaviors, exclude behaviors that belong to a dependency — map *your* code's use of it (the inputs it passes, how it handles the library's outputs and errors), not the library's internals. "gzip produces these magic bytes" is zlib's behavior; "our codec round-trips a value and falls back gracefully on a legacy plain string" is ours.
 
+**Cover the failure branch you can see in the code.** The most common coverage hole in
+AI-assisted suites is a repair/parse/error branch that's fully written but never tested,
+because every fixture feeds valid input so the branch never runs — and it's usually the
+riskiest branch (a fail-open handler that returns "clean" on parse failure ships
+unexercised). If the code has an `except`, a fallback, or a "couldn't do it" path, the
+behavior map needs an entry that forces it.
+
 Present the behavior map to the user and refine before writing tests.
 
 ### Step 4: Choose the Testing Layer
@@ -132,9 +139,17 @@ Coverage percentage is a floor, not a ceiling. 80% meaningful coverage beats 100
 Suites accumulate tests that cost maintenance without buying protection — common in AI-assisted codebases, where generated tests pad coverage. Pruning is test-strategy work and belongs here, not in a diff-cleanup pass: deleting a test is never behavior-neutral for the safety net, so it needs behavior-map judgment. A test is a removal candidate when it:
 
 - **Asserts nothing meaningful** — `expect(true).toBe(true)` filler, or assertions that cannot fail
+- **Hedged or non-falsifiable** — `assert x is None or x == []` (covers both, so nothing can fail it), `assert x in ("skills", "work")` when only one is reachable, or a test whose *name* claims more than its assertion checks (`test_multi_word_goes_to_work` that never asserts "work")
+- **Brittle on cosmetics** — pinned to CSS class strings, emoji, exact copy, or rendered-prompt prose, so a harmless reword reds the suite; assert a stable data attribute or the DOM/structure instead
 - **Duplicates another test's coverage of the same behavior** — same arrange/act/assert in substance, differing only cosmetically
 - **Asserts on the mock rather than the code** — verifying that the mock returned what it was configured to return tests the mock, not the unit
 - **Mirrors the implementation line-for-line** — breaks on every refactor, catches no behavior change
+
+Separately, watch for **setup/fixture duplication across files** — the same on-disk
+scaffold or `_make_x` builder copy-pasted into 5–19 test files because there's no
+`conftest.py` / shared factory. That's not a pruning candidate (the tests are real); it's
+a consolidation candidate — extract the shared fixture (Step 2), then have each file use
+it. Left alone, the copies drift and a setup change becomes an N-file edit.
 
 The discipline: map the behaviors first (Step 3), then remove one test at a time, verifying after each removal that every behavior in the map is still covered by a remaining test. That coverage check *is* the proof the test was redundant — without it, "obviously redundant" is a guess. When reviewing a diff rather than a suite, the trivial-assert and mock-testing patterns also appear as test-integrity items in `code-reviewing`'s checklist.
 

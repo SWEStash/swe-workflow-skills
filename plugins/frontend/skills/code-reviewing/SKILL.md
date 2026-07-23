@@ -37,6 +37,21 @@ Look at the forest before the trees. Check:
 - **Is the approach sound?** Before nitpicking syntax, is the overall strategy correct?
 - **Are there missing pieces?** Tests? Documentation? Error handling? Migration?
 
+**Step outside the diff.** The most common AI slop is invisible in a single hunk —
+it only shows up repo-wide. For any new helper, block, command, or exported symbol in
+the diff, run three greps before accepting it:
+- **A twin?** Grep the repo for an existing function/block that already does this — AI
+  assistants generate a fourth copy instead of finding copies #1–3 (see `code-slop-cleanup`'s
+  *Reuse Before Write*).
+- **Any importer?** A newly-`export`ed symbol with no consumer is dead surface (often
+  exported just to silence the unused-symbol checker).
+- **Any consumer?** A new schema field, prop, or param that nothing reads or sets is
+  speculative plumbing — the API looks finished but is wired to nothing.
+
+Also check the *unit being grown*, not just the hunk: adding 15 lines to an already
+800-line function or 200-line file is how god-functions form one reviewer-approved PR at
+a time. Judge the total size after the change, not the size of the diff.
+
 ### Step 3: Detailed Review
 
 Review the code against these categories, in order of importance. See [references/review-checklist.md](references/review-checklist.md) for the detailed checklist.

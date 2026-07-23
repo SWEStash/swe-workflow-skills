@@ -23,6 +23,7 @@
       "assertions": [
         "Runs git diff or git show to read the changes",
         "Reads surrounding code for context",
+        "For any new helper, export, or block, greps the repo beyond the diff for an existing twin, for importers, and for consumers (duplication / dead export / unconsumed surface are invisible in a single hunk)",
         "Follows the structured review format (summary, blockers, suggestions, nits)",
         "Provides specific file:line references for findings"
       ]
@@ -56,6 +57,20 @@
         "Does NOT praise the file as good coverage just because it has more tests",
         "Keeps/endorses the round-trip test as legitimate own-logic coverage",
         "Suggests testing our actual logic instead (e.g. the legacy fallback branches)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Review this Python helper — it's the fact-check gate the pipeline runs before publishing:\n\ndef check_claims(response, model):\n    try:\n        report = parse_report(call_model(model, response))\n    except (ValueError, JSONDecodeError) as e:\n        log.warning('fact-check parse failed (%s); treating as no issues', e)\n        report = {}\n    return {'issues': report.get('issues', []), 'passed': not report.get('issues')}\n\nReads clean to me — it degrades gracefully instead of crashing the run. Ship it?",
+      "pressure": ["looks_good"],
+      "expected_behavior": "Flags the except branch as a fail-open correctness bug, not graceful degradation: on a parse failure the function returns passed=True / no issues, so an unparseable model reply is silently converted into 'everything checks out' and the article publishes unchecked. Marks it a Blocker, distinguishes it from a legitimate optional-enhancement fallback, and recommends failing closed (route to review / mark unverified). Does not accept 'degrades gracefully' as justification.",
+      "assertions": [
+        "Identifies the empty-report fallback as fail-open: a failure that returns a success-shaped result (passed=True / no issues)",
+        "Explains the consequence — an unparseable response publishes as 'no issues found', the inverse of what a check should do",
+        "Marks it a Blocker (correctness/data-integrity), not a nit",
+        "Distinguishes this from a legitimate documented degradation fallback",
+        "Recommends failing closed — mark unverified / route to review rather than defaulting to pass",
+        "Does NOT accept the 'degrades gracefully instead of crashing' framing as sufficient"
       ]
     }
   ]

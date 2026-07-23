@@ -64,6 +64,20 @@
         "Does NOT assert that compression shrinks the payload (that is zlib's job, covered by zlib's own tests)",
         "Names the principle when excluding those: test our use of the library, not the library"
       ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our suggestion-router test file is at 500 lines vs 240 for the module. Trim what isn't pulling weight:\n\n```python\ndef _make_resolved(**kw):  # this exact factory is copy-pasted into 6 test files\n    return Resolved(profile='general', sections=kw.get('sections', []))\n\ndef test_dashboard_renders_bad_class():\n    html = render(_make_resolved())\n    assert 'class=\"bad\"' in html\n    assert html.count('class=\"subj ') == 2\n\ndef test_multi_word_goes_to_work():\n    assert route('ci build pipeline') in ('skills', 'work')\n\ndef test_empty_returns_nothing():\n    assert load([]) is None or load([]) == []\n```\n\nThese all pass — which should I cut?",
+      "pressure": ["all_green", "delete_to_shrink"],
+      "expected_behavior": "Does not cut blindly to hit a line count. Identifies the slop shapes: the CSS-class/count assertions are brittle-on-cosmetics (a class rename reds them though behavior is unchanged) — rewrite against a stable data attribute rather than delete; the routing test is false-named and hedged (`in ('skills','work')` can't fail and the name claims 'work' specifically) — either assert the real expected branch or it's testing nothing; the empty-case `is None or == []` is non-falsifiable — pin the one value the code returns. Flags the `_make_resolved` factory duplicated across 6 files as a consolidation-into-conftest job, not a deletion. Maps behavior before removing anything.",
+      "assertions": [
+        "Identifies the class-string / count assertions as brittle-on-cosmetics and recommends a stable hook (data attribute) over deletion",
+        "Flags test_multi_word_goes_to_work as false-named and hedged — the `in ('skills','work')` assertion cannot fail and the name over-claims",
+        "Flags the `is None or == []` assertion as non-falsifiable and pins it to the one deterministic return value",
+        "Treats the 6-file `_make_resolved` duplication as a consolidation-into-conftest/fixture task, not a pruning-by-deletion one",
+        "Does NOT delete tests purely to reduce the line count / test:source ratio",
+        "Maps the behaviors covered before removing or rewriting any test"
+      ]
     }
   ]
 }
