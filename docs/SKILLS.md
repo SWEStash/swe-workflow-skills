@@ -34,7 +34,7 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `performance-optimization` | Quality | Bottleneck detection, query optimization, caching strategy |
 | `refactoring` | Improvement | Systematic code improvement guided by design principles |
 | `code-slop-cleanup` | Improvement | Strip AI slop from a branch diff before PR — comments, debug leftovers, defensive theater, stray files |
-| `technical-debt-review` | Improvement | Codebase health assessment — hotspots, debt categories, remediation roadmap |
+| `technical-debt-review` | Improvement | Codebase health assessment — hotspots, debt categories, remediation roadmap; plus an AI-slop-audit mode (14-category scorecard, systemic "fix once at the source" patterns) |
 | `project-review` | Improvement | Whole-project execution health — scope/roadmap alignment, implementation maturity, evidence it works |
 | `dependency-management` | Maintenance | Evaluate, audit, and upgrade project dependencies |
 | `code-archaeology` | Maintenance | Understand unfamiliar/legacy code — history mining, tracing, characterization tests |

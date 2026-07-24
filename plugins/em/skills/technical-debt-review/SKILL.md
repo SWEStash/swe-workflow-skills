@@ -65,6 +65,30 @@ For each hotspot, classify the debt:
 
 For the AI-slop lens on these categories (per-pattern tells and when-it's-NOT-slop guidance), read the sibling skill's `code-slop-cleanup/references/slop-patterns.md` if installed.
 
+## AI-Slop Audit Mode
+
+When the request is specifically an **AI-slop audit** (not a general debt roadmap for
+planning) — "audit this repo for AI slop", "full slop review", "what slop did the agents
+leave" — keep the same integrity discipline but shift the output:
+
+- **Score the 14 slop categories, not the debt types.** Duplication · premature
+  abstraction · dead/unreachable code · defensive theater · verbose/inflated · comment
+  slop · naming/organization · type slop · error-handling slop · test slop · dependency
+  slop · structural/architectural · config/scaffolding · documentation drift. A scorecard
+  row per category (count · worst severity · one-line note) is the map.
+- **Find the systemic patterns — "fix once at the source."** The highest-value section is
+  not the finding list but the handful of **root causes** that parent it: "the same wiring
+  ritual pasted 18× (P1)", "no shared test scaffold, so fixtures duplicate across 6 files
+  (P2)", "one impure `resolve()` leaks `SystemExit`, forcing lossy handling at 7 callers
+  (P3)." Collapse dozens of findings to a few roots, then fix the root.
+- **Use the static-tooling method and the report format** in
+  [references/slop-audit-method.md](references/slop-audit-method.md) (per-language tool
+  menu — jscpd/knip/vulture/deptry/ruff/mypy — plus git-churn and grep/`diff` verification)
+  and write the report with [templates/slop-audit.md](templates/slop-audit.md).
+
+Everything below (Audit Integrity, evidence, "Explicitly not flagged", method log) applies
+unchanged — a slop audit that invents findings is worse than one that misses them.
+
 ## Audit Integrity — do not generate slop while hunting it
 
 A wrong finding costs the audit more credibility than a missed one, and this skill runs in a forked context: the written report is the only artifact that survives, so an unevidenced finding is unfalsifiable downstream. Rules for every finding:

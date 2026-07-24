@@ -55,6 +55,22 @@ Any of these is a completion claim and triggers the gate:
 NOT evidence: a previous run, a CI result you didn't open, a teammate's report
 you didn't confirm, or your own expectation of what the code does.
 
+## The tests aren't the only gate
+
+Tests prove behavior; they don't prove the change is clean. When the project
+configures **static gates** — a type checker (`tsc --noEmit`, `mypy`), a linter
+(`eslint`, `ruff`), a dead-code / unused-export check (`knip`, `vulture`) — those
+are part of "done" too. A change is not complete until they run green *this
+session*, on the same five-step gate (IDENTIFY → RUN → READ → VERIFY → CLAIM).
+
+The failure mode this prevents is a **rotted gate**: a repo declares
+`mypy strict = true` (or `eslint --max-warnings 0`) and it quietly sits on 40+
+errors because no one runs it — so the gate that was supposed to stop `any`-casts,
+stale `type: ignore`s, and dead exports stops nothing. A declared strict gate with
+N errors is not "passing"; it is broken, and adding to it is adding slop the gate
+was meant to catch. Run it, read the count, and either land it at zero or name the
+pre-existing debt explicitly — never let "the tests pass" stand in for "the gates pass."
+
 ## Rationalizations to reject
 
 | Excuse | Reality |
@@ -65,12 +81,14 @@ you didn't confirm, or your own expectation of what the code does.
 | "The subagent said it succeeded" | Reports aren't evidence. Verify the artifact yourself. |
 | "I'm confident it works" | Confidence is a feeling; the exit code is a fact. |
 | "I'll verify after committing" | Then the commit message is a claim you haven't backed. |
+| "Lint and types are separate from tests" | If the repo configures them, "green" means all of them — a strict gate on N errors is a broken gate, not an optional one. |
 
 ## Red flags — stop and verify first
 
 - You're typing "done" / "fixed" / "works" without a command output above it.
 - You feel satisfaction ("Great!", "Perfect!") before running anything.
 - You're about to commit/push/PR and haven't run the test command this session.
+- You ran the tests but not the configured type checker / linter the repo defines.
 - You're relying on a partial run or a stale result.
 
 ## Cross-Skill References

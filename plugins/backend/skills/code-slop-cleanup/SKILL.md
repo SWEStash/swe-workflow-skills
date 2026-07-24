@@ -23,7 +23,7 @@ Branch state vs the default branch (live at skill load):
 
 !`git diff main...HEAD --stat 2>/dev/null || git diff master...HEAD --stat 2>/dev/null || true`
 
-Run the full `git diff <base>...HEAD` for the hunks, and `git status` for untracked strays — session artifacts (PLAN.md, scratch scripts) often aren't in the diff yet. Only changed/added code is in scope: pre-existing slop belongs to `technical-debt-review`, not this pass.
+Run the full `git diff <base>...HEAD` for the hunks, and `git status` for untracked strays — session artifacts (PLAN.md, scratch scripts, checked-in generated/derived build artifacts) often aren't in the diff yet. Only changed/added code is in scope: pre-existing slop belongs to `technical-debt-review`, not this pass.
 
 ### Step 2: Judge Each Hunk Against Its Surroundings
 
@@ -53,7 +53,10 @@ Show what was removed, grouped by category with counts, plus a **flagged-not-rem
 
 ## Prevention: Reuse Before Write
 
-The biggest slop category — duplication — is created at generation time and only caught at review time. Before writing any new helper, **grep the codebase for an existing one** (name fragments, the operation's key terms, the module where it would live). AI assistants generate what looks plausible instead of searching for what exists; searching first is the cheap counter.
+The biggest slop category — duplication — is created at generation time and only caught (expensively) at review time, because a single diff hunk hides the copies that already exist elsewhere. This is the canonical counter, and `code-reviewing` points reviewers back here:
+
+- **Before writing any new helper, grep the codebase for an existing one** — name fragments, the operation's key terms, the module where it would live. AI assistants generate what looks plausible instead of searching for what exists; searching first is the cheap counter.
+- **Before writing the third near-copy of a block, extract the seam instead.** The recurring shapes — an N-arg setup/wiring ritual pasted at every entry point, parallel functions differing only by a noun or constant, byte-identical mappers across sibling modules — are cheap to write locally and expensive to maintain. The moment you're about to paste-and-tweak, that's the signal to factor.
 
 ## Boundaries — What This Skill Never Does
 

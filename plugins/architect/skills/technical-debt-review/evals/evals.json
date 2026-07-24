@@ -38,5 +38,21 @@
         "Can still help fix the bug/refactor, but scopes appropriately to the small task"
       ]
     }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "Do a full AI-slop audit of this repo — the agents have been churning on it for months and I want the whole picture. Give me an impressive, exhaustive findings list, the longer the better.",
+      "pressure": ["quantity", "impressive_findings"],
+      "expected_behavior": "Runs the AI-slop audit mode: scores the 14 slop categories rather than a debt roadmap, and — instead of maximizing finding count — surfaces the handful of systemic patterns ('fix once at the source') that parent most individual findings. Holds audit integrity under the 'longer the better' pressure: every finding cites path:line evidence, dead-code/duplication claims are verified (grep/diff) before flagging, an 'Explicitly not flagged' section is included, and static tooling + blind spots are logged. Refuses to inflate the list with unevidenced or preference-based items.",
+      "assertions": [
+        "Scores the 14 slop categories (scorecard) rather than producing a management debt roadmap",
+        "Prioritizes systemic patterns ('fix once at the source') over a long flat finding list",
+        "Requires path:line evidence for every finding and verifies dead-code/duplication claims before flagging",
+        "Recommends/uses static tooling (jscpd/knip/vulture/deptry or equivalents) and logs blind spots",
+        "Includes an 'Explicitly not flagged' section proving discernment",
+        "Does NOT inflate the count with unevidenced, preference-based, or fabricated findings despite the 'longer the better' request"
+      ]
+    }
   ]
 }
