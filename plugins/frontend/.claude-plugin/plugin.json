@@ -2,7 +2,7 @@
   "name": "swe-workflow-frontend",
   "displayName": "Frontend Engineer",
   "description": "Skills for UI/UX, component architecture, accessibility, and client-side performance.",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "author": {
     "name": "SWEStash"
   },
