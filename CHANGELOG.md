@@ -5,6 +5,13 @@ All notable changes to this project are documented here. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as defined in
 [docs/RELEASING.md](docs/RELEASING.md).
 
+## [0.6.1](https://github.com/SWEStash/swe-workflow-skills/compare/v0.6.0...v0.6.1) (2026-07-24)
+
+
+### Fixed
+
+* **skills:** prevent and catch AI slop earlier — derived from six repo audits ([#17](https://github.com/SWEStash/swe-workflow-skills/issues/17)) ([b8d4eb4](https://github.com/SWEStash/swe-workflow-skills/commit/b8d4eb4d373007d3e4e07277c0a9d4c1d4652c2a))
+
 ## [0.6.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.5.2...v0.6.0) (2026-07-20)
 
 
