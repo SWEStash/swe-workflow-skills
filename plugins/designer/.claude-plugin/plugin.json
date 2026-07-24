@@ -2,7 +2,7 @@
   "name": "swe-workflow-designer",
   "displayName": "Designer / UX",
   "description": "Skills for user flows, accessibility, product requirements, and the frontend architecture that realizes them.",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "author": {
     "name": "SWEStash"
   },

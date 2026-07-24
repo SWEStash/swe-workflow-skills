@@ -2,7 +2,7 @@
   "name": "swe-workflow-qa",
   "displayName": "QA / Test Engineer",
   "description": "Skills for test-first development, coverage strategy, test data, review, and systematic debugging.",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "author": {
     "name": "SWEStash"
   },
