@@ -47,6 +47,15 @@ the diff, run three greps before accepting it:
   exported just to silence the unused-symbol checker).
 - **Any consumer?** A new schema field, prop, or param that nothing reads or sets is
   speculative plumbing — the API looks finished but is wired to nothing.
+- **Any doc still describing the old shape?** If the diff renames, removes, or adds
+  something a user types or configures — a flag, env var, endpoint, config key,
+  command, script, install step — grep the README and `docs/` for it, old name
+  included. Check tables, diagrams, and layout blocks first: prose gets reread when
+  someone edits the feature, inventories don't.
+
+When the diff *is* documentation, review it against the code rather than for prose
+quality. The failure mode is a confident sentence nobody verified — check each claim
+against the file it describes, and treat an unverifiable one as a finding.
 
 Also check the *unit being grown*, not just the hunk: adding 15 lines to an already
 800-line function or 200-line file is how god-functions form one reviewer-approved PR at
@@ -58,8 +67,8 @@ Review the code against these categories, in order of importance. See [reference
 
 **Severity levels for findings:**
 
-- 🔴 **Blocker**: Must fix before merge (bugs, security issues, data loss risks)
-- 🟡 **Suggestion**: Should fix, significantly improves quality (principle violations, missing tests)
+- 🔴 **Blocker**: Must fix before merge (bugs, security issues, data loss risks) — including a doc the diff makes *wrong* where the doc is an instruction someone follows: install steps, setup commands, the API contract, config keys. A stale instruction fails for the next person, silently, and is worse than no instruction.
+- 🟡 **Suggestion**: Should fix, significantly improves quality (principle violations, missing tests, docs the diff leaves incomplete rather than wrong)
 - 🔵 **Nit**: Optional improvement (naming, style, minor simplification)
 
 ### Step 4: Present Findings

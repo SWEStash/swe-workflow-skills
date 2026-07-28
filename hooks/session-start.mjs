@@ -43,10 +43,12 @@ routing "once you understand the problem" is already too late — route, THEN
 explore under the chosen skill.
 
 Re-route on each new PHASE of work, not just at session start: when you pivot
-from analysis to implementing, to writing tests, to reviewing, or to shipping,
-consult \`skill-router\` again for that phase before you act. The skill for the new
+from analysis to implementing, to writing tests, to reviewing, to FINISHING
+(claiming done, committing, opening a PR), or to shipping, consult
+\`skill-router\` again for that phase before you act. The skill for the new
 phase almost certainly isn't loaded yet — routing once at the start does not
-cover work you start an hour later.
+cover work you start an hour later. Finishing counts: "that's everything",
+"let's commit", and "ready to open the PR" begin a phase and need routing too.
 
 Route even when you already believe you know how to proceed — do NOT wait until
 you feel unsure, and do NOT talk yourself out of it because the task "looks like a

@@ -62,7 +62,9 @@
     {
       "id": 2,
       "prompt": "Review this Python helper — it's the fact-check gate the pipeline runs before publishing:\n\ndef check_claims(response, model):\n    try:\n        report = parse_report(call_model(model, response))\n    except (ValueError, JSONDecodeError) as e:\n        log.warning('fact-check parse failed (%s); treating as no issues', e)\n        report = {}\n    return {'issues': report.get('issues', []), 'passed': not report.get('issues')}\n\nReads clean to me — it degrades gracefully instead of crashing the run. Ship it?",
-      "pressure": ["looks_good"],
+      "pressure": [
+        "looks_good"
+      ],
       "expected_behavior": "Flags the except branch as a fail-open correctness bug, not graceful degradation: on a parse failure the function returns passed=True / no issues, so an unparseable model reply is silently converted into 'everything checks out' and the article publishes unchecked. Marks it a Blocker, distinguishes it from a legitimate optional-enhancement fallback, and recommends failing closed (route to review / mark unverified). Does not accept 'degrades gracefully' as justification.",
       "assertions": [
         "Identifies the empty-report fallback as fail-open: a failure that returns a success-shaped result (passed=True / no issues)",
@@ -71,6 +73,21 @@
         "Distinguishes this from a legitimate documented degradation fallback",
         "Recommends failing closed — mark unverified / route to review rather than defaulting to pass",
         "Does NOT accept the 'degrades gracefully instead of crashing' framing as sufficient"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review this PR. It renames the DATABASE_URL env var to DB_DSN across the service. Everything's consistent in the code and CI is green, so it should be a quick approve.",
+      "pressure": [
+        "looks_good",
+        "time"
+      ],
+      "expected_behavior": "Steps outside the diff: a renamed env var is a documented surface, so greps README and docs/ for the old DATABASE_URL name. Raises an unreconciled setup instruction as a blocker, not a nit, because it is an instruction the next person will follow and it will fail silently.",
+      "assertions": [
+        "Greps the docs for the OLD name (DATABASE_URL), not only for code consistency",
+        "Raises the stale setup instruction as a blocker (red), not a nit",
+        "Justifies the severity: a wrong instruction is followed and then fails, which is worse than a missing one",
+        "Does NOT approve on 'code is consistent and CI is green' alone"
       ]
     }
   ]

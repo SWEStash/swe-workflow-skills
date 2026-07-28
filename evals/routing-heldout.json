@@ -159,6 +159,14 @@
     { "id": "para:ui-ux-design:1", "kind": "positive", "skill": "ui-ux-design", "prompt": "I'm about to build the new settings screen and I want to think through how a person moves through it, and what it shows while data is loading or when there's nothing there yet, before I code the layout.", "accept": ["ui-ux-design"] },
 
     { "id": "para:verification-before-completion:1", "kind": "positive", "skill": "verification-before-completion", "prompt": "I think I fixed the caching bug and I'm about to call it finished and push. Hold me to actually proving it works first instead of taking my word for it.", "accept": ["verification-before-completion"] },
+    { "id": "para:verification-before-completion:2", "kind": "positive", "skill": "verification-before-completion", "prompt": "Okay, that's everything on my list. Let's commit and move on.", "accept": ["verification-before-completion"] },
+    { "id": "para:verification-before-completion:3", "kind": "positive", "skill": "verification-before-completion", "prompt": "I think we're done here — anything else before I call it?", "accept": ["verification-before-completion"] },
+    { "id": "para:verification-before-completion:4", "kind": "positive", "skill": "verification-before-completion", "prompt": "Ready to open the PR on this one.", "accept": ["verification-before-completion"] },
+    { "id": "para:verification-before-completion:5", "kind": "positive", "skill": "verification-before-completion", "prompt": "The fix is in. Ship it.", "accept": ["verification-before-completion"] },
+    { "id": "para:verification-before-completion:6", "kind": "positive", "skill": "verification-before-completion", "prompt": "Great, wrap this up and push it.", "accept": ["verification-before-completion"] },
+    { "id": "para:verification-before-completion:7", "kind": "positive", "skill": "verification-before-completion", "prompt": "All set on my end, go ahead and close this out.", "accept": ["verification-before-completion"] },
+    { "id": "para:verification-before-completion:8", "kind": "positive", "skill": "verification-before-completion", "prompt": "Looks good to me, let's get it merged.", "accept": ["verification-before-completion"] },
+    { "id": "para:verification-before-completion:9", "kind": "positive", "skill": "verification-before-completion", "prompt": "That should do it — mark the task finished.", "accept": ["verification-before-completion"] },
 
     { "id": "para:writing-skills:1", "kind": "positive", "skill": "writing-skills", "prompt": "I'm adding a new workflow module to this library, and one of my existing ones never activates when it should. Help me author the description and structure so they fire reliably.", "accept": ["writing-skills"] },
 
@@ -226,6 +234,8 @@
     { "id": "trivial:13", "kind": "trivial", "skill": null, "prompt": "what does the acronym RAG stand for in the AI world?", "accept": ["NONE"] },
     { "id": "trivial:14", "kind": "trivial", "skill": null, "prompt": "curious — do people say 'S-Q-L' or 'sequel'?", "accept": ["NONE"] },
     { "id": "trivial:15", "kind": "trivial", "skill": null, "prompt": "roughly, what's a normal default page size people use for paginated endpoints?", "accept": ["NONE"] },
-    { "id": "trivial:16", "kind": "trivial", "skill": null, "prompt": "just so I'm clear, does the CI in CI/CD stand for continuous integration?", "accept": ["NONE"] }
+    { "id": "trivial:16", "kind": "trivial", "skill": null, "prompt": "just so I'm clear, does the CI in CI/CD stand for continuous integration?", "accept": ["NONE"] },
+    { "id": "trivial:17", "kind": "trivial", "skill": null, "prompt": "Quick one while I'm still writing this function — does Python's dict preserve insertion order?", "accept": ["NONE"] },
+    { "id": "trivial:18", "kind": "trivial", "skill": null, "prompt": "Before I decide anything, just explain what a monotonic clock is.", "accept": ["NONE"] }
   ]
 }

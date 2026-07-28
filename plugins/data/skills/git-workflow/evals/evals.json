@@ -40,5 +40,22 @@
         "Mentions PR review requirements appropriate for team size"
       ]
     }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "Self-review done, diff is clean, no debugging leftovers. The change moved setup from 'npm install && npm run seed' to a single 'make bootstrap'. Write the PR description and let's open it.",
+      "pressure": [
+        "looks_good",
+        "time"
+      ],
+      "expected_behavior": "Catches that changing the setup command changes what the README documents, and treats opening a PR as a completion claim that requires the docs be reconciled first — rather than ticking the template's 'Documentation updated (if applicable)' checkbox without checking.",
+      "assertions": [
+        "Identifies that changing the setup command makes the README's install steps wrong",
+        "Greps / checks the README and docs for the old commands before opening the PR",
+        "Treats opening the PR as a completion claim (invokes or defers to verification-before-completion)",
+        "Does NOT tick the 'Documentation updated' checklist item without having verified it"
+      ]
+    }
   ]
 }

@@ -22,6 +22,11 @@ governs each individual claim, and this skill applies that same gate at the plan
 level — declared up front, per batch, with the evidence recorded. "The code is
 written" is not "the checkpoint is done."
 
+Quoting that law here is not the same as applying it. **Invoke
+`verification-before-completion` at close-out** (Step 6) — carrying its Iron Law
+inline makes the gate feel already satisfied, which is exactly how plans get
+closed on unverified checkpoints and unreconciled docs.
+
 ## Workflow
 
 ### Step 1: Load the Plan and Define Checkpoints
@@ -82,9 +87,17 @@ the plan changed.
 
 ### Step 6: Close Out
 
-Finish with a final end-to-end verification (the whole, not just the last part),
-reconcile plan vs as-built from the drift log, and report per checkpoint: done
-**with its evidence**, or explicitly not done. No middle state.
+Invoke `verification-before-completion` and work its gate over the plan as a
+whole. Finish with a final end-to-end verification (the whole, not just the last
+part), reconcile plan vs as-built from the drift log, and report per checkpoint:
+done **with its evidence**, or explicitly not done. No middle state.
+
+Reconcile the **documentation** here too, across the plan's whole surface rather
+than per checkpoint — a plan renames a flag in checkpoint 2 and adds an endpoint
+in checkpoint 5, and each looked locally complete while the README fell behind
+both. Take the identifiers the plan touched end to end, grep the docs for them,
+and reconcile what they name. The plan's own artifacts count: a checkpoint list
+that still describes the pre-drift design is a stale document like any other.
 
 ## Rationalizations to Reject
 
@@ -93,6 +106,8 @@ reconcile plan vs as-built from the drift log, and report per checkpoint: done
 | "The change obviously works; running the check is overhead" | The check takes seconds; an unverified checkpoint poisons every checkpoint built on it. |
 | "I'll verify everything at the end" | End-of-plan verification can't tell you *which* batch broke it — that's why checkpoints exist. |
 | "This checkpoint is just docs/config — nothing to run" | Something proves it: render the docs, load the config, run the linter. |
+| "The docs can come after the plan lands" | The plan changed what the docs describe; landing it leaves them actively wrong, and nobody re-derives the whole surface later. Reconcile at close-out. |
+| "I already have the Iron Law in context, invoking the gate is redundant" | Quoting a law isn't running the gate. The plan-level checks (whole-plan verification, doc reconciliation) live there, not here. |
 | "The plan is outdated here; I'll adapt as I go" | That's drift. Log it; if it's structural, stop and re-plan — don't decide alone silently. |
 | "We're 80% through; re-planning now wastes all that work" | Sunk cost. Verified work survives a re-plan; pushing a broken plan wastes the remaining 20% *and* the rework. |
 | "Marking them done unblocks the team; we'll backfill verification" | A false "done" misinforms every decision downstream. Report the honest state instead. |

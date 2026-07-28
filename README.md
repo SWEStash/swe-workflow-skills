@@ -136,6 +136,8 @@ data-modeling         →  user/session schema + migration
 tdd-workflow          →  red-green-refactor the implementation
 security-audit        →  authn/authz, token handling, OWASP pass
 code-reviewing        →  DRY/KISS/SRP + conventions
+verification-before-completion
+                      →  evidence for the "done" claim; docs reconciled
 deployment-checklist  →  pre-deploy safety + rollback readiness
 ```
 

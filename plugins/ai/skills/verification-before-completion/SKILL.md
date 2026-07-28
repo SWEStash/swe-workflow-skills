@@ -71,6 +71,57 @@ N errors is not "passing"; it is broken, and adding to it is adding slop the gat
 was meant to catch. Run it, read the count, and either land it at zero or name the
 pre-existing debt explicitly — never let "the tests pass" stand in for "the gates pass."
 
+## The docs are part of the surface you changed
+
+Tests prove behavior, the static gates prove the code is clean — neither notices
+that the README still documents the flag you just renamed. A change carries a
+**documented surface** when it adds, renames, or removes something a person types,
+configures, or calls: a CLI flag, env var, config key, endpoint, command, script,
+package or directory, install/setup step, or public exported symbol. A purely
+internal refactor usually carries none — say so and move on. This gate is for
+changes that made an existing document wrong.
+
+Same five steps, with a grep as the proving command:
+
+1. **Derive** the identifiers your diff touched — the old names as well as the new
+   ones. The old name is what the docs still contain.
+2. **Grep** the doc set for them: README, `docs/`, and inline docs.
+3. **Read** the hits, in place. A hit is not automatically drift; the surrounding
+   sentence decides.
+4. **Reconcile or report.** Fix what your change made wrong, or state plainly which
+   docs are stale and why you're leaving them.
+
+Two things make this gate miss:
+
+- **Prose survives; inventories rot.** People reread the paragraph they're editing
+  and never reread the table three sections down. Endpoint tables, architecture
+  diagrams, project-layout blocks, ADR indexes, and command lists go stale first
+  and silently — check those before the prose.
+- **An empty grep is not evidence of no drift.** Docs use shorthand, globs, and
+  brace expansion (`/api/{users,orders}`), so a literal grep for `orders` can miss
+  a line that documents it. When the doc plausibly covers the area, open the
+  section and read it rather than trusting a clean grep.
+
+Scope this to **reconciliation, not authoring**: it touches documents that already
+reference what you changed. It never means writing new docs nobody asked for —
+that produces the doc-slop `project-documentation` exists to prevent.
+
+## What you write into a doc is also a claim
+
+A document is a set of assertions about the code, and the Iron Law does not stop
+at prose. Every factual sentence you add must come from something you read **this
+session**, not from what you remember the code doing. Sweeps introduce errors as
+readily as they remove them, and a confidently-worded wrong sentence outlives the
+stale one it replaced.
+
+- **Enumerate from the source of truth.** Endpoints come from the router file,
+  scripts from listing the directory, packages from the manifest, flags from the
+  arg parser. Do not reconstruct a list from memory and then spot-check it.
+- **Re-read your own doc diff before committing**, against the code — the same
+  scrutiny you would give a code hunk. This is where a wrong claim gets caught.
+- **Verify links resolve.** A doc edit that moves or adds a relative link is a
+  change whose proving command is a link check.
+
 ## Rationalizations to reject
 
 | Excuse | Reality |
@@ -82,6 +133,10 @@ pre-existing debt explicitly — never let "the tests pass" stand in for "the ga
 | "I'm confident it works" | Confidence is a feeling; the exit code is a fact. |
 | "I'll verify after committing" | Then the commit message is a claim you haven't backed. |
 | "Lint and types are separate from tests" | If the repo configures them, "green" means all of them — a strict gate on N errors is a broken gate, not an optional one. |
+| "Docs can go in a follow-up PR" | The follow-up is where doc debt goes to die, and meanwhile the README documents a flag that no longer exists. The reconciliation is a grep, not a project. |
+| "The user didn't ask me to touch the docs" | They asked for a working change. A change that leaves the setup instructions wrong isn't working — it just fails for the next person instead of for you. |
+| "Nobody reads the README anyway" | The people who read it are exactly the ones who can't ask you. And a *wrong* doc is worse than a missing one: it's followed, then it fails. |
+| "I know what that endpoint does, I don't need to open the file" | That's recall, and recall is what puts false sentences into docs. Read it, then write it. |
 
 ## Red flags — stop and verify first
 
@@ -90,6 +145,10 @@ pre-existing debt explicitly — never let "the tests pass" stand in for "the ga
 - You're about to commit/push/PR and haven't run the test command this session.
 - You ran the tests but not the configured type checker / linter the repo defines.
 - You're relying on a partial run or a stale result.
+- You renamed or removed something a user types or configures, and haven't grepped
+  the docs for the old name.
+- You're writing a sentence about how the code behaves into a doc, and you haven't
+  opened that code this session.
 
 ## Cross-Skill References
 
@@ -100,3 +159,5 @@ This skill is the shared "done" gate for every workflow that ends in a claim:
 - `deployment-checklist` — every checked box is an instance of this gate
 - `code-reviewing` — verify the change before approving, not from the diff alone
 - `cicd-pipeline` — the pipeline automates this gate; locally, run it yourself first
+- `project-documentation` — the sync sweep and the accuracy method, when the grep
+  turns up docs that need reconciling

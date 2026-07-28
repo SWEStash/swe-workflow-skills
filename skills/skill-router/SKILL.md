@@ -33,11 +33,17 @@ not an optional extra. The skills encode the *how* and *why* of doing each
 activity well, so you don't have to re-derive them.
 
 Routing is **not a once-per-session gate.** Re-route whenever the *kind* of work
-changes — analysis → implementation → writing tests → review → shipping — because
-each phase's skill is loaded only when invoked, and the one you need for the new
-phase almost certainly isn't loaded yet. A session that routed for analysis and
-then writes tests an hour later without re-routing silently drops the testing
-skills' guidance.
+changes — analysis → implementation → writing tests → review → **finishing
+(claiming done, committing, opening a PR)** → shipping — because each phase's
+skill is loaded only when invoked, and the one you need for the new phase almost
+certainly isn't loaded yet. A session that routed for analysis and then writes
+tests an hour later without re-routing silently drops the testing skills'
+guidance.
+
+Finishing is a phase, not a formality. "That's everything", "let's commit", and
+"ready to open the PR" are the start of the last phase, not the end of the
+previous one — route to `verification-before-completion` there, the same way you
+would route to `bug-investigating` when something breaks.
 
 Do **not** talk yourself out of it because the task "looks like a one-liner,"
 touches only one file, or seems obvious. Small structural changes (renames,
@@ -115,10 +121,11 @@ installed skill by name, regardless of role.
 - **tdd-workflow** — NEW code, test-first, red-green-refactor
 - **test-suite-design** — add tests to EXISTING code, coverage strategy
 - **test-data-strategy** — factories, synthetic data, property-based, contract testing
+- **verification-before-completion** — the evidence gate before any "done / works / tests pass" claim, and before committing, pushing, or opening a PR. Pinned, but pinned is not automatic — route here when the finishing phase starts, including when another skill already quotes its Iron Law
 - **browser-verification** — drive the real UI to prove a web change works: console/network/state evidence
 - **subagent-orchestration** — fan work out across subagents/worktrees; verify and synthesize results
 - **git-workflow** — commit messages, PR descriptions, branching strategy
-- **project-documentation** — README, contributing guide, changelog, docstrings
+- **project-documentation** — README, contributing guide, changelog, docstrings; and the sync sweep that reconciles existing docs after a change alters what they describe
 
 ### Review & Improve
 - **code-reviewing** — structured review enforcing DRY/KISS/YAGNI/SRP & conventions
@@ -175,28 +182,34 @@ installed skill by name, regardless of role.
 
 ## Golden Path workflow chains
 
-When work spans phases, chain skills rather than improvising:
+When work spans phases, chain skills rather than improvising. Chains that end in
+a claim — done, fixed, shipped — close with `verification-before-completion`;
+that step is the chain's terminus, not an optional flourish.
 
 **New feature**
 `brainstorming` (if the idea is still fuzzy) → `feature-planning` →
 `architecture-design` (if structural) → `data-modeling` (if schema) →
 `threat-modeling` (if new trust boundaries) → `plan-execution` (work the
 approved plan; wraps `tdd-workflow` per task) → `code-slop-cleanup` (strip AI
-artifacts from the diff) → `code-reviewing` → `deployment-checklist`
+artifacts from the diff) → `code-reviewing` → `verification-before-completion`
+(evidence for the claim, docs reconciled) → `deployment-checklist`
 
 **Bug / incident**
 `incident-response` (if prod is down) → `bug-investigating` → `tdd-workflow`
-(regression test) → `deployment-checklist`
+(regression test) → `verification-before-completion` (the repro now passes, and
+any documented behavior the fix changed is reconciled) → `deployment-checklist`
 
 **Continuous improvement**
 `technical-debt-review` → `refactoring` → `dependency-impact-analysis`
-(blast radius) → `test-suite-design` (if coverage is thin)
+(blast radius) → `test-suite-design` (if coverage is thin) →
+`verification-before-completion`
 
 **Ship a release**
 `git-workflow` (commits carry the bump intent) → `release-management` (version,
-changelog, tag, publish gate, registry) → `deployment-checklist` (if it deploys) →
-`rollback-strategy`. `cicd-pipeline` automates the gate as a pipeline stage.
-App-store releases (signing, review, staged rollout) → `mobile-release`.
+changelog, tag, publish gate, registry) → `verification-before-completion`
+(green on *this* commit, not yesterday's) → `deployment-checklist` (if it
+deploys) → `rollback-strategy`. `cicd-pipeline` automates the gate as a pipeline
+stage. App-store releases (signing, review, staged rollout) → `mobile-release`.
 
 **LLM feature**
 `feature-planning` → `llm-app-engineering` (prompt/RAG/agent design) →

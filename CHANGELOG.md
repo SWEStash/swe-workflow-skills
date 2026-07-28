@@ -21,8 +21,19 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+* **`verification-before-completion` was unreachable from the orchestrator** — it had no bullet in `skill-router`'s catalog index (the only skill in the library missing one) and appeared in none of the Golden Path chains, so the router could not route to it. Telemetry over 280 sessions: 3 invocations against 182 sessions that ran `git commit`; 84 of 87 sessions where the router fired *and* a commit happened never reached the gate. Added the catalog bullet, made the gate the terminus of the four chains that end in a claim, and added "finishing (claiming done, committing, opening a PR)" to the re-route phase list in both the router and the SessionStart hook — routing was framed around phases, and finishing wasn't one
+* explicit hand-off to the gate from `plan-execution` (Step 6 close-out) and `git-workflow` (Step 3 self-review) — both carry the Iron Law inline, which made invoking the gate feel redundant; 33 of the 34 sessions that ran `plan-execution` and committed never invoked it
+
 ### Added
 
+* **documentation currency as part of the completion gate** — `verification-before-completion` now treats the documented surface (flags, env vars, endpoints, config keys, commands, scripts, packages, install steps) as part of the surface a change touches: derive the changed identifiers, grep the docs for them (old names included), reconcile or report. Blocks the "done" claim; reconciliation only, never authoring
+* "what you write into a doc is also a claim" discipline in `verification-before-completion` and `project-documentation` — no factual sentence from recall, enumerate from the source of truth, re-read the doc diff against the code. Sweeps introduce errors as readily as they remove them, and a confidently-worded wrong sentence outlives the stale one it replaced
+* **Sync After a Change** workflow + Accuracy section in `project-documentation`, with change-shaped triggers so the skill is reachable when a change lands rather than only when someone asks for a document; inventories (tables, diagrams, ADR indexes, layout blocks) are checked before prose, because prose gets reread when you edit the feature and tables don't
+* plan-wide documentation reconciliation at `plan-execution` close-out — drift accumulates across checkpoints, and each one looks locally complete
+* doc-drift checks in `code-reviewing` (Step 2 grep, plus severity: a doc the diff makes *wrong* is a blocker when it's an instruction someone follows) and in `git-workflow`'s pre-PR self-review
+* 9 pressure tests across the five skills, and 10 claim-shaped routing probes in `evals/routing-heldout.json` — sign-off phrasing that never says "verify", plus two over-routing guards
 * **code-slop-cleanup** skill — branch-diff AI-slop hygiene pass (scan diff vs base, judge each hunk against the surrounding file's conventions, classify by severity, strip behavior-preserving removals only, re-run tests), with the shared `slop-patterns.md` taxonomy consumed by both the diff and repo scopes (66 skills total)
 * anti-slopsquatting package verification step in `dependency-management` (registry existence, adoption history, typo-distance, AI-suggested names as unverified input)
 * "AI-Generated Code Tells" section and four test-integrity items (weakened assertions, deleted/skipped tests, special-cased expected values, mocked-out unit under test) in `code-reviewing`'s review checklist
