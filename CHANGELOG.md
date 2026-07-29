@@ -5,6 +5,13 @@ All notable changes to this project are documented here. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as defined in
 [docs/RELEASING.md](docs/RELEASING.md).
 
+## [0.6.2](https://github.com/SWEStash/swe-workflow-skills/compare/v0.6.1...v0.6.2) (2026-07-29)
+
+
+### Fixed
+
+* **skills:** the completion gate was unreachable — route to it, and make docs part of it ([#19](https://github.com/SWEStash/swe-workflow-skills/issues/19)) ([0527840](https://github.com/SWEStash/swe-workflow-skills/commit/0527840a16f3661b0c37e3953ddfaef6277445e1))
+
 ## [0.6.1](https://github.com/SWEStash/swe-workflow-skills/compare/v0.6.0...v0.6.1) (2026-07-24)
 
 
