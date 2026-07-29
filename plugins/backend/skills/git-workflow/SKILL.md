@@ -97,8 +97,12 @@ The PR description should let a reviewer understand the change without reading e
 
 ### Step 3: Self-Review
 
-Before requesting review:
+Before requesting review, invoke `verification-before-completion` — opening a PR
+is a completion claim, and that skill owns the evidence gate. Then:
 - [ ] Read through the entire diff one more time
+- [ ] Does anything here change what the docs describe? A renamed flag, env var,
+      endpoint, config key, script, or install step means the README and `docs/`
+      are part of this diff — grep them for what you changed
 - [ ] Are there any debugging leftovers?
 - [ ] Any stray working artifacts (PLAN.md, NOTES.md, scratch files, one-off test scripts) that shouldn't ship?
 - [ ] Are there any changes that don't belong in this PR?

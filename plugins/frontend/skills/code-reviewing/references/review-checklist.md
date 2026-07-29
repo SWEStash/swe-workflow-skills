@@ -158,6 +158,17 @@ For the full taxonomy with severity levels and when-it's-NOT-slop guidance, see 
 
 **Rule**: If code needs a comment to explain *what* it does, refactor the code so it doesn't need one. Comments should explain *why*, not *what*.
 
+## Documentation the Diff Affects
+
+Separate from whether the change *needs* new docs — this is whether it made existing ones wrong.
+
+- Did the diff rename, remove, or add anything a user types or configures? Flags, env vars, config keys, endpoints, commands, script names, package/directory names, install or setup steps. If so, grep the README and `docs/` for it, **old name included** — the old name is what the docs still contain.
+- Check inventories before prose: endpoint tables, architecture diagrams, project-layout blocks, ADR indexes, command lists. Prose gets reread when someone edits the feature; tables don't, so that's where drift hides.
+- A clean grep isn't an all-clear — docs use shorthand and brace expansion (`/api/{users,orders}`). If a doc plausibly covers the area, open the section.
+- **Severity**: a doc the diff makes *wrong* is 🔴 when it's an instruction someone follows (install steps, setup commands, the API contract) — it will fail silently for the next person. Incomplete-but-not-wrong is 🟡.
+
+**Reviewing doc hunks**: check each claim against the file it describes, not for prose quality. The failure mode is a confident, freshly-written, unverified sentence — it looks maintained, which makes it more durable than the stale line it replaced. An assertion you can't tie to code is a finding.
+
 ## Language-Specific Patterns
 
 These are loaded contextually based on the codebase language. If reviewing:

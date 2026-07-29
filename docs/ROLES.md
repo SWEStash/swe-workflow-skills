@@ -103,6 +103,7 @@ design │ → architecture-design   ADR: session vs token, where auth lives
 build  │ → tdd-workflow          red → green → refactor                │
 review │ → security-audit  +  code-reviewing   (fan-out: one prompt,   │
        │                                        two skills)            │
+finish │ → verification-before-completion   evidence + docs reconciled │
 ship   │ → deployment-checklist  pre-deploy safety + rollback          │
        └─────────────────────────────────────────────────────────────┘
 

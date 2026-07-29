@@ -43,7 +43,7 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `dependency-impact-analysis` | All Phases | Map blast radius before changing an API, schema, or shared component |
 | `bug-investigating` | Maintenance | Root cause analysis with structured debugging methodology |
 | `git-workflow` | All Phases | Commit messages, PR descriptions, and branching strategy |
-| `project-documentation` | All Phases | README, API docs, contributing guides, and changelogs |
+| `project-documentation` | All Phases | README, API docs, contributing guides, changelogs — and the sync sweep that reconciles existing docs after a change |
 | `architecture-documentation` | All Phases | Multi-level architecture diagrams (context, container, component, runtime) |
 | `configuration-strategy` | All Phases | Environment config, secrets management, and feature-flag hierarchy |
 | `deployment-checklist` | Release | Pre-deploy verification and release safety checks |

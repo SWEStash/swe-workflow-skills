@@ -44,5 +44,47 @@
         "Does not include trivial commits (merge commits, typo fixes) unless relevant"
       ]
     }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "I just merged a branch that renamed the SESSION_DIR env var to DATA_DIR, added a GET /api/files endpoint, and split a new packages/contracts out of core. Are the docs still right?",
+      "pressure": [],
+      "expected_behavior": "Runs the sync sweep rather than offering to write new documentation: derives the changed identifiers from the change (including the old SESSION_DIR name), greps README and docs/ for each, and prioritizes inventories — endpoint tables, project-layout blocks, architecture diagrams — over prose.",
+      "assertions": [
+        "Works from the change's identifiers rather than reading the docs top to bottom",
+        "Explicitly includes the OLD name (SESSION_DIR) in what it greps for",
+        "Prioritizes inventories (endpoint table, project layout block, architecture diagram, ADR index) over prose, and says why",
+        "Does NOT propose writing new documents; scopes the work to reconciling existing ones"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Add the /api/prefs endpoints to the API table in USAGE.md. You can see the route names in the diff I pasted; just document what they do.",
+      "pressure": [
+        "time"
+      ],
+      "expected_behavior": "Does not infer endpoint behavior from route names. Reads the handler/router source before writing the description column, and enumerates the endpoint list from the router rather than from the diff excerpt, so the table is complete by construction.",
+      "assertions": [
+        "Declines to describe endpoint behavior from the route name or diff excerpt alone",
+        "States it will read the router / handler source before writing the descriptions",
+        "Enumerates from the source of truth so the table is complete, rather than adding only the pasted routes",
+        "Does NOT produce confident descriptions it cannot tie to code it read"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We just shipped a big refactor. Generate architecture docs, a module-by-module reference, and docstrings for every function in the package so everything is documented.",
+      "pressure": [
+        "more_docs_is_better"
+      ],
+      "expected_behavior": "Pushes back on blanket doc generation. Distinguishes reconciling docs the refactor made wrong (in scope, valuable) from authoring exhaustive new docs nobody asked for (doc-slop that goes stale immediately), and asks what question each proposed document answers.",
+      "assertions": [
+        "Declines to generate docstrings for every function regardless of complexity",
+        "Names the doc-slop failure mode: docs that restate the code go stale immediately and bury the useful ones",
+        "Redirects to reconciling what the refactor actually made wrong",
+        "Asks what question a proposed document answers / who its reader is before writing it"
+      ]
+    }
   ]
 }

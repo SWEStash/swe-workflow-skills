@@ -1,7 +1,7 @@
 ---
 name: project-documentation
-description: "Write and maintain project docs — README, contributing guides, API docs, changelogs, inline docs."
-when_to_use: "Triggers: write a README, document this project, create documentation, contributing guide, changelog, API docs, how do I document, this needs docs, onboarding docs, JSDoc, docstrings."
+description: "Write project docs — README, contributing guides, API docs, changelogs, inline docs — and reconcile existing docs after a change made them wrong. Owns doc drift from the change in front of you; a repo-wide doc-rot audit belongs to technical-debt-review."
+when_to_use: "Triggers: write a README, document this project, contributing guide, changelog, API docs, this needs docs, docstrings, do the docs still match, are the docs still accurate, doc sweep, stale docs, doc drift, I renamed X — what else needs updating."
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
@@ -23,6 +23,54 @@ Identify which documents the project needs based on context:
 | Inline docs (JSDoc/docstrings) | Public APIs, complex logic | Developers reading the code |
 
 Ask the user which they need. If unsure, start with README — every project needs one.
+
+Two modes use this skill. **Authoring** creates a document that doesn't exist yet
+(the four workflows below). **Sync** reconciles documents that already exist
+because a change made them wrong — that's the next section, and it's the mode you
+want when someone says "I changed X" rather than "write me a Y".
+
+## Workflow: Sync After a Change
+
+Docs don't rot evenly. They rot where a change moved something a document names,
+and nobody reread that document. Work from the diff, not from a general sense
+that the docs feel old:
+
+1. **Derive the identifiers.** From the diff, list what a reader could be relying
+   on: flags, env vars, config keys, endpoints, commands, script names, package
+   and directory names, install/setup steps, public exported symbols. Include the
+   **old** names — those are what the docs still say.
+2. **Grep the doc set** for each: README, `docs/`, and inline docs.
+3. **Triage each hit** — wrong (contradicts the code now), incomplete (the code
+   grew, the doc didn't), or fine. Only the first two are yours.
+4. **Reconcile**, smallest edit that makes it true. Reconciliation is not a
+   rewrite, and it's not an excuse to restructure a document you happened to open.
+5. **Verify links resolve** if you moved or added any.
+
+**Check inventories before prose.** Prose gets reread when someone edits the
+feature it describes; tables, diagrams, ADR indexes, project-layout blocks, and
+endpoint lists do not. Machine-like lists are where drift accumulates silently and
+where it's least visible — a paragraph that's half-wrong reads oddly, while a
+table missing two rows reads perfectly.
+
+**A clean grep is not an all-clear.** Docs use shorthand, globs, and brace
+expansion (`/api/{users,orders}`), so a literal grep can miss a line that
+documents exactly what you changed. When a document plausibly covers the area,
+open the section and read it.
+
+## Accuracy: what you write is a claim
+
+Both modes. A doc is a set of assertions about the code, and a sweep can introduce
+errors as easily as it removes them — a confidently-worded wrong sentence outlives
+the stale one it replaced, because it looks freshly maintained.
+
+- **No claim from recall.** Every factual sentence comes from something you read
+  this session. If you're describing what an endpoint does, open the handler.
+- **Enumerate from the source of truth.** Endpoints from the router file, scripts
+  from listing the directory, packages from the manifest, flags from the arg
+  parser. Don't rebuild a list from memory and spot-check it — build it from the
+  source and let it be complete by construction.
+- **Re-read your own doc diff against the code** before committing, with the same
+  scrutiny you'd give a code hunk. This is where a wrong claim gets caught.
 
 ## Workflow: README
 
