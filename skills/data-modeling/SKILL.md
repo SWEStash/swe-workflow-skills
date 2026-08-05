@@ -1,7 +1,7 @@
 ---
 name: data-modeling
 description: "Design database schemas, relationships, indexes, and migration strategies — relational and document stores. Triggers: data model, schema design, ER diagram, database schema, table design, foreign key, index strategy, normalization, denormalization, migration plan, document model, partition key."
-allowed-tools: Read, Grep, Glob, Write, Edit
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # Data Modeling
@@ -9,6 +9,36 @@ allowed-tools: Read, Grep, Glob, Write, Edit
 Guide the user through designing data models that are normalized, consistent, and evolvable. Good data models make the right things easy and the wrong things hard.
 
 ## Workflow
+
+### Step 0: Inventory What Already Exists
+
+If any database exists, establish what it already holds before proposing a
+single new table, column, or index. Inspect the current schema **directly** —
+don't infer it from the requirements, the ORM models, or memory. Dump it from
+the live database where you can reach one, otherwise read the migration history
+end to end.
+
+Cover both:
+
+- **Artifacts** — existing tables, columns, and indexes that hold, or could
+  hold, the fact in question. Grep for the concept by name and by synonym; the
+  right table is often named for a different concern than the one you're serving.
+- **Written decisions** — ADRs, schema conventions, and prior audit findings
+  that already constrain the shape.
+
+**Exit condition** — one line, then keep going in the same response:
+*"`<existing table>` already stores `<fact>`; it does / does not serve this
+because `<reason>`."*
+
+**This step is not a gate on delivering.** Greenfield — no database yet, or none
+you can reach — closes it in one line: say so and go straight to Step 1. When
+you can't inspect (no repo access, a conversational answer), name what you would
+check and continue under stated assumptions. Never answer a schema request with
+inventory and questions alone; produce the model in the same reply.
+
+This constrains the input, not the choice. A new table is a fine outcome; an
+unexamined one isn't — and a second home for the same fact is duplication
+however well it's named.
 
 ### Step 1: Understand the Domain
 
