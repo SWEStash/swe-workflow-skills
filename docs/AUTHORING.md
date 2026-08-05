@@ -212,6 +212,15 @@ concrete for this library:
   boundaries, and the cross-skill references — those carry routing and safety value
   even when the domain content has gone generic. Re-run GREEN after slimming; the
   gate is GREEN ≥ RED per case.
+- **Reference-heavy carve-out** — the harnesses cannot read `references/` or
+  `templates/` (EVALS.md, known limitation 3), so for a skill whose depth lives
+  there, RED ≈ GREEN is produced by the harness rather than observed of the
+  model. **Never slim or retire on RED ≈ GREEN alone when a skill's
+  reference/template bytes rival or exceed its `SKILL.md`.** Check the ratio
+  first; several skills sit above 2×. Either judge those by hand against the
+  full asset, or wait for a harness that loads what the skill links — the
+  decision rule below assumes the evidence covers the whole skill, and for these
+  skills it doesn't.
 - **Retirement** — only after a slimmed skill stays RED ≈ GREEN for a full further
   cycle. Removal is user-visible (roles and plugins ship the skill), so it needs a
   deprecation notice in CHANGELOG.md and ROLES.md before the skill is dropped from

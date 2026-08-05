@@ -80,6 +80,14 @@ when any of these fires:
 - two consecutive checkpoints failed verification
 - you catch yourself thinking "the plan didn't anticipate this, but I'll just…"
 
+A **structural question the plan didn't answer** fires this too: where a piece
+of state lives, whether to add a table, column, service, module, store, or
+config key. Don't settle it inline — **invoke `data-modeling` (data shape) or
+`architecture-design` (structure and boundaries)** and let it run its inventory
+of what already exists. These decisions arrive disguised as implementation
+details, and they're the ones the plan is least able to absorb silently:
+persistent constructs outlive the plan that introduced them.
+
 Re-planning openly is cheap; silently executing a plan that no longer matches
 reality delivers the wrong thing with perfect discipline. Sunk progress is not a
 reason to continue — the remaining work costs the same whether or not you admit
@@ -109,6 +117,7 @@ that still describes the pre-drift design is a stale document like any other.
 | "The docs can come after the plan lands" | The plan changed what the docs describe; landing it leaves them actively wrong, and nobody re-derives the whole surface later. Reconcile at close-out. |
 | "I already have the Iron Law in context, invoking the gate is redundant" | Quoting a law isn't running the gate. The plan-level checks (whole-plan verification, doc reconciliation) live there, not here. |
 | "The plan is outdated here; I'll adapt as I go" | That's drift. Log it; if it's structural, stop and re-plan — don't decide alone silently. |
+| "This is an implementation detail, not an architecture decision" | Anything that persists — a table, a column, a config key, a shared module — is structure, whatever task it arrived under. Route it to the design skill. |
 | "We're 80% through; re-planning now wastes all that work" | Sunk cost. Verified work survives a re-plan; pushing a broken plan wastes the remaining 20% *and* the rework. |
 | "Marking them done unblocks the team; we'll backfill verification" | A false "done" misinforms every decision downstream. Report the honest state instead. |
 
@@ -118,11 +127,15 @@ that still describes the pre-drift design is a stale document like any other.
 - You can't say what command verified the last checkpoint.
 - "Should work" / "looks done" appearing in your status report.
 - Mid-execution, you're building something the plan never mentioned.
+- You're about to add a persistent construct (table, column, config key, shared
+  module) that the plan never named — and you haven't checked what already exists.
 - You've stopped consulting the plan and are working from memory.
 
 ## Cross-Skill References
 
 - `feature-planning` — creates and (on re-plan) revises the plan this skill executes
+- `data-modeling` — where a schema question surfaced mid-execution belongs
+- `architecture-design` — where a structural or boundary question belongs
 - `verification-before-completion` — the per-claim evidence gate each checkpoint applies
 - `tdd-workflow` — how the implementation tasks inside a batch get built
 - `git-workflow` — commit at checkpoint boundaries; the evidence belongs in the message

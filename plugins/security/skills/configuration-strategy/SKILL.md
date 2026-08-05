@@ -8,6 +8,33 @@ allowed-tools: Read, Grep, Glob, Write, Edit
 
 Design configuration that is safe, auditable, and easy to change. Most configuration problems (hardcoded secrets, production config in dev, feature flags with no off-switch) come from not designing the system upfront.
 
+## Step 0: Inventory What Already Exists
+
+Before introducing a new environment variable, secret, feature flag, or
+constant, establish what the project already defines. Inspect the current state
+**directly** — grep the tree; don't infer it from the requirements or memory.
+
+Cover both:
+
+- **Artifacts** — existing key names *and* the values themselves. Search for the
+  literal value, not just the name: the same timeout or limit is often already
+  hardcoded in two places, and adding a third is the common failure.
+- **Written decisions** — config conventions, naming schemes, `.env.example`,
+  and prior audit findings that already govern where things live.
+
+**Exit condition** — one line, then keep going in the same response:
+*"`<existing key>` already carries `<value>`; it does / does not serve this
+because `<reason>`."*
+
+**This step is not a gate on delivering.** Greenfield — nothing configured yet,
+or nothing you can reach — closes it in one line: say so and go straight to
+Step 1. When you can't inspect, name what you would check and continue under
+stated assumptions. Never answer with inventory and questions alone; produce the
+configuration design in the same reply.
+
+This constrains the input, not the choice. A new key is a fine outcome; an
+unexamined one isn't — and a duplicated value will drift.
+
 ## Step 1: Identify All Configuration Needed
 
 List every piece of configuration the feature or service requires:

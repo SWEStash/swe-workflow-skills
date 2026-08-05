@@ -14,6 +14,35 @@ Design the technical structure of frontend applications — component hierarchy,
 
 ## Workflow
 
+### Step 0: Inventory What Already Exists
+
+In an existing codebase, establish what the app already provides before adding a
+new component, hook, store, or token. Search the shared surfaces **directly** —
+`components/`, `hooks/`, `lib/`, the token file, and each feature's public
+`index.ts` — rather than inferring from the design or from memory.
+
+Cover both:
+
+- **Artifacts** — existing components, hooks, stores, and tokens that already
+  cover, or nearly cover, the need. Search by behavior, not just by name: the
+  component you want often exists under a different label.
+- **Written decisions** — established conventions, the design system's rules,
+  and prior audit findings.
+
+**Exit condition** — one line, then keep going in the same response:
+*"`<existing component/hook>` already covers `<behavior>`; it does / does not
+serve this because `<reason>`."*
+
+**This step is not a gate on delivering.** Greenfield — a new app, or a codebase
+you can't reach — closes it in one line: say so and go straight to Step 1. When
+you can't inspect, name what you would check and continue under stated
+assumptions. Never answer with inventory and questions alone; produce the
+architecture in the same reply.
+
+This constrains the input, not the choice. A new component is a fine outcome; an
+unexamined one isn't — a near-duplicate of an existing one is how design systems
+rot.
+
 ### Step 1: Design the Component Hierarchy
 
 Start from the UI design (or the screen spec from `ui-ux-design`) and decompose into components:

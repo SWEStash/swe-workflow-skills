@@ -10,6 +10,36 @@ Help the user make well-reasoned architectural decisions and document them in Ar
 
 ## Workflow
 
+### Step 0: Inventory What Already Exists
+
+If a system is already running, establish what it already provides before
+proposing a new service, module, boundary, or pattern. Map the current state
+**directly** from the codebase — don't infer it from the requirements, the docs,
+or memory. Docs describe the system someone intended; the code is the one you
+have.
+
+Cover both:
+
+- **Artifacts** — existing services, modules, and seams that already own, or
+  could own, the responsibility in question. Search by capability, not just by
+  name: the component that does this may be called something else entirely.
+- **Written decisions** — the ADR log, established conventions, and prior audit
+  findings. A decision already made and recorded is not yours to re-litigate
+  silently; supersede it explicitly or work within it.
+
+**Exit condition** — one line, then keep going in the same response:
+*"`<existing component>` already handles `<responsibility>`; it does / does not
+serve this because `<reason>`."*
+
+**This step is not a gate on delivering.** Greenfield — nothing built yet, or
+nothing you can reach — closes it in one line: say so and go straight to Step 1.
+When you can't inspect, name what you would check and continue under stated
+assumptions. Never answer a design question with inventory and questions alone;
+carry the options, the recommendation, and the trade-offs in the same reply.
+
+This constrains the input, not the choice. A new component is a fine outcome;
+an unexamined one isn't.
+
 ### Step 1: Frame the Decision
 
 Identify the exact decision to be made. A good architectural question is specific and scoped:
@@ -26,7 +56,8 @@ If the user's question is too broad, help narrow it by asking:
 
 Understand the current state before proposing changes:
 
-- **Current architecture**: What exists today? Read the codebase if available.
+- **Current architecture**: the Step 0 finding — what exists today, established
+  from the code rather than assumed. If you can't state it, Step 0 isn't done.
 - **Quality attributes that matter**: Performance? Scalability? Developer experience? Maintainability? Deployment simplicity?
 - **Team context**: Team size, expertise, on-call burden
 - **Growth trajectory**: Expected scale in 6-12 months (not 5 years — YAGNI)
