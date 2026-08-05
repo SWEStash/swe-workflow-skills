@@ -102,6 +102,23 @@ flaky). Two findings from running this make the choice necessary:
    let the generator use tools for verify-type skills.
 2. **The judge is deliberately harsher than a human eyeball.** Absolute scores
    are therefore not comparable across skills; *movement* is the signal.
+3. **Neither harness can see `references/` or `templates/`.** `run.py` reads
+   only `SKILL.md` and injects it into the system prompt with no `tools=` at
+   all, so linked files are never fetched; `workflow-runner.mjs` *could* read
+   them (its GREEN arm has tools) but is told "do NOT use any other tools".
+   About half the library's instructional content lives in those directories,
+   across 49 of 66 skills — so **an improvement to a reference file cannot move
+   any score**, and reference-heavy skills score as though that content didn't
+   exist. This is the same root cause as (1): the generators don't act, they
+   only reply.
+
+   Two rules follow. **When writing assertions**, make them satisfiable from
+   `SKILL.md` alone, or mark them reference-dependent and leave them out of the
+   gate — an assertion that only `references/` can satisfy reads as a permanent
+   failure and pressures the author to copy depth up into `SKILL.md`, which is
+   exactly what progressive disclosure exists to prevent. **When reading a low
+   GREEN**, check the skill's reference mass before concluding the skill is
+   weak; see the obsolescence carve-out in AUTHORING.md.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what
