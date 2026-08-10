@@ -12,6 +12,13 @@ description, not here. Sections dated before 0.7.0 carry hand-written prose from
 file was curated manually.
 
 
+## [0.7.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.6.3...v0.7.0) (2026-08-10)
+
+
+### Added
+
+* **skills:** gate what a commit publishes, not just whether it works ([#23](https://github.com/SWEStash/swe-workflow-skills/issues/23)) ([4854cce](https://github.com/SWEStash/swe-workflow-skills/commit/4854cce5cffe558b7db6ea6cbcef6642b79cc109))
+
 ## [0.6.3](https://github.com/SWEStash/swe-workflow-skills/compare/v0.6.2...v0.6.3) (2026-08-05)
 
 
