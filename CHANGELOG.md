@@ -11,6 +11,14 @@ The commit subject (for a squash-merge, the PR title) is the changelog entry, an
 description, not here. Sections dated before 0.7.0 carry hand-written prose from when the
 file was curated manually.
 
+
+## [0.6.3](https://github.com/SWEStash/swe-workflow-skills/compare/v0.6.2...v0.6.3) (2026-08-05)
+
+
+### Fixed
+
+* **skills:** close the design-decision leak — route mid-execution, inventory before proposing ([#21](https://github.com/SWEStash/swe-workflow-skills/issues/21)) ([1415f76](https://github.com/SWEStash/swe-workflow-skills/commit/1415f76cf5add3e61d5b122f6c397c9ef0119bd3))
+
 ## [0.6.2](https://github.com/SWEStash/swe-workflow-skills/compare/v0.6.1...v0.6.2) (2026-07-29)
 
 
