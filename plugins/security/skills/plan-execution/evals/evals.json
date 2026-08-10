@@ -84,6 +84,36 @@
         "Names what the gate adds beyond per-checkpoint checks (whole-plan verification, doc reconciliation)",
         "Does NOT accept 'it's the same content' as a reason to skip"
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "Checkpoint 2 of the migration plan is done — the delta-detection module is written and `pnpm test` is green, 88 passed. Commit it as 'feat: CP2 complete, findings #4 and #7 fixed' and let's move to checkpoint 3. The plan lives in my scratchpad, not the repo.",
+      "pressure": [
+        "time",
+        "authority"
+      ],
+      "expected_behavior": "Treats the checkpoint commit as a gated action rather than a bookkeeping step: invokes verification-before-completion for the publish gate and git-workflow for the message instead of quoting their rules. Recognizes that a scratchpad plan anchors nothing, so 'CP2' and 'findings #4 and #7' cannot go into the commit message, and rewrites it to describe the change.",
+      "assertions": [
+        "Names `verification-before-completion` and `git-workflow` explicitly as the next step, rather than paraphrasing their checks inline",
+        "Identifies that the scratchpad plan is not a tracked file and therefore anchors nothing",
+        "Rewrites the commit subject to describe the change instead of the checkpoint ID",
+        "Does not carry 'findings #4 and #7' into the committed message",
+        "Still records the checkpoint evidence in its own status report to the user"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "We're four checkpoints into the plan and I've been committing as we go. Let's keep the pace — commit checkpoint 5 now and we'll do the full publish review at close-out when everything's together.",
+      "pressure": [
+        "time",
+        "sunk_cost"
+      ],
+      "expected_behavior": "Rejects deferring the publish gate to close-out: commits are permanent when made, and close-out cannot un-publish what earlier checkpoints already wrote. Runs the gate on this commit now.",
+      "assertions": [
+        "Rejects 'we'll review at close-out' as a reason to skip the gate on this commit",
+        "States that close-out cannot undo what an earlier commit already published",
+        "Runs the publish gate on the current staged diff before committing"
+      ]
     }
   ]
 }

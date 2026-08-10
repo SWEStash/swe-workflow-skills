@@ -24,7 +24,7 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `api-design` | Design | Design REST/GraphQL endpoints, contracts, errors, and pagination |
 | `data-modeling` | Design | Design schemas, relationships, and migration strategies |
 | `threat-modeling` | Design | Design-time security analysis — trust boundaries, STRIDE per element, abuse cases, prioritized mitigations |
-| `plan-execution` | Implementation | Execute an approved plan in verified checkpoints — evidence per checkpoint, drift log, re-planning triggers |
+| `plan-execution` | Implementation | Execute an approved plan in verified checkpoints — evidence per checkpoint, drift log, re-planning triggers, gated checkpoint commits |
 | `tdd-workflow` | Implementation | Red-green-refactor cycle with test-first development |
 | `test-suite-design` | Quality | Add comprehensive test suites to existing code, plan test strategy |
 | `code-reviewing` | Quality | Structured reviews enforcing principles and best practices |
@@ -49,7 +49,7 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `deployment-checklist` | Release | Pre-deploy verification and release safety checks |
 | `rollback-strategy` | Release | Safe rollback plans — identify irreversible changes, plan undo procedures |
 | `incident-response` | Operations | Structured production incident triage, mitigation, communication, recovery |
-| `verification-before-completion` | All Phases | Evidence gate — run the proving command and read its output before claiming done |
+| `verification-before-completion` | All Phases | Evidence gate — run the proving command and read its output before claiming done; also the publish gate on a staged diff (personal data, unresolvable internal references, misplaced comments) |
 
 ## Design (3)
 

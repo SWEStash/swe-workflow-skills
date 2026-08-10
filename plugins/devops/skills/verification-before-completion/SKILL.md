@@ -1,6 +1,7 @@
 ---
 name: verification-before-completion
-description: "Evidence gate before claiming work is done, passing, fixed, or deployed. Use before saying 'done', 'it works', or 'tests pass', or before committing, pushing, or opening a PR. Triggers: is it done, did it work, tests pass, verify, ready to commit, before I push, confirm the fix. Run the proving command fresh and read its output first."
+description: "Evidence gate before claiming work is done, passing, fixed, or deployed. Use before saying 'done', 'it works', or 'tests pass', or before committing, pushing, or opening a PR. Run the proving command fresh and read its output first."
+when_to_use: "Triggers: is it done, did it work, tests pass, verify, ready to commit, before I push, confirm the fix."
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
@@ -106,6 +107,88 @@ Scope this to **reconciliation, not authoring**: it touches documents that alrea
 reference what you changed. It never means writing new docs nobody asked for —
 that produces the doc-slop `project-documentation` exists to prevent.
 
+## What you're about to publish
+
+Committing publishes. The tests prove the code runs and the doc gate proves the
+docs still match — neither notices that the diff also carries a real customer's
+email, or a comment citing "Phase 3" of a plan that exists only in this session's
+context. Both are invisible to every other gate and permanent once pushed.
+
+**This is not a gate on committing.** It reports; the user decides. Refusing to
+commit doesn't prevent a leak — the commit happens without you — it just removes
+the one reader who noticed. Your job is that the check ran and the finding is on
+the record, in the same response, not that the commit was stopped.
+
+Not blocking is not the same as not urgent. Proportionality governs *how much room
+a finding takes up*, never how plainly you state what it costs — the worst outcome
+here is a hedged sentence about a live credential, which reads as diligence and
+functions as silence.
+
+Read `git diff --staged` and look for three things at once. It's a scan, not three
+passes, and it costs seconds:
+
+1. **Who is in this diff?** Real people or real credentials — in data files,
+   fixtures, seeds, configs/env, logs, captured output, or a doc pasting a "real"
+   example.
+
+   **Look up what this project already decided** before reasoning from general
+   privacy principle: CLAUDE.md and project instructions, memory, `.gitignore`d
+   paths, and the convention the repo's other fixtures follow. That's the answer
+   when it exists, and it beats anything you'd derive. *Exit condition: "This repo
+   declares `<X>` protected"* — or *"nothing is declared; the other fixtures use
+   synthetic values, so I've matched them."*
+
+   **A staged credential is already compromised.** An API key, token, private key,
+   password, or connection string that reached a file you staged must be treated as
+   burned — it has been on disk, in your shell history, and in whatever tooling
+   watched the working tree. **Say that plainly and name rotation, not deletion, as
+   the fix**; dropping the line from the diff leaves a live secret that someone
+   already had. Don't hedge it into a conditional — "if nothing was pushed you can
+   probably skip rotation" is the sentence that gets a key left valid. Route the
+   durable fix to `configuration-strategy`.
+
+   For personal data, name what's exposed and offer redaction or synthetic values
+   (`test-data-strategy`); for internal-but-not-personal — hostnames, client names,
+   paths with usernames — one line is the right size. Full ladder in
+   [references/pre-commit-gate.md § Leg 1](references/pre-commit-gate.md).
+2. **Would a stranger understand this?** Internal identifiers in staged content:
+   `Phase 2`, `CP1.3`, `T02`, `finding #17`, `checkpoint 3/5`. Check, don't assume
+   — `git ls-files '*.md' | xargs grep -l "<term>"`. Anchored in a tracked document,
+   it's a real cross-reference; unanchored, it's a private label a reader can't
+   resolve, so **write the meaning instead**. Rewrites in
+   [§ Leg 2](references/pre-commit-gate.md).
+3. **Does this comment belong in the code?** New comment blocks of four or more
+   lines: system-level rationale belongs in an ADR with the comment carrying a
+   pointer; a local invariant the types can't express stays inline. Calibration in
+   [§ Leg 3](references/pre-commit-gate.md).
+
+**Exit condition** — one line in the response where you commit, then keep going.
+It reports what you *found*, and it scales to that:
+
+- **Nothing found** → *"Staged diff checked, nothing to flag."* That is the entire
+  line. **Do not list the categories you scanned.** "No personal data, no unanchored
+  references" on a diff that was never going to contain either teaches the reader
+  nothing, and asserting a category is clean is not the same as having had a reason
+  to raise it.
+- **Something found** → name only that, and what you did about it: *"Staged diff:
+  `fixtures/accounts.json` carries 40 real-looking email addresses — replaced them
+  with synthetic values."*
+
+**A clean diff ends here.** Don't narrate the scan, don't open with "not yet",
+don't ask permission to proceed, and don't open the reference file — a clean scan
+needs none of it. A gate that makes every commit feel expensive is one that gets
+routed around, and then it protects nothing.
+
+**If the diff has code hunks and something tripped, invoke `code-reviewing`** and
+let it work the diff — it owns the repo-wide greps and the slop catalog, and it is
+almost never reached at commit time on its own. A docs- or config-only diff never
+routes there.
+
+One handling rule that applies while checking, not after: **never echo a real
+secret or a real person's data into context** to inspect it. Match on shape and
+location, report the file and line, and let the user decide. Pasting the value to
+prove it's there is the leak.
+
 ## What you write into a doc is also a claim
 
 A document is a set of assertions about the code, and the Iron Law does not stop
@@ -137,6 +220,14 @@ stale one it replaced.
 | "The user didn't ask me to touch the docs" | They asked for a working change. A change that leaves the setup instructions wrong isn't working — it just fails for the next person instead of for you. |
 | "Nobody reads the README anyway" | The people who read it are exactly the ones who can't ask you. And a *wrong* doc is worse than a missing one: it's followed, then it fails. |
 | "I know what that endpoint does, I don't need to open the file" | That's recall, and recall is what puts false sentences into docs. Read it, then write it. |
+| "It's my own repo / a private repo" | Private today. Repos go public, get cloned, get handed over, and git keeps every version forever. The scan costs seconds; a rewrite of published history costs days. |
+| "I'll scrub it before pushing" | The commit is the artifact. Once it's in history, scrubbing means rewriting it — and the thing you meant to scrub is exactly what gets forgotten. |
+| "The phase name is obvious from context" | It's obvious from *your* context, which no reader has. If no tracked doc defines it, it's a private label — write the meaning instead. |
+| "Reviewing the diff is what the PR is for" | Review happens after the commit exists, and 98% of commits here never reach a review at all. The three checks are greps, not a review. |
+| "The comment explains an important decision, it should stay in the code" | Then the decision deserves an ADR, and the comment deserves a pointer to it. Rationale buried in a source file is found by nobody and rots unread. |
+| "I found something, so I should refuse to commit until it's fixed" | Reporting is the job; deciding is the user's. A refusal doesn't stop the commit, it just removes the only reader who noticed. Say what you found, say what it costs, commit if they say commit. |
+| "This diff is clean, so I'll walk through the checks to show my work" | The one-line exit condition *is* showing your work. Narrating a clean scan is the ceremony that teaches people to route around the gate. |
+| "It's a trivial diff, the gate isn't worth running" | The scan is seconds and the clean path is one line. Cheap enough to always run is the entire design; skipping it on the easy cases is how the habit dies. |
 
 ## Red flags — stop and verify first
 
@@ -149,6 +240,17 @@ stale one it replaced.
   the docs for the old name.
 - You're writing a sentence about how the code behaves into a doc, and you haven't
   opened that code this session.
+- You're about to commit and haven't read `git diff --staged` — you're committing
+  what you *believe* you staged.
+- The diff touches a fixture, seed, log, capture, or `.env`-shaped file and nobody
+  has said what's protected in this project.
+- You're writing a plan's vocabulary — a phase, checkpoint, task code, or finding
+  number — into a commit message, comment, or doc, and the plan is not a tracked file.
+- You just wrote a comment longer than the code it sits above.
+- You're asking permission, or opening with "not yet", on a diff you have already
+  concluded is clean.
+- You're about to refuse a commit rather than report what you found and let the
+  user choose.
 
 ## Cross-Skill References
 
@@ -157,7 +259,12 @@ This skill is the shared "done" gate for every workflow that ends in a claim:
 - `tdd-workflow` — the GREEN step is a verification: watch the test pass for real
 - `bug-investigating` — confirm the reproducing test now passes before claiming the fix
 - `deployment-checklist` — every checked box is an instance of this gate
-- `code-reviewing` — verify the change before approving, not from the diff alone
+- `code-reviewing` — verify the change before approving, not from the diff alone; also
+  where the publish gate routes a tripped code diff
+- `code-slop-cleanup` — the slop catalog behind the comment-placement check
+- `git-workflow` — writes the commit this gate clears
+- `project-documentation` — establishes which docs are versioned, which the anchor
+  check reads as its baseline
 - `cicd-pipeline` — the pipeline automates this gate; locally, run it yourself first
 - `project-documentation` — the sync sweep and the accuracy method, when the grep
   turns up docs that need reconciling

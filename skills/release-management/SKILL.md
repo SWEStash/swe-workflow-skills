@@ -46,7 +46,7 @@ Under-processing breaks consumers; over-processing kills a small project's momen
 
 - **Changelog** from commits, in [Keep a Changelog](https://keepachangelog.com/) form. Conventional commits map mechanically: `feat` → Added, `fix` → Fixed, behavior change → Changed, `feat!` / `BREAKING CHANGE:` → MAJOR.
 - **Release notes ≠ changelog**: notes lead with highlights and breaking changes plus their upgrade steps — what a consumer must know before upgrading, not a commit list.
-- Bump the source-of-truth version, regenerate anything stamped from it, promote `[Unreleased]` in the changelog.
+- Bump the source-of-truth version, regenerate anything stamped from it, and settle the changelog — promote `[Unreleased]` if the file is hand-maintained; if a tool generates it, don't hand-curate alongside (a generated changelog plus a hand-written `[Unreleased]` is how the two silently diverge — the tool prepends and never folds). There, fix the commit subject, not the file.
 
 ## Step 5: Gate, Then Publish
 

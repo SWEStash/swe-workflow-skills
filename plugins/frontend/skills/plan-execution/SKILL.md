@@ -1,6 +1,7 @@
 ---
 name: plan-execution
-description: "Execute an already-approved plan with discipline — batch tasks into verifiable checkpoints, verify each with fresh evidence before marking it done, log drift, and stop to re-plan when reality diverges from the plan's assumptions. Triggers: execute the plan, implement the approved plan, work through this plan, continue/resume the plan, next phase, checkpoint. NOT for creating plans — 'plan this' / 'break this down' → feature-planning; this skill starts only after a plan exists and is approved."
+description: "Execute an already-approved plan with discipline — batch tasks into verifiable checkpoints, verify each with fresh evidence before marking it done, log drift, and stop to re-plan when reality diverges from the plan's assumptions. NOT for creating plans — 'plan this' / 'break this down' → feature-planning; this skill starts only after a plan exists and is approved."
+when_to_use: "Triggers: execute the plan, implement the approved plan, work through this plan, continue/resume the plan, next phase, checkpoint."
 allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
@@ -59,6 +60,34 @@ observed result. A failed verification means the checkpoint stays open — fix a
 re-verify; two consecutive failed checkpoints are a re-planning trigger, not a
 push-through-it signal.
 
+**The checkpoint commit is part of this step, and it is checked.** A commit is the
+first irreversible thing a plan produces, so it gets the same treatment as the
+checkpoint claim: **invoke `verification-before-completion`** for the publish gate
+and **`git-workflow`** for the message.
+
+**Exit condition** — name both, by name, in the response where you commit:
+*"Checkpoint N verified by `<command>`. Invoking `verification-before-completion`
+on the staged diff, then `git-workflow` for the message."*
+
+Do not paraphrase what those skills would check and call it done. Reproducing
+their rules here is exactly how a plan accumulates twelve unreviewed commits with
+a gate that felt "already satisfied" every time — you have their content in
+context, which is what makes skipping the call feel free. If you can name the check
+you are supposed to run, you can name the skill that owns it.
+
+**The plan's vocabulary does not travel with the commit.** Checkpoint IDs, phase
+names, task codes, finding numbers, and drift-log entries are *your* working
+context — they name conversations, not code. They may appear in a commit message,
+comment, or doc **only if the plan itself is a tracked file in this repo**; a plan
+living in a scratchpad, a chat, or a gitignored directory defines nothing a reader
+can look up. Otherwise write what the change means:
+
+- ✗ `feat: complete CP2.3, Phase 2 done` ✗ `// fixes finding #12 from Phase 1`
+- ✓ `feat(sync): add delta detection by content hash`
+
+This is the one leak plan execution is uniquely prone to, precisely because the
+vocabulary is loaded and fluent in context at the moment the message gets written.
+
 ### Step 4: Drift Check Before the Next Batch
 
 At every checkpoint boundary, compare state against plan:
@@ -116,6 +145,9 @@ that still describes the pre-drift design is a stale document like any other.
 | "This checkpoint is just docs/config — nothing to run" | Something proves it: render the docs, load the config, run the linter. |
 | "The docs can come after the plan lands" | The plan changed what the docs describe; landing it leaves them actively wrong, and nobody re-derives the whole surface later. Reconcile at close-out. |
 | "I already have the Iron Law in context, invoking the gate is redundant" | Quoting a law isn't running the gate. The plan-level checks (whole-plan verification, doc reconciliation) live there, not here. |
+| "It's a mid-plan commit, the real gate is at close-out" | Commits are permanent when they're made, not when the plan ends. Close-out can't un-publish what checkpoint 2 already pushed. |
+| "The checkpoint number gives the commit useful traceability" | Only if a reader can resolve it. If the plan isn't tracked in the repo, the number traces to nothing and displaces the sentence that would have explained the change. |
+| "Everyone on this plan knows what CP2.3 means" | Everyone in this session does. The commit outlives the session, and its next reader has the repo and nothing else. |
 | "The plan is outdated here; I'll adapt as I go" | That's drift. Log it; if it's structural, stop and re-plan — don't decide alone silently. |
 | "This is an implementation detail, not an architecture decision" | Anything that persists — a table, a column, a config key, a shared module — is structure, whatever task it arrived under. Route it to the design skill. |
 | "We're 80% through; re-planning now wastes all that work" | Sunk cost. Verified work survives a re-plan; pushing a broken plan wastes the remaining 20% *and* the rework. |
@@ -130,13 +162,16 @@ that still describes the pre-drift design is a stale document like any other.
 - You're about to add a persistent construct (table, column, config key, shared
   module) that the plan never named — and you haven't checked what already exists.
 - You've stopped consulting the plan and are working from memory.
+- You're committing at a checkpoint boundary and haven't read the staged diff.
+- A phase name, checkpoint ID, or finding number is about to enter a commit
+  message, a code comment, or a doc — and the plan isn't a tracked file.
 
 ## Cross-Skill References
 
 - `feature-planning` — creates and (on re-plan) revises the plan this skill executes
 - `data-modeling` — where a schema question surfaced mid-execution belongs
 - `architecture-design` — where a structural or boundary question belongs
-- `verification-before-completion` — the per-claim evidence gate each checkpoint applies
+- `verification-before-completion` — the per-claim evidence gate each checkpoint applies, and the publish gate on every checkpoint commit
 - `tdd-workflow` — how the implementation tasks inside a batch get built
-- `git-workflow` — commit at checkpoint boundaries; the evidence belongs in the message
+- `git-workflow` — writes the checkpoint commit (Step 3); the evidence belongs in the message
 - `code-reviewing` — review at checkpoint or close-out, before "done" is claimed

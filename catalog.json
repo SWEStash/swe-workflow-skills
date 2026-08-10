@@ -218,7 +218,7 @@
     },
     {
       "name": "plan-execution",
-      "description": "Execute an already-approved plan with discipline — batch tasks into verifiable checkpoints, verify each with fresh evidence before marking it done, log drift, and stop to re-plan when reality diverges from the plan's assumptions. Triggers: execute the plan, implement the approved plan, work through this plan, continue/resume the plan, next phase, checkpoint. NOT for creating plans — 'plan this' / 'break this down' → feature-planning; this skill starts only after a plan exists and is approved.",
+      "description": "Execute an already-approved plan with discipline — batch tasks into verifiable checkpoints, verify each with fresh evidence before marking it done, log drift, and stop to re-plan when reality diverges from the plan's assumptions. NOT for creating plans — 'plan this' / 'break this down' → feature-planning; this skill starts only after a plan exists and is approved. Triggers: execute the plan, implement the approved plan, work through this plan, continue/resume the plan, next phase, checkpoint.",
       "path": "plan-execution/SKILL.md"
     },
     {
@@ -323,7 +323,7 @@
     },
     {
       "name": "verification-before-completion",
-      "description": "Evidence gate before claiming work is done, passing, fixed, or deployed. Use before saying 'done', 'it works', or 'tests pass', or before committing, pushing, or opening a PR. Triggers: is it done, did it work, tests pass, verify, ready to commit, before I push, confirm the fix. Run the proving command fresh and read its output first.",
+      "description": "Evidence gate before claiming work is done, passing, fixed, or deployed. Use before saying 'done', 'it works', or 'tests pass', or before committing, pushing, or opening a PR. Run the proving command fresh and read its output first. Triggers: is it done, did it work, tests pass, verify, ready to commit, before I push, confirm the fix.",
       "path": "verification-before-completion/SKILL.md"
     },
     {

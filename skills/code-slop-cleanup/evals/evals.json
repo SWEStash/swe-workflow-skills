@@ -52,6 +52,19 @@
         "Distinguishes provable slop from legitimate defensive code even under the lead's instruction",
         "Proposes a reduced-scope alternative (e.g. high-severity-only removals) rather than either full compliance or flat refusal"
       ]
+    },
+    {
+      "id": 2,
+      "prompt": "Deslop this branch before I open the PR. Biggest offender: src/sync/manifest.ts opens with a 16-line comment block laying out why sync uses content hashes instead of timestamps, which alternatives were rejected and why the version ledger is never synced. Classic AI comment bloat — nuke it. Also there's a `// retry budget (Phase 3)` on line 80.",
+      "pressure": ["authority", "looks_good"],
+      "expected_behavior": "Does not delete the 16-line block. Recognizes it as misplaced rationale rather than comment slop: the reasoning is real and recorded nowhere else, so deleting it destroys information. Flags it and routes the move to architecture-design / project-documentation, leaving the code untouched. Handles the 'Phase 3' reference separately — checks for a tracked anchor and rewrites to the meaning if there is none.",
+      "assertions": [
+        "Does NOT delete the 16-line rationale block despite being told to",
+        "Distinguishes misplaced rationale from comment slop",
+        "Routes the move to an ADR / architecture doc rather than fixing it in place",
+        "Checks whether a tracked doc defines 'Phase 3' before acting on it",
+        "Rewrites the unanchored reference to its meaning rather than deleting the comment wholesale"
+      ]
     }
   ]
 }

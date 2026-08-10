@@ -107,18 +107,35 @@ flaky). Two findings from running this make the choice necessary:
    all, so linked files are never fetched; `workflow-runner.mjs` *could* read
    them (its GREEN arm has tools) but is told "do NOT use any other tools".
    About half the library's instructional content lives in those directories,
-   across 49 of 66 skills — so **an improvement to a reference file cannot move
+   across 50 of 66 skills — so **an improvement to a reference file cannot move
    any score**, and reference-heavy skills score as though that content didn't
    exist. This is the same root cause as (1): the generators don't act, they
    only reply.
 
    Two rules follow. **When writing assertions**, make them satisfiable from
-   `SKILL.md` alone, or mark them reference-dependent and leave them out of the
-   gate — an assertion that only `references/` can satisfy reads as a permanent
-   failure and pressures the author to copy depth up into `SKILL.md`, which is
-   exactly what progressive disclosure exists to prevent. **When reading a low
-   GREEN**, check the skill's reference mass before concluding the skill is
-   weak; see the obsolescence carve-out in AUTHORING.md.
+   `SKILL.md` alone, or leave them out of the gate — an assertion that only
+   `references/` can satisfy reads as a permanent failure and pressures the author
+   to copy depth up into `SKILL.md`, which is exactly what progressive disclosure
+   exists to prevent. There is **no `reference-dependent` field** in the schema and
+   neither runner honours one, so "leave it out" means *delete the assertion and
+   record why in the test's `expected_behavior`* — not add a marker the runners
+   ignore. **When reading a low GREEN**, check the skill's reference mass before
+   concluding the skill is weak; see the obsolescence carve-out in AUTHORING.md.
+
+4. **Tool-dependent assertions are a separate trap from reference-dependent ones.**
+   An assertion that requires the model to *demonstrate a lookup* — "grounds the
+   judgment in what the repo declared protected", "checks the existing fixture
+   convention" — cannot be satisfied by a runner that supplies no repo and no
+   tools. The model has nothing to look up, so it reasons from general principle
+   and the assertion fails forever. Two tells: it scores **0/N unanimous in GREEN
+   across successive rewrites**, or it sits at **0/N in *both* arms** (nothing to
+   discriminate). Treat those like (3) — delete, and record the reasoning — and
+   verify the behavior in a real session or the layer-3 routing harness, which does
+   hand the model tools.
+
+   The distinction matters because the two look identical from the score: content
+   *present* in `SKILL.md` still fails if satisfying it requires an action the
+   harness forbids. Promoting more text will not fix it.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what
@@ -164,8 +181,8 @@ The three layers from the original design:
 ### Dataset — mined from the existing evals
 
 `routing.py --build-dataset` writes `evals/routing-dataset.json` (GENERATED,
-committed, drift-checked via `--check-dataset` like `catalog.json`). Today: **64
-positive + 52 boundary + 8 trivial = 124 cases**. It stays in sync — every new
+committed, drift-checked via `--check-dataset` like `catalog.json`). Today: **65
+positive + 53 boundary + 8 trivial = 126 cases**. It stays in sync — every new
 skill's 3 evals yield 2 new routing cases.
 
 - **Happy-path** prompt (eval #1) → positive: `accept = {that skill}`.
@@ -203,7 +220,7 @@ python evals/routing.py --build-dataset          # mine → routing-dataset.json
 python evals/routing.py --check-dataset          # CI: fail if dataset is stale (offline)
 
 export ANTHROPIC_API_KEY=...
-python evals/routing.py --run                     # route all 124 cases on haiku
+python evals/routing.py --run                     # route all 126 cases on haiku
 python evals/routing.py --run -k 3                # majority-of-3 per case
 python evals/routing.py --run --changed --base origin/main   # CI: changed skills only
 python evals/routing.py --run --update-baseline   # record routing-baseline.json
@@ -223,23 +240,25 @@ the API key is absent — like `skill-evals.yml`).
 
 ### Results (haiku) and the haiku recommendation
 
-Full run on `claude-haiku-4-5` over all 124 cases (2026-07, 65-skill catalog) —
+Full run on `claude-haiku-4-5` over all 126 cases (2026-07, 66-skill catalog) —
 this is the committed CI baseline (`evals/routing-baseline.json`), recorded at
 **k=1** (one sample per case):
 
 | Layer 2 metric | Result (k=1) |
 |---|---|
-| Top-1 routing accuracy (positives) | **64/64 = 1.00** |
-| Boundary pass rate ("no wild misroute") | **52/52 = 1.00** |
+| Top-1 routing accuracy (positives) | **65/65 = 1.00** |
+| Boundary pass rate ("no wild misroute") | **53/53 = 1.00** |
 | False-activation rate (trivial → NONE) | **0/8 = 0.00** |
 | Confusion pairs | **none** |
 
 Layer 3 (behavioral, 16 cases): router-invocation rate **1.00** (8/8 substantial
 prompts invoked a skill), correct-invoke 8/8, over-route **0/8**.
 
-A single-draw 124/124 invites the obvious question — *is the dataset just crafted
-to pass?* Two checks say the result is real but should be stated precisely, not as
-"124 perfect".
+A single-draw clean sweep invites the obvious question — *is the dataset just
+crafted to pass?* Two checks say the result is real but should be stated precisely,
+not as "everything perfect". (Both checks below were run on the **then-124-case**
+dataset — 64 positive / 52 boundary / 8 trivial — before the catalog grew to 66
+skills; their per-case counts are that run's, not today's.)
 
 **What the numbers actually establish.** Positive accept-sets are strict
 single-skill (`{home}`, top-1 exact), so 64/64 there is a genuine signal — and
@@ -291,14 +310,14 @@ Data-science boundaries held in both directions (`ml-pipeline-design` ↔
 alongside the established ones (`rollback-strategy` → `incident-response`;
 `incident-response` / `refactoring` / `strategic-review` boundaries → `NONE`).
 
-(`routing-baseline.json` records the **k=1** full 124-case run — refreshed 2026-07
+(`routing-baseline.json` records the **k=1** full 126-case run — refreshed 2026-07
 via the in-session runner — so every case gates in CI; the k=3 pass above is a
 stability probe, not the committed gate. An earlier, smaller-catalog baseline
 scored the same layer-2 sweep but only a 0.75 layer-3 invocation rate; this run
 clears layer 3 at 8/8.)
 
 **Haiku recommendation: keep haiku.** Stable top-1 accuracy, no wild misroutes,
-and zero false activations across the full 65-skill catalog — reproduced at k=3 —
+and zero false activations across the full 66-skill catalog — reproduced at k=3 —
 say haiku is more than adequate for this routing task; nothing argues for sonnet.
 The earlier watch-item (layer-3 invocation rate 0.75 on the earlier, smaller
 catalog) cleared at 8/8 in this run — worth re-checking as the catalog grows. If
@@ -311,10 +330,17 @@ the gap.
 
 The mined sweep above measures routing on *author-anticipated* phrasings. To close
 the teaching-to-the-test gap, `evals/routing-heldout.json` is a **separate,
-hand-authored 150-case set** written **without** copying phrasing from any skill's
+hand-authored set** written **without** copying phrasing from any skill's
 `evals.json` and deliberately **avoiding each skill's own `Triggers:` keywords**
-(0/92 paraphrases contain an own-trigger phrase). Same `{ id, kind, skill, prompt,
-accept[] }` shape; the authoring category is encoded in the `id` prefix:
+(0/92 paraphrases contained an own-trigger phrase at the time of the run). Same
+`{ id, kind, skill, prompt, accept[] }` shape; the authoring category is encoded in
+the `id` prefix.
+
+**The file now holds 162 cases** (101 paraphrase · 25 confusable · 18 trap · 18
+trivial). The recorded run below was made on the **150-case** version; the 12 cases
+added since — the claim-shaped routing probes landed with the completion-gate work —
+have **not** been routed, so they are outside the result. Re-run the probe to bring
+the record forward. The 150-case composition it measured was:
 
 - **92 paraphrase positives** — every routable skill restated in a foreign
   register, `accept = {home}` (strict top-1);
@@ -337,7 +363,8 @@ Workflow({ scriptPath: "evals/routing-heldout-runner.mjs", args: {
   dataset: "<abs>/evals/routing-heldout.json", catalog: "<abs>/catalog.json" }})
 ```
 
-**Result (`claude-haiku-4-5`, k=3, 2026-07 — 451 route agents, 0 errors):** a
+**Result (`claude-haiku-4-5`, k=3, 2026-07, on the then-150-case set — 451 route
+agents, 0 errors):** a
 perfect, fully-stable sweep — paraphrase **92/92**, confusable **24/24** (all 6
 clusters cleanly separated, **zero confusion pairs**), trap **18/18**, trivial
 **16/16**, false-activation **0/21**, and **150/150 unanimous** across the three
@@ -354,7 +381,7 @@ prompts are meant to find edges (a hard gate would be noisy), and ~450 agents/ru
 is too expensive per-PR. Unlike `routing-dataset.json` it is **hand-authored, not
 generated**, so it is deliberately **not** wired into `--build-dataset` /
 `--check-dataset` and does **not** touch `routing-baseline.json` (the committed
-gate stays the mined 124-case k=1 run).
+gate stays the mined 126-case k=1 run).
 
 ### TDD loop for routing (RED → GREEN)
 
@@ -365,7 +392,7 @@ routing eval until GREEN. This is the `writing-skills` baseline→counter loop w
 routing accuracy as the metric; descriptions are the shared tuning surface for both
 routing (the catalog) and direct auto-trigger, so one improvement pays twice.
 
-The current suite has **zero natural misroutes** (64/64 positive, 52/52 boundary,
+The current suite has **zero natural misroutes** (65/65 positive, 53/53 boundary,
 0 confusion — the committed CI baseline), so there is no live RED to fix. Exercising the loop synthetically (degrade one skill's
 `description`, regenerate the catalog, re-run that case) surfaced a finding worth
 recording:

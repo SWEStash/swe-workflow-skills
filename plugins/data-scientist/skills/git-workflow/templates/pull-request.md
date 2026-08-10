@@ -18,12 +18,15 @@ or anything non-obvious about the implementation.]
 
 ## Changes
 
-[Bullet list of the main changes, grouped logically. Not every file —
-just the meaningful changes.]
+[OPTIONAL — delete this section unless it earns its place. The reviewer already
+has the diff and the file list; this section is only for changes they would
+otherwise miss or misread. If a bullet just names a file and what obviously
+happened to it, cut the bullet.]
 
-- Added `OrderService.calculateDiscount()` for percentage-based discounts
-- Updated `Order` model with `discount_code` field and migration
-- Added validation for discount codes in `POST /orders` endpoint
+- `POST /orders` now rejects expired discount codes with 422, not 400 — the
+  mobile client special-cases 400 and would have retried forever
+- The `Order.discount_code` migration backfills NULL for existing rows; it is
+  reversible but the backfill is not
 
 ## Testing
 
@@ -48,6 +51,8 @@ just the meaningful changes.]
 - [ ] Documentation updated (if applicable)
 - [ ] Migration is reversible
 - [ ] No hardcoded secrets or environment-specific values
+- [ ] No personal data in fixtures, seeds, logs, or captured output
+- [ ] No phase names, checkpoint IDs, or task codes that a tracked doc doesn't define
 - [ ] PR is a reasonable size (< 400 lines changed)
 
 ## Notes for Reviewers
