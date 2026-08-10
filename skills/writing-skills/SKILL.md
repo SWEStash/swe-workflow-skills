@@ -34,6 +34,15 @@ tends to over-explain things Claude already knows and miss the real failure mode
 3. **REFACTOR — re-test, capture *new* rationalizations, add counters.** Repeat
    until the behavior holds under pressure. Stop when two consecutive runs pass.
 
+**When it doesn't pass, stop by rule, not by patience.** Before each rewrite, name
+the cause you believe is responsible and change *only* that. If the number doesn't
+move, the hypothesis is dead — do not reword the same section a third time. Either
+the assertion is unsatisfiable in this harness (see EVALS.md limitations 3 and 4:
+reference-dependent and tool-dependent), or the behavior is a real cost of the
+skill and belongs in the test's `expected_behavior` as an accepted trade with its
+mechanism recorded. Both endings are results. Endless rewording is how a skill
+grows to satisfy an instrument instead of a user.
+
 ### Match the form to the failure
 
 | Baseline failure | Right form in the skill |
@@ -42,6 +51,30 @@ tends to over-explain things Claude already knows and miss the real failure mode
 | Output has the wrong shape | A positive recipe / template stating what the output *is* |
 | Omits a required element | A structural requirement (named field or slot) |
 | Behavior should depend on a condition | A conditional rule ("if X, do Y"), not a blanket rule + exceptions |
+| Skill defers instead of delivering | The grounding instruction needs a **delivery clause** (below) |
+
+### Grounding instructions need a delivery clause
+
+Any instruction of the form *"read/inventory/verify X before you answer"* degrades
+into *"ask permission to read X, deliver later"* unless you say otherwise. This is
+the most-repeated authoring failure in this library — five occurrences across two
+cycles, in `architecture-design`/`data-modeling` (Step 0's first draft),
+`project-documentation` (twice), `verification-before-completion`, and
+`git-workflow` — and the base model, having no such instruction, often scores
+*better* because it just answers.
+
+Every grounding step must carry three things, and they are cheap:
+
+1. **"This is not a gate on delivering."** Say it in those words.
+2. **An exit condition** — the literal one-line sentence that closes the step, so
+   the model has something concrete to emit instead of a question.
+3. **"…in the same response."** Plus the fallback: when the artifact can't be read,
+   state the assumption and deliver anyway. A draft the user corrects beats a
+   question they must answer.
+
+`architecture-design` Step 0 is the reference implementation — copy its shape rather
+than reinventing it. The tell in an eval is a GREEN reply that contains no artifact:
+no message, no document, no recommendation, just a plan to produce one.
 
 ## Description discipline (the highest-leverage line)
 

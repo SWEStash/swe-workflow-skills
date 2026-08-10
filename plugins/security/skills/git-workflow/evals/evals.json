@@ -4,12 +4,12 @@
     {
       "id": 1,
       "prompt": "I just finished implementing a user notification feature. I've staged all changes. Write a good commit message for me.",
-      "expected_output": "Should read the staged diff first, then write a Conventional Commits formatted message with type, scope, subject, and body explaining why.",
+      "expected_output": "Should read the staged diff and deliver the drafted message in the same reply — not ask the developer to run a command and come back, and not close by offering to redo it properly once the diff is read. Conventional Commits format, subject within 72 characters including the type(scope): prefix, and a body only where the change carries reasoning the diff cannot show. The scope judgment ships with the message: whether this is one logical change, and the split if it isn't. RUN THIS CASE AT k>=3: the base model is bimodal on this prompt — observed 6/6 and 1/6 on identical input in consecutive k=1 runs, sometimes drafting and sometimes asking for the diff, which is the very behavior under test. A single sample cannot support a lift claim either way.",
       "assertions": [
-        "Runs git diff --staged to read the actual changes",
+        "Establishes the actual staged changes as the basis for the message (naming git diff --staged as what it must read) rather than writing from the feature description alone",
         "Uses Conventional Commits format (type(scope): description)",
-        "Subject line is under 50 characters",
-        "Body explains WHY, not just WHAT",
+        "Subject line is within 72 characters including the type(scope): prefix",
+        "Writes a body only if the change carries reasoning the diff cannot show; for an ordinary change it says no body is needed rather than padding one (per the skill's body ladder)",
         "Checks if the staged changes are a single logical unit",
         "If multiple logical changes, suggests splitting into separate commits"
       ]
@@ -19,7 +19,7 @@
       "prompt": "I need to write a PR description for a branch that adds Stripe payment integration. The branch has 12 commits including some WIP and fix-typo commits. We're using a standard PR template.",
       "expected_output": "Should read the branch diff and commit log, suggest squashing the WIP commits, then write a structured PR description.",
       "assertions": [
-        "Reads git log and diff for the branch",
+        "Names the git log / git diff commands that establish the branch's scope, or works from the branch state given",
         "Suggests cleaning up the 'WIP' and 'fix-typo' commits via rebase/squash",
         "Writes a complete PR description with What/Why/How/Testing sections",
         "Links to the relevant issue or task",
@@ -55,6 +55,38 @@
         "Greps / checks the README and docs for the old commands before opening the PR",
         "Treats opening the PR as a completion claim (invokes or defers to verification-before-completion)",
         "Does NOT tick the 'Documentation updated' checklist item without having verified it"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Staged: a pure rename of `getUserData` to `fetchUserProfile` across 23 files, plus the prettier reformat that came with it. No behavior change. Write me a really thorough commit message — I want the reasoning fully documented for the team so nobody wonders later.",
+      "pressure": [
+        "authority",
+        "looks_good"
+      ],
+      "expected_behavior": "Applies the recoverability test rather than the request for thoroughness: a mechanical rename has no unrecoverable reasoning, so the subject line is the whole message. Writes no body (or at most one line naming why the rename happened, if that isn't visible), and explains why padding it would make review worse rather than complying with 'thorough'.",
+      "assertions": [
+        "Writes a subject line within 72 characters including the type(scope): prefix",
+        "Does NOT produce a multi-paragraph body for a mechanical rename",
+        "Does not enumerate the 23 files or restate what the diff shows",
+        "Explains that length tracks unrecoverable reasoning, not lines touched",
+        "Considers whether the reformat should be split into its own commit"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Here's the fix: the markdown filter returned a plain str while Jinja runs with autoescape on, so every tag it produced got escaped back into the page. It only showed up in multi-paragraph fields because plain-text bullets hit the single-<p> unwrap and had nothing left to escape. I also pinned markdown-it to html=False, since marking the output safe without that would let imported JSON data inject HTML. Keep the commit message short — one line, we don't need an essay.",
+      "pressure": [
+        "authority",
+        "time"
+      ],
+      "expected_behavior": "Resists over-correcting into terseness. This change carries reasoning the diff cannot show — why the bug was invisible, and why the html=False pin is load-bearing for security — so the body earns its length. Pushes back on 'one line' and writes the body, while still keeping the subject tight and cutting anything the diff already shows.",
+      "assertions": [
+        "Writes a body rather than complying with the one-line request",
+        "Keeps the 'why nobody noticed' explanation (the single-<p> unwrap)",
+        "Keeps the security rationale for the html=False pin",
+        "Still holds the subject line to the length rule",
+        "Does not pad the body with restatement of the diff"
       ]
     }
   ]

@@ -33,7 +33,12 @@ Slop is relative — the same construct is correct in one place and slop in anot
 
 - **High**: debug leftovers, silent-failure handlers, stray working files
 - **Medium**: defensive theater on trusted paths, generic TODOs, unrequested backwards-compat shims, duplication of existing helpers
+- **Medium**: also unanchored internal terminology (`Phase 2`, `CP1.3`, `finding #17`) that no git-tracked doc defines — rewrite to the meaning
 - **Low**: comment slop, dead weight (unused imports, `=== true`, redundant returns), style inconsistent with the file
+
+Misplaced rationale — the multi-line header essay explaining a *system* instead of
+the code beneath it — is detected here but **routed, not deleted**: the reasoning
+belongs in an ADR, and deleting it loses something nothing else records.
 
 ### Step 4: Strip — Deletions Only, Production Code Only
 
@@ -71,6 +76,8 @@ The biggest slop category — duplication — is created at generation time and 
 |--------|---------|
 | "This check might catch something someday" | If nothing upstream can produce that state, it's theater — and it hides the real bugs by normalizing noise. |
 | "The comments help junior developers" | Restating comments rot and mislead; code clarity helps juniors. Keep why-comments, cut what-comments. |
+| "This 12-line header explains the architecture — I'll delete it as comment slop" | It's misplaced, not worthless. Deleting it destroys reasoning nothing else records. Flag it for the ADR and leave the code alone. |
+| "Phase 3 is obviously meaningful, leave the reference" | Check before assuming: if no tracked doc defines it, it points at a conversation the reader wasn't in. Rewrite it to what it means. |
 | "I'll just fix this bug while I'm here" | Cleanup and fixes in one pass make both unreviewable. Flag it, route it, finish the cleanup. |
 | "Strip it all — defensive code is slop" | A boundary check is not slop. Over-removal breaks behavior, the one thing this pass must never do. |
 | "This test is obviously redundant, I'll just delete it" | "Obviously" is a guess; proof requires the behavior map. Route to `test-suite-design`. |

@@ -60,11 +60,30 @@ from the commit types since the last tag and maps them to changelog sections
 `chore`/`ci`/`test` are hidden). A sloppy commit type is now a versioning bug, not just
 untidy history.
 
-[CHANGELOG.md](../CHANGELOG.md) stays in [Keep a Changelog](https://keepachangelog.com/)
-form: accumulate rich, hand-written entries under `[Unreleased]` as you land work.
-Release-please generates its own section from the commit titles; the hand-written prose
-is folded into that section on the release PR before merging (see step 3 below) — the
-curated file, not the generated stub, is the canonical history.
+[CHANGELOG.md](../CHANGELOG.md) is **generated, not written.** Release-please owns the
+file; nobody edits it by hand and there is no `[Unreleased]` section to maintain. The
+point of the tool is that the changelog is a *derivative* of history — hand-curating it
+alongside gives up that guarantee and reintroduces the drift it exists to prevent.
+
+**The lever is the commit subject.** Release-please renders one line per commit — the
+subject, its type-mapped section, and a link — so the subject line *is* the changelog
+entry a consumer reads at upgrade time. Since the repo squash-merges, that subject is
+the **PR title**. Write it for the person upgrading, not for you:
+
+- `fix(skills): commit gate never fired on plan checkpoints` ✅ names the behavior change
+- `fix(skills): address review feedback` ❌ true, and useless in a changelog
+
+The type prefix picks the section (`feat` → Added, `fix` → Fixed, `refactor`/`perf`/`docs`
+→ Changed; `chore`/`ci`/`test` are hidden), so a mislabeled type doesn't just mis-version
+the release — it files the entry in the wrong place or hides it entirely.
+
+**Reasoning goes in the commit body and the PR description**, which is where it belongs:
+the changelog answers *what changed* for someone deciding whether to upgrade, the body
+answers *why* for whoever reads history later, and durable decisions belong in an ADR.
+See `git-workflow` for the subject and body rules.
+
+Prior versions in the file still carry hand-written prose from when it was curated by
+hand. That's real history and it stays; the policy applies from here forward.
 
 ## How a release happens
 
@@ -98,11 +117,10 @@ lockstep fan-out), and [`.github/workflows/release.yml`](../.github/workflows/re
    before merging. The tool knows the commit types; you know whether a change was
    actually contract-breaking. Disagreement means a mislabeled commit — fix the label
    (or the config), don't hand-edit the version.
-2. **Curate the changelog on the PR branch**: fold the hand-written `[Unreleased]`
-   entries under the generated `## [X.Y.Z]` heading (keep the richer prose), leave
-   `[Unreleased]` empty for the next cycle, and update the link refs. Pushes to the PR
-   branch don't re-trigger the release workflow; a later push to `main` **regenerates
-   the PR**, so curate last.
+2. **Read the generated changelog section as a consumer would.** Don't edit it — if an
+   entry is unhelpful, the commit subject was, and that's the thing to fix next time.
+   The one edit worth making is deleting an entry that shipped nothing user-visible
+   and should have been typed `chore`.
 3. **Merge the release PR** — this is the deliberate release trigger. Nothing tags or
    publishes until a human merges.
 4. **Verify the artifact like a user** (see below) before announcing.
@@ -135,7 +153,8 @@ node /tmp/package/bin/cli.mjs install --dir /tmp/pkgtest   # should install all 
 
 If the automation is unavailable, a release is the same steps by hand — bump
 `package.json` (`npm version X.Y.Z --no-git-tag-version`), run
-`node scripts/sync-version.mjs`, promote `[Unreleased]` in CHANGELOG.md, run
+`node scripts/sync-version.mjs`, add the `## [X.Y.Z]` changelog heading with one line
+per commit since the last tag (the same shape release-please would emit), run
 `node scripts/verify.mjs` + `node scripts/build-plugins.mjs --check`, commit as
 `chore(release): vX.Y.Z`, tag `vX.Y.Z` (annotated), push with tags, `npm publish`
 (the `prepublishOnly` gate still runs), and `gh release create vX.Y.Z --notes-from-tag`.

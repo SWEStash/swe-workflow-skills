@@ -29,6 +29,47 @@ Two modes use this skill. **Authoring** creates a document that doesn't exist ye
 because a change made them wrong — that's the next section, and it's the mode you
 want when someone says "I changed X" rather than "write me a Y".
 
+## The Documentation Strategy — What Ships and What Doesn't
+
+Establish once with the user: **which artifacts are git-versioned, and which stay
+internal.** Most projects accumulate both, and only one of them is readable by
+someone who has the repo and nothing else.
+
+| Typically versioned | Typically internal |
+|---|---|
+| README, contributing guide, API docs, changelog | Execution plans and phase breakdowns |
+| ADRs and architecture docs | Findings/bug logs kept during a work session |
+| Roadmaps the project chooses to publish | Scratchpads, handoff prompts, session notes |
+| Runbooks and operational docs | Anything under a gitignored directory |
+
+This boundary is not bureaucracy — it decides what vocabulary the project's own
+artifacts are allowed to use. **A term is usable in a versioned file only if a
+versioned file defines it.** When a plan lives outside the repo, its phases,
+checkpoints, and task codes name a conversation, and a reader hitting `Phase 2` or
+`CP1.3` in a comment or commit has nothing to resolve it against. Write what the
+term means instead.
+
+The reverse also holds and matters just as much: when a project *does* ship its
+plan or roadmap, referencing it is good practice, not a leak. Check which case
+you're in rather than assuming either — `git ls-files` answers it.
+
+**On a greenfield project** nothing is tracked yet, so this is a decision to make,
+not a fact to look up.
+
+**Exit condition** — one line, then write the document in the same response:
+*"Nothing is tracked yet, so `<term>` resolves to nothing for a reader; I've
+written the meaning instead. Worth deciding whether the plan itself ships."*
+
+**This is not a gate on authoring.** Raise the boundary, apply the safe default —
+meanings rather than labels, which is never wrong and costs nothing to change — and
+deliver the document. Never answer a request for docs with the boundary question
+alone: the user asked for a README, and a README that avoids unresolvable
+vocabulary is strictly better than a question. Ask when the answer would change
+what you write; otherwise state the assumption and write.
+
+`verification-before-completion`'s publish gate reads this boundary as its baseline
+when checking a staged diff.
+
 ## Workflow: Sync After a Change
 
 Docs don't rot evenly. They rot where a change moved something a document names,
@@ -135,11 +176,19 @@ Follow Keep a Changelog conventions:
 
 See [templates/changelog.md](templates/changelog.md) for the format.
 
-Accumulate entries under `[Unreleased]` as changes land. Writing the entries is this
-skill's work even when they must be reconstructed from git history — read the log
-since the last tag, drop trivial commits (merges, typo fixes), and translate the rest
-into user-perspective entries under the sections above. Hand off only the release
-mechanics (version choice, tagging, publish automation) to `release-management`.
+**First check whether the project generates this file.** A `release-please-config.json`,
+`.changeset/`, `.releaserc*`, or `cliff.toml` means the changelog is derived from commit
+history, and hand-editing it — including keeping an `[Unreleased]` section alongside —
+throws away the guarantee the tool exists to provide and reintroduces drift. There, the
+entry is the **commit subject** (for squash-merges, the PR title) and the work is writing
+that well; the reasoning goes in the commit body, not the changelog. Say so and stop.
+
+When the changelog *is* hand-maintained, accumulate entries under `[Unreleased]` as
+changes land. Writing them is this skill's work even when they must be reconstructed from
+git history — read the log since the last tag, drop trivial commits (merges, typo fixes),
+and translate the rest into user-perspective entries under the sections above. Hand off
+only the release mechanics (version choice, tagging, publish automation) to
+`release-management`.
 
 ## Workflow: Inline Documentation
 
@@ -147,12 +196,30 @@ For code-level documentation (JSDoc, Python docstrings, Go doc comments):
 
 - **Document public APIs**: Every exported function, class, and type
 - **Skip obvious code**: Don't document `getName()` returning a name
-- **Document the why**: Why this approach, why this parameter exists, why this edge case matters
+- **Document the why — at the altitude it belongs**: this is where inline docs go
+  wrong most often. The why of a *line* belongs on the line: why this parameter
+  exists, why this comparison is written the strange way it is, what the caller
+  can't see. The why of a *system* — why the component exists, which alternatives
+  were rejected, how it relates to other services — belongs in an ADR or
+  architecture doc, and the code carries a pointer to it:
+  `// Triage state lives in a separate writable DB; see ADR-018.`
+  A design rationale pasted into a file header is unfindable (nobody greps source
+  for "why two databases"), unreviewable (it never gets the scrutiny an ADR gets),
+  and rots first — nobody re-reads a file header while editing line 300.
 - **Include examples** for non-obvious usage
 - **Document exceptions/errors**: What can go wrong and under what conditions
+- **Use vocabulary the reader can resolve**: no phase names, checkpoint IDs, or
+  task codes that no versioned document defines (see The Documentation Strategy)
 
 ## Principles Applied
 
 - **KISS**: Write the minimum documentation that makes the project usable. Don't over-document internals.
 - **DRY**: Don't duplicate information across docs. Link between documents instead.
 - **YAGNI**: Don't write architecture docs for a 200-line script. Match documentation depth to project complexity. And don't create docs nobody asked for — a doc that merely restates the code is doc-slop: it goes stale immediately and buries the docs that answer real questions. Every document must answer a question someone actually has.
+
+## Cross-Skill References
+
+- `architecture-design` — the ADR a system-level rationale belongs in, rather than a source-file header
+- `architecture-documentation` — C4 diagrams and docs-as-code for the architecture docs this skill points at
+- `verification-before-completion` — the doc-drift and publish gates that read the versioned/internal boundary above
+- `technical-debt-review` — a repo-wide doc-rot audit, as opposed to the drift from the change in front of you

@@ -21,9 +21,9 @@
       "prompt": "Can you review the changes in my last git commit?",
       "expected_output": "Should read the git diff, understand context from surrounding files, and perform a structured review.",
       "assertions": [
-        "Runs git diff or git show to read the changes",
-        "Reads surrounding code for context",
-        "For any new helper, export, or block, greps the repo beyond the diff for an existing twin, for importers, and for consumers (duplication / dead export / unconsumed surface are invisible in a single hunk)",
+        "Names the command that reads the change (git show / git diff HEAD~1) and scopes the review to that commit",
+        "Establishes the surrounding code as context for the review rather than judging the hunk in isolation",
+        "For any new helper, export, or block, states it will search the repo beyond the diff for an existing twin, for importers, and for consumers (duplication / dead export / unconsumed surface are invisible in a single hunk)",
         "Follows the structured review format (summary, blockers, suggestions, nits)",
         "Provides specific file:line references for findings"
       ]
@@ -88,6 +88,22 @@
         "Raises the stale setup instruction as a blocker (red), not a nit",
         "Justifies the severity: a wrong instruction is followed and then fails, which is worse than a missing one",
         "Does NOT approve on 'code is consistent and CI is green' alone"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "The pre-commit gate routed you here. Review the staged diff: it adds `src/server/dashboard.ts` with a 14-line file-header block explaining why dashboard state lives in a second SQLite file, which tables get wiped on rebuild, and why the read handle stays read-only — the header cites ADR-018. Below that are two query functions, one commented `// Aggregates (Phase 4). Read-only.` The repo has docs/decisions/ADR-018 tracked, but no tracked doc mentions any phase.",
+      "pressure": [
+        "looks_good"
+      ],
+      "expected_behavior": "Scopes to the staged diff rather than the whole branch. Flags the 14-line header as misplaced rationale — it duplicates the ADR it cites, so it should shrink to a pointer — and flags 'Phase 4' as unanchored after checking the tracked docs, while correctly leaving the ADR-018 reference alone since that document is tracked. Assigns both as suggestions, not blockers.",
+      "assertions": [
+        "Scopes the review to the staged diff",
+        "Flags the 14-line header as rationale that belongs in the ADR, reduced to a pointer",
+        "Checks the tracked docs before judging the terminology rather than assuming",
+        "Flags 'Phase 4' as unanchored and recommends writing the meaning",
+        "Does NOT flag the ADR-018 reference, which resolves to a tracked document",
+        "Rates these as suggestions rather than blockers"
       ]
     }
   ]

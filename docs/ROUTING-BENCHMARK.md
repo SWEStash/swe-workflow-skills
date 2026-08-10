@@ -3,9 +3,9 @@
 **TL;DR** — Claude Code's skill auto-triggering is probabilistic, and community
 measurements put it anywhere from ~45% to ~84% depending on prompt and hook hacks. This
 library replaces auto-triggering with an **orchestrator that routes intent to skills by
-name**, and it measures that routing the way you'd measure code: a 124-case harness,
-graded by accept-set, gated in CI against a committed baseline. On the current 65-skill
-catalog, routing on `claude-haiku-4-5` scores a **clean sweep — 64/64 top-1, 52/52
+name**, and it measures that routing the way you'd measure code: a 126-case harness,
+graded by accept-set, gated in CI against a committed baseline. On the current 66-skill
+catalog, routing on `claude-haiku-4-5` scores a **clean sweep — 65/65 top-1, 53/53
 boundary, 0/8 false activation, zero confusion pairs.** The numbers below are
 reproducible from the repo with no API key.
 
@@ -25,7 +25,7 @@ that unreliable as a library grows:
 2. **Listing-budget cropping.** Claude Code injects skill `name`+`description` pairs into
    a listing capped at ~1% of the context window (~20–22 descriptions on a 200k window).
    Past the cap it drops the least-recently-used descriptions, silently stripping the
-   keywords a skill needs to match. At 65 skills, most of the catalog is invisible to
+   keywords a skill needs to match. At 66 skills, most of the catalog is invisible to
    auto-triggering by default.
 
 ### What the wild looks like (⚠ small-sample practitioner benchmarks)
@@ -60,7 +60,7 @@ means it can be *tested*.
 Full methodology in [EVALS.md § Activation evaluation](EVALS.md#activation-evaluation-routing--implemented).
 The short version:
 
-- **Dataset (124 cases, generated + committed):** 64 positive + 52 boundary + 8 trivial.
+- **Dataset (126 cases, generated + committed):** 65 positive + 53 boundary + 8 trivial.
   Positive and boundary cases are **mined from each skill's own evals** (happy-path eval
   → positive; scope-boundary eval → boundary), so the dataset grows with the catalog and
   can't drift. The 8 trivial/conversational cases are the only hand-authored ones.
@@ -78,12 +78,12 @@ The short version:
   correctly in the committed `routing-baseline.json` must not later misroute. Wired into
   `.github/workflows/routing-evals.yml`.
 
-## Results (committed baseline, 2026-07, 65-skill catalog)
+## Results (committed baseline, 2026-07, 66-skill catalog)
 
 | Layer 2 metric | Result |
 |---|---|
-| Top-1 routing accuracy (positives) | **64 / 64 = 1.00** |
-| Boundary pass rate ("no wild misroute") | **52 / 52 = 1.00** |
+| Top-1 routing accuracy (positives) | **65 / 65 = 1.00** |
+| Boundary pass rate ("no wild misroute") | **53 / 53 = 1.00** |
 | False-activation rate (trivial → NONE) | **0 / 8 = 0.00** |
 | Confusion pairs | **none** |
 
@@ -102,7 +102,7 @@ Source of record: [`evals/routing-baseline.json`](../evals/routing-baseline.json
 # Offline: confirm the dataset is in sync with the skills' evals
 python evals/routing.py --check-dataset
 
-# With an API key: route all 124 cases on haiku, majority-of-3
+# With an API key: route all 126 cases on haiku, majority-of-3
 export ANTHROPIC_API_KEY=...
 python evals/routing.py --run -k 3
 
@@ -125,23 +125,24 @@ python evals/routing.py --run -k 3
   question from "the skill helped" — that's the RED/GREEN content harness (`run.py`). The
   realized value is the product of the two: *routing accuracy × (GREEN − RED gap)*.
 - **The committed set is mined from the skills' own evals — but cross-checked held-out.**
-  Positive/boundary cases are written by the same hand as the descriptions, so the 124-case
+  Positive/boundary cases are written by the same hand as the descriptions, so the 126-case
   gate could in principle be teaching to the test. To probe that, a separate **hand-authored
-  150-case held-out set** (`evals/routing-heldout.json`) — no phrasing copied from any
-  `evals.json`, each skill's own trigger keywords deliberately avoided — was routed on haiku
-  at k=3: a perfect, fully-unanimous sweep (paraphrase 92/92, confusable 24/24 with zero
-  confusion pairs, trap 18/18, trivial 16/16, false-activation 0/21). So the clean sweep
+  held-out set** (`evals/routing-heldout.json`) — no phrasing copied from any `evals.json`,
+  each skill's own trigger keywords deliberately avoided — was routed on haiku at k=3: a
+  perfect, fully-unanimous sweep (paraphrase 92/92, confusable 24/24 with zero confusion
+  pairs, trap 18/18, trivial 16/16, false-activation 0/21) **on the then-150-case version**;
+  the set has since grown to 162 and the additions are not yet routed. So the clean sweep
   isn't an artifact of shared author phrasing. It's a periodic manual probe, **not** a CI
   gate (see [EVALS.md § Held-out generalization probe](EVALS.md#held-out-generalization-probe-independent)).
 - **The comparison isn't apples-to-apples.** The community numbers above measure native
-  auto-triggering on small skill sets; ours measures orchestrator routing on a 65-skill
+  auto-triggering on small skill sets; ours measures orchestrator routing on a 66-skill
   catalog. They're different mechanisms — which is the point: routing is what makes a
   large catalog reliable at all.
 
 ## The takeaway
 
 Native auto-triggering is a real, useful feature that degrades with scale. For a curated
-65-skill SDLC library, routing is what keeps every skill reachable *and* makes activation
+66-skill SDLC library, routing is what keeps every skill reachable *and* makes activation
 predictable enough to regression-test. The number to remember isn't "100%" — it's that
 **activation is measured and gated at all**, which is not something the platform or the
 community libraries do at catalog scale.

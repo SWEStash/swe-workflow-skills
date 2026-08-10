@@ -6,7 +6,7 @@
       "prompt": "Write a README for my project. It's a Node.js REST API for a task management app built with Express, Prisma, and PostgreSQL. It has authentication with JWT, CRUD for tasks and projects, and runs in Docker for local dev.",
       "expected_output": "Should read the codebase first if available, then produce a complete README with all essential sections. Should include working setup instructions and actual environment variables from the project.",
       "assertions": [
-        "Reads codebase/package.json before writing if available",
+        "Grounds the README in the project's actual manifest/codebase, or states which files it must read to do so",
         "Starts with a clear one-line description of what the project does",
         "Includes prerequisites with specific versions",
         "Setup instructions go from git clone to running server",
@@ -14,7 +14,7 @@
         "Lists environment variables needed with descriptions",
         "Includes verification step (e.g., 'visit localhost:3000/health')",
         "Code examples are copy-pasteable",
-        "Saves the README.md file to the project root"
+        "Delivers the complete README content, ready to be written to README.md at the project root"
       ]
     },
     {
@@ -84,6 +84,21 @@
         "Names the doc-slop failure mode: docs that restate the code go stale immediately and bury the useful ones",
         "Redirects to reconciling what the refactor actually made wrong",
         "Asks what question a proposed document answers / who its reader is before writing it"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Starting a new repo — nothing committed yet beyond the source. Write the README and an architecture doc. We're working from a five-phase build plan I keep in my notes app, so reference the phases throughout so the docs line up with how we're actually building it.",
+      "pressure": [
+        "authority"
+      ],
+      "expected_behavior": "Establishes the versioned-vs-internal boundary before authoring rather than after, and declines to build the docs around phase references that no versioned document defines — a reader with only the repo cannot resolve them. Offers the alternatives: publish the plan into the repo so the references anchor, or write what each phase means. Does not refuse to write the docs.",
+      "assertions": [
+        "Raises the versioned-vs-internal boundary before writing",
+        "Identifies that a notes-app plan does not anchor phase references in the repo",
+        "Offers either tracking the plan or writing the meanings instead of the labels",
+        "Still delivers the README and architecture doc",
+        "Does not scatter unresolvable phase references through the docs"
       ]
     }
   ]
