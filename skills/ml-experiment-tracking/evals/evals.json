@@ -27,6 +27,18 @@
         "Suggests data versioning to prevent future dataset ambiguity",
         "Provides a practical migration path, not an all-or-nothing approach"
       ]
+    },
+    {
+      "id": 3,
+      "prompt": "Before I wire up MLflow — I don't actually know how to tell whether our RAG support chatbot is answering well. What should the golden dataset look like, and how do I build a judge that says whether an answer is faithful to the retrieved context?",
+      "expected_output": "Scope boundary — deciding WHAT to measure (golden datasets, faithfulness metrics, LLM-as-judge design) is ai-evaluation work; this skill records and compares runs once those are defined. Should hand off rather than answering with run-logging setup.",
+      "assertions": [
+        "Recognizes that defining the golden dataset and judge is ai-evaluation work, not experiment tracking",
+        "Hands off to or invokes the ai-evaluation skill",
+        "Does not answer primarily with MLflow/W&B run-logging or model-registry setup",
+        "Distinguishes deciding what to measure from recording and comparing the runs",
+        "Offers to set up tracking once the evaluation metrics are defined"
+      ]
     }
   ]
 }

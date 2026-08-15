@@ -69,21 +69,56 @@ Two runners turn the loop above into something repeatable:
 
 | Runner | Use | Needs |
 |---|---|---|
-| `evals/workflow-runner.mjs` | Fast local RED/GREEN loop, on demand | Claude Code Workflow tool |
-| `evals/run.py` | CI regression gate, scriptable | `ANTHROPIC_API_KEY` + `pip install -r evals/requirements.txt` |
+| `evals/workflow-runner.mjs` | Fast local RED/GREEN loop; **produces the committed baseline** | Claude Code Workflow tool |
+| `evals/run.py` | CI regression gate, scriptable; **consumes that baseline** | `ANTHROPIC_API_KEY` + `EVAL_GEN_MODEL`/`EVAL_JUDGE_MODEL` + `pip install -r evals/requirements.txt` |
 
 Both **generate** a candidate reply (with the skill loaded = GREEN; without =
 RED) and **judge** it with a skeptical LLM-as-judge using structured output
-(per-assertion pass/fail). `run.py` adds majority-of-`k` voting, a stored
-`baseline.json`, and a non-zero exit when a previously-green assertion
+(per-assertion pass/fail, keyed on assertion index). `run.py` adds
+majority-of-`k` voting and a non-zero exit when a previously-green assertion
 regresses. The GitHub Actions workflow (`.github/workflows/skill-evals.yml`)
 runs it on PRs that touch `skills/`.
 
+**The two arms present the model the same condition**, so their rows are
+comparable: RED is tool-less in both, and GREEN in both may read files inside
+the skill's own directory (see "What the harnesses can see" below).
+
 ```bash
+export EVAL_GEN_MODEL=claude-opus-5 EVAL_JUDGE_MODEL=claude-opus-5
 python evals/run.py --all --update-baseline      # record the golden baseline
 python evals/run.py --changed --base origin/main # CI: only changed skills
 python evals/run.py --skills tdd-workflow -k 3    # one skill, 3 votes
 ```
+
+### The shared baseline (`evals/baseline.json`)
+
+Written by the **in-session Workflow arm** (subscription-funded), committed, and
+consumed as the CI gate by the **Python arm** — the same split
+`evals/routing-baseline.json` already uses. Shape: top-level `_note` / `model` /
+`k` / `runner` / `option` / `summary`, then `skills.<name>."{kind}:{id}"` rows
+carrying `green` and `red` **per-assertion boolean arrays** plus their own
+`model` / `k` / `runner`.
+
+Two properties matter:
+
+- **Partial files are valid.** `run.py` chains `.get()`, so uncovered cases
+  simply don't gate — which is what makes a large sweep resumable and safe to
+  commit in batches.
+- **Model is recorded, not pinned.** `run.py` has no default model on purpose:
+  a stale hardcoded pin plus a committed baseline manufactures false regressions
+  library-wide the day a new model ships. The gate compares **only rows whose
+  recorded model matches the model now running**, and prints "not comparable"
+  otherwise rather than reporting a regression. `workflow-runner.mjs`'s
+  `MODEL = 'opus'` is a harness shorthand, not a model id — the session that runs
+  the sweep reports the resolved id, and that string goes into the provenance
+  fields.
+
+The committed baseline is recorded at **k=1** (one sample per case), matching the
+routing precedent. k=1 is noisy on some cases — accepted, and recorded in the
+`_note`; majority voting in the Workflow arm is a tracked follow-up. CI still
+runs `-k 3`, and gating a k=3 run against a k=1 baseline is deliberate: majority-of-3
+is strictly less noisy than the recorded value, so the asymmetry biases toward
+*not* firing false regressions.
 
 ### Why the gate is regression-vs-baseline, not an absolute threshold
 
@@ -96,46 +131,58 @@ flaky). Two findings from running this make the choice necessary:
    "runs the proving command in this session" or "keeps a timestamped action
    log" fail even when the skill is working — the behavior spans a session, not
    one message. In a real run these depressed `verification-before-completion`
-   and `incident-response` GREEN scores well below a manual read. Fix going
-   forward: phrase assertions so they're satisfiable by the artifact under test
-   (e.g. "identifies *which* command would prove it" rather than "runs it"), or
-   let the generator use tools for verify-type skills.
+   and `incident-response` GREEN scores well below a manual read. Fix: phrase
+   assertions so they're satisfiable by the artifact under test (e.g.
+   "identifies *which* command would prove it" rather than "runs it"). The
+   generator now *does* get a read tool scoped to the skill directory — see (3)
+   — but it still cannot execute a command or write a file, so genuinely
+   session-spanning assertions remain out of reach; (4) says what to do with them.
 2. **The judge is deliberately harsher than a human eyeball.** Absolute scores
    are therefore not comparable across skills; *movement* is the signal.
-3. **Neither harness can see `references/` or `templates/`.** `run.py` reads
-   only `SKILL.md` and injects it into the system prompt with no `tools=` at
-   all, so linked files are never fetched; `workflow-runner.mjs` *could* read
-   them (its GREEN arm has tools) but is told "do NOT use any other tools".
-   About half the library's instructional content lives in those directories,
-   across 50 of 66 skills — so **an improvement to a reference file cannot move
-   any score**, and reference-heavy skills score as though that content didn't
-   exist. This is the same root cause as (1): the generators don't act, they
-   only reply.
+3. **GREEN can see `references/` and `templates/` — RED still can't act.** This
+   used to be the harness's biggest blind spot: about half the library's
+   instructional content lives in those directories (428KB across 50 of 66
+   skills), and neither runner read a byte of it, so reference-heavy skills
+   scored as though that content didn't exist and **an improvement to a reference
+   file could not move any score**. Both arms now use **option A**: the GREEN
+   generator may read any file inside the skill's *own* directory, guarded by a
+   path check that rejects `..`, absolute paths outside the root, and symlink
+   escapes. Read-only — no write, no bash, no repo access. RED is unchanged and
+   tool-less; that contrast is the whole signal.
 
-   Two rules follow. **When writing assertions**, make them satisfiable from
-   `SKILL.md` alone, or leave them out of the gate — an assertion that only
-   `references/` can satisfy reads as a permanent failure and pressures the author
-   to copy depth up into `SKILL.md`, which is exactly what progressive disclosure
-   exists to prevent. There is **no `reference-dependent` field** in the schema and
-   neither runner honours one, so "leave it out" means *delete the assertion and
-   record why in the test's `expected_behavior`* — not add a marker the runners
-   ignore. **When reading a low GREEN**, check the skill's reference mass before
-   concluding the skill is weak; see the obsolescence carve-out in AUTHORING.md.
+   The authoring rule **inverts**: an assertion satisfiable only from
+   `references/` or `templates/` is now legitimate and should be kept. Do not
+   copy reference depth up into `SKILL.md` to make a score move — that defeats
+   progressive disclosure, and it is no longer necessary. There is still **no
+   `reference-dependent` field** in the schema, and neither runner honours one;
+   don't invent a marker.
 
-4. **Tool-dependent assertions are a separate trap from reference-dependent ones.**
-   An assertion that requires the model to *demonstrate a lookup* — "grounds the
-   judgment in what the repo declared protected", "checks the existing fixture
-   convention" — cannot be satisfied by a runner that supplies no repo and no
-   tools. The model has nothing to look up, so it reasons from general principle
-   and the assertion fails forever. Two tells: it scores **0/N unanimous in GREEN
-   across successive rewrites**, or it sits at **0/N in *both* arms** (nothing to
-   discriminate). Treat those like (3) — delete, and record the reasoning — and
-   verify the behavior in a real session or the layer-3 routing harness, which does
-   hand the model tools.
+   Two costs come with the grant. GREEN is now nondeterministic in a second way
+   (which files the agent chooses to open), and GREEN has *tool access* as well
+   as reference access — so a GREEN movement is not by itself proof the
+   references caused it. The 16 zero-reference skills are the control pool for
+   that question.
 
-   The distinction matters because the two look identical from the score: content
-   *present* in `SKILL.md` still fails if satisfying it requires an action the
-   harness forbids. Promoting more text will not fix it.
+4. **Tool-dependent assertions: partially inverted.** An assertion requiring the
+   model to *demonstrate a lookup* is now satisfiable **when the thing looked up
+   lives inside the skill's directory** — that's exactly what option A grants.
+   What stays unreachable is anything needing a **real repo, a write, or an
+   executed command**: "runs it fresh in this session and reads the exit code",
+   "saves the ADR to the filesystem", "grounds the judgment in what the repo
+   declared protected". The harness supplies no repo and no write tool, so those
+   fail forever regardless of how good the skill is.
+
+   Such an assertion contributes **zero gate signal** by construction — the
+   regression check only fires on `was && !now`, so a permanently-false assertion
+   can never catch anything. Delete it and record why in the test's
+   `expected_output` / `expected_behavior`, then verify that behavior in a real
+   session or the layer-3 routing harness, which does hand the model tools. Two
+   tells if you're unsure: **0/N unanimous in GREEN across successive rewrites**,
+   or **0/N in both arms** (nothing to discriminate).
+
+   The distinction still matters because the two look identical from the score:
+   content *present* in `SKILL.md` still fails if satisfying it requires an action
+   the harness forbids. Promoting more text will not fix it.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what

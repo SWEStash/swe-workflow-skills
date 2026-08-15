@@ -31,6 +31,18 @@
         "Recommends adding HEALTHCHECK",
         "Provides a corrected Dockerfile"
       ]
+    },
+    {
+      "id": 3,
+      "prompt": "The image builds fine now. Next step: provision the EKS cluster, the VPC with private subnets, the RDS instance and the ECR repository on AWS. Write me the Terraform for all of it.",
+      "expected_output": "Scope boundary — provisioning cloud infrastructure is infrastructure-as-code territory, not containerization. Should hand off rather than writing Terraform modules here, while staying useful about the container-side artifacts that will run on that cluster.",
+      "assertions": [
+        "Recognizes that provisioning EKS/VPC/RDS/ECR is infrastructure-as-code work, not containerization",
+        "Hands off to or invokes the infrastructure-as-code skill",
+        "Does not write the Terraform modules as part of the containerization workflow",
+        "Distinguishes authoring images and Kubernetes manifests from provisioning the platform they run on",
+        "Remains useful by offering the container-side artifacts (manifests, image build) that pair with the provisioned cluster"
+      ]
     }
   ]
 }

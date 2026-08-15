@@ -29,6 +29,18 @@
         "Suggests a retraining pipeline with fresh data",
         "Does NOT just say 'retrain the model' without diagnosing the cause"
       ]
+    },
+    {
+      "id": 3,
+      "prompt": "Hold off on the serving setup. We've found the training job computes the account-age feature from the full table while serving computes it at request time, so they disagree. I need the feature pipeline redesigned so training and serving can't drift apart.",
+      "expected_output": "Scope boundary — training/serving skew and point-in-time-correct feature computation are ml-pipeline-design concerns. Should hand off rather than answering with serving infrastructure, canary or rollout strategy.",
+      "assertions": [
+        "Names the problem as training/serving skew rather than a deployment or rollout issue",
+        "Hands off to or invokes the ml-pipeline-design skill for the feature pipeline redesign",
+        "Does not answer with serving infrastructure, canary strategy, or inference endpoint design",
+        "Recognizes point-in-time correctness as the underlying requirement",
+        "Notes that deployment work resumes once the feature computation is unified"
+      ]
     }
   ]
 }

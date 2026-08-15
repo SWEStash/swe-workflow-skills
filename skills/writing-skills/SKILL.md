@@ -140,11 +140,11 @@ As base models improve, a skill can become pure overhead. Once per release cycle
 — or on a major base-model update — re-run the skill's 3 evals RED on shipping
 models via `evals/workflow-runner.mjs`; re-sample ×3 on borderline scores and
 read the judge journal before calling a result variance (a "flaky" case is often
-a real content gap the skill causes). **First check the skill's reference mass:**
-the harnesses can't read `references/` or `templates/`, so where that content
-rivals `SKILL.md` the RED ≈ GREEN verdict is a harness artifact — judge those by
-hand instead. Otherwise, if RED ≈ GREEN across all 3 evals (0/0
-tool-dependent assertion pairs don't count), **slim first** — cut what the model
+a real content gap the skill causes). The GREEN arm reads the skill's
+`references/` and `templates/`, so reference-heavy skills are judged against
+their full depth — the old carve-out for them is retired. If RED ≈ GREEN across
+all 3 evals (0/0 assertion pairs needing a real repo, a write, or an executed
+command don't count — the harness can't provide those), **slim first** — cut what the model
 does unaided; keep the Iron Law, boundaries, and cross-skill references — then
 re-run GREEN (gate: GREEN ≥ RED per case). Retire only after a slimmed skill
 stays RED ≈ GREEN a full cycle later, with a deprecation notice in

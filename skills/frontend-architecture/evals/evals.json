@@ -29,6 +29,18 @@
         "Does NOT recommend adding yet another state management library on top",
         "Addresses the performance issue specifically (memoization, selector optimization)"
       ]
+    },
+    {
+      "id": 3,
+      "prompt": "Component structure is settled. Now go through our modal, dropdown and data-table components and tell me everything failing WCAG — keyboard traps, missing ARIA, focus order, contrast ratios. We have an accessibility audit next month.",
+      "expected_output": "Scope boundary — a WCAG conformance review of existing components is accessibility-design work, not frontend architecture. Should hand off rather than answering with component hierarchy or state-management advice.",
+      "assertions": [
+        "Recognizes that WCAG conformance, ARIA, focus order and contrast are accessibility-design concerns",
+        "Hands off to or invokes the accessibility-design skill",
+        "Does not answer with component hierarchy, state management, or folder structure guidance",
+        "Does not attempt a full WCAG audit inside the frontend-architecture workflow",
+        "May note where architectural choices (focus management, component composition) support the accessibility work"
+      ]
     }
   ]
 }

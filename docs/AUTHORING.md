@@ -202,8 +202,11 @@ concrete for this library:
 - **Cadence** — once per release cycle, or when the shipping base models change
   materially (a new default model family or tier).
 - **Procedure** — re-run the skill's 3 evals RED (without the skill) on shipping
-  models via `evals/workflow-runner.mjs`; its generators and judges are pinned to
-  the shipping model line precisely so this baseline means something. Re-sample ×3
+  models via `evals/workflow-runner.mjs`; its generators and judges all run on the
+  same model line, so one sweep is internally consistent. (That pin is the harness
+  shorthand `opus`, which tracks whatever opus the session runs — it does **not**
+  make scores comparable across sessions months apart; record the resolved model
+  with the numbers.) Re-sample ×3
   on borderline scores, and **read the judge journal before writing a gap off as
   variance** — a "flaky" case is often a real content gap the skill itself causes.
 - **Decision rule** — RED ≈ GREEN across **all three evals** (ignore assertion pairs
@@ -212,15 +215,19 @@ concrete for this library:
   boundaries, and the cross-skill references — those carry routing and safety value
   even when the domain content has gone generic. Re-run GREEN after slimming; the
   gate is GREEN ≥ RED per case.
-- **Reference-heavy carve-out** — the harnesses cannot read `references/` or
-  `templates/` (EVALS.md, known limitation 3), so for a skill whose depth lives
-  there, RED ≈ GREEN is produced by the harness rather than observed of the
-  model. **Never slim or retire on RED ≈ GREEN alone when a skill's
-  reference/template bytes rival or exceed its `SKILL.md`.** Check the ratio
-  first; several skills sit above 2×. Either judge those by hand against the
-  full asset, or wait for a harness that loads what the skill links — the
-  decision rule below assumes the evidence covers the whole skill, and for these
-  skills it doesn't.
+- **Reference-heavy skills** — the carve-out that used to apply here is **retired**:
+  the GREEN arm now reads files inside the skill's own directory (EVALS.md, known
+  limitation 3), so a skill whose depth lives in `references/` or `templates/` is
+  evaluated against that depth rather than against `SKILL.md` alone. RED ≈ GREEN on
+  such a skill is now evidence about the *model*, not an artifact of the harness,
+  and the decision rule above applies to it unchanged.
+  **Run the obsolescence review on `evals/workflow-runner.mjs`** — it is the arm
+  that produces the committed baseline, and the one you can actually run without
+  an API key. Two caveats survive: GREEN also gained *tool access* alongside
+  reference access, so on a borderline call compare against a zero-reference skill
+  before attributing movement to the references; and an assertion needing a real
+  repo, a write, or an executed command is still unreachable (limitation 4) — those
+  score 0/0 in both arms and are excluded from the decision rule, as above.
 - **Retirement** — only after a slimmed skill stays RED ≈ GREEN for a full further
   cycle. Removal is user-visible (roles and plugins ship the skill), so it needs a
   deprecation notice in CHANGELOG.md and ROLES.md before the skill is dropped from

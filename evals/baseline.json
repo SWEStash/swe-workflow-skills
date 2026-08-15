@@ -1,0 +1,484 @@
+{
+  "_note": "First content baseline for the library. Recorded in-session via evals/workflow-runner.mjs (Workflow tool, subscription) on 2026-08-15, branch main / parent commit 45aa919, run wf_225687a2-7f5, at k=1 over 23 cases / 124 assertions, option A (the GREEN generator may read files inside the skill's own directory; RED stays tool-less). 'model' is the resolved id the agents ran on; the runner's 'opus' pin is a harness shorthand and was substituted here. PARTIAL by design: covers a 6-skill validation probe \u2014 the three most reference-heavy skills (architecture-design, performance-optimization, architecture-documentation) and three carrying no references at all (plan-execution, project-review, resilience-engineering). Uncovered cases simply do not gate; the remaining 60 skills are recorded in later runs, staged by reference mass. Refresh by re-running the in-session runner, or `python evals/run.py --all --update-baseline` (needs ANTHROPIC_API_KEY plus EVAL_GEN_MODEL/EVAL_JUDGE_MODEL). The gate (run.py / skill-evals.yml) fails if an assertion green here later goes red on a same-model row; rows recorded on a different model are reported 'not comparable' and skipped rather than flagged. k=1 is noisy on some cases \u2014 accepted; majority voting in the Workflow arm is a tracked follow-up. One row is knowingly recorded red and should not be 'fixed' by editing this file: performance-optimization eval:2 assertion 0 ('asks to see the current query and database schema') scored RED true / GREEN false, i.e. the skill made the model stop asking. A recorded false can never fire the regression check, so keeping it is safe, but it is a real authoring defect in that skill rather than harness noise.",
+  "model": "claude-opus-5",
+  "k": 1,
+  "runner": "workflow-runner.mjs",
+  "option": "A",
+  "summary": {
+    "cases": 23,
+    "excluded": 0,
+    "assertions": 124,
+    "red": 89,
+    "green": 121,
+    "skills": 6
+  },
+  "skills": {
+    "architecture-design": {
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:2": {
+        "green": [
+          false,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      }
+    },
+    "architecture-documentation": {
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      }
+    },
+    "performance-optimization": {
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:2": {
+        "green": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      }
+    },
+    "plan-execution": {
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "pressure:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "pressure:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "pressure:4": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "pressure:5": {
+        "green": [
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      }
+    },
+    "project-review": {
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      }
+    },
+    "resilience-engineering": {
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-opus-5",
+        "k": 1,
+        "runner": "workflow-runner.mjs"
+      }
+    }
+  }
+}

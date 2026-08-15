@@ -28,6 +28,18 @@
         "Suggests a timeframe for evaluation (not 'check once and declare victory')",
         "Warns against vanity metrics (total searches without context is meaningless)"
       ]
+    },
+    {
+      "id": 3,
+      "prompt": "We defined the KR already. Here's the data: the A/B test on the new onboarding shows a 3.1% lift in activation, p = 0.06, n = 800 split across both arms. Is that a real effect? Do we ship it?",
+      "expected_output": "Scope boundary — judging whether an observed lift is real (significance, power, sample size, stopping rules) is statistical-analysis work. Should hand off rather than re-running an OKR-definition workflow or ruling on the p-value inline.",
+      "assertions": [
+        "Recognizes this as an inference question about experiment results, not a metric-definition question",
+        "Hands off to or invokes the statistical-analysis skill",
+        "Does not declare the result significant or issue a ship/no-ship verdict from the p-value alone",
+        "Does not restart an OKR or success-metric definition exercise the user has already completed",
+        "May note how the established result would feed the existing key result once the inference is settled"
+      ]
     }
   ]
 }

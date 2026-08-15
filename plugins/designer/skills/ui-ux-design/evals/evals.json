@@ -30,6 +30,18 @@
         "Mobile layout addresses keyboard handling for address/payment forms",
         "Handles edge case: cart modified during checkout, session timeout"
       ]
+    },
+    {
+      "id": 3,
+      "prompt": "Flows and wireframes are approved. Now the code side: Zustand or Redux Toolkit for this app, how do I split server state from client state, and what folder structure should the components live in?",
+      "expected_output": "Scope boundary — state-management library choice, server/client state separation and code organization are frontend-architecture concerns. Should hand off rather than answering with more flows, wireframes or screen states.",
+      "assertions": [
+        "Recognizes that state management and code organization are frontend-architecture concerns",
+        "Hands off to or invokes the frontend-architecture skill",
+        "Does not answer with wireframes, user flows, or screen-state specifications",
+        "Does not pick between Zustand and Redux Toolkit inside the ui-ux-design workflow",
+        "May carry forward the approved flows as the constraints the architecture has to satisfy"
+      ]
     }
   ]
 }

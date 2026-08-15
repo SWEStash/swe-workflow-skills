@@ -4,15 +4,14 @@
     {
       "id": 1,
       "prompt": "We're building a SaaS platform and need to decide whether to use a multi-tenant single database or database-per-tenant approach. We have about 50 customers now, expecting 500 in a year. It's a Django app on PostgreSQL. Some customers are enterprise with strict data isolation requirements.",
-      "expected_output": "A structured analysis with at least 3 options (shared DB with row-level security, schema-per-tenant, DB-per-tenant), trade-off analysis against quality attributes, a clear recommendation with rationale, and an ADR document.",
+      "expected_output": "A structured analysis with at least 3 options (shared DB with row-level security, schema-per-tenant, DB-per-tenant), trade-off analysis against quality attributes, a clear recommendation with rationale, and an ADR document. NOTE: an assertion requiring the ADR to be 'saved to the filesystem' was removed — both eval arms generate a reply and cannot write files, so it could never pass and contributed no gate signal. Verify ADR file creation in a real session instead.",
       "assertions": [
         "Presents at least 3 distinct options",
         "Analyzes trade-offs for each option (not just pros/cons lists)",
         "Considers the enterprise data isolation requirement explicitly",
         "Applies KISS and YAGNI (doesn't over-engineer for 500 customers)",
         "Makes a clear recommendation with primary reason stated",
-        "Includes revisit triggers for when to reconsider",
-        "Produces an ADR document saved to the filesystem"
+        "Includes revisit triggers for when to reconsider"
       ]
     },
     {

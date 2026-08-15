@@ -29,6 +29,19 @@
         "Each action item has an owner",
         "Includes review of previous retro action items"
       ]
+    },
+    {
+      "id": 3,
+      "prompt": "The payment service is down right now — checkout has been failing for about ten minutes and customers are tweeting at us. Let's start the post-mortem so we capture everything while it's fresh.",
+      "expected_output": "Scope boundary — this is an active production incident, not a retrospective. Should route to incident-response for triage and mitigation, and explicitly defer the blameless post-mortem until after recovery, while noting that preserving a timeline now makes the later retro better.",
+      "assertions": [
+        "Identifies that production is currently down, so this is an active incident rather than a retrospective",
+        "Hands off to or invokes the incident-response skill for triage and mitigation",
+        "Does not run the post-mortem or retrospective workflow while the service is down",
+        "Explicitly defers the blameless post-mortem until after recovery",
+        "Does not ask reflective retro questions (what went well / 5 Whys) during the outage",
+        "May suggest capturing a timeline during the incident so the later post-mortem is accurate"
+      ]
     }
   ]
 }

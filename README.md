@@ -183,7 +183,10 @@ Each skill carries an `evals/` directory; safety/discipline skills add a `pressu
 block. Two runners replay scenarios through Claude (skill loaded = GREEN, absent = RED)
 and judge each assertion with a skeptical LLM-as-judge: `evals/workflow-runner.mjs`
 (in-session, no API key) and `evals/run.py` (CI regression gate, wired into
-`.github/workflows/skill-evals.yml`). Full guide in **[EVALS.md](docs/EVALS.md)**.
+`.github/workflows/skill-evals.yml`). The GREEN arm reads the skill *and* the
+`references/`/`templates/` files it links to, so improving a reference file moves the
+score. The first runner writes `evals/baseline.json`; the second gates against it.
+Full guide in **[EVALS.md](docs/EVALS.md)**.
 
 ## Contributing
 
