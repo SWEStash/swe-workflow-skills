@@ -109,8 +109,11 @@ description over the body, so get it right.
   report to a file and put anything needing user input in an "Open questions"
   section, since a fork returns only a summary and can't ask the user),
   `paths` (file-scoped), `disable-model-invocation` (deliberate-only workflows),
-  `effort`. Dynamic `` !`cmd` `` injection: cheap `--stat`-style commands only,
-  `|| true` failure-tolerant — see AUTHORING.md's injection rules.
+  `effort`. Dynamic injection (bang-prefixed backtick commands, inline or
+  fenced): cheap `--stat`-style commands only, `|| true` failure-tolerant — see
+  AUTHORING.md's injection rules. Note the syntax executes even inside markdown
+  code spans, so never write a runnable example of it in a SKILL.md — describe
+  it, or the skill runs the command every time it loads.
 - Progressive disclosure: keep SKILL.md tight (aim < 300 lines); push deep
   domain knowledge to `references/`, output formats to `templates/`. On
   compaction only a skill's first ~5k tokens are re-attached — front-load the
