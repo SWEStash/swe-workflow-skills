@@ -145,10 +145,23 @@ flaky). Two findings from running this make the choice necessary:
    skills), and neither runner read a byte of it, so reference-heavy skills
    scored as though that content didn't exist and **an improvement to a reference
    file could not move any score**. Both arms now use **option A**: the GREEN
-   generator may read any file inside the skill's *own* directory, guarded by a
-   path check that rejects `..`, absolute paths outside the root, and symlink
-   escapes. Read-only — no write, no bash, no repo access. RED is unchanged and
-   tool-less; that contrast is the whole signal.
+   generator may read files inside the skill's *own* directory. Read-only — no
+   write, no bash. RED is unchanged and tool-less; that contrast is the whole
+   signal.
+
+   **The two arms enforce that scope differently, and the difference matters.**
+   `run.py` enforces it in code: the request carries exactly one tool, whose path
+   guard resolves the request and rejects `..`, absolute paths outside the root,
+   and symlink escapes — write and bash are not refused, they are absent.
+   `workflow-runner.mjs` runs its GREEN generator as `agentType: 'general-purpose'`,
+   which carries the full tool set; there the scope is **enforced by the prompt
+   alone**. A stray write or a read outside the skill directory is possible in
+   principle, and the sharper risk is eval integrity rather than security — a GREEN
+   agent that reads a *sibling* skill is no longer measuring what the row claims.
+   Fingerprint `skills/` before and after a sweep (`find skills -type f | sort |
+   xargs sha256sum | sha256sum`) to detect it. Tightening this is a deliberate
+   re-baseline, not a silent edit: changing the agent type changes the eval
+   condition and makes new rows incomparable with everything already recorded.
 
    The authoring rule **inverts**: an assertion satisfiable only from
    `references/` or `templates/` is now legitimate and should be kept. Do not
