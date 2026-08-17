@@ -99,7 +99,18 @@ const items = (typeof args === 'string' ? JSON.parse(args) : args).map((it) => (
 // Never let one failed agent poison a row: routing-runner.mjs excludes errored
 // cases rather than scoring them, because an all-false row silently understates
 // GREEN and would be committed as if it were evidence.
-const safe = (p) => p.then((v) => ({ ok: true, v }), (e) => ({ ok: false, e: String(e) }))
+//
+// A rejected promise is the EASY case. The dangerous one is a RESOLVED null: the
+// Workflow tool returns null (it does not throw) when an agent dies on a terminal
+// API error after retries — a quota limit mid-sweep is the common trigger. Treating
+// that as a value gives toBools() nothing to read, so every assertion comes back
+// false and the row is recorded as evidence with `errored: []`. A quota-killed sweep
+// then yields a well-formed, shape-check-passing, entirely fabricated 0/n baseline.
+// Resolve-with-null must fail the same way a throw does.
+const safe = (p) => p.then(
+  (v) => (v == null || v === '' ? { ok: false, e: 'agent returned null/empty (terminal API error after retries)' } : { ok: true, v }),
+  (e) => ({ ok: false, e: String(e) }),
+)
 
 // Per-assertion booleans, index-aligned. A count cannot drive run.py's
 // `was && !now` check: 5/8 -> 5/8 with a DIFFERENT assertion failing is invisible.
@@ -129,7 +140,10 @@ const results = await pipeline(
       safe(agent(judgeP(it, red.v || ''), { label: `judge-red:${it.skill}:${it.kind}${it.id}`, phase: 'Judge', schema: JUDGE, model: MODEL })),
       safe(agent(judgeP(it, green.v || ''), { label: `judge-green:${it.skill}:${it.kind}${it.id}`, phase: 'Judge', schema: JUDGE, model: MODEL })),
     ])
-    if (!rj.ok || !gj.ok) {
+    // A judge that returns no verdicts is indistinguishable from the null case
+    // above once toBools() has run: 0 verdicts -> n false booleans. Exclude it too.
+    const noVerdicts = (x) => !Array.isArray(x?.v?.verdicts) || x.v.verdicts.length === 0
+    if (!rj.ok || !gj.ok || noVerdicts(rj) || noVerdicts(gj)) {
       log(`${it.skill} ${key}: JUDGE ERROR — excluded`)
       return { skill: it.skill, kind: it.kind, id: it.id, key, n, errored: true }
     }
