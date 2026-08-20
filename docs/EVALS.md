@@ -135,6 +135,44 @@ k=1, three evaporated at k=3 — and RED moves too: one case scored RED 5/5 then
 4/5 on consecutive k=3 runs. Confirm a one-assertion gap at k>1 before treating it
 as a defect, let alone editing a skill for it.
 
+### Results (content evals, full catalog)
+
+`claude-opus-5`, all 66 skills, 234 cases, 1315 assertions. RED is the same model
+answering the same prompt with no skill loaded.
+
+| Metric | Result |
+|---|---|
+| Assertions passed, no skill (RED) | **882 / 1315 = 67.1%** |
+| Assertions passed, skill loaded (GREEN) | **1242 / 1315 = 94.4%** |
+| Gain | **+27.4 points** |
+| Cases where GREEN beats RED | **158 / 234** |
+| Cases where GREEN ties RED | **76 / 234** |
+| Cases where GREEN is *below* RED | **0 / 234** |
+
+**The zero is the number to protect.** A skill that scores below the unaided model is
+worse than no skill at all, and the ties are mostly cases where RED already saturates
+(`accessibility-design` 23/25, `performance-optimization` 20/21) — no headroom left to
+show, not a skill doing nothing. Ten individual assertions still score RED-true /
+GREEN-false inside cases the skill wins overall; they are enumerated in the baseline's
+`_note` as authoring leads, and all sit on k=1 rows that have not been re-measured.
+
+**The gain does not track reference mass**, which is worth knowing before optimising
+for depth:
+
+| Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
+|---|---|---|---|
+| zero (no references at all) | 16 | 66.8% → 97.3% | **+30.5** |
+| light (0 < ratio < 1) | 22 | 69.2% → 93.9% | +24.7 |
+| heavy (ratio ≥ 1) | 28 | 65.6% → 93.7% | +28.1 |
+
+Pearson r between reference ratio and GREEN gain is **−0.06** across the 66 skills —
+no relationship. The zero-reference skills are the control that makes this readable:
+they gained the *most* with nothing to read, so the gain comes from the instruction
+itself. Note the standing confound — GREEN gained tool access alongside reference
+access — which is exactly why the zero-reference band matters.
+
+Recorded at k=1 except 12 cases at k=3 (see above); `k` is per row.
+
 ### Why the gate is regression-vs-baseline, not an absolute threshold
 
 We gate on **GREEN drift vs. the baseline**, never on an absolute pass rate, and

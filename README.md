@@ -38,9 +38,13 @@ don't cover:
   ([how it works](docs/ROLES.md)).
 - **Tested like code, not prose.** Every skill ships 3 evals; two LLM-as-judge
   harnesses (content quality and routing accuracy) replay them with skill loaded vs
-  absent and gate regressions in CI. Safety-critical skills (deploys, releases, tests,
-  incidents, security) are **hardened**: an Iron Law, a rationalization table distilled
-  from real baseline failures, and pressure tests that try to talk the agent out of it.
+  absent and gate regressions in CI. Across all 66 skills — 234 cases, 1315 assertions —
+  the same model passes **67.1%** of assertions unaided and **94.4%** with the skill
+  loaded, and **no skill scores below the unaided model on any case**
+  ([results](docs/EVALS.md#results-content-evals-full-catalog)). Safety-critical skills
+  (deploys, releases, tests, incidents, security) are **hardened**: an Iron Law, a
+  rationalization table distilled from real baseline failures, and pressure tests that
+  try to talk the agent out of it.
 - **Curated, not a mega-catalog.** First-party skills, versioned and eval-gated in the
   repo — no arbitrary third-party skills pulled from a hub, and nothing that executes on
   its own (the content is instructions and templates; the only code is the open Node
