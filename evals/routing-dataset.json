@@ -189,6 +189,17 @@
       ]
     },
     {
+      "id": "boundary:cicd-pipeline:3",
+      "kind": "boundary",
+      "skill": "cicd-pipeline",
+      "prompt": "The pipeline itself is fine. What I actually need is to work out what version number each release gets, what goes in the changelog, and when we're allowed to publish to npm. Can you just build all that into the workflow file?",
+      "accept": [
+        "cicd-pipeline",
+        "release-management",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:code-archaeology:1",
       "kind": "positive",
       "skill": "code-archaeology",
@@ -296,6 +307,17 @@
       "prompt": "Containerize my Express.js API. It uses Node 20, has a build step (TypeScript), connects to PostgreSQL and Redis, and needs to run in production on Kubernetes.",
       "accept": [
         "containerization"
+      ]
+    },
+    {
+      "id": "boundary:containerization:3",
+      "kind": "boundary",
+      "skill": "containerization",
+      "prompt": "The image builds fine now. Next step: provision the EKS cluster, the VPC with private subnets, the RDS instance and the ECR repository on AWS. Write me the Terraform for all of it.",
+      "accept": [
+        "containerization",
+        "infrastructure-as-code",
+        "NONE"
       ]
     },
     {
@@ -468,6 +490,17 @@
       ]
     },
     {
+      "id": "boundary:effort-estimation:3",
+      "kind": "boundary",
+      "skill": "effort-estimation",
+      "prompt": "Give me story points for the new billing feature. I don't have it broken down yet \u2014 there's just the one-line ask from the customer. Just point it so I can put it in the sprint.",
+      "accept": [
+        "effort-estimation",
+        "feature-planning",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:exploratory-data-analysis:1",
       "kind": "positive",
       "skill": "exploratory-data-analysis",
@@ -534,6 +567,17 @@
       "prompt": "I'm starting a new React app (Next.js) for a project management tool. It has projects, tasks, team members, and a dashboard. Users can filter, sort, and search tasks. There's real-time collaboration. Help me design the frontend architecture.",
       "accept": [
         "frontend-architecture"
+      ]
+    },
+    {
+      "id": "boundary:frontend-architecture:3",
+      "kind": "boundary",
+      "skill": "frontend-architecture",
+      "prompt": "Component structure is settled. Now go through our modal, dropdown and data-table components and tell me everything failing WCAG \u2014 keyboard traps, missing ARIA, focus order, contrast ratios. We have an accessibility audit next month.",
+      "accept": [
+        "frontend-architecture",
+        "accessibility-design",
+        "NONE"
       ]
     },
     {
@@ -606,6 +650,18 @@
       ]
     },
     {
+      "id": "boundary:infrastructure-as-code:3",
+      "kind": "boundary",
+      "skill": "infrastructure-as-code",
+      "prompt": "Our Terraform is in good shape. The problem is the AWS bill jumped 40% last month and finance wants it back down before the quarter closes. Work out what's driving it and cut it.",
+      "accept": [
+        "infrastructure-as-code",
+        "finops-cost-optimization",
+        "refactoring",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:llm-app-engineering:1",
       "kind": "positive",
       "skill": "llm-app-engineering",
@@ -635,6 +691,17 @@
       ]
     },
     {
+      "id": "boundary:metrics-and-okrs:3",
+      "kind": "boundary",
+      "skill": "metrics-and-okrs",
+      "prompt": "We defined the KR already. Here's the data: the A/B test on the new onboarding shows a 3.1% lift in activation, p = 0.06, n = 800 split across both arms. Is that a real effect? Do we ship it?",
+      "accept": [
+        "metrics-and-okrs",
+        "statistical-analysis",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:ml-experiment-tracking:1",
       "kind": "positive",
       "skill": "ml-experiment-tracking",
@@ -644,12 +711,34 @@
       ]
     },
     {
+      "id": "boundary:ml-experiment-tracking:3",
+      "kind": "boundary",
+      "skill": "ml-experiment-tracking",
+      "prompt": "Before I wire up MLflow \u2014 I don't actually know how to tell whether our RAG support chatbot is answering well. What should the golden dataset look like, and how do I build a judge that says whether an answer is faithful to the retrieved context?",
+      "accept": [
+        "ml-experiment-tracking",
+        "ai-evaluation",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:ml-model-deployment:1",
       "kind": "positive",
       "skill": "ml-model-deployment",
       "prompt": "I have a scikit-learn fraud detection model that's performing well in our test environment. I need to deploy it as a real-time API that our payment service calls for every transaction. We process about 1000 transactions per second. What's the best approach?",
       "accept": [
         "ml-model-deployment"
+      ]
+    },
+    {
+      "id": "boundary:ml-model-deployment:3",
+      "kind": "boundary",
+      "skill": "ml-model-deployment",
+      "prompt": "Hold off on the serving setup. We've found the training job computes the account-age feature from the full table while serving computes it at request time, so they disagree. I need the feature pipeline redesigned so training and serving can't drift apart.",
+      "accept": [
+        "ml-model-deployment",
+        "ml-pipeline-design",
+        "NONE"
       ]
     },
     {
@@ -800,6 +889,18 @@
       ]
     },
     {
+      "id": "boundary:prd-writing:3",
+      "kind": "boundary",
+      "skill": "prd-writing",
+      "prompt": "The PRD is signed off by product and design. Now turn it into the actual sprint backlog \u2014 tickets sized in points, ordered by dependency, with acceptance criteria on each one.",
+      "accept": [
+        "prd-writing",
+        "effort-estimation",
+        "feature-planning",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:project-documentation:1",
       "kind": "positive",
       "skill": "project-documentation",
@@ -825,6 +926,17 @@
       "prompt": "I want to propose migrating our monolithic Django app to microservices. Our CTO is skeptical and wants to see a business case. We have 15 engineers, the app serves 50K users, and deployments take 2 hours with frequent rollbacks. Help me write the proposal.",
       "accept": [
         "project-proposal"
+      ]
+    },
+    {
+      "id": "boundary:project-proposal:3",
+      "kind": "boundary",
+      "skill": "project-proposal",
+      "prompt": "Forget the business case, the VP already approved the budget. I just need the technical call: Kafka or RabbitMQ for our event backbone? We do about 5K events/sec with ordering guarantees per customer.",
+      "accept": [
+        "project-proposal",
+        "architecture-design",
+        "NONE"
       ]
     },
     {
@@ -919,6 +1031,17 @@
       ]
     },
     {
+      "id": "boundary:retrospective:3",
+      "kind": "boundary",
+      "skill": "retrospective",
+      "prompt": "The payment service is down right now \u2014 checkout has been failing for about ten minutes and customers are tweeting at us. Let's start the post-mortem so we capture everything while it's fresh.",
+      "accept": [
+        "retrospective",
+        "incident-response",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:rollback-strategy:1",
       "kind": "positive",
       "skill": "rollback-strategy",
@@ -981,7 +1104,7 @@
       "id": "positive:strategic-review:1",
       "kind": "positive",
       "skill": "strategic-review",
-      "prompt": "We're considering taking our open-source developer tool public in a couple of months. Before we do, I want a hard strategic review \u2014 is the positioning actually defensible, who are we really competing with as of now, and is the platform we run on about to eat our wedge?",
+      "prompt": "We're taking Cascade public in a couple of months. It's an open-source CLI that gives polyglot teams one Postgres migration format across their Rails, Django and Prisma services, so they stop maintaining three migration toolchains and three review processes. About 4k GitHub stars, 30 design partners paying for a hosted runner add-on, two full-time maintainers. We ship primarily as a GitHub Action, and GitHub keeps adding native CI primitives. Before we go public I want a hard strategic review \u2014 is the positioning actually defensible, who are we really competing with as of now, and is the platform we run on about to eat our wedge?",
       "accept": [
         "strategic-review"
       ]
@@ -1120,6 +1243,17 @@
       "prompt": "Design the UI for a project management dashboard. Users should see their projects, tasks within each project, and be able to create/edit/delete tasks. It's a React web app. We don't have a designer \u2014 I need to figure out the screens and flows myself.",
       "accept": [
         "ui-ux-design"
+      ]
+    },
+    {
+      "id": "boundary:ui-ux-design:3",
+      "kind": "boundary",
+      "skill": "ui-ux-design",
+      "prompt": "Flows and wireframes are approved. Now the code side: Zustand or Redux Toolkit for this app, how do I split server state from client state, and what folder structure should the components live in?",
+      "accept": [
+        "ui-ux-design",
+        "frontend-architecture",
+        "NONE"
       ]
     },
     {

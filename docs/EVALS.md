@@ -257,7 +257,7 @@ The three layers from the original design:
 
 `routing.py --build-dataset` writes `evals/routing-dataset.json` (GENERATED,
 committed, drift-checked via `--check-dataset` like `catalog.json`). Today: **65
-positive + 53 boundary + 8 trivial = 126 cases**. It stays in sync — every new
+positive + 65 boundary + 8 trivial = 138 cases**. It stays in sync — every new
 skill's 3 evals yield 2 new routing cases.
 
 - **Happy-path** prompt (eval #1) → positive: `accept = {that skill}`.
@@ -295,7 +295,7 @@ python evals/routing.py --build-dataset          # mine → routing-dataset.json
 python evals/routing.py --check-dataset          # CI: fail if dataset is stale (offline)
 
 export ANTHROPIC_API_KEY=...
-python evals/routing.py --run                     # route all 126 cases on haiku
+python evals/routing.py --run                     # route all 138 cases on haiku
 python evals/routing.py --run -k 3                # majority-of-3 per case
 python evals/routing.py --run --changed --base origin/main   # CI: changed skills only
 python evals/routing.py --run --update-baseline   # record routing-baseline.json
@@ -315,14 +315,17 @@ the API key is absent — like `skill-evals.yml`).
 
 ### Results (haiku) and the haiku recommendation
 
-Full run on `claude-haiku-4-5` over all 126 cases (2026-07, 66-skill catalog) —
-this is the committed CI baseline (`evals/routing-baseline.json`), recorded at
-**k=1** (one sample per case):
+Full run on `claude-haiku-4-5` over the then-126-case dataset (2026-07, 66-skill
+catalog), recorded at **k=1** (one sample per case). The committed baseline
+(`evals/routing-baseline.json`) now covers 138 cases: the 12 boundary cases the
+dataset gained when twelve skills got their missing third eval, plus one rewritten
+positive prompt, were re-recorded in-session and all pass, so the rates below still
+hold at 65/65, 65/65 and 0/8:
 
 | Layer 2 metric | Result (k=1) |
 |---|---|
 | Top-1 routing accuracy (positives) | **65/65 = 1.00** |
-| Boundary pass rate ("no wild misroute") | **53/53 = 1.00** |
+| Boundary pass rate ("no wild misroute") | **65/65 = 1.00** |
 | False-activation rate (trivial → NONE) | **0/8 = 0.00** |
 | Confusion pairs | **none** |
 
@@ -385,7 +388,7 @@ Data-science boundaries held in both directions (`ml-pipeline-design` ↔
 alongside the established ones (`rollback-strategy` → `incident-response`;
 `incident-response` / `refactoring` / `strategic-review` boundaries → `NONE`).
 
-(`routing-baseline.json` records the **k=1** full 126-case run — refreshed 2026-07
+(`routing-baseline.json` records the **k=1** full 138-case run — refreshed 2026-07
 via the in-session runner — so every case gates in CI; the k=3 pass above is a
 stability probe, not the committed gate. An earlier, smaller-catalog baseline
 scored the same layer-2 sweep but only a 0.75 layer-3 invocation rate; this run
@@ -456,7 +459,7 @@ prompts are meant to find edges (a hard gate would be noisy), and ~450 agents/ru
 is too expensive per-PR. Unlike `routing-dataset.json` it is **hand-authored, not
 generated**, so it is deliberately **not** wired into `--build-dataset` /
 `--check-dataset` and does **not** touch `routing-baseline.json` (the committed
-gate stays the mined 126-case k=1 run).
+gate stays the mined 138-case k=1 run).
 
 ### TDD loop for routing (RED → GREEN)
 

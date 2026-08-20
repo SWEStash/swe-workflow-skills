@@ -3,7 +3,7 @@
 **TL;DR** — Claude Code's skill auto-triggering is probabilistic, and community
 measurements put it anywhere from ~45% to ~84% depending on prompt and hook hacks. This
 library replaces auto-triggering with an **orchestrator that routes intent to skills by
-name**, and it measures that routing the way you'd measure code: a 126-case harness,
+name**, and it measures that routing the way you'd measure code: a 138-case harness,
 graded by accept-set, gated in CI against a committed baseline. On the current 66-skill
 catalog, routing on `claude-haiku-4-5` scores a **clean sweep — 65/65 top-1, 53/53
 boundary, 0/8 false activation, zero confusion pairs.** The numbers below are
@@ -60,7 +60,7 @@ means it can be *tested*.
 Full methodology in [EVALS.md § Activation evaluation](EVALS.md#activation-evaluation-routing--implemented).
 The short version:
 
-- **Dataset (126 cases, generated + committed):** 65 positive + 53 boundary + 8 trivial.
+- **Dataset (138 cases, generated + committed):** 65 positive + 65 boundary + 8 trivial.
   Positive and boundary cases are **mined from each skill's own evals** (happy-path eval
   → positive; scope-boundary eval → boundary), so the dataset grows with the catalog and
   can't drift. The 8 trivial/conversational cases are the only hand-authored ones.
@@ -78,12 +78,16 @@ The short version:
   correctly in the committed `routing-baseline.json` must not later misroute. Wired into
   `.github/workflows/routing-evals.yml`.
 
-## Results (committed baseline, 2026-07, 66-skill catalog)
+## Results (committed baseline, 66-skill catalog)
+
+Recorded 2026-07 over the then-126-case dataset; 13 cases re-recorded in-session
+2026-08 when the dataset grew to 138 (twelve skills' third evals, plus one rewritten
+positive prompt). All 13 pass, no misroutes.
 
 | Layer 2 metric | Result |
 |---|---|
 | Top-1 routing accuracy (positives) | **65 / 65 = 1.00** |
-| Boundary pass rate ("no wild misroute") | **53 / 53 = 1.00** |
+| Boundary pass rate ("no wild misroute") | **65 / 65 = 1.00** |
 | False-activation rate (trivial → NONE) | **0 / 8 = 0.00** |
 | Confusion pairs | **none** |
 
@@ -102,7 +106,7 @@ Source of record: [`evals/routing-baseline.json`](../evals/routing-baseline.json
 # Offline: confirm the dataset is in sync with the skills' evals
 python evals/routing.py --check-dataset
 
-# With an API key: route all 126 cases on haiku, majority-of-3
+# With an API key: route all 138 cases on haiku, majority-of-3
 export ANTHROPIC_API_KEY=...
 python evals/routing.py --run -k 3
 
@@ -125,7 +129,7 @@ python evals/routing.py --run -k 3
   question from "the skill helped" — that's the RED/GREEN content harness (`run.py`). The
   realized value is the product of the two: *routing accuracy × (GREEN − RED gap)*.
 - **The committed set is mined from the skills' own evals — but cross-checked held-out.**
-  Positive/boundary cases are written by the same hand as the descriptions, so the 126-case
+  Positive/boundary cases are written by the same hand as the descriptions, so the 138-case
   gate could in principle be teaching to the test. To probe that, a separate **hand-authored
   held-out set** (`evals/routing-heldout.json`) — no phrasing copied from any `evals.json`,
   each skill's own trigger keywords deliberately avoided — was routed on haiku at k=3: a
