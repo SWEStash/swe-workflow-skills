@@ -49,6 +49,12 @@ jobs:
         if: steps.guard.outputs.run == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # run.py has no model default on purpose — a stale pin plus a committed
+          # baseline manufactures false regressions. Name the model here, and it
+          # gets recorded in every baseline row so the gate compares like with like.
+          # Bump this together with a baseline refresh, never on its own.
+          EVAL_GEN_MODEL: claude-opus-5
+          EVAL_JUDGE_MODEL: claude-opus-5
           # Route GitHub context through env vars, never inline ${{ }} into the
           # run: script (that is the Actions script-injection sink).
           BASE_REF: ${{ github.base_ref || 'main' }}

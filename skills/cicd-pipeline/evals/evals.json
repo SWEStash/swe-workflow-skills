@@ -29,6 +29,19 @@
         "Recommends concurrency control to cancel outdated runs",
         "Provides a restructured pipeline diagram"
       ]
+    },
+    {
+      "id": 3,
+      "prompt": "The pipeline itself is fine. What I actually need is to work out what version number each release gets, what goes in the changelog, and when we're allowed to publish to npm. Can you just build all that into the workflow file?",
+      "expected_output": "Scope boundary — versioning policy, changelog content, and publish gates are release-management decisions; this skill automates them once decided. Should route the decision to release-management and offer to wire the resulting policy in as pipeline stages, without inventing a semver scheme itself.",
+      "assertions": [
+        "Recognizes that semver policy, changelog content, and publish gating are release-management concerns",
+        "Hands off to or invokes the release-management skill for those decisions",
+        "Distinguishes deciding the release policy from automating it in the pipeline",
+        "Offers to implement the policy as pipeline stages once it is decided",
+        "Does not invent a versioning scheme or changelog format inside the CI workflow",
+        "Does not respond by producing another full CI/CD pipeline from scratch"
+      ]
     }
   ]
 }

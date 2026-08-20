@@ -38,9 +38,13 @@ don't cover:
   ([how it works](docs/ROLES.md)).
 - **Tested like code, not prose.** Every skill ships 3 evals; two LLM-as-judge
   harnesses (content quality and routing accuracy) replay them with skill loaded vs
-  absent and gate regressions in CI. Safety-critical skills (deploys, releases, tests,
-  incidents, security) are **hardened**: an Iron Law, a rationalization table distilled
-  from real baseline failures, and pressure tests that try to talk the agent out of it.
+  absent and gate regressions in CI. Across all 66 skills — 234 cases, 1315 assertions —
+  the same model passes **67.1%** of assertions unaided and **94.4%** with the skill
+  loaded, and **no skill scores below the unaided model on any case**
+  ([results](docs/EVALS.md#results-content-evals-full-catalog)). Safety-critical skills
+  (deploys, releases, tests, incidents, security) are **hardened**: an Iron Law, a
+  rationalization table distilled from real baseline failures, and pressure tests that
+  try to talk the agent out of it.
 - **Curated, not a mega-catalog.** First-party skills, versioned and eval-gated in the
   repo — no arbitrary third-party skills pulled from a hub, and nothing that executes on
   its own (the content is instructions and templates; the only code is the open Node
@@ -183,7 +187,10 @@ Each skill carries an `evals/` directory; safety/discipline skills add a `pressu
 block. Two runners replay scenarios through Claude (skill loaded = GREEN, absent = RED)
 and judge each assertion with a skeptical LLM-as-judge: `evals/workflow-runner.mjs`
 (in-session, no API key) and `evals/run.py` (CI regression gate, wired into
-`.github/workflows/skill-evals.yml`). Full guide in **[EVALS.md](docs/EVALS.md)**.
+`.github/workflows/skill-evals.yml`). The GREEN arm reads the skill *and* the
+`references/`/`templates/` files it links to, so improving a reference file moves the
+score. The first runner writes `evals/baseline.json`; the second gates against it.
+Full guide in **[EVALS.md](docs/EVALS.md)**.
 
 ## Contributing
 

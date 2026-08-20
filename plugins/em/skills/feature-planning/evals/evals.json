@@ -4,15 +4,14 @@
     {
       "id": 1,
       "prompt": "I need to add a notification system to our app. Users should get email and in-app notifications when someone comments on their posts. We're using a Node.js/Express backend with PostgreSQL and a React frontend. Can you help me plan this out?",
-      "expected_output": "A structured plan with clarifying questions asked first, acceptance criteria in Given/When/Then format, 5-10 granular tasks with dependencies, risk identification, and a saved markdown plan file.",
+      "expected_output": "A structured plan with clarifying questions asked first, acceptance criteria in Given/When/Then format, 5-10 granular tasks with dependencies, risk identification, and a saved markdown plan file. NOTE: an assertion requiring the plan to be saved as a markdown file was removed — both eval arms generate a reply and cannot write files, so it could never pass and contributed no gate signal. Verify file creation in a real session instead.",
       "assertions": [
         "Asks clarifying questions before producing the plan",
         "Includes acceptance criteria in Given/When/Then format",
         "Tasks are granular (1-4 hours each) with clear deliverables",
         "Dependency map is present showing task ordering",
         "Risks section identifies at least 2 technical risks",
-        "Out of scope section explicitly excludes something",
-        "Saves the plan as a markdown file"
+        "Out of scope section explicitly excludes something"
       ]
     },
     {

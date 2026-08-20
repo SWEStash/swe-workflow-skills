@@ -69,21 +69,109 @@ Two runners turn the loop above into something repeatable:
 
 | Runner | Use | Needs |
 |---|---|---|
-| `evals/workflow-runner.mjs` | Fast local RED/GREEN loop, on demand | Claude Code Workflow tool |
-| `evals/run.py` | CI regression gate, scriptable | `ANTHROPIC_API_KEY` + `pip install -r evals/requirements.txt` |
+| `evals/workflow-runner.mjs` | Fast local RED/GREEN loop; **produces the committed baseline** | Claude Code Workflow tool |
+| `evals/run.py` | CI regression gate, scriptable; **consumes that baseline** | `ANTHROPIC_API_KEY` + `EVAL_GEN_MODEL`/`EVAL_JUDGE_MODEL` + `pip install -r evals/requirements.txt` |
 
 Both **generate** a candidate reply (with the skill loaded = GREEN; without =
 RED) and **judge** it with a skeptical LLM-as-judge using structured output
-(per-assertion pass/fail). `run.py` adds majority-of-`k` voting, a stored
-`baseline.json`, and a non-zero exit when a previously-green assertion
-regresses. The GitHub Actions workflow (`.github/workflows/skill-evals.yml`)
+(per-assertion pass/fail, keyed on assertion index). Both support
+majority-of-`k` voting; `run.py` adds a non-zero exit when a previously-green
+assertion regresses. The GitHub Actions workflow (`.github/workflows/skill-evals.yml`)
 runs it on PRs that touch `skills/`.
 
+**The two arms present the model the same condition**, so their rows are
+comparable: RED is tool-less in both, and GREEN in both may read files inside
+the skill's own directory (see "What the harnesses can see" below).
+
 ```bash
+export EVAL_GEN_MODEL=claude-opus-5 EVAL_JUDGE_MODEL=claude-opus-5
 python evals/run.py --all --update-baseline      # record the golden baseline
 python evals/run.py --changed --base origin/main # CI: only changed skills
 python evals/run.py --skills tdd-workflow -k 3    # one skill, 3 votes
 ```
+
+### The shared baseline (`evals/baseline.json`)
+
+Written by the **in-session Workflow arm** (subscription-funded), committed, and
+consumed as the CI gate by the **Python arm** — the same split
+`evals/routing-baseline.json` already uses. Shape: top-level `_note` / `model` /
+`k` / `runner` / `option` / `summary`, then `skills.<name>."{kind}:{id}"` rows
+carrying `green` and `red` **per-assertion boolean arrays** plus their own
+`model` / `k` / `runner`.
+
+Two properties matter:
+
+- **Partial files are valid.** `run.py` chains `.get()`, so uncovered cases
+  simply don't gate — which is what makes a large sweep resumable and safe to
+  commit in batches.
+- **Model is recorded, not pinned.** `run.py` has no default model on purpose:
+  a stale hardcoded pin plus a committed baseline manufactures false regressions
+  library-wide the day a new model ships. The gate compares **only rows whose
+  recorded model matches the model now running**, and prints "not comparable"
+  otherwise rather than reporting a regression. `workflow-runner.mjs`'s
+  `MODEL = 'opus'` is a harness shorthand, not a model id — the session that runs
+  the sweep reports the resolved id, and that string goes into the provenance
+  fields.
+
+**`k` is per row.** The full sweep was recorded at **k=1** (one sample per case),
+matching the routing precedent; individual cases have since been re-recorded at
+k=3 and supersede their k=1 predecessors, so a row's own `k` is the authority and
+the top-level value only summarises. CI runs `-k 3`, and gating a k=3 run against
+a k=1 row is deliberate: majority-of-3 is strictly less noisy than the recorded
+value, so the asymmetry biases toward *not* firing false regressions.
+
+Vote in the Workflow arm by passing `{ k, cases }` instead of a bare case array
+(a bare array still means k=1). Each assertion is a majority of `k` independent
+generate-and-judge rounds per arm — independent generations, because generator
+variance is the larger of the two and re-judging one reply would measure only the
+smaller. **Ties fail**, matching the judge's own instruction to fail when in
+doubt. A round that dies drops out rather than counting as a round of falses; the
+survivors vote and the row records the count actually voted, so a quota death
+degrades a row to k=2 instead of recording a fabricated failure. Only a total
+wipeout of an arm excludes the case.
+
+**k=1 is noisy enough to mislead.** Of seven cases that scored GREEN below RED at
+k=1, three evaporated at k=3 — and RED moves too: one case scored RED 5/5 then
+4/5 on consecutive k=3 runs. Confirm a one-assertion gap at k>1 before treating it
+as a defect, let alone editing a skill for it.
+
+### Results (content evals, full catalog)
+
+`claude-opus-5`, all 66 skills, 234 cases, 1315 assertions. RED is the same model
+answering the same prompt with no skill loaded.
+
+| Metric | Result |
+|---|---|
+| Assertions passed, no skill (RED) | **882 / 1315 = 67.1%** |
+| Assertions passed, skill loaded (GREEN) | **1242 / 1315 = 94.4%** |
+| Gain | **+27.4 points** |
+| Cases where GREEN beats RED | **158 / 234** |
+| Cases where GREEN ties RED | **76 / 234** |
+| Cases where GREEN is *below* RED | **0 / 234** |
+
+**The zero is the number to protect.** A skill that scores below the unaided model is
+worse than no skill at all, and the ties are mostly cases where RED already saturates
+(`accessibility-design` 23/25, `performance-optimization` 20/21) — no headroom left to
+show, not a skill doing nothing. Ten individual assertions still score RED-true /
+GREEN-false inside cases the skill wins overall; they are enumerated in the baseline's
+`_note` as authoring leads, and all sit on k=1 rows that have not been re-measured.
+
+**The gain does not track reference mass**, which is worth knowing before optimising
+for depth:
+
+| Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
+|---|---|---|---|
+| zero (no references at all) | 16 | 66.8% → 97.3% | **+30.5** |
+| light (0 < ratio < 1) | 22 | 69.2% → 93.9% | +24.7 |
+| heavy (ratio ≥ 1) | 28 | 65.6% → 93.7% | +28.1 |
+
+Pearson r between reference ratio and GREEN gain is **−0.06** across the 66 skills —
+no relationship. The zero-reference skills are the control that makes this readable:
+they gained the *most* with nothing to read, so the gain comes from the instruction
+itself. Note the standing confound — GREEN gained tool access alongside reference
+access — which is exactly why the zero-reference band matters.
+
+Recorded at k=1 except 12 cases at k=3 (see above); `k` is per row.
 
 ### Why the gate is regression-vs-baseline, not an absolute threshold
 
@@ -96,46 +184,71 @@ flaky). Two findings from running this make the choice necessary:
    "runs the proving command in this session" or "keeps a timestamped action
    log" fail even when the skill is working — the behavior spans a session, not
    one message. In a real run these depressed `verification-before-completion`
-   and `incident-response` GREEN scores well below a manual read. Fix going
-   forward: phrase assertions so they're satisfiable by the artifact under test
-   (e.g. "identifies *which* command would prove it" rather than "runs it"), or
-   let the generator use tools for verify-type skills.
+   and `incident-response` GREEN scores well below a manual read. Fix: phrase
+   assertions so they're satisfiable by the artifact under test (e.g.
+   "identifies *which* command would prove it" rather than "runs it"). The
+   generator now *does* get a read tool scoped to the skill directory — see (3)
+   — but it still cannot execute a command or write a file, so genuinely
+   session-spanning assertions remain out of reach; (4) says what to do with them.
 2. **The judge is deliberately harsher than a human eyeball.** Absolute scores
    are therefore not comparable across skills; *movement* is the signal.
-3. **Neither harness can see `references/` or `templates/`.** `run.py` reads
-   only `SKILL.md` and injects it into the system prompt with no `tools=` at
-   all, so linked files are never fetched; `workflow-runner.mjs` *could* read
-   them (its GREEN arm has tools) but is told "do NOT use any other tools".
-   About half the library's instructional content lives in those directories,
-   across 50 of 66 skills — so **an improvement to a reference file cannot move
-   any score**, and reference-heavy skills score as though that content didn't
-   exist. This is the same root cause as (1): the generators don't act, they
-   only reply.
+3. **GREEN can see `references/` and `templates/` — RED still can't act.** This
+   used to be the harness's biggest blind spot: about half the library's
+   instructional content lives in those directories (428KB across 50 of 66
+   skills), and neither runner read a byte of it, so reference-heavy skills
+   scored as though that content didn't exist and **an improvement to a reference
+   file could not move any score**. Both arms now use **option A**: the GREEN
+   generator may read files inside the skill's *own* directory. Read-only — no
+   write, no bash. RED is unchanged and tool-less; that contrast is the whole
+   signal.
 
-   Two rules follow. **When writing assertions**, make them satisfiable from
-   `SKILL.md` alone, or leave them out of the gate — an assertion that only
-   `references/` can satisfy reads as a permanent failure and pressures the author
-   to copy depth up into `SKILL.md`, which is exactly what progressive disclosure
-   exists to prevent. There is **no `reference-dependent` field** in the schema and
-   neither runner honours one, so "leave it out" means *delete the assertion and
-   record why in the test's `expected_behavior`* — not add a marker the runners
-   ignore. **When reading a low GREEN**, check the skill's reference mass before
-   concluding the skill is weak; see the obsolescence carve-out in AUTHORING.md.
+   **The two arms enforce that scope differently, and the difference matters.**
+   `run.py` enforces it in code: the request carries exactly one tool, whose path
+   guard resolves the request and rejects `..`, absolute paths outside the root,
+   and symlink escapes — write and bash are not refused, they are absent.
+   `workflow-runner.mjs` runs its GREEN generator as `agentType: 'general-purpose'`,
+   which carries the full tool set; there the scope is **enforced by the prompt
+   alone**. A stray write or a read outside the skill directory is possible in
+   principle, and the sharper risk is eval integrity rather than security — a GREEN
+   agent that reads a *sibling* skill is no longer measuring what the row claims.
+   Fingerprint `skills/` before and after a sweep (`find skills -type f | sort |
+   xargs sha256sum | sha256sum`) to detect it. Tightening this is a deliberate
+   re-baseline, not a silent edit: changing the agent type changes the eval
+   condition and makes new rows incomparable with everything already recorded.
 
-4. **Tool-dependent assertions are a separate trap from reference-dependent ones.**
-   An assertion that requires the model to *demonstrate a lookup* — "grounds the
-   judgment in what the repo declared protected", "checks the existing fixture
-   convention" — cannot be satisfied by a runner that supplies no repo and no
-   tools. The model has nothing to look up, so it reasons from general principle
-   and the assertion fails forever. Two tells: it scores **0/N unanimous in GREEN
-   across successive rewrites**, or it sits at **0/N in *both* arms** (nothing to
-   discriminate). Treat those like (3) — delete, and record the reasoning — and
-   verify the behavior in a real session or the layer-3 routing harness, which does
-   hand the model tools.
+   The authoring rule **inverts**: an assertion satisfiable only from
+   `references/` or `templates/` is now legitimate and should be kept. Do not
+   copy reference depth up into `SKILL.md` to make a score move — that defeats
+   progressive disclosure, and it is no longer necessary. There is still **no
+   `reference-dependent` field** in the schema, and neither runner honours one;
+   don't invent a marker.
 
-   The distinction matters because the two look identical from the score: content
-   *present* in `SKILL.md` still fails if satisfying it requires an action the
-   harness forbids. Promoting more text will not fix it.
+   Two costs come with the grant. GREEN is now nondeterministic in a second way
+   (which files the agent chooses to open), and GREEN has *tool access* as well
+   as reference access — so a GREEN movement is not by itself proof the
+   references caused it. The 16 zero-reference skills are the control pool for
+   that question.
+
+4. **Tool-dependent assertions: partially inverted.** An assertion requiring the
+   model to *demonstrate a lookup* is now satisfiable **when the thing looked up
+   lives inside the skill's directory** — that's exactly what option A grants.
+   What stays unreachable is anything needing a **real repo, a write, or an
+   executed command**: "runs it fresh in this session and reads the exit code",
+   "saves the ADR to the filesystem", "grounds the judgment in what the repo
+   declared protected". The harness supplies no repo and no write tool, so those
+   fail forever regardless of how good the skill is.
+
+   Such an assertion contributes **zero gate signal** by construction — the
+   regression check only fires on `was && !now`, so a permanently-false assertion
+   can never catch anything. Delete it and record why in the test's
+   `expected_output` / `expected_behavior`, then verify that behavior in a real
+   session or the layer-3 routing harness, which does hand the model tools. Two
+   tells if you're unsure: **0/N unanimous in GREEN across successive rewrites**,
+   or **0/N in both arms** (nothing to discriminate).
+
+   The distinction still matters because the two look identical from the score:
+   content *present* in `SKILL.md` still fails if satisfying it requires an action
+   the harness forbids. Promoting more text will not fix it.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what
@@ -182,7 +295,7 @@ The three layers from the original design:
 
 `routing.py --build-dataset` writes `evals/routing-dataset.json` (GENERATED,
 committed, drift-checked via `--check-dataset` like `catalog.json`). Today: **65
-positive + 53 boundary + 8 trivial = 126 cases**. It stays in sync — every new
+positive + 65 boundary + 8 trivial = 138 cases**. It stays in sync — every new
 skill's 3 evals yield 2 new routing cases.
 
 - **Happy-path** prompt (eval #1) → positive: `accept = {that skill}`.
@@ -220,7 +333,7 @@ python evals/routing.py --build-dataset          # mine → routing-dataset.json
 python evals/routing.py --check-dataset          # CI: fail if dataset is stale (offline)
 
 export ANTHROPIC_API_KEY=...
-python evals/routing.py --run                     # route all 126 cases on haiku
+python evals/routing.py --run                     # route all 138 cases on haiku
 python evals/routing.py --run -k 3                # majority-of-3 per case
 python evals/routing.py --run --changed --base origin/main   # CI: changed skills only
 python evals/routing.py --run --update-baseline   # record routing-baseline.json
@@ -240,14 +353,17 @@ the API key is absent — like `skill-evals.yml`).
 
 ### Results (haiku) and the haiku recommendation
 
-Full run on `claude-haiku-4-5` over all 126 cases (2026-07, 66-skill catalog) —
-this is the committed CI baseline (`evals/routing-baseline.json`), recorded at
-**k=1** (one sample per case):
+Full run on `claude-haiku-4-5` over the then-126-case dataset (2026-07, 66-skill
+catalog), recorded at **k=1** (one sample per case). The committed baseline
+(`evals/routing-baseline.json`) now covers 138 cases: the 12 boundary cases the
+dataset gained when twelve skills got their missing third eval, plus one rewritten
+positive prompt, were re-recorded in-session and all pass, so the rates below still
+hold at 65/65, 65/65 and 0/8:
 
 | Layer 2 metric | Result (k=1) |
 |---|---|
 | Top-1 routing accuracy (positives) | **65/65 = 1.00** |
-| Boundary pass rate ("no wild misroute") | **53/53 = 1.00** |
+| Boundary pass rate ("no wild misroute") | **65/65 = 1.00** |
 | False-activation rate (trivial → NONE) | **0/8 = 0.00** |
 | Confusion pairs | **none** |
 
@@ -310,7 +426,7 @@ Data-science boundaries held in both directions (`ml-pipeline-design` ↔
 alongside the established ones (`rollback-strategy` → `incident-response`;
 `incident-response` / `refactoring` / `strategic-review` boundaries → `NONE`).
 
-(`routing-baseline.json` records the **k=1** full 126-case run — refreshed 2026-07
+(`routing-baseline.json` records the **k=1** full 138-case run — refreshed 2026-07
 via the in-session runner — so every case gates in CI; the k=3 pass above is a
 stability probe, not the committed gate. An earlier, smaller-catalog baseline
 scored the same layer-2 sweep but only a 0.75 layer-3 invocation rate; this run
@@ -381,7 +497,7 @@ prompts are meant to find edges (a hard gate would be noisy), and ~450 agents/ru
 is too expensive per-PR. Unlike `routing-dataset.json` it is **hand-authored, not
 generated**, so it is deliberately **not** wired into `--build-dataset` /
 `--check-dataset` and does **not** touch `routing-baseline.json` (the committed
-gate stays the mined 126-case k=1 run).
+gate stays the mined 138-case k=1 run).
 
 ### TDD loop for routing (RED → GREEN)
 

@@ -3,12 +3,12 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "We're considering taking our open-source developer tool public in a couple of months. Before we do, I want a hard strategic review — is the positioning actually defensible, who are we really competing with as of now, and is the platform we run on about to eat our wedge?",
-      "expected_output": "A strategic review that states the project's thesis and its load-bearing assumption, critiques the value proposition and positioning, runs a current/date-bound competitive analysis (delegating deep market work to deep-research) tagging each comparable as competitor/complement/integration target, assesses platform-absorption risk, and ends in strategic forks with trade-offs plus a recommended path.",
+      "prompt": "We're taking Cascade public in a couple of months. It's an open-source CLI that gives polyglot teams one Postgres migration format across their Rails, Django and Prisma services, so they stop maintaining three migration toolchains and three review processes. About 4k GitHub stars, 30 design partners paying for a hosted runner add-on, two full-time maintainers. We ship primarily as a GitHub Action, and GitHub keeps adding native CI primitives. Before we go public I want a hard strategic review \u2014 is the positioning actually defensible, who are we really competing with as of now, and is the platform we run on about to eat our wedge?",
+      "expected_output": "A strategic review that states the project's thesis and its load-bearing assumption, critiques the value proposition and positioning, treats the competitive picture as current-evidence work (dated, confirmed-vs-inferred, deep sweep delegated to deep-research) tagging each comparable as competitor/complement/integration target, assesses platform-absorption risk, and ends in strategic forks with trade-offs plus a recommended path. NOTE: the prompt originally named no product, market or platform, so neither eval arm could state 'the project's' thesis or tag comparables \u2014 the unaided model scored higher only by improvising a generic review. The concrete project was added so the assertions are answerable. Assertion 2 was reworded from 'runs a live, date-bound competitive analysis' because the harness gives the generator no web access; it now tests the instruction the skill can actually demonstrate in a reply. Verify real search behavior in a live session instead.",
       "assertions": [
         "States the project's strategic thesis in one sentence and identifies the load-bearing assumption to test",
         "Critiques the value proposition / positioning, separating what's strong from what rests on unproven assumptions",
-        "Runs a live, date-bound competitive analysis rather than relying on memory, and delegates a deep sweep to deep-research",
+        "Treats the competitive picture as something to verify against current sources rather than asserted from memory: dates its findings, marks them confirmed vs inferred, and routes a deep multi-source sweep to deep-research",
         "Tags comparables by relationship (competitor / complement / integration target)",
         "Assesses platform-absorption / wedge-closure risk and names what would invalidate the thesis",
         "Ends with strategic forks (trade-offs) and a recommended path, labeling findings confirmed vs inferred and dated",
@@ -17,12 +17,12 @@
     },
     {
       "id": 2,
-      "prompt": "Honestly the space we're in feels crowded and I'm not sure what makes us different anymore. Big platforms keep shipping features that overlap with ours. Is there even a defensible wedge here?",
-      "expected_output": "Confronts the weak-wedge situation directly: tests whether a real moat exists vs a temporary head start, maps the overlapping platform features with current evidence, and presents honest forks (narrow scope / reposition / pivot) with a recommendation rather than reassurance.",
+      "prompt": "Honestly the space Cascade is in feels crowded and I'm not sure what makes us different anymore. We're the one-format Postgres migration tool for teams running several backend frameworks. Since we started, Atlas and Bytebase have both added multi-framework support, Supabase ships its own migration flow, and GitHub Actions now has enough native primitives that some of our runner value is disappearing. Is there even a defensible wedge here?",
+      "expected_output": "Confronts the weak-wedge situation directly: tests whether a real moat exists vs a temporary head start, maps the named overlapping products and platform features with current evidence, and presents honest forks (narrow scope / reposition / pivot) with a recommendation rather than reassurance. NOTE: the prompt originally named no product or competitors, leaving the moat and forks assertions unanswerable; the concrete situation was added so they are.",
       "assertions": [
         "Distinguishes a durable moat (standard, network, data, switching cost) from a temporary head start",
         "Examines the overlapping platform/incumbent features with current, dated evidence",
-        "Does not offer false reassurance — willing to conclude the wedge is thin if that's what the evidence shows",
+        "Does not offer false reassurance \u2014 willing to conclude the wedge is thin if that's what the evidence shows",
         "Presents distinct strategic forks (e.g. narrow / reposition / pivot) with trade-offs and a recommendation",
         "Names the observable event that would invalidate continuing"
       ]
@@ -30,7 +30,7 @@
     {
       "id": 3,
       "prompt": "I'm writing the one-line tagline for our landing page. Should it say 'fast' or 'simple'?",
-      "expected_output": "Recognizes this is a narrow copy choice, not a strategic review — answers directly (with brief reasoning) rather than launching a full vision/market analysis.",
+      "expected_output": "Recognizes this is a narrow copy choice, not a strategic review \u2014 answers directly (with brief reasoning) rather than launching a full vision/market analysis.",
       "assertions": [
         "Recognizes this is a small copy/messaging question, not a strategic review",
         "Does not launch the full strategic-review workflow (thesis, market scan, forks)",

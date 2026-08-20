@@ -28,6 +28,19 @@
         "Has open questions that invite reviewer input",
         "Links to feature-planning for implementation task breakdown"
       ]
+    },
+    {
+      "id": 3,
+      "prompt": "The PRD is signed off by product and design. Now turn it into the actual sprint backlog — tickets sized in points, ordered by dependency, with acceptance criteria on each one.",
+      "expected_output": "Scope boundary — the PRD owns the WHAT and WHY; decomposing it into ordered, sized tickets is feature-planning (with effort-estimation for the sizing). Should hand off rather than producing another requirements document.",
+      "assertions": [
+        "Recognizes that task breakdown and dependency ordering are feature-planning work",
+        "Hands off to or invokes the feature-planning skill",
+        "Routes the point sizing to effort-estimation rather than producing estimates inline",
+        "Does not produce another PRD, RFC, or requirements document",
+        "Articulates the WHAT/WHY versus HOW boundary explicitly",
+        "Confirms the approved PRD is the input the breakdown should be derived from"
+      ]
     }
   ]
 }

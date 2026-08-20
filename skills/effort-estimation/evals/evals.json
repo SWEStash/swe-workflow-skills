@@ -27,6 +27,19 @@
         "Recommends a technical spike before committing to precise numbers",
         "Does NOT produce a precise single-number estimate for 6 months of unknown work"
       ]
+    },
+    {
+      "id": 3,
+      "prompt": "Give me story points for the new billing feature. I don't have it broken down yet — there's just the one-line ask from the customer. Just point it so I can put it in the sprint.",
+      "expected_output": "Scope boundary — there is nothing to estimate yet. Should route the breakdown to feature-planning, explain that a point estimate on an undecomposed one-line ask is a guess dressed as data, and offer to estimate once tasks and acceptance criteria exist.",
+      "assertions": [
+        "Identifies that no breakdown exists yet, so there is nothing meaningful to estimate",
+        "Hands off to or invokes the feature-planning skill to decompose the work first",
+        "Does not emit a story-point number for the undecomposed one-line request",
+        "Explains that estimating requires tasks and acceptance criteria to size against",
+        "Offers to run the estimation workflow once the breakdown exists",
+        "Does not simply refuse — gives the user a concrete next step"
+      ]
     }
   ]
 }

@@ -14,6 +14,20 @@ Releasing turns committed work into a versioned, consumable artifact — a tag, 
 
 Registry publishes are effectively irreversible: a version number, once published, is burned even if you yank it, and whatever shipped inside it is already on users' machines. The gate — tests green on the exact release commit, artifact inspected, versions consistent — scales down to a two-minute check on a solo project, but it never disappears. Ceremony scales with the project; the gate doesn't.
 
+## Scope boundary: "is it safe to ship?" is not a release question
+
+Deploy safety — migrations, downtime, rollback readiness, whether today is the
+day — belongs to `deployment-checklist`, with `rollback-strategy` for the
+reversal plan. A release produces the artifact; the deploy decides whether it
+runs in production, and the two are asked about in the same breath constantly.
+
+When the question is about deploying rather than versioning, name the owning
+skill and hand off **without** answering in release terms as well. Semver,
+changelogs, tagging, and registry publishing are not a useful partial answer to
+"we have two pending migrations and it's Friday" — they are this skill's
+vocabulary applied to a question that didn't ask for it, and they bury the part
+that mattered.
+
 ## Step 1: Detect Existing Conventions — Never Assume Greenfield
 
 Before proposing anything, find what the project already does:
@@ -34,6 +48,13 @@ If conventions exist, follow them for this release; propose improvements as a se
 | **Org / platform / monorepo** | Many packages, coordinated versions, compliance needs | Release PRs, protected release branches, provenance / trusted publishing, pre-release channels, coordinated monorepo versioning |
 
 Under-processing breaks consumers; over-processing kills a small project's momentum. State which tier applies and why. **Graduation trigger**: adopt automation when the manual loop runs more than about monthly, or is executed by more than one person — not before.
+
+**The table is how you choose, not what you deliver.** Name the tier, then work in
+that tier only. Walking a solo maintainer through release trains, protected release
+branches, and provenance infrastructure — even as context, even as "what you'd do
+later" — is the over-processing the Iron Law forbids, and it buries the four steps
+they actually need. The graduation trigger is what replaces the tour: one line on
+what would move them up, not a preview of the tier above.
 
 ## Step 3: Decide the Version
 
@@ -78,6 +99,7 @@ Selection detail, trusted publishing/provenance, pre-release channels and dist-t
 | "Let's set up semantic-release" (solo repo, three releases a year) | Below regular cadence, automation costs more than it saves. Right-sizing cuts both ways. |
 | "Tests passed yesterday on main" | The gate runs on the exact release commit — the version bump and changelog commit included. |
 | "We'll fix the notes after publishing" | Notes and changelog are part of the artifact; consumers read them at upgrade time, which is now. |
+| "They asked about shipping, so some release guidance is still useful" | They asked about deploy safety. Versioning advice alongside it reads as the answer and displaces the migration and rollback questions that actually decide it. Hand off and stop. |
 
 ## Red Flags — Stop and Correct Course
 

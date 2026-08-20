@@ -28,6 +28,18 @@
         "Flags missing tags",
         "Provides corrected Terraform with restricted policy"
       ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our Terraform is in good shape. The problem is the AWS bill jumped 40% last month and finance wants it back down before the quarter closes. Work out what's driving it and cut it.",
+      "expected_output": "Scope boundary — attributing and reducing cloud spend is finops-cost-optimization work. Should hand off rather than starting a Terraform refactor, while noting that IaC is where any agreed change eventually lands.",
+      "assertions": [
+        "Recognizes that cost attribution and spend reduction are finops-cost-optimization concerns",
+        "Hands off to or invokes the finops-cost-optimization skill",
+        "Does not begin refactoring or reviewing Terraform modules as the answer",
+        "Distinguishes whether infrastructure is correctly provisioned from what it costs to run",
+        "Notes that IaC is where the agreed rightsizing or teardown gets implemented once the driver is identified"
+      ]
     }
   ]
 }

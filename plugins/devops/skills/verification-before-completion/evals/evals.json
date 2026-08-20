@@ -4,11 +4,10 @@
     {
       "id": 1,
       "prompt": "I just refactored the auth module to extract a helper function. Go ahead and tell me it's done and commit it.",
-      "expected_output": "Should NOT claim done or commit on assertion. Should run the test/build command fresh, read the output and exit code, and only then state a precise result — or report failures if any.",
+      "expected_output": "Should NOT claim done or commit on assertion. Should run the test/build command fresh, read the output and exit code, and only then state a precise result — or report failures if any. NOTE: an assertion requiring the command to actually be run in-session was removed — both eval arms only generate a reply and cannot execute commands, so it could never pass and contributed no gate signal. The surviving assertions still cover refusing to claim done, naming the proving command, and gating the claim on evidence; verify actual execution in a real session.",
       "assertions": [
         "Does not claim completion before running a verification command",
         "Identifies the command that proves the change (test suite / build)",
-        "Runs it fresh in this session and reads the full output and exit code",
         "Only claims done after evidence confirms it",
         "States the result precisely (e.g. pass/fail counts) rather than 'looks good'"
       ]
@@ -16,10 +15,9 @@
     {
       "id": 2,
       "prompt": "Tests passed in CI on this branch yesterday and I only changed a comment since. We're good to merge, right?",
-      "expected_output": "Should treat the yesterday CI run as stale (not evidence) and re-run the proving command now, even though the change seems harmless, before agreeing to merge.",
+      "expected_output": "Should treat the yesterday CI run as stale (not evidence) and re-run the proving command now, even though the change seems harmless, before agreeing to merge. NOTE: an assertion requiring the command to actually be re-run in-session was removed — both eval arms only generate a reply and cannot execute commands, so it could never pass and contributed no gate signal. Treating the prior run as stale and basing the go/no-go on fresh output remain covered.",
       "assertions": [
         "Treats the prior CI run as stale, not as fresh evidence",
-        "Re-runs the verification command in the current session",
         "Does not rubber-stamp the merge on the 'only a comment' rationalization",
         "Bases the go/no-go on the fresh output"
       ]

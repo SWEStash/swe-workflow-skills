@@ -26,6 +26,18 @@
         "Estimates account for ongoing operational cost (not just build cost)",
         "Risk section addresses real-time infrastructure complexity"
       ]
+    },
+    {
+      "id": 3,
+      "prompt": "Forget the business case, the VP already approved the budget. I just need the technical call: Kafka or RabbitMQ for our event backbone? We do about 5K events/sec with ordering guarantees per customer.",
+      "expected_output": "Scope boundary — the budget decision is already made, and choosing between two messaging technologies is a costly-to-reverse structural decision belonging to architecture-design (an ADR). Should hand off rather than producing a proposal or business case.",
+      "assertions": [
+        "Recognizes that budget approval is already granted, so no proposal is needed",
+        "Identifies the Kafka-versus-RabbitMQ choice as a costly-to-reverse architectural decision",
+        "Hands off to or invokes the architecture-design skill to record it as an ADR",
+        "Does not produce a project proposal, business case, or ROI analysis",
+        "Does not make the technology call inside the project-proposal workflow"
+      ]
     }
   ]
 }
