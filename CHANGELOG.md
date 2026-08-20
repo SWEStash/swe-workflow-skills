@@ -12,6 +12,13 @@ description, not here. Sections dated before 0.7.0 carry hand-written prose from
 file was curated manually.
 
 
+## [0.8.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.7.0...v0.8.0) (2026-08-20)
+
+
+### Added
+
+* **evals:** score skills against their references, and gate on a full baseline ([#25](https://github.com/SWEStash/swe-workflow-skills/issues/25)) ([d052df5](https://github.com/SWEStash/swe-workflow-skills/commit/d052df57cdb3abb88506539f4e98463e18f6ed64))
+
 ## [0.7.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.6.3...v0.7.0) (2026-08-10)
 
 
