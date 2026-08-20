@@ -12,6 +12,18 @@ Design user interfaces from a senior engineer's perspective. This isn't about pi
 
 **Design the states, not just the happy path.** Every screen has at least 5 states: loading, empty, partial data, full data, and error. Designing only the "full data" state is the #1 cause of poor user experience.
 
+## Scope boundary: naming the owner is not the same as answering anyway
+
+State-management library choice (Zustand vs Redux Toolkit vs Context), the
+server/client state split, data fetching, and component folder structure belong
+to `frontend-architecture`. When the ask turns to those, hand off **and stop**:
+name the skill, carry the approved flows and screen states forward as the
+constraints the architecture has to satisfy, and leave the choice to it.
+
+Do not pick the library "just as a starting point". A recommendation offered in
+passing is the one the reader acts on, and it pre-empts the trade-off the owning
+skill exists to work through — with none of its reasoning attached.
+
 ## Workflow
 
 ### Step 1: Map the User Flow
