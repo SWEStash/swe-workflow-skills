@@ -9,6 +9,14 @@
 //
 // Each case: { skill, path, kind, id, prompt, assertions[] } where `path` is the
 // absolute path to the skill's SKILL.md and `kind` is "eval" | "pressure".
+//
+// To vote instead of sampling once, pass { k, cases } rather than a bare array:
+//
+//   Workflow({ scriptPath: "evals/workflow-runner.mjs", args: { k: 3, cases: [...] } })
+//
+// Each assertion then becomes a majority of k independent generate-and-judge
+// rounds per arm, ties failing. Rows record the rounds actually voted, which is
+// below k where a round died. A bare array means k=1.
 // Build the full payload (all evals + all pressure tests) from evals.json:
 //
 //   python3 - <<'PY'

@@ -74,9 +74,9 @@ Two runners turn the loop above into something repeatable:
 
 Both **generate** a candidate reply (with the skill loaded = GREEN; without =
 RED) and **judge** it with a skeptical LLM-as-judge using structured output
-(per-assertion pass/fail, keyed on assertion index). `run.py` adds
-majority-of-`k` voting and a non-zero exit when a previously-green assertion
-regresses. The GitHub Actions workflow (`.github/workflows/skill-evals.yml`)
+(per-assertion pass/fail, keyed on assertion index). Both support
+majority-of-`k` voting; `run.py` adds a non-zero exit when a previously-green
+assertion regresses. The GitHub Actions workflow (`.github/workflows/skill-evals.yml`)
 runs it on PRs that touch `skills/`.
 
 **The two arms present the model the same condition**, so their rows are
@@ -113,12 +113,27 @@ Two properties matter:
   the sweep reports the resolved id, and that string goes into the provenance
   fields.
 
-The committed baseline is recorded at **k=1** (one sample per case), matching the
-routing precedent. k=1 is noisy on some cases — accepted, and recorded in the
-`_note`; majority voting in the Workflow arm is a tracked follow-up. CI still
-runs `-k 3`, and gating a k=3 run against a k=1 baseline is deliberate: majority-of-3
-is strictly less noisy than the recorded value, so the asymmetry biases toward
-*not* firing false regressions.
+**`k` is per row.** The full sweep was recorded at **k=1** (one sample per case),
+matching the routing precedent; individual cases have since been re-recorded at
+k=3 and supersede their k=1 predecessors, so a row's own `k` is the authority and
+the top-level value only summarises. CI runs `-k 3`, and gating a k=3 run against
+a k=1 row is deliberate: majority-of-3 is strictly less noisy than the recorded
+value, so the asymmetry biases toward *not* firing false regressions.
+
+Vote in the Workflow arm by passing `{ k, cases }` instead of a bare case array
+(a bare array still means k=1). Each assertion is a majority of `k` independent
+generate-and-judge rounds per arm — independent generations, because generator
+variance is the larger of the two and re-judging one reply would measure only the
+smaller. **Ties fail**, matching the judge's own instruction to fail when in
+doubt. A round that dies drops out rather than counting as a round of falses; the
+survivors vote and the row records the count actually voted, so a quota death
+degrades a row to k=2 instead of recording a fabricated failure. Only a total
+wipeout of an arm excludes the case.
+
+**k=1 is noisy enough to mislead.** Of seven cases that scored GREEN below RED at
+k=1, three evaporated at k=3 — and RED moves too: one case scored RED 5/5 then
+4/5 on consecutive k=3 runs. Confirm a one-assertion gap at k>1 before treating it
+as a defect, let alone editing a skill for it.
 
 ### Why the gate is regression-vs-baseline, not an absolute threshold
 
