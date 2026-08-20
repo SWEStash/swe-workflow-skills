@@ -1,15 +1,15 @@
 {
-  "_note": "Content baseline for the library \u2014 complete: all 66 skills, all 234 cases. Recorded in-session via evals/workflow-runner.mjs (Workflow tool, subscription) at k=1, option A (the GREEN generator may read files inside the skill's own directory; RED stays tool-less). 'model' is the resolved id the agents ran on; the runner's 'opus' pin is a harness shorthand and was substituted here. All runs executed on the 1M-context variant of claude-opus-5, recorded under the base id so they stay comparable with API-side runs \u2014 run.py compares the model string exactly, so a variant suffix would make these rows skip as 'not comparable' instead of gating.\n\nRECORDED IN FOUR RUNS, staged by reference mass (references+templates bytes over SKILL.md bytes). 2026-08-15, branch main / parent 45aa919, run wf_225687a2-7f5: a 6-skill validation probe, 23 cases. 2026-08-18, branch feat/reference-aware-evals / parent 69cf2d3: the 25 skills with ratio \u2265 1.0, 86 cases. 2026-08-19, parent 35dc048: the 22 skills with 0 < ratio < 1.0, 86 cases. 2026-08-19, parent cb7c83e: the 13 skills with no references at all, 39 cases. Together 66 skills / 234 cases / 1315 assertions.\n\nRefresh by re-running the in-session runner, or `python evals/run.py --all --update-baseline` (needs ANTHROPIC_API_KEY plus EVAL_GEN_MODEL/EVAL_JUDGE_MODEL). The gate (run.py / skill-evals.yml) fails if an assertion green here later goes red on a same-model row; rows recorded on a different model are reported 'not comparable' and skipped rather than flagged. k=1 is noisy on some cases \u2014 accepted; majority voting in the Workflow arm is a tracked follow-up.\n\nRows knowingly recorded red must not be 'fixed' by editing this file \u2014 a recorded false can never fire the regression check, so keeping it is safe, and each one is an authoring lead. 22 assertions scored RED true / GREEN false, i.e. the skill made the model stop doing something it did without the skill: accessibility-design eval:3[7], api-design eval:1[4], api-design eval:1[5], brainstorming eval:1[1], brainstorming eval:1[3], compliance-privacy eval:2[2], dependency-impact-analysis eval:3[1], incident-response eval:1[1], ml-experiment-tracking eval:2[2], mobile-release eval:1[5], performance-optimization eval:2[0], refactoring eval:1[1], release-management eval:2[4], release-management eval:3[3], strategic-review eval:1[0], strategic-review eval:1[4], strategic-review eval:2[4], test-data-strategy eval:1[7], test-data-strategy eval:3[6], test-suite-design eval:1[3], test-suite-design eval:3[7], ui-ux-design eval:3[3]. 7 of those cases score GREEN below RED overall (api-design eval:1 7\u21926, brainstorming eval:1 3\u21922, compliance-privacy eval:2 5\u21924, incident-response eval:1 6\u21925, release-management eval:3 4\u21923, strategic-review eval:1 2\u21921, ui-ux-design eval:3 5\u21924) and are worth a higher-k re-run before being treated as settled floors. brainstorming eval:1 is the cleanest of them: it carries no references, so its GREEN arm gained only tool access, and it is the one skill in that band with no net gain.",
+  "_note": "Content baseline for the library \u2014 complete: all 66 skills, all 234 cases. Recorded in-session via evals/workflow-runner.mjs (Workflow tool, subscription), option A (the GREEN generator may read files inside the skill's own directory; RED stays tool-less). 'model' is the resolved id the agents ran on; the runner's 'opus' pin is a harness shorthand and was substituted here. Runs executed on claude-opus-5 (the 1M-context variant tags itself claude-opus-5[1m]; it is the same model and is recorded under the base id, because run.py compares the model string exactly and a variant suffix would make those rows skip as 'not comparable' instead of gating).\n\nK IS PER ROW. The four sweep runs recorded k=1. Later runs re-recorded 12 cases at k=3 \u2014 a majority of three independent generate-and-judge rounds per arm, ties failing \u2014 covering every case where GREEN had scored below RED, plus regression coverage for the skills fixed as a result. Those rows supersede their k=1 predecessors. Trust a k=3 row over a k=1 one: of the four degradations left unfixed as a control, three evaporated at k=3, which is what k=1 noise looks like. RED moves between runs too \u2014 release-management eval:2 scored RED 5/5 then 4/5 on consecutive k=3 runs \u2014 so a one-assertion gap at k=1 is not evidence of anything.\n\nCOVERAGE, by run. 2026-08-15, branch main / parent 45aa919, run wf_225687a2-7f5: a 6-skill validation probe, 23 cases. 2026-08-18, branch feat/reference-aware-evals / parent 69cf2d3: the 25 skills whose references+templates outweigh their SKILL.md, 86 cases. 2026-08-19, parent 35dc048: the 22 skills with fewer reference bytes than SKILL.md, 86 cases. 2026-08-19, parent cb7c83e: the 13 skills with no references at all, 39 cases. 2026-08-20, parent 25ce06b, runs wf_91ce2dad-408 / wf_395b9ae6-ef3: the 12-case k=3 re-run of the degraded cases. 2026-08-20, same parent, run wf_5dddf7b6-a46: release-management at k=3, verifying its Step 2 fix.\n\nRefresh by re-running the in-session runner (pass { k, cases } to vote), or `python evals/run.py --all --update-baseline` (needs ANTHROPIC_API_KEY plus EVAL_GEN_MODEL/EVAL_JUDGE_MODEL). The gate (run.py / skill-evals.yml) fails if an assertion green here later goes red on a same-model row; rows recorded on a different model are reported 'not comparable' and skipped rather than flagged.\n\nNO CASE IN THE LIBRARY SCORES GREEN BELOW RED. That is the property this baseline is maintained to protect: a skill must not make the model worse than no skill at all. 10 individual assertions still scored RED true / GREEN false inside cases the skill wins overall \u2014 accessibility-design eval:3[7], dependency-impact-analysis eval:3[1], ml-experiment-tracking eval:2[2], mobile-release eval:1[5], performance-optimization eval:2[0], refactoring eval:1[1], test-data-strategy eval:1[7], test-data-strategy eval:3[6], test-suite-design eval:1[3], test-suite-design eval:3[7] \u2014 and they must not be 'fixed' by editing this file: a recorded false can never fire the regression check, so keeping it is safe, and each is an authoring lead. All of them sit on k=1 rows that have not been re-measured, so treat them as leads to confirm, not as settled floors.",
   "model": "claude-opus-5",
-  "k": 1,
+  "k": "1, except 12 cases at 3",
   "runner": "workflow-runner.mjs",
   "option": "A",
   "summary": {
     "cases": 234,
     "excluded": 0,
     "assertions": 1315,
-    "red": 892,
-    "green": 1227,
+    "red": 882,
+    "green": 1242,
     "skills": 66
   },
   "skills": {
@@ -165,16 +165,16 @@
         "red": [
           true,
           true,
-          true,
-          true,
-          true,
-          true,
           false,
-          true,
+          false,
+          false,
+          false,
+          false,
+          false,
           false
         ],
         "model": "claude-opus-5",
-        "k": 1,
+        "k": 3,
         "runner": "workflow-runner.mjs"
       },
       "eval:2": {
@@ -360,20 +360,20 @@
       "eval:1": {
         "green": [
           true,
-          false,
           true,
-          false,
+          true,
+          true,
           false
         ],
         "red": [
           true,
-          true,
           false,
           true,
+          false,
           false
         ],
         "model": "claude-opus-5",
-        "k": 1,
+        "k": 3,
         "runner": "workflow-runner.mjs"
       },
       "eval:2": {
@@ -1005,7 +1005,7 @@
         "green": [
           true,
           true,
-          false,
+          true,
           true,
           true
         ],
@@ -1017,7 +1017,7 @@
           true
         ],
         "model": "claude-opus-5",
-        "k": 1,
+        "k": 3,
         "runner": "workflow-runner.mjs"
       },
       "eval:3": {
@@ -2191,7 +2191,7 @@
       "eval:1": {
         "green": [
           true,
-          false,
+          true,
           true,
           true,
           true,
@@ -2199,14 +2199,14 @@
         ],
         "red": [
           true,
-          true,
+          false,
           true,
           true,
           true,
           true
         ],
         "model": "claude-opus-5",
-        "k": 1,
+        "k": 3,
         "runner": "workflow-runner.mjs"
       },
       "eval:2": {
@@ -3534,19 +3534,19 @@
           true,
           false,
           true,
-          false,
+          true,
           true
         ],
         "red": [
           true,
+          false,
+          false,
+          false,
           true,
-          false,
-          false,
-          false,
           true
         ],
         "model": "claude-opus-5",
-        "k": 1,
+        "k": 3,
         "runner": "workflow-runner.mjs"
       },
       "eval:2": {
@@ -3555,7 +3555,7 @@
           true,
           true,
           true,
-          false
+          true
         ],
         "red": [
           true,
@@ -3565,7 +3565,7 @@
           true
         ],
         "model": "claude-opus-5",
-        "k": 1,
+        "k": 3,
         "runner": "workflow-runner.mjs"
       },
       "eval:3": {
@@ -3573,16 +3573,16 @@
           true,
           true,
           true,
-          false
+          true
         ],
         "red": [
           true,
           true,
-          true,
+          false,
           true
         ],
         "model": "claude-opus-5",
-        "k": 1,
+        "k": 3,
         "runner": "workflow-runner.mjs"
       },
       "pressure:1": {
@@ -4028,44 +4028,44 @@
     "strategic-review": {
       "eval:1": {
         "green": [
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
           true
         ],
         "red": [
-          true,
           false,
           false,
           false,
-          true,
+          false,
+          false,
           false,
           false
         ],
         "model": "claude-opus-5",
-        "k": 1,
+        "k": 3,
         "runner": "workflow-runner.mjs"
       },
       "eval:2": {
         "green": [
+          true,
           false,
           true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
           true,
           false,
           false
         ],
-        "red": [
-          false,
-          false,
-          true,
-          false,
-          true
-        ],
         "model": "claude-opus-5",
-        "k": 1,
+        "k": 3,
         "runner": "workflow-runner.mjs"
       },
       "eval:3": {
@@ -4581,7 +4581,7 @@
           false
         ],
         "model": "claude-opus-5",
-        "k": 1,
+        "k": 3,
         "runner": "workflow-runner.mjs"
       },
       "eval:2": {
@@ -4593,7 +4593,7 @@
           true,
           true,
           true,
-          true
+          false
         ],
         "red": [
           false,
@@ -4606,7 +4606,7 @@
           false
         ],
         "model": "claude-opus-5",
-        "k": 1,
+        "k": 3,
         "runner": "workflow-runner.mjs"
       },
       "eval:3": {
@@ -4614,7 +4614,7 @@
           true,
           true,
           true,
-          false,
+          true,
           true
         ],
         "red": [
@@ -4625,7 +4625,7 @@
           true
         ],
         "model": "claude-opus-5",
-        "k": 1,
+        "k": 3,
         "runner": "workflow-runner.mjs"
       }
     },
