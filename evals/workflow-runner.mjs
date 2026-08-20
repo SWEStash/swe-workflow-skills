@@ -88,13 +88,24 @@ phase('Generate')
 // pins are independent and deliberate.
 const MODEL = 'opus'
 const RUNNER = 'workflow-runner.mjs'
-const K = 1
 
-const items = (typeof args === 'string' ? JSON.parse(args) : args).map((it) => ({
+// Payload is either a bare case array (k=1) or { k, cases } for majority voting.
+const input = typeof args === 'string' ? JSON.parse(args) : args
+const K = Math.min(9, Math.max(1, Number(Array.isArray(input) ? 1 : input.k) || 1))
+const cases = Array.isArray(input) ? input : input.cases
+
+const items = cases.map((it) => ({
   ...it,
   kind: it.kind || 'eval',
   dir: it.path.replace(/\/[^/]*$/, ''),
 }))
+
+// Majority vote per assertion index across the surviving rounds. Ties fail:
+// the judge prompt already says "if in doubt, fail it", and a recorded false
+// can never fire run.py's regression check, so the conservative side is the
+// safe one. With one surviving round this degrades to that round's verdict.
+const vote = (rounds, n) =>
+  Array.from({ length: n }, (_, i) => rounds.filter((r) => r[i]).length * 2 > rounds.length)
 
 // Never let one failed agent poison a row: routing-runner.mjs excludes errored
 // cases rather than scoring them, because an all-false row silently understates
@@ -119,38 +130,52 @@ const toBools = (j, n) => {
   return Array.from({ length: n }, (_, i) => m.get(i) === true)
 }
 
+const rounds = Array.from({ length: K }, (_, i) => i)
+
 const results = await pipeline(
   items,
   async (it) => {
-    const [red, green] = await Promise.all([
-      safe(agent(redGen(it), { label: `gen-red:${it.skill}:${it.kind}${it.id}`, phase: 'Generate', model: MODEL })),
-      safe(agent(greenGen(it), { label: `gen-green:${it.skill}:${it.kind}${it.id}`, phase: 'Generate', agentType: 'general-purpose', model: MODEL })),
-    ])
-    return { it, red, green }
+    // K independent generations per arm. Each round is judged separately below;
+    // re-judging one generation K times would measure judge variance only, and
+    // generator variance is the larger of the two.
+    const gens = await Promise.all(
+      rounds.flatMap((r) => [
+        safe(agent(redGen(it), { label: `gen-red:${it.skill}:${it.kind}${it.id}#${r}`, phase: 'Generate', model: MODEL })),
+        safe(agent(greenGen(it), { label: `gen-green:${it.skill}:${it.kind}${it.id}#${r}`, phase: 'Generate', agentType: 'general-purpose', model: MODEL })),
+      ])
+    )
+    return { it, red: gens.filter((_, i) => i % 2 === 0), green: gens.filter((_, i) => i % 2 === 1) }
   },
   async (g) => {
     const { it, red, green } = g
     const key = `${it.kind}:${it.id}`
     const n = it.assertions.length
-    if (!red.ok || !green.ok) {
-      log(`${it.skill} ${key}: GENERATOR ERROR — excluded`)
-      return { skill: it.skill, kind: it.kind, id: it.id, key, n, errored: true }
-    }
-    const [rj, gj] = await Promise.all([
-      safe(agent(judgeP(it, red.v || ''), { label: `judge-red:${it.skill}:${it.kind}${it.id}`, phase: 'Judge', schema: JUDGE, model: MODEL })),
-      safe(agent(judgeP(it, green.v || ''), { label: `judge-green:${it.skill}:${it.kind}${it.id}`, phase: 'Judge', schema: JUDGE, model: MODEL })),
-    ])
     // A judge that returns no verdicts is indistinguishable from the null case
-    // above once toBools() has run: 0 verdicts -> n false booleans. Exclude it too.
+    // above once toBools() has run: 0 verdicts -> n false booleans. Drop it too.
     const noVerdicts = (x) => !Array.isArray(x?.v?.verdicts) || x.v.verdicts.length === 0
-    if (!rj.ok || !gj.ok || noVerdicts(rj) || noVerdicts(gj)) {
-      log(`${it.skill} ${key}: JUDGE ERROR — excluded`)
+    const judgeArm = async (arm, gs) => {
+      const js = await Promise.all(
+        gs.map((gen, r) =>
+          gen.ok
+            ? safe(agent(judgeP(it, gen.v), { label: `judge-${arm}:${it.skill}:${it.kind}${it.id}#${r}`, phase: 'Judge', schema: JUDGE, model: MODEL }))
+            : Promise.resolve({ ok: false, e: 'generator failed' })
+        )
+      )
+      return js.filter((j) => j.ok && !noVerdicts(j)).map((j) => toBools(j.v, n))
+    }
+    const [redR, greenR] = await Promise.all([judgeArm('red', red), judgeArm('green', green)])
+    // A round that died is a round we don't have, not a round of falses. Vote on
+    // what survived; only a total wipeout of an arm excludes the case.
+    if (!redR.length || !greenR.length) {
+      log(`${it.skill} ${key}: NO SURVIVING ROUNDS — excluded`)
       return { skill: it.skill, kind: it.kind, id: it.id, key, n, errored: true }
     }
-    const redB = toBools(rj.v, n)
-    const greenB = toBools(gj.v, n)
-    const r = { skill: it.skill, kind: it.kind, id: it.id, key, n, red: redB, green: greenB }
-    log(`${it.skill} ${key}: RED ${redB.filter(Boolean).length}/${n}  GREEN ${greenB.filter(Boolean).length}/${n}`)
+    const k = Math.min(redR.length, greenR.length)
+    const redB = vote(redR, n)
+    const greenB = vote(greenR, n)
+    const r = { skill: it.skill, kind: it.kind, id: it.id, key, n, red: redB, green: greenB, k }
+    const short = k < K ? `  (k=${k} of ${K}: RED ${redR.length}, GREEN ${greenR.length} rounds survived)` : ''
+    log(`${it.skill} ${key}: RED ${redB.filter(Boolean).length}/${n}  GREEN ${greenB.filter(Boolean).length}/${n}${short}`)
     return r
   }
 )
@@ -166,8 +191,10 @@ const tot = { red: sum(ok, 'red'), green: sum(ok, 'green'), n: ok.reduce((a, r) 
 // run.py can compare only same-model rows.
 const skills = {}
 for (const r of ok) {
-  ;(skills[r.skill] ||= {})[r.key] = { green: r.green, red: r.red, model: MODEL, k: K, runner: RUNNER }
+  // r.k is the number of rounds actually voted, which is K unless rounds died.
+  ;(skills[r.skill] ||= {})[r.key] = { green: r.green, red: r.red, model: MODEL, k: r.k, runner: RUNNER }
 }
+const degraded = ok.filter((r) => r.k < K).map((r) => `${r.skill} ${r.key} (k=${r.k})`)
 
 const baseline = {
   _note:
@@ -175,7 +202,9 @@ const baseline = {
     `REPLACE "model" here and in every row with the resolved model id reported by the running session — "${MODEL}" is a harness shorthand, not a model id. ` +
     `Refresh by re-running the in-session runner, or \`python evals/run.py --all --update-baseline\` (needs ANTHROPIC_API_KEY). ` +
     `The gate (run.py / skill-evals.yml) fails if an assertion green here later goes red on a same-model row. ` +
-    `k=1 is noisy on some cases — accepted; majority voting is a tracked follow-up.`,
+    (K > 1
+      ? `Each assertion is a majority of ${K} independent generate-and-judge rounds per arm; ties fail. Rows record the rounds actually voted, which is below ${K} where a round died.`
+      : `k=1 is noisy on some cases — pass { k, cases } as the payload to vote instead.`),
   model: MODEL,
   k: K,
   runner: RUNNER,
@@ -184,6 +213,7 @@ const baseline = {
   skills,
 }
 
-log(`TOTAL: RED ${tot.red}/${tot.n}  GREEN ${tot.green}/${tot.n}  (${ok.length} cases${errored.length ? `, ${errored.length} excluded` : ''})`)
+log(`TOTAL: RED ${tot.red}/${tot.n}  GREEN ${tot.green}/${tot.n}  (${ok.length} cases at k=${K}${errored.length ? `, ${errored.length} excluded` : ''})`)
 if (errored.length) log(`EXCLUDED: ${errored.join(', ')}`)
+if (degraded.length) log(`FEWER ROUNDS THAN k=${K}: ${degraded.join(', ')}`)
 return { results: ok, errored, total: tot, baseline }
