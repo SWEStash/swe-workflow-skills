@@ -180,6 +180,7 @@ Verify the full lifecycle works:
 
 ## Cross-Skill References
 
+- `test-data-strategy` — **name this handoff whenever the question is how to write the contract tests**, not which versions to pin. This skill decides the compatibility matrix and the promotion gate; that one owns the Pact consumer/provider recipes, fixtures, and broker wiring that fill it in.
 - `gitops-delivery` — automate delivery from the deployment repo using ArgoCD/Flux and cross-repo triggers
 - `containerization` — Helm chart structure, Kustomize overlays, and Dockerfile patterns for services
 - `infrastructure-as-code` — Terraform modules for shared infrastructure in the deployment repo

@@ -32,11 +32,11 @@
     {
       "id": 3,
       "prompt": "How do I write Pact contract tests between my frontend and backend API?",
-      "expected_output": "Should recognize this as a contract testing question that overlaps with but is not the core of the deployment-repo skill. Should provide brief context on how contract tests fit into the deployment repo pattern, then redirect to test-suite-design for implementation details.",
+      "expected_output": "Should recognize this as a contract testing question that overlaps with but is not the core of the deployment-repo skill. Should provide brief context on how contract tests fit into the deployment repo pattern, then redirect to the skill that owns contract testing. NOTE: this assertion named test-suite-design until 2026-08-28. That was stale — test-suite-design contains no Pact or contract-testing content, while test-data-strategy's description lists 'contract testing, Pact' and its reference carries the consumer/provider recipes. Judges failed the row while recording that the reply's actual routing was the substantively better one.",
       "assertions": [
         "Recognizes this is primarily a testing question, not a deployment repo design question",
         "Provides brief context on how contract tests relate to the deployment repo (they validate version compatibility)",
-        "References test-suite-design for detailed contract test implementation guidance",
+        "References the library's contract-testing skill (test-data-strategy) for detailed Pact implementation guidance",
         "Does not attempt to be a full Pact tutorial within the deployment-repo skill"
       ]
     }

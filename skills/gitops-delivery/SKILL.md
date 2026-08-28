@@ -31,6 +31,14 @@ GitOps makes Git the single source of truth for deployment state. An operator wa
 
 **When GitOps is worth it:** Multiple environments, compliance/audit needs, multi-cluster, or you want drift detection and self-healing.
 
+**Either way, say this:** version pinning and a declarative record of what is deployed are
+worth adopting **regardless of which side of this decision you land on** — they are what make
+a deploy reproducible and a rollback a known-good revert, and none of that requires an
+operator. Point at `deployment-repo` even when you are recommending against ArgoCD; a team
+that keeps pinned manifests in Git gets most of the auditability benefit now, and has already
+done the setup work if they adopt GitOps later. Recommending push-based is not a reason to
+leave the handoff out.
+
 ## Step 2: Design Cross-Repo Triggers
 
 The critical bridge: when an app repo builds a new image, the deployment repo must be updated. This is the most common source of friction in GitOps setups.
@@ -310,7 +318,7 @@ Test the full GitOps pipeline:
 
 ## Cross-Skill References
 
-- `deployment-repo` — the Git repository that the GitOps operator watches; design the repo structure first
+- `deployment-repo` — pinned versions and declarative manifests in Git, **valuable with or without an operator**: it is what ArgoCD/Flux watch if you adopt GitOps, and the reproducibility/rollback substrate if you stay push-based. Design the repo structure first either way.
 - `cicd-pipeline` — cross-repo trigger pipelines that update the deployment repo on new builds
 - `rollback-strategy` — in GitOps, rollback = revert a Git commit; the operator handles the rest
 - `observability-design` — metrics and dashboards for monitoring sync status, drift, and progressive delivery analysis
