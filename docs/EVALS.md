@@ -135,6 +135,43 @@ k=1, three evaporated at k=3 — and RED moves too: one case scored RED 5/5 then
 4/5 on consecutive k=3 runs. Confirm a one-assertion gap at k>1 before treating it
 as a defect, let alone editing a skill for it.
 
+### Merging a run into the baseline (`evals/merge-baseline.mjs`)
+
+`workflow-runner.mjs` **returns** its results and writes nothing, so a Workflow-arm
+run has to be merged in. Do it with the helper, not by hand:
+
+```bash
+node evals/merge-baseline.mjs <results.json> --model claude-opus-5 \
+     --note "2026-08-27, branch main / parent 50c44b6, run wf_…: <what it covered>, N cases."
+```
+
+`<results.json>` is the `{ results, errored, total, baseline }` object the runner
+returned. The merge is **row-level**, keyed by `(skill, case-id)`: k=3 rows
+supersede their k=1 predecessors, every untouched row stays byte-identical, and
+re-merging the same results is a no-op — so it does not matter which of two
+concurrent sessions merges first. `--dry-run` prints the plan and writes nothing;
+`--baseline` / `--out` retarget the file (merge against a copy to rehearse).
+
+It recomputes `summary` from **all** rows (including the `skills` count the runner
+never emits), rewrites the top-level `k` summary string, and appends `--note` to the
+`_note` coverage paragraph. It also reports the two numbers a merge should be judged
+on: assertions newly green, and **gate coverage given up** — every assertion that was
+green and is now red, which is exactly what `run.py` fails on. A k=3 row superseding
+a k=1 one legitimately does that; the point is that it gets named rather than
+absorbed.
+
+It refuses to write when a row looks wrong rather than recording it: `--model` still
+set to the `opus` shorthand or carrying a variant suffix like `claude-opus-5[1m]`
+(either makes every merged row skip as "not comparable" instead of gating); a row
+whose verdict count disagrees with the case's current `evals.json` (the arrays are
+positional — deleting one assertion shifts every index above it); `green`/`red` of
+different lengths; a row all-false in both arms (the agents-died signature); or a row
+that voted fewer rounds than the run targeted (resume the run, or `--allow-degraded`).
+
+**Do not** use `run.py --update-baseline` to fold in a partial run: it merges
+skill-level (`{**base_skills, **results}`), so re-running a subset of one skill's
+cases drops that skill's other rows.
+
 ### Results (content evals, full catalog)
 
 `claude-opus-5`, all 66 skills, 234 cases, 1315 assertions. RED is the same model

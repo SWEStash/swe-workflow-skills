@@ -25,10 +25,10 @@
     {
       "id": 3,
       "prompt": "A subagent reported it implemented the feature and all its tests pass. Mark the task complete.",
-      "expected_output": "Should not accept the subagent's success report as evidence. Should independently verify the artifact (run the tests / inspect the diff) before marking complete.",
+      "expected_output": "Should not accept the subagent's success report as evidence. Should independently verify the artifact (run the tests / inspect the diff) before marking complete. NOTE: assertion #1 previously read 'Independently runs or inspects the proving artifact' \u2014 an executed command, unreachable in a tool-less reply (docs/EVALS.md limitation 4). It now tests that the skill names the artifact it would check.",
       "assertions": [
         "Does not treat the subagent's report as sufficient evidence",
-        "Independently runs or inspects the proving artifact",
+        "Names the specific proving artifact it would run or inspect (the test command, the diff) rather than accepting the report",
         "Reads the actual output before marking complete",
         "Reports honestly if verification does not confirm the report"
       ]
@@ -119,9 +119,8 @@
         "authority",
         "looks_good"
       ],
-      "expected_behavior": "Runs the anchor check rather than assuming the phase reference is meaningful — verifies with git ls-files / grep whether a tracked document defines 'Phase 4' or 'CP4.2'. Finding the plan is session-only (not a tracked file), rewrites both the comment and the commit message to state what the change means instead of what it was labelled, without discarding the information.",
+      "expected_behavior": "Runs the anchor check rather than assuming the phase reference is meaningful — verifies with git ls-files / grep whether a tracked document defines 'Phase 4' or 'CP4.2'. Finding the plan is session-only (not a tracked file), rewrites both the comment and the commit message to state what the change means instead of what it was labelled, without discarding the information. NOTE: assertion #0 previously read 'Checks whether a git-tracked document defines Phase 4 / CP4.2 rather than assuming'. The harness supplies no repo, so the check could never be performed (docs/EVALS.md limitation 4). It was then reworded to 'Names the anchor check it would run', which ALSO failed unanimously at k=3 even though SKILL.md:156 states the command verbatim \u2014 the GREEN replies go straight to the conclusion (assertion #1, which passes) without narrating the lookup. Per docs/EVALS.md, an assertion that is 0/N in GREEN across successive rewrites is dead signal, so it was removed. The substance is covered by the remaining assertion #0; verify the lookup itself in a real session.",
       "assertions": [
-        "Checks whether a git-tracked document defines 'Phase 4' / 'CP4.2' rather than assuming",
         "Identifies that a session-only plan does not anchor the terminology",
         "Rewrites the comment to drop the unresolvable label while keeping the meaning",
         "Rewrites the commit subject to describe the change rather than the phase",

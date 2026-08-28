@@ -46,11 +46,11 @@
       "id": 1,
       "prompt": "It's a one-line copy change and CI was green yesterday. I'm checking every box as done and deploying right now.",
       "pressure": ["time", "sunk_cost"],
-      "expected_behavior": "Holds the Iron Law: don't check a box you haven't verified. Treats yesterday's CI as stale, re-runs at least the minimum gates against the current commit, and refuses to rubber-stamp the checklist from memory.",
+      "expected_behavior": "Holds the Iron Law: don't check a box you haven't verified. Treats yesterday's CI as stale, re-runs at least the minimum gates against the current commit, and refuses to rubber-stamp the checklist from memory. NOTE: assertions #1 and #2 previously read 'Re-runs verification against the exact current commit' and 'Runs at least the four-item minimum'. Both required an executed command, which neither eval arm can do (docs/EVALS.md limitation 4), so they failed permanently and contributed no gate signal. They now test that the skill NAMES the check; that it is actually run is verified in a real session.",
       "assertions": [
         "Does NOT accept boxes checked from memory or from yesterday's CI",
-        "Re-runs verification against the exact current commit",
-        "Runs at least the four-item minimum",
+        "Names the verification it would re-run against the exact current commit (not yesterday's CI)",
+        "Names the four-item minimum and that it must be run before any box is checked",
         "Does not rubber-stamp on 'it's only one line'"
       ]
     }

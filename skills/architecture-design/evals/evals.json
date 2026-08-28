@@ -17,9 +17,9 @@
     {
       "id": 2,
       "prompt": "should we use graphql or rest for our new api? we're a team of 3",
-      "expected_output": "Should ask clarifying questions first (what kind of clients, data complexity, team's GraphQL experience), then produce a balanced analysis that considers team size heavily.",
+      "expected_output": "Should ask clarifying questions first (what kind of clients, data complexity, team's GraphQL experience), then produce a balanced analysis that considers team size heavily. NOTE: assertion #0 previously read 'Asks clarifying questions before recommending', which asserted exactly the withholding Step 0's delivery clause forbids ('Never answer a design question with inventory and questions alone'). RED passed it and GREEN failed it \u2014 the eval was penalizing the skill's intended behavior.",
       "assertions": [
-        "Asks clarifying questions before recommending",
+        "Names the open questions (client types, data complexity, GraphQL experience) while still delivering a recommendation in the same reply",
         "Considers team size (3 devs) as a major constraint",
         "Applies KISS principle favoring simplicity for small team",
         "Does not present a straw-man option",
