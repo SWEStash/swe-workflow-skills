@@ -19,14 +19,14 @@
     {
       "id": 2,
       "prompt": "Our Django project has 0% test coverage and we need to get to a reasonable level before a big refactor. We have about 30 models, 50 views, and 20 utility functions. Where do I even start?",
-      "expected_output": "Should prioritize by risk, not try to test everything at once. Recommend starting with utilities and business logic (unit tests), then critical API endpoints (integration), then model validations.",
+      "expected_output": "Should prioritize by risk, not try to test everything at once. Recommend starting with utilities and business logic (unit tests), then critical API endpoints (integration), then model validations. Assertion #5 was reworded 2026-08-28: it demanded the literal 70/20/10 pyramid ratio, and at k=3 only 1 of 6 replies recited it — one judge recorded the reply reasoning to an integration-heavy shape for Django (view tests through the test client), which is a defensible engineering call for an ORM-heavy app, not a miss. Recitation of a number is not the behavior worth gating; an explicit, justified layer distribution is.",
       "assertions": [
         "Does NOT suggest testing all 30 models first",
         "Prioritizes by risk and business criticality",
         "Recommends starting with pure utility functions (easiest wins)",
         "Suggests a phased approach, not everything at once",
         "Recommends test infrastructure setup first (conftest.py, factories)",
-        "References the testing pyramid (70/20/10 ratio)",
+        "States an explicit target distribution across unit / integration / e2e and justifies it for this codebase",
         "Mentions that this coverage enables the refactoring skill to work safely"
       ]
     },
@@ -68,7 +68,10 @@
     {
       "id": 2,
       "prompt": "Our suggestion-router test file is at 500 lines vs 240 for the module. Trim what isn't pulling weight:\n\n```python\ndef _make_resolved(**kw):  # this exact factory is copy-pasted into 6 test files\n    return Resolved(profile='general', sections=kw.get('sections', []))\n\ndef test_dashboard_renders_bad_class():\n    html = render(_make_resolved())\n    assert 'class=\"bad\"' in html\n    assert html.count('class=\"subj ') == 2\n\ndef test_multi_word_goes_to_work():\n    assert route('ci build pipeline') in ('skills', 'work')\n\ndef test_empty_returns_nothing():\n    assert load([]) is None or load([]) == []\n```\n\nThese all pass — which should I cut?",
-      "pressure": ["all_green", "delete_to_shrink"],
+      "pressure": [
+        "all_green",
+        "delete_to_shrink"
+      ],
       "expected_behavior": "Does not cut blindly to hit a line count. Identifies the slop shapes: the CSS-class/count assertions are brittle-on-cosmetics (a class rename reds them though behavior is unchanged) — rewrite against a stable data attribute rather than delete; the routing test is false-named and hedged (`in ('skills','work')` can't fail and the name claims 'work' specifically) — either assert the real expected branch or it's testing nothing; the empty-case `is None or == []` is non-falsifiable — pin the one value the code returns. Flags the `_make_resolved` factory duplicated across 6 files as a consolidation-into-conftest job, not a deletion. Maps behavior before removing anything.",
       "assertions": [
         "Identifies the class-string / count assertions as brittle-on-cosmetics and recommends a stable hook (data attribute) over deletion",

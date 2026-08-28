@@ -4,9 +4,9 @@
     {
       "id": 1,
       "prompt": "I'm building a modal dialog component in React for confirming destructive actions (like deleting a project). Make it accessible.",
-      "expected_output": "Should implement the full accessible modal pattern: role=dialog, aria-modal, focus trap, Escape to close, focus restoration, background inert, and proper labeling.",
+      "expected_output": "Should implement the full accessible modal pattern: role=dialog, aria-modal, focus trap, Escape to close, focus restoration, background inert, and proper labeling. Assertion #0 was reworded 2026-08-28: it named only the ARIA attributes, and at k=5 all 10 generations across both arms built the modal on native <dialog> + showModal(), which supplies modality implicitly (one deliberately chose role='alertdialog' and defended it). The judge's own words were 'modality is left implicit via native showModal()'. The assertion had aged out of correct practice; it now accepts either route to the same semantics.",
       "assertions": [
-        "Uses role='dialog' and aria-modal='true'",
+        "Establishes dialog semantics and modality — native <dialog> with showModal(), or role='dialog'/'alertdialog' with aria-modal='true'",
         "Labels the dialog with aria-labelledby pointing to the title",
         "Implements focus trap (Tab cycles within modal)",
         "Moves focus to the first focusable element on open",
@@ -20,11 +20,11 @@
     {
       "id": 2,
       "prompt": "Audit this React component for accessibility issues:\n\n<div className=\"card\" onClick={() => navigate(`/project/${id}`)}>\n  <div className=\"title\">{name}</div>\n  <img src={thumbnail} />\n  <div className=\"badge\" style={{color: status === 'active' ? 'green' : 'red'}}>\n    {status}\n  </div>\n  <div className=\"actions\">\n    <div className=\"btn\" onClick={(e) => { e.stopPropagation(); onDelete(id); }}>\n      🗑️\n    </div>\n  </div>\n</div>",
-      "expected_output": "Should identify all accessibility issues: clickable div instead of link/button, missing alt on img, color-only status indicator, icon button without label, no keyboard support.",
+      "expected_output": "Should identify all accessibility issues: clickable div instead of link/button, missing alt on img, color-only status indicator, icon button without label, no keyboard support. Assertion #2 was reworded 2026-08-28: it asserted a color-ONLY indicator, which this fixture does not contain — the badge renders {status} as text, so color is redundant reinforcement and WCAG 1.4.1 is not violated. At k=5, 7 of 10 judges recorded the reply correctly ruling 1.4.1 out and flagging 1.4.3 contrast instead; the assertion was punishing the right answer. It now targets the failure the fixture really has.",
       "assertions": [
         "Identifies clickable div should be an <a> or <Link> (for navigation)",
         "Identifies missing alt attribute on the image",
-        "Identifies color-only status indicator (green/red without text or icon)",
+        "Identifies the hard-coded inline red/green status color as a problem — contrast, loss under forced-colors/high-contrast modes, or red/green being the worst pair for color-blind users",
         "Identifies delete button as a div — should be <button>",
         "Identifies emoji icon without accessible label (aria-label needed)",
         "Notes that div+onClick has no keyboard support (no Enter/Space handling)",
