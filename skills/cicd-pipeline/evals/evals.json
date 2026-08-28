@@ -4,12 +4,13 @@
     {
       "id": 1,
       "prompt": "Set up a GitHub Actions CI/CD pipeline for our TypeScript Express API. We use PostgreSQL, run tests with Jest, build a Docker image, and deploy to AWS ECS. We want PR checks and auto-deploy to staging on merge to main, with manual approval for production.",
-      "expected_output": "Should produce a complete GitHub Actions workflow with lint, test (with Postgres service), build Docker image, deploy to staging, and gated production deploy.",
+      "expected_output": "Should produce a complete GitHub Actions workflow with lint, test (with Postgres service), build Docker image, deploy to staging, and gated production deploy. Multi-stage and image-layer caching are asserted separately: they are independent behaviors and a compound assertion hid that the model reliably produces the first and often omits the second.",
       "assertions": [
         "Lint and test run in parallel",
         "PostgreSQL service container configured with health check",
         "Dependencies are cached",
-        "Docker build uses multi-stage and caching",
+        "Docker build uses a multi-stage Dockerfile (a build stage that compiles, a slim runtime stage carrying only the artifact)",
+        "Docker image layers are cached across runs (buildx cache-from/cache-to, or an equivalent registry/gha layer cache)",
         "Staging deploys automatically on main push",
         "Production deploy requires manual approval (environment protection)",
         "Smoke test after each deployment",
