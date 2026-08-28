@@ -294,6 +294,21 @@ test('verify contracts', async () => {
 | Credit card | `4111...1234` → `4111...0000` (keep BIN, zero out rest) |
 | Date of birth | Shift by random offset (preserve age distribution) |
 
+### Do not apply these by hand
+
+The table above is a set of per-column rules, not a script to run once over a dump. Applying it
+with search-and-replace produces data that is simultaneously broken and still identifying:
+
+| Hand-rolled failure | What a masking tool does instead |
+|---|---|
+| The same customer becomes `Person_82947` in `users` and `Person_11043` in `orders` — joins break | Deterministic substitution: one input always maps to one fake value, so referential integrity survives |
+| Scrambled emails stop parsing; card numbers fail their checksum | Format-preserving generation — output stays valid for its type |
+| Only the obvious columns are scrubbed; names survive in free text, JSON blobs, audit logs | A declarative policy covering every column, reviewable and re-runnable |
+| Quasi-identifiers (employer + postcode + birth date) still single a person out | Generalization or suppression of rare combinations, not just direct identifiers |
+
+Use a dedicated anonymizer (Tonic, Gretel, Datanymizer, PostgreSQL Anonymizer) or the database's native
+dynamic data masking, and run it while copying to a lower environment — never in place on the source.
+
 ### Deterministic seeding for reproducibility
 
 Always seed random generators in test data scripts:

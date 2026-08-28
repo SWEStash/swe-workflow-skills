@@ -44,6 +44,10 @@ Establish the foundation before writing individual tests:
 
 See [references/test-infrastructure.md](references/test-infrastructure.md) for framework-specific setup patterns.
 
+These four are choices to *state*, not questions to ask back. Pick the stack's conventional
+answer, note it in a line, and keep going to Step 3 in the same response — infrastructure
+decisions are cheap for the user to correct and expensive to wait for.
+
 ### Step 3: Map Behaviors to Test
 
 For each piece of code to test, create a behavior map — not a line-by-line mirror of the implementation, but a list of *what the code is supposed to do*:
@@ -120,6 +124,18 @@ describe('OrderService')
 ```
 
 For each test, follow Arrange-Act-Assert. Keep tests focused — one behavior per test.
+
+**Write the tests out, in this same response.** Steps 1-5 are preparation, not a gate on
+delivering — none of them is a reason to stop at a plan. A behavior map, a list of describe
+blocks, an `it.each` table shape, or "tell me your runner and I'll write them" is not a test
+suite. If the runner is unknown, pick the stack's default (Jest/Vitest for JS/TS, pytest for
+Python), say in one line that you assumed it, and write the tests anyway — the user can
+correct a framework far more cheaply than they can answer four questions to get anything at all.
+
+Exit condition for this step: **runnable test bodies exist in your reply**, one per behavior
+mapped in Step 3, each with a name that reads as a specification (`it('returns 0 when the
+order has no items')`, not `it('test calculateShippingCost')` or `it('edge case 3')`) — so a
+failure report names the broken behavior without anyone opening the file.
 
 ### Step 7: Evaluate Coverage Quality
 
