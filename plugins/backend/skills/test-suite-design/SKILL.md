@@ -100,7 +100,7 @@ Existing code is often hard to test because of tight coupling. Common patterns a
 
 **External API calls** → Wrap in a client class/module. Mock the wrapper in unit tests. Test the wrapper itself in integration tests.
 
-If refactoring is needed to make code testable, keep changes minimal. The goal is test coverage now, not architectural perfection. Suggest the `refactoring` skill for deeper structural improvement later.
+If refactoring is needed to make code testable, keep changes minimal. The goal is test coverage now, not architectural perfection. Deeper structural work belongs to the `refactoring` skill — see Cross-Skill References.
 
 ### Step 6: Write the Tests
 
@@ -152,6 +152,16 @@ a consolidation candidate — extract the shared fixture (Step 2), then have eac
 it. Left alone, the copies drift and a setup change becomes an N-file edit.
 
 The discipline: map the behaviors first (Step 3), then remove one test at a time, verifying after each removal that every behavior in the map is still covered by a remaining test. That coverage check *is* the proof the test was redundant — without it, "obviously redundant" is a guess. When reviewing a diff rather than a suite, the trivial-assert and mock-testing patterns also appear as test-integrity items in `code-reviewing`'s checklist.
+
+## Cross-Skill References
+
+- `refactoring` — **name this handoff whenever the goal of the coverage is a refactor.** The
+  suite is what makes the refactor safe: it pins current behavior so a structural change that
+  breaks something fails a test instead of reaching production. Say which tests have to be
+  green before the refactor starts, and that untested code should not be restructured.
+- `tdd-workflow` — for code that does not exist yet; this skill is for covering code that does
+- `test-data-strategy` — factories, fixtures, and synthetic data for the suite designed here
+- `code-archaeology` — when the current behavior is unclear, characterize it before pinning it
 
 ## Principles Applied
 
