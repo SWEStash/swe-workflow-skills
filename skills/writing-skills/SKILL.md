@@ -52,16 +52,26 @@ grows to satisfy an instrument instead of a user.
 | Omits a required element | A structural requirement (named field or slot) |
 | Behavior should depend on a condition | A conditional rule ("if X, do Y"), not a blanket rule + exceptions |
 | Skill defers instead of delivering | The grounding instruction needs a **delivery clause** (below) |
+| Behavior is documented but never appears | It is filed where the question doesn't reach — **move it, don't restate it** (below) |
+| Behavior appears only as a handoff to another skill | The cross-skill reference is **ceding** it — say what stays in this skill's answer (below) |
 
 ### Grounding instructions need a delivery clause
 
 Any instruction of the form *"read/inventory/verify X before you answer"* degrades
 into *"ask permission to read X, deliver later"* unless you say otherwise. This is
-the most-repeated authoring failure in this library — five occurrences across two
-cycles, in `architecture-design`/`data-modeling` (Step 0's first draft),
-`project-documentation` (twice), `verification-before-completion`, and
-`git-workflow` — and the base model, having no such instruction, often scores
-*better* because it just answers.
+the most-repeated authoring failure in this library — **eight occurrences across
+three cycles**, in `architecture-design`/`data-modeling` (Step 0's first draft),
+`project-documentation` (twice), `verification-before-completion`,
+`git-workflow`, `tdd-workflow`, `api-design`, and `test-suite-design` — and the
+base model, having no such instruction, often scores *better* because it just
+answers. The `architecture-design` Step 0 fix shape has now been applied eight
+times and has never failed.
+
+It also hides behind other diagnoses. `test-suite-design` looked like a *naming*
+problem — an assertion about specification-style test names was failing — but the
+judges recorded "no test names appear anywhere": the skill stopped at a behavior
+map and an `it.each` table shape, so there was nothing to name. **When an assertion
+about the quality of some output fails, first check that the output exists at all.**
 
 Every grounding step must carry three things, and they are cheap:
 
@@ -75,6 +85,50 @@ Every grounding step must carry three things, and they are cheap:
 `architecture-design` Step 0 is the reference implementation — copy its shape rather
 than reinventing it. The tell in an eval is a GREEN reply that contains no artifact:
 no message, no document, no recommendation, just a plan to produce one.
+
+### Before adding content, check whether it is already there
+
+A behavior can be documented and still never appear, because it is filed where the
+question never reaches. Adding it a second time makes the skill longer without
+making it reachable — **move it, or file it where the prompt lands.**
+
+Three confirmed cases: `accessibility-design` documented submit-time focus in a
+general focus table, but the Form Accessibility reference — the material a forms
+prompt actually opens — omitted it, so the unaided model produced the behavior and
+the skill did not; `test-suite-design` had its `refactoring` handoff buried inside a
+step about untestable code, framed as "later", so a "where do I start" question never
+hit it; `api-design`'s YAGNI bullet licensed omitting the very pagination its own
+step specified. Each was fixed by relocating, not by restating.
+
+The check is cheap: grep the skill directory for the behavior first. If it is there,
+the bug is placement. **But confirm before assuming** — this pattern does not explain
+every miss. Two of three assertions investigated in one later pass turned out to be
+genuine content gaps where the behavior appeared nowhere in the skill at all, and the
+material an author would "relocate" did not exist.
+
+### A cross-skill reference can suppress the behavior it delegates
+
+The mirror image of the above. When a handoff covers something **this skill's own
+output is judged on**, naming the other skill gives the model permission to hand the
+topic over instead of doing it.
+
+Measured: `cicd-pipeline` gained a Step 3 bullet requiring a multi-stage cached
+Docker build *and* a `containerization` reference that ceded "the Dockerfile itself
+(multi-stage layout…)". Multi-stage went from 0 of 6 generations to 5 of 6 — but
+almost never together with caching, because the reply pushed the build out of scope:
+*"the pipeline assumes a good one exists."*
+
+The delegation that worked, in `test-suite-design`, has four ingredients:
+
+1. A **dedicated Cross-Skill References entry**, not only a sentence inside a step.
+2. The delegation **leads the list** rather than sitting among peers.
+3. A bold imperative naming the **trigger condition** ("name this handoff whenever
+   the goal of the coverage is a refactor").
+4. It says **what to say**, and **cedes nothing** — the skill still does its own work
+   and names the successor for what comes after.
+
+So: state explicitly what stays in this skill's answer. A reference that transfers
+the topic will transfer the behavior with it.
 
 ## Description discipline (the highest-leverage line)
 
