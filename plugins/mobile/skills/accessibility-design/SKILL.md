@@ -118,6 +118,7 @@ Automated testing catches ~30% of accessibility issues. Manual testing catches t
 - [ ] Test at 200% zoom — no horizontal scroll, no overlapping text
 - [ ] Verify all form fields have associated labels
 - [ ] Verify error messages are announced to screen readers
+- [ ] Submit an invalid form: focus must move to the first error (or an error summary), not stay on the submit button
 
 ## Principles Applied
 

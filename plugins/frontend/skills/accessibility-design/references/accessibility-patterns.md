@@ -130,6 +130,40 @@ Key: `aria-invalid` tells screen readers the field has an error. `aria-described
 
 The `*` is visual-only (`aria-hidden`). `aria-required` is the programmatic indicator.
 
+### Errors on submit
+Validation that fails on submit must move focus. Leaving focus on the submit button strands
+keyboard and screen reader users — the errors are below or above them and they are never told.
+
+**Short forms — focus the first invalid field:**
+```jsx
+const onSubmit = (e) => {
+  e.preventDefault()
+  const errors = validate(values)
+  if (Object.keys(errors).length) {
+    setErrors(errors)
+    refs[Object.keys(errors)[0]].current?.focus()   // first field IN DOM ORDER
+    return
+  }
+  save(values)
+}
+```
+
+**Long forms — focus an error summary:**
+```jsx
+<div ref={summaryRef} tabIndex={-1} role="alert">
+  <h2>3 errors need fixing</h2>
+  <ul>
+    <li><a href="#email">Email address is not valid</a></li>
+  </ul>
+</div>
+```
+Move focus to the summary container on failed submit; each item links to its field's `id`, so
+the user can jump straight to it.
+
+Key: a failed submit must land focus somewhere the user can act on — the first invalid field
+or an error summary — never on the submit button. Order errors by DOM position, not by the
+order your validator happened to produce them.
+
 ### Form submission feedback
 ```html
 <!-- Status region for form-level messages -->
