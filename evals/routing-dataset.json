@@ -456,7 +456,7 @@
       "prompt": "How do I write Pact contract tests between my frontend and backend API?",
       "accept": [
         "deployment-repo",
-        "test-suite-design",
+        "test-data-strategy",
         "NONE"
       ]
     },
