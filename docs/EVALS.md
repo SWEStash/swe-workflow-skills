@@ -382,6 +382,21 @@ skill's 3 evals yield 2 new routing cases.
 - A small curated **trivial/conversational** set (`evals/routing-trivial.json`,
   the only hand-authored cases) → `accept = {NONE}`, guarding against over-routing.
 
+**Editing an `evals.json` therefore edits this dataset**, which is easy to miss because the
+fields involved are not the ones the content harness reads. An `eval:1` or `eval:3` prompt
+changes a case; an `eval:3` **assertion or `expected_output`** changes a boundary case's
+*accept set*, because siblings are found by scanning that text for skill names. Run
+`--build-dataset` and commit, or the `routing` CI job fails on `--check-dataset`.
+
+**Read the rebuild diff rather than committing it blind.** The scan is a plain substring
+match, so *any* mention of a skill name lands in the accept set — including one you wrote to
+explain that a name is wrong. Retargeting `deployment-repo eval:3` off a stale skill once
+produced an accept set holding **both** the old and new owner, because the `expected_output`
+narrated which was stale; the note describing the bug re-introduced it, loosening the
+boundary test to accept a route to a skill with no relevant content. Keep
+`expected_output` as prose about what a good answer looks like — history belongs in the
+commit message, not the fixture.
+
 ### Accept-set grading (why, not single-expected)
 
 The design note assumed eval #3 is pre-labeled redirect gold ("hands off to X").
