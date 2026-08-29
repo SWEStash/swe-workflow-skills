@@ -44,6 +44,10 @@ Establish the foundation before writing individual tests:
 
 See [references/test-infrastructure.md](references/test-infrastructure.md) for framework-specific setup patterns.
 
+These four are choices to *state*, not questions to ask back. Pick the stack's conventional
+answer, note it in a line, and keep going to Step 3 in the same response — infrastructure
+decisions are cheap for the user to correct and expensive to wait for.
+
 ### Step 3: Map Behaviors to Test
 
 For each piece of code to test, create a behavior map — not a line-by-line mirror of the implementation, but a list of *what the code is supposed to do*:
@@ -100,7 +104,7 @@ Existing code is often hard to test because of tight coupling. Common patterns a
 
 **External API calls** → Wrap in a client class/module. Mock the wrapper in unit tests. Test the wrapper itself in integration tests.
 
-If refactoring is needed to make code testable, keep changes minimal. The goal is test coverage now, not architectural perfection. Suggest the `refactoring` skill for deeper structural improvement later.
+If refactoring is needed to make code testable, keep changes minimal. The goal is test coverage now, not architectural perfection. Deeper structural work belongs to the `refactoring` skill — see Cross-Skill References.
 
 ### Step 6: Write the Tests
 
@@ -120,6 +124,18 @@ describe('OrderService')
 ```
 
 For each test, follow Arrange-Act-Assert. Keep tests focused — one behavior per test.
+
+**Write the tests out, in this same response.** Steps 1-5 are preparation, not a gate on
+delivering — none of them is a reason to stop at a plan. A behavior map, a list of describe
+blocks, an `it.each` table shape, or "tell me your runner and I'll write them" is not a test
+suite. If the runner is unknown, pick the stack's default (Jest/Vitest for JS/TS, pytest for
+Python), say in one line that you assumed it, and write the tests anyway — the user can
+correct a framework far more cheaply than they can answer four questions to get anything at all.
+
+Exit condition for this step: **runnable test bodies exist in your reply**, one per behavior
+mapped in Step 3, each with a name that reads as a specification (`it('returns 0 when the
+order has no items')`, not `it('test calculateShippingCost')` or `it('edge case 3')`) — so a
+failure report names the broken behavior without anyone opening the file.
 
 ### Step 7: Evaluate Coverage Quality
 
@@ -152,6 +168,16 @@ a consolidation candidate — extract the shared fixture (Step 2), then have eac
 it. Left alone, the copies drift and a setup change becomes an N-file edit.
 
 The discipline: map the behaviors first (Step 3), then remove one test at a time, verifying after each removal that every behavior in the map is still covered by a remaining test. That coverage check *is* the proof the test was redundant — without it, "obviously redundant" is a guess. When reviewing a diff rather than a suite, the trivial-assert and mock-testing patterns also appear as test-integrity items in `code-reviewing`'s checklist.
+
+## Cross-Skill References
+
+- `refactoring` — **name this handoff whenever the goal of the coverage is a refactor.** The
+  suite is what makes the refactor safe: it pins current behavior so a structural change that
+  breaks something fails a test instead of reaching production. Say which tests have to be
+  green before the refactor starts, and that untested code should not be restructured.
+- `tdd-workflow` — for code that does not exist yet; this skill is for covering code that does
+- `test-data-strategy` — factories, fixtures, and synthetic data for the suite designed here
+- `code-archaeology` — when the current behavior is unclear, characterize it before pinning it
 
 ## Principles Applied
 

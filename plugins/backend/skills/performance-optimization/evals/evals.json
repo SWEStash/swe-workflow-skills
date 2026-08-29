@@ -19,9 +19,9 @@
     {
       "id": 2,
       "prompt": "Our API response times are fine for small accounts but degrade badly for enterprise customers with 50K+ records. The main offender is the search endpoint. How should I approach this?",
-      "expected_output": "Should ask for the current query and indexes, suggest EXPLAIN ANALYZE, and recommend strategies for large dataset search (proper indexing, cursor pagination, search-specific solutions like Elasticsearch for complex search).",
+      "expected_output": "Should ask for the current query and indexes, suggest EXPLAIN ANALYZE, and recommend strategies for large dataset search (proper indexing, cursor pagination, search-specific solutions like Elasticsearch for complex search). NOTE: assertion #0 previously read 'Asks to see the current query and database schema'. RED passed it and GREEN failed it \u2014 the skill correctly delivers a method rather than stopping at a request for input. It now tests that the ask accompanies the answer instead of replacing it.",
       "assertions": [
-        "Asks to see the current query and database schema",
+        "Asks for the current query and schema while still giving the diagnostic approach in the same reply",
         "Suggests running EXPLAIN ANALYZE on the slow query",
         "Identifies that OFFSET-based pagination degrades with large datasets",
         "Recommends cursor-based pagination",

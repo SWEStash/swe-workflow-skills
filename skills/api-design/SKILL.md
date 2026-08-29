@@ -12,6 +12,22 @@ Design APIs that are consistent, predictable, and easy to consume. A well-design
 
 This skill designs the **contract** (endpoints, request/response shapes, error formats, pagination). For higher-level decisions (REST vs GraphQL, API gateway, authentication strategy), use the `architecture-design` skill first, then return here to design the specifics.
 
+## The Deliverable
+
+An API design is not finished until it carries **all six** of these. A list of endpoints is a
+third of an answer:
+
+1. **Resources and endpoints** — URLs, methods, and how relationships are expressed
+2. **Request/response schemas** — field names, types, and the response envelope
+3. **The error format** — one shape for every error, plus the status-code mapping
+4. **The pagination contract** — parameters and response shape for every list endpoint
+5. **Auth per endpoint** — scheme, who may call it, and which endpoints are public
+6. **The written spec** — markdown or OpenAPI, using [templates/api-spec.md](templates/api-spec.md)
+
+Deliver all six **in the same response**. Where a choice is genuinely open, pick the default
+this skill recommends, say you picked it, and keep going — never return a design as a list of
+questions.
+
 ## Workflow
 
 ### Step 1: Identify Resources and Operations
@@ -45,7 +61,7 @@ POST   /api/v1/orders/:id/cancel   → Cancel an order
 POST   /api/v1/users/:id/verify    → Verify a user's email
 ```
 
-Present the endpoint list to the user and refine before designing schemas.
+Present the endpoint list, then **design the schemas in the same response** — the list is a checkpoint, not a stopping point. Invite correction on the naming while delivering the rest.
 
 ### Step 3: Define Request/Response Schemas
 
@@ -57,11 +73,12 @@ For each endpoint, define:
 
 Use consistent patterns across all endpoints — see [references/rest-conventions.md](references/rest-conventions.md) for standard shapes.
 
-Key decisions to make with the user:
-- **ID format**: Integer, UUID, or ULID? (be consistent)
-- **Date format**: ISO 8601 always (`2025-03-05T14:30:00Z`)
-- **Null vs absent**: Are missing fields returned as `null` or omitted?
-- **Envelope or not**: `{ data: [...], meta: {...} }` vs flat response?
+Decisions to make **now**, with a stated default rather than a question — flag them for
+correction and move on:
+- **ID format**: default ULID (sortable, no coordination); integer or UUID if the stack forces it
+- **Date format**: ISO 8601 always (`2025-03-05T14:30:00Z`) — not a decision
+- **Null vs absent**: default omit absent fields, return `null` only for a known-empty value
+- **Envelope or not**: default `{ data, pagination }` on collections, flat on single resources
 
 ### Step 4: Standardize Error Responses
 
@@ -139,5 +156,5 @@ Use the template at [templates/api-spec.md](templates/api-spec.md) for markdown 
 
 - **KISS**: Prefer flat resource URLs over deeply nested ones. `/orders?user_id=123` is simpler than `/users/123/orders/456/items/789`.
 - **DRY**: Standardize error format, pagination, and envelope structure once. Don't reinvent per-endpoint.
-- **YAGNI**: Don't add filtering, sorting, or pagination until a list endpoint actually needs them. Add later when the need is real.
+- **YAGNI**: Don't add filtering or sorting until a list endpoint actually needs them. Pagination is not in this category — any collection that can grow ships with the pagination contract from day one, because adding it later is a breaking change for every consumer.
 - **Functional Independence**: Each endpoint should do one thing. Avoid "Swiss army knife" endpoints that change behavior based on query parameters.

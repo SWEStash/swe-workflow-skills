@@ -108,6 +108,20 @@ When test data must resemble production data but cannot contain real PII:
 4. **Version control your data generation seeds** — for reproducible test runs
 5. **Audit test environments** — ensure no real PII leaked into test databases
 
+**Masking is a pipeline, not a find-and-replace.** The common failure is to dump production,
+run search-and-replace over the obvious columns, and call it anonymized. That leaves the data
+both broken and still identifying: foreign keys and joins break when the same person is
+replaced inconsistently across tables, formats stop validating (a scrambled email no longer
+parses, a card number fails its checksum), free-text columns and logs keep the names that were
+only scrubbed from `users.name`, and rare combinations — one employer in one postcode with one
+birth date — re-identify a person even with every direct identifier gone.
+
+Use a masking tool rather than a script: the dedicated anonymizers (Tonic, Gretel, Datanymizer,
+PostgreSQL Anonymizer) or your database's native dynamic data masking. What they supply and a hand-rolled
+pass does not is **deterministic, referentially-consistent substitution** — the same input maps to
+the same fake value everywhere it appears, so joins survive — plus format-preserving generators and
+a declarative per-column policy you can review and re-run. Mask on a one-way copy, never in place.
+
 See [references/data-generation-patterns.md](references/data-generation-patterns.md) for privacy-safe generation patterns.
 
 ### Step 7: Design Load Test Data

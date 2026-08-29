@@ -8,6 +8,27 @@ allowed-tools: Read, Grep, Glob, Write, Edit
 
 Understand what will break before breaking it. Changing a shared component without mapping its dependents leads to cascading failures — often discovered in production.
 
+## Scope Boundary
+
+This skill maps the blast radius of a **specific, already-decided change to something that
+already exists**. It does not decide what to build or how to build it.
+
+Out of scope — hand these off and stop:
+
+- *"How do I add authentication / caching / this feature?"* — an implementation question.
+  Route to `security-audit` or `api-design`; adding something new to one endpoint has no
+  dependents to map.
+- *"Should I use X or Y?"* — a design decision. Route to `architecture-design`.
+
+**Declining means producing no analysis, not producing it generically.** When a request is out
+of scope, the failure mode is to say "that's not this skill" and then walk the workflow anyway
+with the specifics left blank — a template that finds dependents, classifies breaking vs
+additive, and lays out an expand-contract plan for an unnamed endpoint. That is the deliverable,
+and emitting it is running the skill, not declining it. Name the right skill, add at most a
+one-sentence impact observation if a genuine breaking change is visible (requiring auth on an
+endpoint that already has callers is one), and stop. If the change turns out to be in scope
+after all, ask for the component by name first and run the workflow on the real thing.
+
 ## Step 1: Define the Change
 
 Be precise about what is changing:
@@ -105,7 +126,7 @@ For each breaking change, define the coordination plan:
 
 ## Cross-Skill References
 
-- `api-design` — design the new API contract after impact is understood
+- `api-design` — **the right owner when the request is to design or add an endpoint at all**; also where to design the new contract once an impact map exists. Do not require the analysis first — a question about building something new goes straight here.
 - `feature-planning` — incorporate the dependency coordination into the implementation plan
 - `architecture-design` — if analysis reveals excessive coupling, document an ADR for reducing it
 - `data-modeling` — use for schema change design once impact is mapped

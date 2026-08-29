@@ -46,7 +46,18 @@ Before writing any test, create a list of behaviors to test. Derive this from ac
 3. **Error cases** — invalid input, missing resources, permission failures
 4. **Integration points** — interactions with other components
 
-Present the test list to the user. This is the roadmap — each item becomes one red-green-refactor cycle.
+**Exit condition** — one line, then keep going in the same response:
+*"Test list: `<n>` behaviors, starting with `<the simplest one>`."*
+
+**This step is not a gate on delivering.** The test list is the roadmap — each item becomes
+one red-green-refactor cycle — but presenting it is not the deliverable. **Run the first
+cycle in the same response**: a real failing test body, the minimum code that passes it, and
+either a named refactor or an explicit "nothing to refactor yet". A reply that stops at test
+names and input values has delivered nothing testable.
+
+Where a requirement is under-specified, **state the assumption and encode it in the test** —
+a test the user corrects beats a question they must answer. Ask only when the assumption
+would change what the code is, not merely a value you can name in one line.
 
 ### Step 1: RED — Write a Failing Test
 

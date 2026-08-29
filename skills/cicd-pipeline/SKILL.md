@@ -45,6 +45,7 @@ Write the pipeline config for the target platform. Use [templates/github-actions
 
 Key best practices:
 - **Cache dependencies** — Cache node_modules, pip packages, Go modules between runs
+- **Build images multi-stage, with layer caching** — a build stage that compiles and a slim runtime stage that carries only the artifact, plus `buildx` with `cache-from`/`cache-to: type=gha` so layers survive between runs. Dependency caching (above) does not cover the image build. Recipe: [references/pipeline-patterns.md](references/pipeline-patterns.md)
 - **Pin action/image versions** — Use SHA hashes or exact tags, not `@latest` or `@main`
 - **Minimize secrets scope** — Only expose secrets to the jobs that need them
 - **Use matrix builds** — Test across Node versions, OS variants, or Python versions when applicable
@@ -83,5 +84,6 @@ Quality gates prevent bad code from advancing:
 - `gitops-delivery` — pull-based delivery as an alternative to CI-driven `kubectl apply` / `helm upgrade`
 - `deployment-checklist` — pre-deployment verification gates to incorporate into the pipeline
 - `release-management` — the release stage itself: version bumps, changelog, tagging, publish gates, registry publishing (the pipeline automates what that skill decides)
+- `containerization` — the Dockerfile itself (multi-stage layout, base image, non-root user, image hardening); this skill orchestrates the build, that one designs what is built
 - `security-audit` — security scanning stages and SAST/DAST integration
 - `verification-before-completion` — run the proving commands locally before relying on the pipeline to catch failures

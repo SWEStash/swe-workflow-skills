@@ -18,10 +18,10 @@
     {
       "id": 2,
       "prompt": "Honestly the space Cascade is in feels crowded and I'm not sure what makes us different anymore. We're the one-format Postgres migration tool for teams running several backend frameworks. Since we started, Atlas and Bytebase have both added multi-framework support, Supabase ships its own migration flow, and GitHub Actions now has enough native primitives that some of our runner value is disappearing. Is there even a defensible wedge here?",
-      "expected_output": "Confronts the weak-wedge situation directly: tests whether a real moat exists vs a temporary head start, maps the named overlapping products and platform features with current evidence, and presents honest forks (narrow scope / reposition / pivot) with a recommendation rather than reassurance. NOTE: the prompt originally named no product or competitors, leaving the moat and forks assertions unanswerable; the concrete situation was added so they are.",
+      "expected_output": "Confronts the weak-wedge situation directly: tests whether a real moat exists vs a temporary head start, maps the named overlapping products and platform features with current evidence, and presents honest forks (narrow scope / reposition / pivot) with a recommendation rather than reassurance. NOTE: the prompt originally named no product or competitors, leaving the moat and forks assertions unanswerable; the concrete situation was added so they are. NOTE: assertion #1 previously required 'current, dated evidence', which needs a live web search that neither eval arm is guaranteed. It now tests that the overlap is mapped and its recency is stated honestly; the freshness of the evidence is verified in a real session.",
       "assertions": [
         "Distinguishes a durable moat (standard, network, data, switching cost) from a temporary head start",
-        "Examines the overlapping platform/incumbent features with current, dated evidence",
+        "Maps the named overlapping platform/incumbent features and states how current its information is (or that it must be re-verified before deciding)",
         "Does not offer false reassurance \u2014 willing to conclude the wedge is thin if that's what the evidence shows",
         "Presents distinct strategic forks (e.g. narrow / reposition / pivot) with trade-offs and a recommendation",
         "Names the observable event that would invalidate continuing"

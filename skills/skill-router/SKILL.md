@@ -194,6 +194,13 @@ approved plan; wraps `tdd-workflow` per task) → `code-slop-cleanup` (strip AI
 artifacts from the diff) → `code-reviewing` → `verification-before-completion`
 (evidence for the claim, docs reconciled) → `deployment-checklist`
 
+*Entry point.* `feature-planning` leads by default. But when a single
+costly-to-reverse structural decision **dominates** the feature — the tenant
+isolation model, the storage engine, the offline sync model — `architecture-design`
+leads instead, and `feature-planning` then scopes the work that the chosen option
+implies. Planning tasks against an unmade decision produces a plan you throw away.
+Either way both skills are in the chain; what changes is which one runs first.
+
 **Bug / incident**
 `incident-response` (if prod is down) → `bug-investigating` → `tdd-workflow`
 (regression test) → `verification-before-completion` (the repro now passes, and

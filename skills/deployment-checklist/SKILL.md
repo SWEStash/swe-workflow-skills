@@ -55,6 +55,11 @@ Walk through each section. Check items by reading code, running commands, and ve
 - [ ] No destructive operations without confirmation (DROP, DELETE without WHERE)
 - [ ] Backfill scripts are idempotent (safe to run multiple times)
 
+This checklist **verifies** a migration; it does not design one. When a box above fails —
+a rename with no forwards-compatible path, an irreversible migration, a change that cannot
+be split across deploys — the answer is an expand-contract migration strategy, and that is
+`data-modeling`'s work. Say so rather than green-lighting a redesign from the checklist.
+
 #### Configuration & Environment
 - [ ] New environment variables are documented and set in all target environments
 - [ ] Feature flags are in the correct state for this release
@@ -125,6 +130,7 @@ See [references/pre-deploy-gates.md](references/pre-deploy-gates.md) for environ
 
 ## Cross-Skill References
 
+- `data-modeling` — **name this handoff whenever a migration fails a Database & Data box.** This skill decides whether a migration is safe to ship; that one designs the expand-contract sequence (add, backfill, dual-write, cut over, drop) that makes it safe.
 - `release-management` — cutting the versioned release (semver, changelog, tag, publish) that this checklist deploys
 - `rollback-strategy` — design the rollback plan before deploying (required for High-risk changes)
 - `configuration-strategy` — verify all environment variables and feature flags are configured correctly

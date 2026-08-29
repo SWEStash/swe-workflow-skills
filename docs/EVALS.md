@@ -34,6 +34,10 @@ describes the schema and a repeatable way to run them.
 - **`evals`** (required, exactly 3): happy path, edge case, scope boundary.
   These check that the workflow runs, handles a corner, and knows its
   boundaries.
+- For a skill with `context: fork` in its frontmatter, write assertions against
+  the **returned summary**. The full report goes to a file that neither the
+  harness nor the calling conversation ever sees, so an assertion aimed at the
+  written artifact tests nothing. See limitation 5 below.
 - **`pressure_tests`** (optional): present on hardened/safety-critical and
   discipline skills. Each tempts the agent to rationalize past the skill's Iron
   Law under one or more `pressure` levers, and asserts that it doesn't. See
@@ -135,6 +139,43 @@ k=1, three evaporated at k=3 — and RED moves too: one case scored RED 5/5 then
 4/5 on consecutive k=3 runs. Confirm a one-assertion gap at k>1 before treating it
 as a defect, let alone editing a skill for it.
 
+### Merging a run into the baseline (`evals/merge-baseline.mjs`)
+
+`workflow-runner.mjs` **returns** its results and writes nothing, so a Workflow-arm
+run has to be merged in. Do it with the helper, not by hand:
+
+```bash
+node evals/merge-baseline.mjs <results.json> --model claude-opus-5 \
+     --note "2026-08-27, branch main / parent 50c44b6, run wf_…: <what it covered>, N cases."
+```
+
+`<results.json>` is the `{ results, errored, total, baseline }` object the runner
+returned. The merge is **row-level**, keyed by `(skill, case-id)`: k=3 rows
+supersede their k=1 predecessors, every untouched row stays byte-identical, and
+re-merging the same results is a no-op — so it does not matter which of two
+concurrent sessions merges first. `--dry-run` prints the plan and writes nothing;
+`--baseline` / `--out` retarget the file (merge against a copy to rehearse).
+
+It recomputes `summary` from **all** rows (including the `skills` count the runner
+never emits), rewrites the top-level `k` summary string, and appends `--note` to the
+`_note` coverage paragraph. It also reports the two numbers a merge should be judged
+on: assertions newly green, and **gate coverage given up** — every assertion that was
+green and is now red, which is exactly what `run.py` fails on. A k=3 row superseding
+a k=1 one legitimately does that; the point is that it gets named rather than
+absorbed.
+
+It refuses to write when a row looks wrong rather than recording it: `--model` still
+set to the `opus` shorthand or carrying a variant suffix like `claude-opus-5[1m]`
+(either makes every merged row skip as "not comparable" instead of gating); a row
+whose verdict count disagrees with the case's current `evals.json` (the arrays are
+positional — deleting one assertion shifts every index above it); `green`/`red` of
+different lengths; a row all-false in both arms (the agents-died signature); or a row
+that voted fewer rounds than the run targeted (resume the run, or `--allow-degraded`).
+
+**Do not** use `run.py --update-baseline` to fold in a partial run: it merges
+skill-level (`{**base_skills, **results}`), so re-running a subset of one skill's
+cases drops that skill's other rows.
+
 ### Results (content evals, full catalog)
 
 `claude-opus-5`, all 66 skills, 234 cases, 1315 assertions. RED is the same model
@@ -171,13 +212,15 @@ they gained the *most* with nothing to read, so the gain comes from the instruct
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at k=1 except 12 cases at k=3 (see above); `k` is per row.
+Recorded at k=1 except 52 cases at k=3 and 8 at k=5; `k` is per row, and the
+remediation cycle re-measured every case that held an ungated assertion. See
+limitation 6 below for what the remaining k=1 majority means for the gate.
 
 ### Why the gate is regression-vs-baseline, not an absolute threshold
 
 We gate on **GREEN drift vs. the baseline**, never on an absolute pass rate, and
 we track RED for delta only (base-model behavior varies, so gating on it is
-flaky). Two findings from running this make the choice necessary:
+flaky). Several findings from running this make the choice necessary:
 
 1. **Some assertions can't be satisfied by a single tool-less reply.** The
    generators are told to output only a reply (no tool use), so assertions like
@@ -249,6 +292,41 @@ flaky). Two findings from running this make the choice necessary:
    The distinction still matters because the two look identical from the score:
    content *present* in `SKILL.md` still fails if satisfying it requires an action
    the harness forbids. Promoting more text will not fix it.
+5. **Item 4's failure mode has a skill-side twin: the skill routes the output
+   away itself.** A skill that both *demands* an output and *routes it elsewhere*
+   hands the model a documented licence to defer, and the score looks identical
+   to a content gap. The four `context: fork` skills (`strategic-review`,
+   `project-review`, `security-audit`, `technical-debt-review`) each carry a
+   clause of the shape "write the full report to a file … only the summary
+   returns, everything unwritten is lost", plus an **Open questions** section for
+   judgment calls. `strategic-review` shows the trap: `SKILL.md:90` requires it to
+   "name a recommended path and why", while `:98` files "which strategic fork to
+   take" under Open questions.
+
+   **The diagnostic is to check RED.** RED never reads the SKILL.md, so if RED
+   fails the same assertion, no clause in the skill can be the cause — the problem
+   is the assertion's wording against the prompt. Applying that test to this
+   library retired every fork-context row that looked unreachable: an audit of all
+   14 cases / 76 assertions across the four skills found **zero** assertions
+   unreachable because of `context: fork`. Assertions naming a *report section*
+   render inline fine and pass. What the clause actually produces is an **untested
+   instruction** — no assertion anywhere covers the write-to-file behavior, so
+   verify it in a live session or the layer-3 routing harness rather than adding an
+   assertion the harness can never satisfy.
+
+   `project-review/SKILL.md:95-101` is the clause shape to copy: it ends "and
+   mention it in the summary", which keeps Open-questions content inside the
+   returned artifact and therefore inside the harness's reach.
+6. **Most of the baseline rests on single samples, and the gate compares against
+   k=3.** k is per row. As of 2026-08-28, 173 of 234 cases are k=1, and **917 of
+   the 1288 GREEN-true assertions sit on those rows**, while CI runs
+   `run.py -k 3` and fires on `was_green && !now_green`. Phase 3 of the
+   remediation cycle measured that half of k=1 *reds* evaporate at k=3; the same
+   sampling moves marginal k=1 *greens* to red, which reads in CI as a regression
+   that is not one. Exposure is bounded — the gate runs `--changed`, so only a
+   PR's own skills are re-measured — but when a gate failure names a case whose
+   baseline row is k=1, re-measure before believing it. The durable fix is to
+   re-run a skill's cases at k=3 and merge the rows when you touch it.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what

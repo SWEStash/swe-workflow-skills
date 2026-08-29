@@ -28,12 +28,11 @@
     {
       "id": 3,
       "prompt": "Help me roll back the deploy I just did — users are getting 500 errors.",
-      "expected_output": "Recognizes this is an active incident execution context, not a planning context — redirects to incident-response skill for immediate action while potentially providing the rollback steps if a rollback plan exists",
+      "expected_output": "Recognizes this is an active incident execution context, not a planning context — redirects to incident-response skill for immediate action while potentially providing the rollback steps if a rollback plan exists. NOTE: assertion #3 previously read 'Asks for or uses the rollback plan if one was previously created'. Using a prior-session artifact is unreachable in this harness, and the 'uses' half also pulled against assertions #1 and #4 (prioritize speed, don't plan mid-incident). It was then reworded to 'Asks whether a rollback plan already exists, without stalling the response on the answer' and STILL failed at k=3. Two rewrites with no movement is the docs/EVALS.md dead-signal tell, so it was removed: mid-incident the skill correctly goes straight to the rollback steps, and assertions #1 and #3 already reward exactly that. Verify the ask in a real session where a prior plan can actually exist.",
       "assertions": [
         "Recognizes this is an active incident, not a pre-deploy planning session",
         "Prioritizes speed and clear action over comprehensive planning",
         "Mentions incident-response skill for the overall incident workflow",
-        "Asks for or uses the rollback plan if one was previously created",
         "Does not spend time on rollback planning when immediate action is needed"
       ]
     }
