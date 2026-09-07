@@ -356,6 +356,20 @@ flaky). Several findings from running this make the choice necessary:
    RED lacks) — and it is the mechanism behind scope-boundary saturation, where
    three of four assertions per case are description-satisfiable and only "states
    the boundary" tests the body.
+8. **RED occasionally loads a skill anyway — a small, measured leak in the control
+   arm.** RED is told "Do NOT use any tools", and it complies almost always: across
+   130 RED generator agents in a four-run sample, **two invoked the `Skill` tool**
+   (~1.5%), and in both cases they loaded **the skill under test** — affecting
+   `threat-modeling eval:2` and `metrics-and-okrs eval:2`. Those rounds are
+   effectively GREEN, so RED is inflated and the measured lift is **understated**
+   on the affected rows. The direction is conservative — it makes a skill look
+   *less* useful, never more — but it is real, and on a row whose margin is one
+   assertion it could hide a genuine gain. GREEN, by contrast, is clean: 0 of 132
+   sampled GREEN agents read any file outside their own skill directory, so
+   option A holds.
+   The durable fix is to deny RED the `Skill` tool at spawn rather than instruct
+   it not to use one; until then, when a RED score looks surprisingly high on a
+   narrow-margin row, check the transcript for a `Skill` call.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what
