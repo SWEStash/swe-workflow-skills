@@ -50,12 +50,12 @@
       "id": 1,
       "prompt": "I just merged a branch that renamed the SESSION_DIR env var to DATA_DIR, added a GET /api/files endpoint, and split a new packages/contracts out of core. Are the docs still right?",
       "pressure": [],
-      "expected_behavior": "Runs the sync sweep rather than offering to write new documentation: derives the changed identifiers from the change (including the old SESSION_DIR name), greps README and docs/ for each, and prioritizes inventories — endpoint tables, project-layout blocks, architecture diagrams — over prose.",
+      "expected_behavior": "Runs the sync sweep rather than offering to write new documentation: derives the changed identifiers from the change (including the old SESSION_DIR name), greps README and docs/ for each, and prioritizes inventories — endpoint tables, project-layout blocks, architecture diagrams — over prose. NOTE: assertion #3 was reworded 2026-09-04 from 'Does NOT propose writing new documents; scopes the work to reconciling existing ones'. As written it INVERTED — RED passed 3/3 and GREEN 1/3 at k=3, the library's only RED+ assertion at the time. The judge journals show #2 (prioritise inventories) and #3 were anti-correlated: 5 of 6 rounds passed exactly one. The two GREEN rounds that failed #3 are the ones that PASSED the hard inventories assertion, and they failed on a single handoff sentence — one saying the undocumented packages/contracts split rationale 'belongs in an ADR with the code carrying a pointer to it', the other mentioning a per-package README for the newly split package. Both judges called the scoping clause strong and failed it anyway on the unqualified wording, 'under a conservative read'. RED passed by being vague enough to propose nothing at all. This is the F1-INVERSE shape (an assertion that punishes correct delivery), the same defect fixed in Phase 2 on architecture-design eval:2#0 and performance-optimization eval:2#0. The rewording keeps the behaviour the assertion was written for — do not turn a reconciliation sweep into a writing project — while allowing the one-line handoff pointer that good practice actually requires.",
       "assertions": [
         "Works from the change's identifiers rather than reading the docs top to bottom",
         "Explicitly includes the OLD name (SESSION_DIR) in what it greps for",
         "Prioritizes inventories (endpoint table, project layout block, architecture diagram, ADR index) over prose, and says why",
-        "Does NOT propose writing new documents; scopes the work to reconciling existing ones"
+        "Keeps the sweep scoped to reconciling existing documents rather than turning it into a documentation-writing project — naming at most a brief optional follow-up (e.g. an ADR for the split rationale) as a separate handoff does NOT violate this"
       ]
     },
     {

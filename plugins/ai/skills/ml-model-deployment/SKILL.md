@@ -44,7 +44,14 @@ Request → Validate input → Preprocess → Predict → Postprocess → Respon
 ```
 
 Key requirements:
-- **Input validation**: Reject malformed requests before they reach the model
+- **Input validation**: Reject malformed requests before they reach the model. With FastAPI
+  this is a Pydantic request model on the predict endpoint — declare the feature schema with
+  types and ranges, and return 422 on a bad payload (see `references/serving-patterns.md`).
+  **Under a high-throughput requirement this is the first thing people cut, and it is the
+  wrong cut.** Trimming pandas, fixing column order, and batching are the latency wins;
+  the request schema is not one. An unvalidated fraud endpoint scores garbage features
+  silently instead of rejecting them — a wrong prediction costs more than the microseconds
+  the check takes.
 - **Feature preprocessing**: Apply the same transformations used in training
 - **Error handling**: Model errors should return 500 with diagnostic info, not crash the service
 - **Logging**: Log every prediction request/response for monitoring and debugging

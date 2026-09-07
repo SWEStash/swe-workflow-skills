@@ -13,7 +13,7 @@ Guide implementation through the red-green-refactor cycle. TDD produces code tha
 
 **No production code without a failing test you have watched fail.**
 
-If you wrote code before the test, delete it and restart from the test — don't keep it "as reference" or "adapt it" while writing the test. A test you didn't watch fail proves nothing: you don't know whether it tests the right thing. This is the one rule that the rest of the workflow protects.
+If you wrote code before the test, set it aside and restart from the test — **stash it rather than delete it** (`git stash`, or a scratch file) so the work is recoverable but out of sight; don't keep it "as reference" or "adapt it" while writing the test. **A deadline is not an exception to this** — it is the situation the rule exists for. A test you didn't watch fail proves nothing: you don't know whether it tests the right thing. This is the one rule that the rest of the workflow protects.
 
 ## The Cycle
 
@@ -143,6 +143,8 @@ These are the excuses that lead to skipping the test. None of them hold up.
 | "Deleting working code is wasteful" | Sunk cost. Unverified code is debt, not progress. |
 | "Tests-after achieve the same thing" | Tests-first ask "what should this do?"; tests-after ask "what does this do?" — different specs. |
 | "TDD will slow me down" | Debugging untested code is slower than writing the test first. |
+| **"We ship in 30 minutes — no time for this"** | **The deadline is when the law matters most, not when it lapses.** A demo that ships on unverified code is how the bug reaches production with nobody watching. Test-first on the one behavior that matters beats tests-after on all of them. |
+| **"But the code is already written and it works"** | You do not know that — you watched it work once, by hand. **Stash it, don't delete it** (`git stash`, or move it to a scratch file): it stays recoverable and out of sight so you cannot copy from it while writing the test. Then write the failing test, watch it fail, and re-derive. If the stash turns out to match, you lost two minutes and gained a test that means something. |
 
 ## Red flags — stop and correct course
 

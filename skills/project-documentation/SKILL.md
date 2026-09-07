@@ -138,6 +138,14 @@ Use the template at [templates/readme.md](templates/readme.md). Adapt sections b
 Key principles:
 - **Lead with value**: The first thing someone reads should explain what the project does and why they should care. Not the tech stack, not the folder structure.
 - **Working examples**: Every code snippet should be copy-pasteable and actually work.
+- **Mark unverified values outside the command, never inside it.** When you have to write a
+  command before you can confirm a value (a repo URL, a version, a port), the marker goes on
+  its own comment line above the block, or in prose beneath it — never inline in a command
+  token. `git clone <repo-url> ⚠️` is not a command: pasted, it clones into a directory
+  literally named `⚠️`. Write `# ⚠️ replace <repo-url> with the real remote` on the line
+  above, or use an obvious placeholder the shell cannot mistake for an argument. A snippet
+  that has been annotated into breaking is worse than one that says "I need to read
+  `package.json` first" — the reader trusts it and it fails on them.
 - **Prerequisites explicitly stated**: Don't assume Node 20, Python 3.12, or Docker are installed. State versions.
 - **From zero to running**: A new developer should go from `git clone` to a working local instance by following the README, without asking anyone.
 

@@ -17,11 +17,11 @@
     {
       "id": 2,
       "prompt": "My `data-modeling` skill never seems to trigger even when people ask about schema design. How do I fix it?",
-      "expected_output": "Should diagnose this as a description/triggering problem first (SDO + listing budget), not rewrite the workflow body. Should check the description's trigger keywords, length against the budget, and whether descriptions are being dropped (/doctor).",
+      "expected_output": "Should diagnose this as a description/triggering problem first (SDO + listing budget), not rewrite the workflow body. Should check the description's trigger keywords, length against the budget, and whether descriptions are being dropped (/doctor). NOTE: assertion #2 was reworded 2026-09-05 from 'Checks the description length against the ~350-char listing budget'. It demanded a CHECK the harness forbids. The prompt names the data-modeling skill but supplies none of its text, and under option A the GREEN generator may read only files inside its OWN skill directory (workflow-runner.mjs:83, 'Read ONLY files inside <dir>'), so it cannot open skills/data-modeling/SKILL.md to measure that description. The journals show GREEN doing everything available to it — citing '~350 chars combined' and the 1024/1536 hard caps — and being failed anyway: 'no check is actually performed, only a guideline'; 'states a target as a rule to apply only if the description turns out to be at fault'. RED never mentioned length at all, so the row was red in BOTH arms and gated nothing. This is docs/EVALS.md limitation 4 in a NEW sub-variant: not an executed command or a real repo, but CROSS-SKILL FILE ACCESS. Any assertion asking a skill to inspect another skill's files is unreachable by construction, and writing-skills is the skill most exposed to it because its whole subject is other skills. Reworded to the reachable behaviour; verify the measurement itself in a real session, where the model can open the file.",
       "assertions": [
         "Treats it as a description/triggering issue, not a body-content issue",
         "Inspects the trigger keywords and suggests widening them to match user phrasing",
-        "Checks the description length against the ~350-char listing budget",
+        "Names the ~350-char listing budget with its number as a constraint the description must satisfy — measuring it, or telling the user to measure theirs against it",
         "Mentions /doctor / the listing budget as a possible cause of dropped descriptions",
         "Does not immediately rewrite the workflow steps"
       ]

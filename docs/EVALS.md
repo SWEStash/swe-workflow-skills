@@ -117,12 +117,12 @@ Two properties matter:
   the sweep reports the resolved id, and that string goes into the provenance
   fields.
 
-**`k` is per row.** The full sweep was recorded at **k=1** (one sample per case),
-matching the routing precedent; individual cases have since been re-recorded at
-k=3 and supersede their k=1 predecessors, so a row's own `k` is the authority and
-the top-level value only summarises. CI runs `-k 3`, and gating a k=3 run against
-a k=1 row is deliberate: majority-of-3 is strictly less noisy than the recorded
-value, so the asymmetry biases toward *not* firing false regressions.
+**`k` is per row.** The original sweep was recorded at k=1 (one sample per case),
+matching the routing precedent. **As of 2026-09-07 that is history: every row is
+at k>=3** (215 cases at k=3, 19 at k=5) after the Cycle 2 burn-down re-measured all
+173 remaining single-sample cases. A row's own `k` is still the authority and the
+top-level value only summarises. CI runs `-k 3` against a baseline with no k=1 rows,
+so the gate now compares like with like.
 
 Vote in the Workflow arm by passing `{ k, cases }` instead of a bare case array
 (a bare array still means k=1). Each assertion is a majority of `k` independent
@@ -178,24 +178,34 @@ cases drops that skill's other rows.
 
 ### Results (content evals, full catalog)
 
-`claude-opus-5`, all 66 skills, 234 cases, 1315 assertions. RED is the same model
-answering the same prompt with no skill loaded.
+`claude-opus-5`, all 66 skills, 234 cases, 1311 assertions, **every row at k>=3**.
+
+**What RED actually is.** RED answers the same prompt without the skill's *content* —
+it cannot read any `SKILL.md`, `references/` or `templates/`. Both arms do carry the
+session's skill listing (~63KB of every skill's name, description and trigger
+keywords), so RED knows the library exists and what each skill claims; that is a
+constant on both sides and cancels. **So the gain measures what a skill's body and
+references add over that skill merely being installed and listed** — the right
+counterfactual for a name-only library, where the listing is always in context.
+See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill (RED) | **882 / 1315 = 67.1%** |
-| Assertions passed, skill loaded (GREEN) | **1242 / 1315 = 94.4%** |
-| Gain | **+27.4 points** |
-| Cases where GREEN beats RED | **158 / 234** |
-| Cases where GREEN ties RED | **76 / 234** |
+| Assertions passed, no skill body (RED) | **855 / 1311 = 65.2%** |
+| Assertions passed, skill loaded (GREEN) | **1283 / 1311 = 97.9%** |
+| Gain | **+32.6 points** |
+| Cases where GREEN beats RED | **177 / 234** |
+| Cases where GREEN ties RED | **57 / 234** |
 | Cases where GREEN is *below* RED | **0 / 234** |
 
-**The zero is the number to protect.** A skill that scores below the unaided model is
-worse than no skill at all, and the ties are mostly cases where RED already saturates
-(`accessibility-design` 23/25, `performance-optimization` 20/21) — no headroom left to
-show, not a skill doing nothing. Ten individual assertions still score RED-true /
-GREEN-false inside cases the skill wins overall; they are enumerated in the baseline's
-`_note` as authoring leads, and all sit on k=1 rows that have not been re-measured.
+**The zero is the number to protect.** A skill that scores below the model without its
+content is worse than no skill at all. **There are also zero RED-true / GREEN-false
+assertions** anywhere in the library. The 57 ties are mostly cases where RED already
+saturates — no headroom left to show, not a skill doing nothing — and saturation
+concentrates by case kind: `eval:1` 5%, `eval:2` 33%, `eval:3` 28%, pressure 26%.
+Scope-boundary cases saturate because three of their four assertions (recognise the
+request, name the sibling skill, withhold the wrong deliverable) are satisfied by the
+roster alone; only "states the boundary" discriminates.
 
 **The gain does not track reference mass**, which is worth knowing before optimising
 for depth:
@@ -212,9 +222,9 @@ they gained the *most* with nothing to read, so the gain comes from the instruct
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at k=1 except 52 cases at k=3 and 8 at k=5; `k` is per row, and the
-remediation cycle re-measured every case that held an ungated assertion. See
-limitation 6 below for what the remaining k=1 majority means for the gate.
+Recorded at **k>=3 for every row** (215 at k=3, 19 at k=5) as of 2026-09-07; `k` is
+per row. The Cycle 2 burn-down re-measured all 173 remaining single-sample cases, so
+the k=1 caveat that used to sit here no longer applies.
 
 ### Why the gate is regression-vs-baseline, not an absolute threshold
 
@@ -317,16 +327,59 @@ flaky). Several findings from running this make the choice necessary:
    `project-review/SKILL.md:95-101` is the clause shape to copy: it ends "and
    mention it in the summary", which keeps Open-questions content inside the
    returned artifact and therefore inside the harness's reach.
-6. **Most of the baseline rests on single samples, and the gate compares against
-   k=3.** k is per row. As of 2026-08-28, 173 of 234 cases are k=1, and **917 of
-   the 1288 GREEN-true assertions sit on those rows**, while CI runs
-   `run.py -k 3` and fires on `was_green && !now_green`. Phase 3 of the
-   remediation cycle measured that half of k=1 *reds* evaporate at k=3; the same
-   sampling moves marginal k=1 *greens* to red, which reads in CI as a regression
-   that is not one. Exposure is bounded — the gate runs `--changed`, so only a
-   PR's own skills are re-measured — but when a gate failure names a case whose
-   baseline row is k=1, re-measure before believing it. The durable fix is to
-   re-run a skill's cases at k=3 and merge the rows when you touch it.
+6. **~~Most of the baseline rests on single samples~~ — RESOLVED 2026-09-07.**
+   This limitation described 173 of 234 cases sitting at k=1 while CI ran
+   `run.py -k 3`, so sampling noise on a marginal row read as a regression. The
+   Cycle 2 burn-down re-measured every one of them: **the baseline is now k>=3
+   throughout** (215 at k=3, 19 at k=5) and the gate compares like with like.
+   Kept as a numbered entry so the reasoning survives — the finding that half of
+   k=1 *reds* evaporate at k=3 still holds, and **any new row must be recorded at
+   k>=3**. A bare case array in the Workflow runner still means k=1; pass
+   `{ k, cases }`.
+7. **Both arms see every skill's description, so the contrast is body-vs-description.**
+   The harness injects the session's skill listing (~63KB of names, descriptions
+   and trigger keywords) into **both** generators — verified: 29/29 GREEN and
+   28/28 RED agents in a sampled run carry it. RED is therefore not a model that
+   has never heard of this library; it knows every skill exists and what each one
+   claims, and can route by roster without reading any skill content.
+   **This is a constant, not a confound** — it is present on both sides and
+   cancels. What the gain measures is exactly the deployment-relevant question:
+   **does a skill's body and references add value over that skill merely being
+   installed and listed?** For a name-only library, where the listing is always
+   in context, that is the right counterfactual, and the figure is neither
+   inflated nor a lower bound.
+   The consequence is about **assertion design**, not about the arms: an
+   assertion satisfiable from a description alone cannot isolate the body, because
+   the description is on both sides by construction. That is why "refers to skill
+   X" assertions discriminate weakly — RED passes 6 of 15 of them (GREEN 15/15,
+   its edge coming from being told to follow the skill rather than from content
+   RED lacks) — and it is the mechanism behind scope-boundary saturation, where
+   three of four assertions per case are description-satisfiable and only "states
+   the boundary" tests the body.
+8. **RED occasionally loads the skill under test, and nothing prevents it.** The
+   treatment in this A/B is *the skill being loaded*, so the control must load
+   none. GREEN loads by **reading the file** (`greenGen`: "First read that file"),
+   which is why GREEN legitimately shows `Read`/`cat` against its own directory;
+   GREEN never invokes the `Skill` tool. RED is only *told* "Do NOT use any tools"
+   — `workflow-runner.mjs:151` spawns it as the default workflow subagent with **no
+   tool restriction**, and `agent()` has no tool-restriction option.
+   Measured across every recorded run: **16 of 1571 RED generators (1.0%) loaded a
+   skill**, all via the `Skill` tool and all succeeding — the transcript shows the
+   full `SKILL.md` body arriving. **15 loaded the skill under test; 1 loaded a
+   sibling.** No RED agent ever found a `SKILL.md` by reading the filesystem, which
+   is unsurprising: it has no knowledge of the project layout.
+   **The contamination is self-limiting**, which is why the invariants hold. 10 of
+   13 affected case-runs leaked **one round of three**, and majority-of-3 cannot be
+   flipped by a single round unless the other two split — so the k>=3 baseline is
+   largely immune. `context: fork` skills inject nothing at all (they launch a
+   background agent), and a leaked round still is not GREEN: it gets `SKILL.md`
+   only, mid-conversation, from the globally installed copy rather than the version
+   under test.
+   **The fix is not to ban all skills in RED — it is to deny the skill under
+   test.** Allowing RED to route to *siblings* is signal worth keeping: if RED
+   solves the task via another skill, this one may be redundant. That case already
+   exists — in `cicd-pipeline eval:3`, RED invoked `release-management`, which on a
+   scope-boundary case is arguably the correct answer.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what
@@ -381,6 +434,21 @@ skill's 3 evals yield 2 new routing cases.
   named in its expected_output} ∪ {NONE}`.
 - A small curated **trivial/conversational** set (`evals/routing-trivial.json`,
   the only hand-authored cases) → `accept = {NONE}`, guarding against over-routing.
+
+**Editing an `evals.json` therefore edits this dataset**, which is easy to miss because the
+fields involved are not the ones the content harness reads. An `eval:1` or `eval:3` prompt
+changes a case; an `eval:3` **assertion or `expected_output`** changes a boundary case's
+*accept set*, because siblings are found by scanning that text for skill names. Run
+`--build-dataset` and commit, or the `routing` CI job fails on `--check-dataset`.
+
+**Read the rebuild diff rather than committing it blind.** The scan is a plain substring
+match, so *any* mention of a skill name lands in the accept set — including one you wrote to
+explain that a name is wrong. Retargeting `deployment-repo eval:3` off a stale skill once
+produced an accept set holding **both** the old and new owner, because the `expected_output`
+narrated which was stale; the note describing the bug re-introduced it, loosening the
+boundary test to accept a route to a skill with no relevant content. Keep
+`expected_output` as prose about what a good answer looks like — history belongs in the
+commit message, not the fixture.
 
 ### Accept-set grading (why, not single-expected)
 

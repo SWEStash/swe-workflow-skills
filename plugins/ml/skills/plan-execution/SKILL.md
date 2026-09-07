@@ -60,6 +60,12 @@ observed result. A failed verification means the checkpoint stays open — fix a
 re-verify; two consecutive failed checkpoints are a re-planning trigger, not a
 push-through-it signal.
 
+**Report each checkpoint in exactly one of two states: done with its evidence, or
+explicitly not done. There is no middle state** — no "mostly done", "basically
+working", "should work", or "done pending tests". Say this rule when you declare
+the checkpoints, so the reader knows what a status report from you will and will
+not contain. A half-state is how a false "done" enters the record.
+
 **The checkpoint commit is part of this step, and it is checked.** A commit is the
 first irreversible thing a plan produces, so it gets the same treatment as the
 checkpoint claim: **invoke `verification-before-completion`** for the publish gate

@@ -4,14 +4,14 @@
     {
       "id": 1,
       "prompt": "We just had a production outage — our payment service was down for 45 minutes because a database migration locked a table. 200 users couldn't complete checkouts. Help me write the post-mortem.",
-      "expected_output": "Should produce a blameless incident post-mortem with timeline, root cause analysis (5 Whys), and prevention action items.",
+      "expected_output": "Should produce a blameless incident post-mortem with timeline, root cause analysis (5 Whys), and prevention action items. NOTE: assertion #5 was reworded 2026-09-07. It demanded an OWNER the harness cannot supply — the prompt gives no team roster, so no reply can name a real person. The judges named the mechanism and credited the behaviour while failing the letter: \"the reply deliberately declines to assign anyone ('action items with real owners can't be invented for them')\"; \"I've deliberately not invented owners\"; \"I can't assign your people\"; \"The refusal is well reasoned given no team session occurred, but the assertion as written...\". The skill is teaching exactly the right thing (SKILL.md:64 — one person, not 'the team') and the model is right to refuse to invent names. docs/EVALS.md limitation 4. Reworded to the reachable behaviour: carry the Owner field and state the naming rule; leaving the name to be filled at the retro is correct, inventing one is not. Verify real assignment in a live session. SECOND NOTE (2026-09-07): the first rewording of #5 overcorrected — it required the Owner field, a concrete deadline, AND an explicit statement that the owner must be one named person, and the judges flagged the conjunction directly (\"Only partially met, and the assertion is conjunctive\"). Rounds that correctly produced Owner [Name] / Deadline [Date] placeholders were failed for omitting the meta-statement. Reduced to the two structural conjuncts the eval:2 version already proves reachable. Note also that #1 (timeline) fails for a different reason — 8 of 10 rounds ask the user for timestamps instead of drafting the timeline from the facts given, while 2 rounds produce a full UTC table; that is Cycle 3 Finding 11 (posture), not unreachability, and is deliberately not addressed here.",
       "assertions": [
         "Uses blameless language throughout (systems, not people)",
         "Reconstructs a timeline with key events",
         "Applies 5 Whys to get past 'migration locked table' to systemic cause",
         "Identifies root cause as missing migration safety process, not the specific migration",
         "Action items include prevention, detection, AND process improvements",
-        "Each action item has a specific owner and deadline",
+        "Each action item carries an Owner field and a Deadline field, with unfilled placeholders (e.g. [Name] / [Date]) accepted — inventing a specific person is not",
         "Includes 'what went well' section (not just what went wrong)",
         "Quantifies impact (200 users, 45 minutes, potential revenue loss)"
       ]
@@ -19,14 +19,14 @@
     {
       "id": 2,
       "prompt": "Run a sprint retrospective for our team. This sprint we completed 8 of 10 planned stories, had one carry-over from last sprint, and our CI pipeline was broken for 2 days due to a flaky test. Team morale seems a bit low.",
-      "expected_output": "Should facilitate a structured retro using Start/Stop/Continue or similar format, address the specific issues (carry-over, CI, morale), and produce 2-3 actionable items.",
+      "expected_output": "Should facilitate a structured retro using Start/Stop/Continue or similar format, address the specific issues (carry-over, CI, morale), and produce 2-3 actionable items. NOTE: assertion #5 was reworded 2026-09-07. It demanded an OWNER the harness cannot supply — the prompt gives no team roster, so no reply can name a real person. The judges named the mechanism and credited the behaviour while failing the letter: \"the reply deliberately declines to assign anyone ('action items with real owners can't be invented for them')\"; \"I've deliberately not invented owners\"; \"I can't assign your people\"; \"The refusal is well reasoned given no team session occurred, but the assertion as written...\". The skill is teaching exactly the right thing (SKILL.md:64 — one person, not 'the team') and the model is right to refuse to invent names. docs/EVALS.md limitation 4. Reworded to the reachable behaviour: carry the Owner field and state the naming rule; leaving the name to be filled at the retro is correct, inventing one is not. Verify real assignment in a live session.",
       "assertions": [
         "Uses a structured format (Start/Stop/Continue, 4Ls, or similar)",
         "Addresses the CI breakage specifically (not just generically)",
         "Addresses carry-over pattern (is this recurring?)",
         "Acknowledges morale concern constructively",
         "Produces exactly 2-3 action items (not 10)",
-        "Each action item has an owner",
+        "Each action item carries an Owner field, and the reply states that the owner must be one named person rather than 'the team' — leaving the name to be filled in at the retro is acceptable, inventing a person is not",
         "Includes review of previous retro action items"
       ]
     },
