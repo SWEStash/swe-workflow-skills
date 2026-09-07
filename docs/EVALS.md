@@ -146,7 +146,7 @@ run has to be merged in. Do it with the helper, not by hand:
 
 ```bash
 node evals/merge-baseline.mjs <results.json> --model claude-opus-5 \
-     --note "2026-08-27, branch main / parent 50c44b6, run wf_…: <what it covered>, N cases."
+     --note "2026-08-27, branch main / parent 50c44b6: <what it covered>, N cases."
 ```
 
 `<results.json>` is the `{ results, errored, total, baseline }` object the runner
@@ -169,6 +169,12 @@ row whose **control arm loaded the skill under test** (limitation 8) — the row
 not a control, so it must not be recorded as one. Cross-skill loads and
 `context: fork` calls are reported and allowed through. `--allow-contaminated`
 records them anyway, the way `--allow-degraded` does for short rows.
+
+`--note` is checked before anything else: it **refuses** a planning label
+(`Cycle 2`, `Phase 3`, `CP1.4`) because the note ships inside `baseline.json`,
+whose `_note` is a single ~29,000-character line — a private label there renders
+as one unreadable diff line and reaches readers who cannot resolve it. A bare run
+id only warns; it is weak provenance, not a label pretending to be a reference.
 
 It refuses to write when a row looks wrong rather than recording it: `--model` still
 set to the `opus` shorthand or carrying a variant suffix like `claude-opus-5[1m]`

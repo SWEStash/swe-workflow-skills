@@ -86,6 +86,27 @@ if (/[[\]]/.test(opts.model)) {
   )
 }
 
+// The note is appended verbatim into a tracked file whose _note is a single
+// ~29,000-character line, so a private label entering here renders as one
+// unreadable +/- line pair in review and ships. Two releases shipped labels this
+// way before anyone noticed. Guard at the ingress rather than hoping a reviewer
+// reads the line.
+const PRIVATE_LABEL = /\b(Cycle|Phase|Batch|CP)\s*\d/i
+const RUN_ID = /wf_[a-z0-9-]{3,}/
+if (opts.note && PRIVATE_LABEL.test(opts.note)) {
+  die(
+    `--note contains "${opts.note.match(PRIVATE_LABEL)[0]}" — a planning label no reader of ` +
+      `this repo can resolve. The note ships in evals/baseline.json. Write what the run ` +
+      `covered instead (e.g. "re-measured the rows where the control arm loaded the skill").`
+  )
+}
+if (opts.note && RUN_ID.test(opts.note)) {
+  console.warn(
+    `warning: --note cites ${opts.note.match(RUN_ID)[0]}, which is resolvable only inside the ` +
+      `session that ran it. Kept as provenance, but it explains nothing on its own.`
+  )
+}
+
 // ---------------------------------------------------------------- load input
 
 const readJson = (p, what) => {
