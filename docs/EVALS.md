@@ -119,8 +119,8 @@ Two properties matter:
 
 **`k` is per row.** The original sweep was recorded at k=1 (one sample per case),
 matching the routing precedent. **As of 2026-09-07 that is history: every row is
-at k>=3** (215 cases at k=3, 19 at k=5) after the Cycle 2 burn-down re-measured all
-173 remaining single-sample cases. A row's own `k` is still the authority and the
+at k>=3** (215 cases at k=3, 19 at k=5), every remaining single-sample case having
+been re-measured. A row's own `k` is still the authority and the
 top-level value only summarises. CI runs `-k 3` against a baseline with no k=1 rows,
 so the gate now compares like with like.
 
@@ -223,8 +223,8 @@ itself. Note the standing confound — GREEN gained tool access alongside refere
 access — which is exactly why the zero-reference band matters.
 
 Recorded at **k>=3 for every row** (215 at k=3, 19 at k=5) as of 2026-09-07; `k` is
-per row. The Cycle 2 burn-down re-measured all 173 remaining single-sample cases, so
-the k=1 caveat that used to sit here no longer applies.
+per row. All 173 remaining single-sample cases have since been re-measured, so the
+k=1 caveat that used to sit here no longer applies.
 
 ### Why the gate is regression-vs-baseline, not an absolute threshold
 
@@ -330,7 +330,7 @@ flaky). Several findings from running this make the choice necessary:
 6. **~~Most of the baseline rests on single samples~~ — RESOLVED 2026-09-07.**
    This limitation described 173 of 234 cases sitting at k=1 while CI ran
    `run.py -k 3`, so sampling noise on a marginal row read as a regression. The
-   Cycle 2 burn-down re-measured every one of them: **the baseline is now k>=3
+   remediation cycle re-measured every one of them: **the baseline is now k>=3
    throughout** (215 at k=3, 19 at k=5) and the gate compares like with like.
    Kept as a numbered entry so the reasoning survives — the finding that half of
    k=1 *reds* evaporate at k=3 still holds, and **any new row must be recorded at
@@ -363,18 +363,31 @@ flaky). Several findings from running this make the choice necessary:
    GREEN never invokes the `Skill` tool. RED is only *told* "Do NOT use any tools"
    — `workflow-runner.mjs:151` spawns it as the default workflow subagent with **no
    tool restriction**, and `agent()` has no tool-restriction option.
-   Measured across every recorded run: **16 of 1571 RED generators (1.0%) loaded a
-   skill**, all via the `Skill` tool and all succeeding — the transcript shows the
-   full `SKILL.md` body arriving. **15 loaded the skill under test; 1 loaded a
-   sibling.** No RED agent ever found a `SKILL.md` by reading the filesystem, which
-   is unsurprising: it has no knowledge of the project layout.
+   Measured across every recorded run: **16 `Skill` calls out of 1571 RED
+   generators (1.0%)**, every one succeeding. Two of them do not contaminate the
+   A/B, and they are different rounds, so **true contamination is 14**:
+   - **15 of 16 loaded the skill under test**; the exception invoked a *sibling*
+     (`cicd-pipeline eval:3` → `release-management`), which is redundancy signal
+     rather than contamination — on a scope-boundary case that is arguably the
+     right answer.
+   - **15 of 16 actually injected a body** (the transcript shows
+     `Base directory for this skill: …` and the full `SKILL.md`); the exception was
+     a `context: fork` skill, which launches a background agent and returns only
+     "launched (forked execution, running in the background)". That is why
+     `strategic-review eval:1` records RED 0/7 *despite* a successful call.
+
+   No RED agent ever found a `SKILL.md` by reading the filesystem, which is
+   unsurprising: it has no knowledge of the project layout.
    **The contamination is self-limiting**, which is why the invariants hold. 10 of
    13 affected case-runs leaked **one round of three**, and majority-of-3 cannot be
    flipped by a single round unless the other two split — so the k>=3 baseline is
-   largely immune. `context: fork` skills inject nothing at all (they launch a
-   background agent), and a leaked round still is not GREEN: it gets `SKILL.md`
-   only, mid-conversation, from the globally installed copy rather than the version
-   under test.
+   largely immune. A leaked round is also not GREEN: it gets `SKILL.md` only,
+   mid-conversation, from the globally installed copy rather than the version under
+   test.
+   The fork behaviour also **constrains the fix**: the four fork skills
+   (`strategic-review`, `project-review`, `security-audit`,
+   `technical-debt-review`) would silently load *nothing* through a Skill-tool
+   path, so GREEN must keep loading by file read.
    **The fix is not to ban all skills in RED — it is to deny the skill under
    test.** Allowing RED to route to *siblings* is signal worth keeping: if RED
    solves the task via another skill, this one may be redundant. That case already
