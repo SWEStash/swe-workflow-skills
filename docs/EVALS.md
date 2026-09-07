@@ -356,20 +356,25 @@ flaky). Several findings from running this make the choice necessary:
    RED lacks) — and it is the mechanism behind scope-boundary saturation, where
    three of four assertions per case are description-satisfiable and only "states
    the boundary" tests the body.
-8. **RED occasionally loads a skill anyway — a small, measured leak in the control
-   arm.** RED is told "Do NOT use any tools", and it complies almost always: across
-   130 RED generator agents in a four-run sample, **two invoked the `Skill` tool**
-   (~1.5%), and in both cases they loaded **the skill under test** — affecting
-   `threat-modeling eval:2` and `metrics-and-okrs eval:2`. Those rounds are
-   effectively GREEN, so RED is inflated and the measured lift is **understated**
-   on the affected rows. The direction is conservative — it makes a skill look
-   *less* useful, never more — but it is real, and on a row whose margin is one
-   assertion it could hide a genuine gain. GREEN, by contrast, is clean: 0 of 132
-   sampled GREEN agents read any file outside their own skill directory, so
-   option A holds.
-   The durable fix is to deny RED the `Skill` tool at spawn rather than instruct
-   it not to use one; until then, when a RED score looks surprisingly high on a
-   narrow-margin row, check the transcript for a `Skill` call.
+8. **RED occasionally loads a skill, and nothing prevents it.** The treatment in
+   this A/B is *the skill being loaded*, so the control arm must load none. GREEN
+   loads its skill by **reading the file** (`greenGen` says "First read that
+   file"), which is why GREEN legitimately shows `Read`/`cat` traffic against its
+   own directory; GREEN never invokes the `Skill` tool. RED is only *told* "Do NOT
+   use any tools" — `workflow-runner.mjs:151` spawns it as the default workflow
+   subagent with **no tool restriction**, and `agent()` has no tool-restriction
+   option, so the only structural lever is a custom `agentType`.
+   Measured across every recorded run: **16 of 1571 RED generators (1.0%) loaded a
+   skill**, all via the `Skill` tool. Note that *tool use is not the same as skill
+   loading* — one further RED agent ran `cat package.json`, a protocol violation
+   that acquired no skill content.
+   The leak **clusters where a prompt strongly evokes the skill's own triggers**
+   (`tdd-workflow` alone accounts for 6 of 16), which concentrates it on
+   happy-path cases. A contaminated RED round is effectively GREEN, so RED is
+   inflated and lift **understated** — conservative, never flattering — but on a
+   one-assertion margin it can hide a real gain.
+   Until RED is spawned with the `Skill` tool denied, scan a run's RED transcripts
+   for `Skill` calls and for reads of any `skills/**/SKILL.md` before merging it.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what
