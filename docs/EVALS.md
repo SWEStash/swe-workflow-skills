@@ -356,25 +356,30 @@ flaky). Several findings from running this make the choice necessary:
    RED lacks) — and it is the mechanism behind scope-boundary saturation, where
    three of four assertions per case are description-satisfiable and only "states
    the boundary" tests the body.
-8. **RED occasionally loads a skill, and nothing prevents it.** The treatment in
-   this A/B is *the skill being loaded*, so the control arm must load none. GREEN
-   loads its skill by **reading the file** (`greenGen` says "First read that
-   file"), which is why GREEN legitimately shows `Read`/`cat` traffic against its
-   own directory; GREEN never invokes the `Skill` tool. RED is only *told* "Do NOT
-   use any tools" — `workflow-runner.mjs:151` spawns it as the default workflow
-   subagent with **no tool restriction**, and `agent()` has no tool-restriction
-   option, so the only structural lever is a custom `agentType`.
+8. **RED occasionally loads the skill under test, and nothing prevents it.** The
+   treatment in this A/B is *the skill being loaded*, so the control must load
+   none. GREEN loads by **reading the file** (`greenGen`: "First read that file"),
+   which is why GREEN legitimately shows `Read`/`cat` against its own directory;
+   GREEN never invokes the `Skill` tool. RED is only *told* "Do NOT use any tools"
+   — `workflow-runner.mjs:151` spawns it as the default workflow subagent with **no
+   tool restriction**, and `agent()` has no tool-restriction option.
    Measured across every recorded run: **16 of 1571 RED generators (1.0%) loaded a
-   skill**, all via the `Skill` tool. Note that *tool use is not the same as skill
-   loading* — one further RED agent ran `cat package.json`, a protocol violation
-   that acquired no skill content.
-   The leak **clusters where a prompt strongly evokes the skill's own triggers**
-   (`tdd-workflow` alone accounts for 6 of 16), which concentrates it on
-   happy-path cases. A contaminated RED round is effectively GREEN, so RED is
-   inflated and lift **understated** — conservative, never flattering — but on a
-   one-assertion margin it can hide a real gain.
-   Until RED is spawned with the `Skill` tool denied, scan a run's RED transcripts
-   for `Skill` calls and for reads of any `skills/**/SKILL.md` before merging it.
+   skill**, all via the `Skill` tool and all succeeding — the transcript shows the
+   full `SKILL.md` body arriving. **15 loaded the skill under test; 1 loaded a
+   sibling.** No RED agent ever found a `SKILL.md` by reading the filesystem, which
+   is unsurprising: it has no knowledge of the project layout.
+   **The contamination is self-limiting**, which is why the invariants hold. 10 of
+   13 affected case-runs leaked **one round of three**, and majority-of-3 cannot be
+   flipped by a single round unless the other two split — so the k>=3 baseline is
+   largely immune. `context: fork` skills inject nothing at all (they launch a
+   background agent), and a leaked round still is not GREEN: it gets `SKILL.md`
+   only, mid-conversation, from the globally installed copy rather than the version
+   under test.
+   **The fix is not to ban all skills in RED — it is to deny the skill under
+   test.** Allowing RED to route to *siblings* is signal worth keeping: if RED
+   solves the task via another skill, this one may be redundant. That case already
+   exists — in `cicd-pipeline eval:3`, RED invoked `release-management`, which on a
+   scope-boundary case is arguably the correct answer.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what
