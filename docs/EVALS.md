@@ -119,8 +119,8 @@ Two properties matter:
 
 **`k` is per row.** The original sweep was recorded at k=1 (one sample per case),
 matching the routing precedent. **As of 2026-09-07 that is history: every row is
-at k>=3** (215 cases at k=3, 19 at k=5) after the Cycle 2 burn-down re-measured all
-173 remaining single-sample cases. A row's own `k` is still the authority and the
+at k>=3** (215 cases at k=3, 19 at k=5), every remaining single-sample case having
+been re-measured. A row's own `k` is still the authority and the
 top-level value only summarises. CI runs `-k 3` against a baseline with no k=1 rows,
 so the gate now compares like with like.
 
@@ -223,8 +223,8 @@ itself. Note the standing confound — GREEN gained tool access alongside refere
 access — which is exactly why the zero-reference band matters.
 
 Recorded at **k>=3 for every row** (215 at k=3, 19 at k=5) as of 2026-09-07; `k` is
-per row. The Cycle 2 burn-down re-measured all 173 remaining single-sample cases, so
-the k=1 caveat that used to sit here no longer applies.
+per row. All 173 remaining single-sample cases have since been re-measured, so the
+k=1 caveat that used to sit here no longer applies.
 
 ### Why the gate is regression-vs-baseline, not an absolute threshold
 
@@ -330,7 +330,7 @@ flaky). Several findings from running this make the choice necessary:
 6. **~~Most of the baseline rests on single samples~~ — RESOLVED 2026-09-07.**
    This limitation described 173 of 234 cases sitting at k=1 while CI ran
    `run.py -k 3`, so sampling noise on a marginal row read as a regression. The
-   Cycle 2 burn-down re-measured every one of them: **the baseline is now k>=3
+   remediation cycle re-measured every one of them: **the baseline is now k>=3
    throughout** (215 at k=3, 19 at k=5) and the gate compares like with like.
    Kept as a numbered entry so the reasoning survives — the finding that half of
    k=1 *reds* evaporate at k=3 still holds, and **any new row must be recorded at
