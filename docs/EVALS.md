@@ -424,6 +424,17 @@ flaky). Several findings from running this make the choice necessary:
    - **Merge gate.** `merge-baseline.mjs --transcripts <dir>` refuses any row whose
      control arm loaded the skill under test.
 
+   **Field-tested.** The five rows whose control arm had loaded the skill under
+   test were re-measured under the prohibition: 15/15 RED rounds loaded nothing,
+   and all five rows kept their GREEN vectors exactly, giving up no gate coverage.
+   RED moved by one assertion net — but it moved *up* on two assertions, which
+   de-contamination cannot cause, so that net sits inside k=3 sampling jitter.
+   Read the re-measure as confirmation that the rows are clean, **not** as a
+   measurement of what the leak was costing. The one majority-contaminated row
+   (two of three rounds) came back only one assertion lower, which is further
+   evidence for limitation 7: RED gets most of such a case from the prompt and the
+   skill listing, not from the body.
+
    **`evals/run.py` needs no equivalent and deliberately has none:** its RED arm
    calls `messages.create` with no `tools` parameter at all (contrast the GREEN
    arm's `tool_runner`), so it is structurally incapable of loading a skill.
