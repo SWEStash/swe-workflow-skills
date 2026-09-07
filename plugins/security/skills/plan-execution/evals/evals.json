@@ -4,13 +4,13 @@
     {
       "id": 1,
       "prompt": "Here's the approved implementation plan for the notifications feature — five phases: (1) DB schema for notification preferences, (2) event ingestion endpoint, (3) delivery worker with retry, (4) user preference UI, (5) docs + rollout flag. It's been reviewed and signed off. Start executing it.",
-      "expected_output": "Reads the whole plan before starting, groups the phases into checkpoints and declares a concrete verification per checkpoint BEFORE executing (e.g. migration applies + rollback works, endpoint responds with tests passing), executes batch by batch, runs the declared verification fresh and records the evidence before marking each checkpoint done, and keeps a drift log for any deviation",
+      "expected_output": "Reads the whole plan before starting, groups the phases into checkpoints and declares a concrete verification per checkpoint BEFORE executing (e.g. migration applies + rollback works, endpoint responds with tests passing), executes batch by batch, runs the declared verification fresh and records the evidence before marking each checkpoint done, and keeps a drift log for any deviation NOTE: assertion #4 was reworded 2026-09-04 from 'Reports progress per checkpoint as verified-done with evidence or explicitly not done — no vague 'mostly done' states'. It was false in BOTH arms at k=3 (dead signal per docs/EVALS.md) and unreachable by construction: it demands a REPORT of per-checkpoint progress, but the harness gives no repo and forbids running commands, and assertion #1 requires checkpoints to be declared BEFORE executing — so a reply that satisfies #1 has necessarily executed nothing and has no checkpoint status to report. The two assertions were in direct tension in a single-reply harness. Judges split 1 pass / 2 fail on whether a forward commitment counts, one passing it for 'pre-emptively ruling out the vague state'. Reworded to the reporting RULE, which is what the skill owns and what a tool-less reply can actually show — the same accomplished-act-to-commitment fix applied to browser-verification eval:1 this cycle. Verify the reporting behaviour itself in a real session or the layer-3 harness.",
       "assertions": [
         "Reads or reviews the entire plan before executing the first task",
         "Defines checkpoints with a concrete, named verification (command or observation) for each, declared before executing that batch",
         "Marks a checkpoint done only after running its verification fresh and recording the evidence (command and observed result)",
         "Tracks deviations from the plan in a drift log or equivalent explicit record",
-        "Reports progress per checkpoint as verified-done with evidence or explicitly not done — no vague 'mostly done' states"
+        "States the per-checkpoint reporting rule it will follow — each checkpoint reported as verified-done with its recorded evidence, or explicitly not done — and rules out vague 'mostly done' states"
       ]
     },
     {

@@ -94,10 +94,19 @@ Integrate the above into a decision instrument:
 **Write the full review to a file** — default a gitignored path (e.g.
 `.local/strategic-review-<date>.md`) — and state its path in your final summary.
 This skill runs in a forked context: only the summary returns, everything unwritten
-is lost. The summary leads with the thesis verdict and the top weak point.
-Anything that needs the user's judgment (which strategic fork to take, an
+is lost. The summary leads with the thesis verdict and the top weak point, **and carries
+the strategic forks and the recommended path inline — state them in the reply itself, not
+as a promise of what the written review will contain.** This is not a gate on writing the
+file: write it *and* put the forks and the recommendation in the summary. A reply that
+defers them to the file has withheld the deliverable — the file may go unread, and in a
+forked context the summary is what the user actually receives.
+Anything that needs the user's judgment (their risk appetite or time horizon, an
 unverifiable market assumption, missing vision docs) goes in an **Open questions**
-section of the report — never silently decided.
+section of the report and is mentioned in the summary — never silently decided.
+**Recommending a fork is not one of these.** Step 5 requires you to name a
+recommended path and why; the user decides whether to take it. Filing the
+recommendation itself under Open questions is the one thing this section must not
+do — it withholds the deliverable the review exists to produce.
 
 For the rendered deliverable (interactive HTML, scorecards, a forks comparison
 panel), hand off to `artifact-design`.
