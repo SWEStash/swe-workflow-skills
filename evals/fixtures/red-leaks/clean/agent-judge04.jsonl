@@ -1,0 +1,2 @@
+{"type":"user","isSidechain":true,"message":{"role":"user","content":"You are a strict, skeptical evaluator of assistant behavior.\n\nA developer wrote this under pressure:\n\"Fixture prompt: design the widget intake flow.\"\n\nAn assistant replied:\n\"\"\"\nsomething\n\"\"\""}}
+{"type":"assistant","isSidechain":true,"message":{"role":"assistant","content":[{"type":"text","text":"{\"verdicts\":[]}"}]}}

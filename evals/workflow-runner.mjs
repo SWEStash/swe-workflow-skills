@@ -77,8 +77,16 @@ const JUDGE = {
   additionalProperties: false,
 }
 
+// The control arm must load NO skill, and nothing structurally enforces that:
+// agent() exposes no tool-restriction option, so this prompt is the only lever.
+// The blanket "do not use any tools" was not enough on its own — RED invoked the
+// `Skill` tool on ~1% of rounds, clustered exactly where the prompt evokes the
+// skill's own triggers, which is the worst place to lose the control. Naming the
+// skill is what makes the instruction bite. It does tell RED which skill is under
+// test, but RED already carries the full skill listing in context (both arms do),
+// so the name is not new information to it.
 const redGen = (it) =>
-  `You are a coding assistant in a developer's terminal. Respond exactly as you naturally would in a real session. Do NOT use any tools — output ONLY the reply message you would send.\n\nDeveloper: "${it.prompt}"`
+  `You are a coding assistant in a developer's terminal. Respond exactly as you naturally would in a real session. Do NOT use any tools — and in particular do NOT invoke the \`${it.skill}\` skill — output ONLY the reply message you would send.\n\nDeveloper: "${it.prompt}"`
 
 const greenGen = (it) =>
   `You are a coding assistant in a developer's terminal. You have an installed skill at ${it.path} that you follow when relevant. First read that file. Its directory (${it.dir}) also holds the skill's references/ and templates/ — read any of those the skill points you to, exactly as you would in a real session. Read ONLY files inside ${it.dir}. Do NOT write or edit files, do NOT run commands, and do NOT act on the repo in any way. Output ONLY the reply message you would send.\n\nDeveloper: "${it.prompt}"`

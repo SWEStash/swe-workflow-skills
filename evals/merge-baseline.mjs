@@ -3,6 +3,9 @@
 //
 //   node evals/merge-baseline.mjs <results.json> --model <resolved-id> [options]
 //
+// Options include --transcripts <dir>, which scans the run's transcripts and
+// refuses any row whose control arm loaded the skill under test.
+//
 // <results.json> is the { results, errored, total, baseline } object returned by
 // evals/workflow-runner.mjs (the Workflow arm). Rows are read from its
 // `baseline.skills`, falling back to `results`.
@@ -26,6 +29,7 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
+import { scanRun, loadCases } from './check-red-leaks.mjs'
 
 const HARNESS_SHORTHANDS = new Set(['opus', 'sonnet', 'haiku', 'fable'])
 const NON_ASCII = new RegExp('[\\u007f-\\uffff]', 'g')
@@ -51,6 +55,8 @@ for (let i = 0; i < argv.length; i++) {
   else if (a === '--skills-dir') opts.skillsDir = next()
   else if (a === '--dry-run') opts.dryRun = true
   else if (a === '--allow-degraded') opts.allowDegraded = true
+  else if (a === '--transcripts') opts.transcripts = next()
+  else if (a === '--allow-contaminated') opts.allowContaminated = true
   else if (a === '-h' || a === '--help') {
     console.log(fs.readFileSync(new URL(import.meta.url), 'utf8').split('\n').slice(1, 27).join('\n'))
     process.exit(0)
@@ -77,6 +83,27 @@ if (/[[\]]/.test(opts.model)) {
     `--model "${opts.model}" carries a variant suffix. Record the base id ` +
       `(e.g. claude-opus-5, not claude-opus-5[1m]) — same model, and run.py compares ` +
       `the string exactly, so the suffix would make these rows skip rather than gate.`
+  )
+}
+
+// The note is appended verbatim into a tracked file whose _note is a single
+// ~29,000-character line, so a private label entering here renders as one
+// unreadable +/- line pair in review and ships. Two releases shipped labels this
+// way before anyone noticed. Guard at the ingress rather than hoping a reviewer
+// reads the line.
+const PRIVATE_LABEL = /\b(Cycle|Phase|Batch|CP)\s*\d/i
+const RUN_ID = /wf_[a-z0-9-]{3,}/
+if (opts.note && PRIVATE_LABEL.test(opts.note)) {
+  die(
+    `--note contains "${opts.note.match(PRIVATE_LABEL)[0]}" — a planning label no reader of ` +
+      `this repo can resolve. The note ships in evals/baseline.json. Write what the run ` +
+      `covered instead (e.g. "re-measured the rows where the control arm loaded the skill").`
+  )
+}
+if (opts.note && RUN_ID.test(opts.note)) {
+  console.warn(
+    `warning: --note cites ${opts.note.match(RUN_ID)[0]}, which is resolvable only inside the ` +
+      `session that ran it. Kept as provenance, but it explains nothing on its own.`
   )
 }
 
@@ -197,6 +224,32 @@ if (degraded.length && !opts.allowDegraded) {
   for (const d of degraded) console.error(`  ${d.skill} ${d.key} (k=${d.row.k})`)
   console.error('Resume the run (resumeFromRunId) to fill them in, or pass --allow-degraded to accept them.')
   process.exit(1)
+}
+
+// The control arm is supposed to load no skill, and nothing structurally enforces
+// it — the prompt is the only lever. A row whose RED rounds loaded the skill under
+// test is not a control and must not be recorded as one. Cross-skill loads are
+// reported and allowed through: a bare model that solves the task by routing to a
+// sibling is evidence about redundancy, not contamination.
+if (opts.transcripts) {
+  const scan = scanRun(opts.transcripts, { cases: loadCases(opts.skillsDir) })
+  const dirty = new Set(scan.contaminated.map((c) => c.case).filter(Boolean))
+  const hit = plan.filter((p) => dirty.has(`${p.skill} ${p.key}`))
+  console.log(
+    `leak scan (${opts.transcripts}): ${scan.redGens} RED / ${scan.greenGens} GREEN generators, ` +
+      `${scan.contaminated.length} same-skill load(s), ${scan.crossSkill.length} cross-skill, ` +
+      `${scan.forked.length} fork call(s), ${scan.unattributed.length} unattributed`
+  )
+  for (const c of scan.crossSkill) console.log(`  cross-skill (redundancy signal): ${c.skill} loaded on ${c.case}`)
+  if (scan.unattributed.length)
+    console.warn(`warning: ${scan.unattributed.length} load(s) match no current case prompt — prompts changed since the run.`)
+  if (hit.length && !opts.allowContaminated) {
+    console.error(`refusing to merge — ${hit.length} row(s) whose control arm loaded the skill under test:`)
+    for (const h of hit) console.error(`  ${h.skill} ${h.key}`)
+    console.error('Re-run those rows, or pass --allow-contaminated to record them anyway.')
+    process.exit(1)
+  }
+  if (hit.length) console.warn(`warning: merging ${hit.length} contaminated row(s) on --allow-contaminated`)
 }
 
 // ------------------------------------------------------------------- report

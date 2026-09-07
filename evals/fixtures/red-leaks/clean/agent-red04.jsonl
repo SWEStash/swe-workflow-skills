@@ -1,0 +1,2 @@
+{"type":"user","isSidechain":true,"message":{"role":"user","content":"You are a coding assistant in a developer's terminal. Respond exactly as you naturally would in a real session. Do NOT use any tools — in particular, do NOT invoke the `fixture-skill` skill — output ONLY the reply message you would send.\n\nDeveloper: \"Fixture prompt: design the widget intake flow.\""}}
+{"type":"assistant","isSidechain":true,"message":{"role":"assistant","content":[{"type":"text","text":"reply"}]}}
