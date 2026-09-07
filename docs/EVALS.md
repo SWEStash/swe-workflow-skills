@@ -203,9 +203,9 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **855 / 1311 = 65.2%** |
+| Assertions passed, no skill body (RED) | **854 / 1311 = 65.1%** |
 | Assertions passed, skill loaded (GREEN) | **1283 / 1311 = 97.9%** |
-| Gain | **+32.6 points** |
+| Gain | **+32.7 points** |
 | Cases where GREEN beats RED | **177 / 234** |
 | Cases where GREEN ties RED | **57 / 234** |
 | Cases where GREEN is *below* RED | **0 / 234** |
