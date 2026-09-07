@@ -181,13 +181,13 @@ cases drops that skill's other rows.
 `claude-opus-5`, all 66 skills, 234 cases, 1311 assertions, **every row at k>=3**.
 
 **What RED actually is.** RED answers the same prompt without the skill's *content* —
-it cannot read any `SKILL.md`, `references/` or `templates/`. It is **not** an unaided
-model: the harness injects the session's skill listing (~63KB of every skill's name,
-description and trigger keywords) into the RED generator, so RED can route by roster
-without having read anything. Measured effect: on cross-skill handoff assertions RED
-scores 6/15 where GREEN scores 15/15 — a 40% free pass. Read the gain below as
-**skill body vs skill description**, which makes it a lower bound, not as skill vs
-nothing.
+it cannot read any `SKILL.md`, `references/` or `templates/`. Both arms do carry the
+session's skill listing (~63KB of every skill's name, description and trigger
+keywords), so RED knows the library exists and what each skill claims; that is a
+constant on both sides and cancels. **So the gain measures what a skill's body and
+references add over that skill merely being installed and listed** — the right
+counterfactual for a name-only library, where the listing is always in context.
+See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
@@ -336,16 +336,26 @@ flaky). Several findings from running this make the choice necessary:
    k=1 *reds* evaporate at k=3 still holds, and **any new row must be recorded at
    k>=3**. A bare case array in the Workflow runner still means k=1; pass
    `{ k, cases }`.
-7. **RED is not an unaided model — it sees every skill's description.** The
-   harness injects the session's skill listing (~63KB of names, descriptions and
-   trigger keywords) into the RED generator, so RED routes by roster without
-   reading any skill content: it passes 6 of 15 cross-skill handoff assertions
-   against GREEN's 15/15. Two consequences. Every gain figure is a **lower bound**
-   (the contrast is skill body vs skill description), and scope-boundary
-   saturation is partly structural rather than weak authoring. Whether to strip
-   the listing from RED is an open design question — doing so would invalidate
-   every recorded RED value, and "description only" is arguably the honest
-   counterfactual for a name-only library.
+7. **Both arms see every skill's description, so the contrast is body-vs-description.**
+   The harness injects the session's skill listing (~63KB of names, descriptions
+   and trigger keywords) into **both** generators — verified: 29/29 GREEN and
+   28/28 RED agents in a sampled run carry it. RED is therefore not a model that
+   has never heard of this library; it knows every skill exists and what each one
+   claims, and can route by roster without reading any skill content.
+   **This is a constant, not a confound** — it is present on both sides and
+   cancels. What the gain measures is exactly the deployment-relevant question:
+   **does a skill's body and references add value over that skill merely being
+   installed and listed?** For a name-only library, where the listing is always
+   in context, that is the right counterfactual, and the figure is neither
+   inflated nor a lower bound.
+   The consequence is about **assertion design**, not about the arms: an
+   assertion satisfiable from a description alone cannot isolate the body, because
+   the description is on both sides by construction. That is why "refers to skill
+   X" assertions discriminate weakly — RED passes 6 of 15 of them (GREEN 15/15,
+   its edge coming from being told to follow the skill rather than from content
+   RED lacks) — and it is the mechanism behind scope-boundary saturation, where
+   three of four assertions per case are description-satisfiable and only "states
+   the boundary" tests the body.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what
