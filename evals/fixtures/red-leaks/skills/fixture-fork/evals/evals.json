@@ -1,0 +1,11 @@
+{
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Fixture prompt: design the widget intake flow.",
+      "assertions": [
+        "Fixture assertion."
+      ]
+    }
+  ]
+}

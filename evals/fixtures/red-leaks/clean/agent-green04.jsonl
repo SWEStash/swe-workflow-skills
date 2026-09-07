@@ -1,0 +1,3 @@
+{"type":"user","isSidechain":true,"message":{"role":"user","content":"You are a coding assistant in a developer's terminal. You have an installed skill at evals/fixtures/red-leaks/skills/fixture-skill/SKILL.md that you follow when relevant. First read that file.\n\nDeveloper: \"Fixture prompt: design the widget intake flow.\""}}
+{"type":"assistant","isSidechain":true,"message":{"role":"assistant","content":[{"type":"tool_use","id":"t1","name":"Read","input":{"file_path":"evals/fixtures/red-leaks/skills/fixture-skill/SKILL.md"}}]}}
+{"type":"assistant","isSidechain":true,"message":{"role":"assistant","content":[{"type":"text","text":"reply"}]}}

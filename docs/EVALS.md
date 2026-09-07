@@ -164,6 +164,12 @@ green and is now red, which is exactly what `run.py` fails on. A k=3 row superse
 a k=1 one legitimately does that; the point is that it gets named rather than
 absorbed.
 
+`--transcripts <dir>` points it at the run's workflow transcripts and refuses any
+row whose **control arm loaded the skill under test** (limitation 8) — the row is
+not a control, so it must not be recorded as one. Cross-skill loads and
+`context: fork` calls are reported and allowed through. `--allow-contaminated`
+records them anyway, the way `--allow-degraded` does for short rows.
+
 It refuses to write when a row looks wrong rather than recording it: `--model` still
 set to the `opus` shorthand or carrying a variant suffix like `claude-opus-5[1m]`
 (either makes every merged row skip as "not comparable" instead of gating); a row
@@ -356,12 +362,12 @@ flaky). Several findings from running this make the choice necessary:
    RED lacks) — and it is the mechanism behind scope-boundary saturation, where
    three of four assertions per case are description-satisfiable and only "states
    the boundary" tests the body.
-8. **RED occasionally loads the skill under test, and nothing prevents it.** The
+8. **RED occasionally loaded the skill under test — now prevented and detected.** The
    treatment in this A/B is *the skill being loaded*, so the control must load
    none. GREEN loads by **reading the file** (`greenGen`: "First read that file"),
    which is why GREEN legitimately shows `Read`/`cat` against its own directory;
    GREEN never invokes the `Skill` tool. RED is only *told* "Do NOT use any tools"
-   — `workflow-runner.mjs:151` spawns it as the default workflow subagent with **no
+   — `workflow-runner.mjs` spawns it as `agent(redGen(it), …)`, the default workflow subagent with **no
    tool restriction**, and `agent()` has no tool-restriction option.
    Measured across every recorded run: **16 `Skill` calls out of 1571 RED
    generators (1.0%)**, every one succeeding. Two of them do not contaminate the
@@ -393,6 +399,37 @@ flaky). Several findings from running this make the choice necessary:
    solves the task via another skill, this one may be redundant. That case already
    exists — in `cicd-pipeline eval:3`, RED invoked `release-management`, which on a
    scope-boundary case is arguably the correct answer.
+
+   **What is in place now.** The fix is not to ban all skills in RED — it is to
+   deny *the skill under test*, keeping sibling routing as signal:
+
+   - **Prevention.** `redGen` names it: "Do NOT use any tools — and in particular
+     do NOT invoke the `<skill>` skill". The blanket ban alone did not hold,
+     precisely on the prompts that most evoke the skill. Naming it tells RED which
+     skill is under test, but **both arms already carry the full skill listing**
+     (limitation 7), so the name is not information RED lacked.
+   - **Detection.** `evals/check-red-leaks.mjs` scans a run's transcripts and
+     classifies each RED skill load as same-skill (contamination, fatal),
+     cross-skill (redundancy signal, reported), or a `context: fork` call (no body
+     injected, harmless). It reads the fork set from the skills' own frontmatter
+     and attributes each leaked round to a row by its prompt, since a transcript's
+     `agent-*.meta.json` carries no label. `--self-test` runs it against committed
+     fixtures and is wired into the `drift` CI job.
+   - **Merge gate.** `merge-baseline.mjs --transcripts <dir>` refuses any row whose
+     control arm loaded the skill under test.
+
+   **`evals/run.py` needs no equivalent and deliberately has none:** its RED arm
+   calls `messages.create` with no `tools` parameter at all (contrast the GREEN
+   arm's `tool_runner`), so it is structurally incapable of loading a skill.
+   Changing its prompt would alter the CI arm's control for no benefit.
+
+   **Two caveats on the numbers above.** The prompt change means rows measured
+   after it are not prompt-identical in the *control arm* to rows measured before.
+   The gate is unaffected — `run.py` compares GREEN only and never reads RED — but
+   a lift comparison spanning that boundary is comparing two slightly different
+   controls. And the 1571 denominator was true when counted: workflow transcripts
+   age off disk, and a re-scan today finds 1250 RED generators still present,
+   containing all 16 of the same calls.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what
