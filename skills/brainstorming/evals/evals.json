@@ -27,13 +27,14 @@
     },
     {
       "id": 3,
-      "prompt": "We've settled on building a CLI tool that syncs our design tokens to code. Break it into tasks with acceptance criteria and dependencies so the team can start next sprint.",
-      "expected_output": "Recognizes that ideation is complete and the user is asking for convergent task breakdown — refers to feature-planning for the scoped tasks, acceptance criteria, and dependency mapping rather than reopening divergent exploration",
+      "prompt": "We've settled on building a CLI that syncs design tokens to code — that decision is final. Break it into tasks with acceptance criteria for next sprint. We also still haven't worked out whether it watches files continuously or runs one-shot, or whether it emits CSS custom properties or a JS theme object. Sort those out too.",
+      "expected_output": "Splits the request: the task breakdown is convergent planning, while the watch-vs-one-shot and output-format questions are genuinely undecided and are where divergent work still applies. Widens those two into options with trade-offs, leaves the settled build decision alone, and routes the breakdown to feature-planning.",
       "assertions": [
-        "Recognizes the request as convergent planning of an already-chosen idea, not ideation",
-        "Refers to the feature-planning skill for the task breakdown, acceptance criteria, and dependencies",
-        "Does not restart divergent idea generation or question the settled decision as the main response",
-        "States or implies the boundary: brainstorming opens the option space before a decision; feature-planning structures the work after it"
+        "Separates the settled build decision and its task breakdown from the two design questions that are still open",
+        "Refers to feature-planning for the task breakdown, acceptance criteria, and dependencies",
+        "Does not reopen or relitigate the settled decision to build the CLI",
+        "Widens the watch-vs-one-shot and output-format questions into options with trade-offs rather than picking one and moving on",
+        "States the boundary: brainstorming opens the option space while a decision is still open; feature-planning structures the work once it is closed"
       ]
     }
   ]

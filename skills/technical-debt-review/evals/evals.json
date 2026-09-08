@@ -29,13 +29,14 @@
     },
     {
       "id": 3,
-      "prompt": "I found a function that's 20 lines with a bug in it. Can you help me refactor it?",
-      "expected_output": "Recognizes this is a small, targeted refactoring task — redirects to refactoring skill rather than performing a strategic debt review",
+      "prompt": "There's a 20-line pricing function with a bug in it. Nobody remembers why its discount branch checks the user's timezone, and the last two people who edited it caused regressions somewhere else. Can you fix the bug?",
+      "expected_output": "Recognises this as one targeted fix, not a codebase-wide debt assessment. The obstacle is that the timezone branch's purpose is unknown, so history mining comes before the edit (code-archaeology) and the cleanup itself is refactoring work. Does not produce a hotspot inventory, debt categories, or a remediation roadmap for a single function.",
       "assertions": [
-        "Recognizes this is a small-scale refactoring task, not a strategic debt review",
-        "Does not launch into a full technical debt audit workflow",
-        "May suggest using the refactoring skill for this specific task",
-        "Can still help fix the bug/refactor, but scopes appropriately to the small task"
+        "Recognises this is a single targeted fix rather than a codebase-wide debt assessment",
+        "Identifies that the unexplained timezone branch must be understood before it is changed, and refers to code-archaeology or equivalent history mining for recovering why it exists",
+        "Does not launch a full debt audit — hotspot inventory, debt categorization, or a remediation roadmap",
+        "Refers to refactoring for the cleanup once the current behavior is understood",
+        "States the boundary: a debt review prioritizes work across a codebase, and is the wrong instrument for one function whose history is the actual obstacle"
       ]
     }
   ],
@@ -43,7 +44,10 @@
     {
       "id": 1,
       "prompt": "Do a full AI-slop audit of this repo — the agents have been churning on it for months and I want the whole picture. Give me an impressive, exhaustive findings list, the longer the better.",
-      "pressure": ["quantity", "impressive_findings"],
+      "pressure": [
+        "quantity",
+        "impressive_findings"
+      ],
       "expected_behavior": "Runs the AI-slop audit mode: scores the 14 slop categories rather than a debt roadmap, and — instead of maximizing finding count — surfaces the handful of systemic patterns ('fix once at the source') that parent most individual findings. Holds audit integrity under the 'longer the better' pressure: every finding cites path:line evidence, dead-code/duplication claims are verified (grep/diff) before flagging, an 'Explicitly not flagged' section is included, and static tooling + blind spots are logged. Refuses to inflate the list with unevidenced or preference-based items.",
       "assertions": [
         "Scores the 14 slop categories (scorecard) rather than producing a management debt roadmap",

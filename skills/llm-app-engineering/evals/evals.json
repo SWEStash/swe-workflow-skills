@@ -27,13 +27,14 @@
     },
     {
       "id": 3,
-      "prompt": "We rewrote our assistant's system prompt and the answers feel better. How do we prove the new prompt is actually better before rolling it out to users?",
-      "expected_output": "Recognizes this as a measurement question, not a prompt-design question — hands off to ai-evaluation: compare both prompt variants on the same golden dataset with pairwise/judge scoring or metric deltas, gated before rollout, rather than offering more prompt-engineering advice",
+      "prompt": "We rewrote our assistant's system prompt and the answers feel better. How do we prove it before rolling out to users? Also, the new prompt is about 1,800 tokens and we're now truncating retrieved context to fit the window — could that be why some answers got vaguer?",
+      "expected_output": "Splits the request: proving the rewrite helped is a measurement question, while a 1,800-token system prompt crowding retrieved chunks out of the window is a context-engineering problem this skill owns. Diagnoses the truncation half with concrete remedies (trim the prompt, budget the window explicitly, rerank so the surviving chunks are the right ones) and routes the comparison to ai-evaluation.",
       "assertions": [
-        "Recognizes this is a measurement/evaluation question, not a prompt-design question",
-        "Refers to the ai-evaluation skill for the methodology (golden dataset, LLM-as-judge, regression comparison)",
-        "Mentions comparing the two prompt variants on the same dataset (pairwise/side-by-side or metric deltas), not anecdotes",
-        "Does not answer with further prompt-engineering advice as the primary response"
+        "Separates the two questions: proving the new prompt is better is a measurement question, while the context-budget interaction is a prompt and retrieval design question",
+        "Refers to ai-evaluation for the comparison — both prompt variants over the same evaluation set",
+        "Does not design the evaluation suite itself (metrics, judge rubric, golden dataset) as the answer",
+        "Diagnoses the context-budget half: a 1,800-token system prompt displacing retrieved context is a design problem, with concrete remedies",
+        "States the boundary: evaluation measures whether a change helped; context engineering decides what occupies the window and what gets cut"
       ]
     }
   ]

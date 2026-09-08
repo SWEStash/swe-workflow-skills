@@ -27,13 +27,13 @@
     },
     {
       "id": 3,
-      "prompt": "Set up MLflow for our fine-tuning experiments so we can log runs and compare hyperparameters across the team.",
-      "expected_output": "Recognizes this as experiment-tracking infrastructure, not evaluation design — hands off to ml-experiment-tracking for the MLflow setup and run comparison, noting the boundary: tracking records and compares runs, while ai-evaluation defines what and how to measure",
+      "prompt": "We're fine-tuning a summarizer. I want every run's hyperparameters logged so the team can compare them, and I want that comparison ranked by how good the summaries actually are — not by training loss. What should we set up?",
+      "expected_output": "Splits the request: capturing hyperparameters and comparing runs is tracking infrastructure, while deciding what 'good summary' means and how it is scored is evaluation design. Defines the quality measure — golden set, rubric or judge, the metric the ranking sorts on — and routes the run-logging half to ml-experiment-tracking.",
       "assertions": [
-        "Recognizes the request is about experiment-tracking/run-comparison infrastructure, not about defining evaluation metrics or datasets",
-        "Refers to the ml-experiment-tracking skill for the MLflow setup and run comparison",
-        "Does not produce an evaluation-design workflow (golden datasets, judges, RAG metrics) as the answer to a tracking-infrastructure request",
-        "States the boundary: tracking records and compares runs, while evaluation design defines what and how to measure"
+        "Separates the two halves: run logging and comparison infrastructure versus defining the summary-quality measure the ranking needs",
+        "Refers to ml-experiment-tracking for capturing hyperparameters and comparing runs",
+        "Defines the quality measure itself — an evaluation set, a rubric or judge, and the metric the ranking would sort on — rather than handing the whole request off",
+        "States the boundary: tracking records and compares whatever score it is given; evaluation design decides what counts as good and how it is scored"
       ]
     }
   ]

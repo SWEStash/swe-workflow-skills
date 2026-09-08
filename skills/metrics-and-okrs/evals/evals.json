@@ -31,14 +31,14 @@
     },
     {
       "id": 3,
-      "prompt": "We defined the KR already. Here's the data: the A/B test on the new onboarding shows a 3.1% lift in activation, p = 0.06, n = 800 split across both arms. Is that a real effect? Do we ship it?",
-      "expected_output": "Scope boundary — judging whether an observed lift is real (significance, power, sample size, stopping rules) is statistical-analysis work. Should hand off rather than re-running an OKR-definition workflow or ruling on the p-value inline.",
+      "prompt": "Our activation key result is 'increase week-1 activation from 22% to 30% by Q3'. The A/B test on the new onboarding shows a 3.1% lift, p = 0.06, n = 800 split across both arms. Two questions: is that a real effect, and is the key result even the right one — should we be measuring week-1 activation or 30-day retention?",
+      "expected_output": "Splits the request: whether the observed lift is real is an inference question, while whether week-1 activation is the right key result is a metric-definition question this skill owns. Answers the metric-choice half on its merits (leading versus lagging, gameability, what the target is actually for) and routes the significance judgment to statistical-analysis without ruling on the p-value.",
       "assertions": [
-        "Recognizes this as an inference question about experiment results, not a metric-definition question",
-        "Hands off to or invokes the statistical-analysis skill",
-        "Does not declare the result significant or issue a ship/no-ship verdict from the p-value alone",
-        "Does not restart an OKR or success-metric definition exercise the user has already completed",
-        "May note how the established result would feed the existing key result once the inference is settled"
+        "Separates the two questions: whether the lift is real is an inference question, while whether week-1 activation is the right key result is a metric-definition question",
+        "Refers to statistical-analysis for the significance, power, and sample-size judgment",
+        "Does not declare the result significant or issue a ship verdict from the p-value alone",
+        "Answers the metric-definition half — whether week-1 activation or 30-day retention is the better key result here, and on what grounds",
+        "States the boundary: metric definition decides what to measure and what target counts as success; statistical analysis decides whether an observed difference is real"
       ]
     }
   ]

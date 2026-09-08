@@ -1,15 +1,15 @@
 {
-  "_note": "Content baseline for the library — complete: all 66 skills, all 234 cases. Recorded in-session via evals/workflow-runner.mjs (Workflow tool, subscription), option A (the GREEN generator may read files inside the skill's own directory; RED stays tool-less). 'model' is the resolved id the agents ran on; the runner's 'opus' pin is a harness shorthand and was substituted here. Runs executed on claude-opus-5 (the 1M-context variant tags itself claude-opus-5[1m]; it is the same model and is recorded under the base id, because run.py compares the model string exactly and a variant suffix would make those rows skip as 'not comparable' instead of gating).\n\nK IS PER ROW. The four sweep runs recorded k=1. Later runs re-recorded 12 cases at k=3 — a majority of three independent generate-and-judge rounds per arm, ties failing — covering every case where GREEN had scored below RED, plus regression coverage for the skills fixed as a result. Those rows supersede their k=1 predecessors. Trust a k=3 row over a k=1 one: of the four degradations left unfixed as a control, three evaporated at k=3, which is what k=1 noise looks like. RED moves between runs too — release-management eval:2 scored RED 5/5 then 4/5 on consecutive k=3 runs — so a one-assertion gap at k=1 is not evidence of anything.\n\nCOVERAGE, by run. 2026-08-15, branch main / parent 45aa919, run wf_225687a2-7f5: a 6-skill validation probe, 23 cases. 2026-08-18, branch feat/reference-aware-evals / parent 69cf2d3: the 25 skills whose references+templates outweigh their SKILL.md, 86 cases. 2026-08-19, parent 35dc048: the 22 skills with fewer reference bytes than SKILL.md, 86 cases. 2026-08-19, parent cb7c83e: the 13 skills with no references at all, 39 cases. 2026-08-20, parent 25ce06b, runs wf_91ce2dad-408 / wf_395b9ae6-ef3: the 12-case k=3 re-run of the degraded cases. 2026-08-20, same parent, run wf_5dddf7b6-a46: release-management at k=3, verifying its Step 2 fix. 2026-08-27, branch main / parent 50c44b6, run wf_090cb90a-404 (resumed after a spend limit killed 30 judges mid-flight; cached generators replayed, only the failed judges re-ran): the 5 spend-limited cases of the delivery-clause and assertion-pruning work, at k=3. Those rewordings confirmed working on architecture-design eval:2 (#0 now green, 5/5 vs RED 4/5) and performance-optimization eval:2 (#0 now green, 7/7 vs RED 5/7) — both had previously been assertions where RED passed and GREEN failed. strategic-review eval:2 #1 also went green. Two misses persist and are NOT harness artifacts: rollback-strategy eval:3 #3 (reworded once, still red) and skill-router eval:1 #1 ('Routes to feature-planning as the entry point'), the latter a real routing finding deferred to the k=3 re-baseline. strategic-review eval:2 #3 flipped green->red between two consecutive k=3 runs with no edit to that skill; treat as judge variance of the kind this note already records for release-management eval:2, not a regression. 2026-08-27, branch main / parent 50c44b6, run wf_c431e37a-a50: the 4 cases the resume could not serve, at k=3 against post-fix content. feature-planning eval:1-3 needed a FRESH run, not a resume: the generator's cache key is the prompt plus the skill PATH, not the skill's bytes, so resuming would have replayed generations made against the pre-delivery-clause SKILL.md. v-b-c pressure:6 needed one because an assertion was deleted after the earlier run. Result: the feature-planning delivery clause is confirmed — eval:1 green 1/6 -> 6/6 against RED 1/6 (lift +5), and eval:2 #0 ('Does not immediately produce a plan from this vague request') now holds, which the first, looser draft-vs-ask condition had broken (that run scored GREEN 3/5 BELOW RED 4/5). feature-planning overall: green 10/17 lift +0 -> green 16/17 lift +5. v-b-c pressure:6 is 4/4 after the dead assertion was dropped. One known-red remains: feature-planning eval:2 #3 fails in BOTH arms even after Step 1 gained a verification bullet — 0/N in both arms is the docs/EVALS.md dead-signal tell, so it is a delete candidate for the next pass, not evidence about the skill. 2026-08-27, branch main / parent 50c44b6, run wf_f5da45ee-80f, k=5: the deferred items from the delivery-clause and assertion-pruning pass, plus feature-planning eval:1 as a stability control. skill-router eval:1 #1 now green (4/4 vs RED 3/4) after the Golden Path gained an explicit entry-point rule: feature-planning leads by default, but where a single costly-to-reverse structural decision dominates, architecture-design leads and feature-planning scopes what the ADR implies. GREEN had been routing that way in every round and arguing it well; the chain simply did not cover the case. rollback-strategy eval:3 and feature-planning eval:2 are 4/4 after their dead assertions were dropped. K=5 FINDING: for 4 of the 5 cases k=5 reproduced the k=3 verdict exactly, including the control (feature-planning eval:1 green 6/6 vs RED 1/6 at both k=3 and k=5). The value of k=5 here was settling one contested assertion, not surfacing new instability - so k=3 remains the sensible default and k=5 is a targeted tool for a disputed row. strategic-review eval:2 #3 is that row, and it did NOT resolve the way an earlier note guessed: it is red at k=3 AND at k=5, and red in BOTH arms, so it is not judge variance. Treat it as a live dead-signal candidate, not noise. 2026-08-27, branch main / parent 50c44b6, run wf_131037d5-926 (ungated re-measure, PARTIAL - 5 of 15 cases; the other 10 carry no row and keep their prior value): merged by the session that owned writes to this file at the time. Findings recorded by the re-measure session and confirmed by this merge. (a) cicd-pipeline eval:1 GREEN 6/9 -> 8/9: assertions #0 (parallel lint/test) and #7 (job timeouts) EVAPORATED at k=3, so two of the three cicd targets then queued were k=1 noise and that item shrinks to #3 (Docker multi-stage + caching) alone. (b) accessibility-design eval:3 now scores GREEN 7/8 BELOW RED 8/8, breaking the invariant that no case scores GREEN under RED; consistent with the skill being near-saturated in RED with no headroom, so it is an obsolescence-review input, not a re-measure fix. (c) api-design eval:2 #6 (401 vs 403) gave up gate coverage, green -> red, but RED went true -> false on the same assertion and the case still wins 5 vs 1. (d) RED is a sample, not a constant: it moved on 7 assertions across these 5 cases and api-design eval:2's RED collapsed 6/7 -> 1/7, so any later reasoning that treats a recorded RED as a fixed reference point is unsafe. Confirmed floors still red at k=3: accessibility-design eval:3#7, api-design eval:2#4, cicd-pipeline eval:1#3, dependency-impact-analysis eval:3#1, deployment-repo eval:3#2. 2026-08-27, branch main / parent 50c44b6, run wf_131037d5-926: the k=3 re-measure of cases holding ungated assertions, 15 cases (5 of them merged earlier from a partial and byte-identical to this final run). 2026-08-27, branch main / parent 50c44b6, run wf_65db0382-be8: k=3 re-measure, 12 cases. 2026-08-27, branch main / parent 50c44b6, run wf_c0b4aed5-eb6: k=3 re-measure, 11 cases. UNGATED RE-MEASURE COMPLETE: 38 cases, all 48 ungated assertions re-measured at k=3. Half the backlog was k=1 noise — 24 of 48 assertions evaporated, 24 confirmed as real floors, 10 new floors surfaced. Noise rate rose by batch (45%, 43%, 67%) as the cases got thinner, which is what a variance-dominated tail looks like. The k=1 baseline was UNDERSTATING the library: over these 38 cases lift goes +63 -> +79 (GREEN 218->232, RED 155->153). That aggregate RED stability is cancellation, not constancy — RED moved on 44 individual assertions, so no recorded RED is a fixed reference point. 2026-08-28, branch eval-remediation / parent 0ca08b3, run wf_3858dd17-59d, k=5: accessibility-design eval:1-3 re-measured after filing submit-time focus into references/accessibility-patterns.md § Form Accessibility (new '### Errors on submit': focus the first invalid field, or an error summary for long forms) and adding the matching Step 7 Validate checklist line. THE INVARIANT BREAK IS CLOSED: eval:3 goes GREEN 7/8 -> 8/8 while RED stayed true on the contested assertion, so #7 ('on submit with errors, focus moves to the first field with an error') was fixed by the edit, not by RED drifting. GREEN replies quote the new reference directly ('first invalid field in DOM order, not validator order'; 'must not stay on the submit button'), which is the causal tell. Diagnosis confirmed: the behavior was documented at SKILL.md:72 in the Step 4 focus table all along, but a forms prompt routed into the Form Accessibility material, which omitted it — crowding-out, not a content gap. COST: 2 assertions gave up gate coverage on the two re-run rows, and NEITHER is caused by this edit; both now fail in BOTH arms, the docs/EVALS.md dead-signal tell. eval:1#0 ('uses role=dialog and aria-modal=true') is an AGING assertion: all 10 modal generations used native <dialog> + showModal(), which supplies modality implicitly, and one deliberately used role=alertdialog; the judge's words are 'modality is left implicit via native showModal()'. eval:2#2 ('identifies color-only status indicator') is a DEFECTIVE assertion — factually wrong about its own fixture, which renders {status} as text, so color is not the only channel; 7 of 10 judges record the reply correctly RULING OUT WCAG 1.4.1 and flagging 1.4.3 contrast instead. Both are inverted-assertion rows (the assertion is wrong, not the skill) and are candidates for rewording, but that edit invalidates the rows and needs a re-run, so it is deliberately NOT done here. accessibility-design overall: GREEN 23/25 vs RED 20/25 (lift +3, was +7 at k=3, the change being RED movement on eval:3 — RED is a sample, not a constant). 2026-08-28, branch eval-remediation / parent e25dc44, run wf_ee7e5c11-32e, k=5: the two assertion bugs the accessibility-design re-measure surfaced, reworded and re-measured. BOTH REWORDS RECOVERED THEIR GATE COVERAGE, with no skill edit involved. eval:1#0 now reads 'establishes dialog semantics and modality — native <dialog> with showModal(), or role=dialog/alertdialog with aria-modal=true' and is green in BOTH arms (it had aged out: at k=5 all 10 generations built the modal on native <dialog>+showModal(), which supplies modality implicitly). eval:2#2 now targets the hard-coded inline red/green status color — contrast, loss under forced-colors, red/green as the worst colour-blind pair — instead of asserting a color-ONLY indicator the fixture never contained (it renders {status} as text), and is likewise green in both arms. eval:1 GREEN 8/9 -> 9/9 vs RED 7/9; eval:2 GREEN 7/8 -> 8/8 vs RED 8/8 (a saturated audit tie, long known). accessibility-design is now GREEN 25/25 vs RED 20/25, lift +5, with every case at or above RED. NOTE ON eval:1 RED STABILITY: across four measurements RED on that case reads 8/9 (k=1), 1/9 (k=3), 8/9 (k=5), 7/9 (k=5, this run, one assertion reworded). The k=3 value of 1/9 is confirmed as the outlier — it is what retracted finding F5 and dissolved the obsolescence phase, and it has now failed to reproduce twice. Do not quote the resulting 'lift +7'. 2026-08-28, branch eval-remediation / parent e25dc44, run wf_ccd41fdb-964, k=3: assertion-shape fixes, PARTIAL — 4 of 6 cases; tdd-workflow eval:2 and test-suite-design eval:2 lost all their judges to a session limit and carry NO row, keeping their previous value pending the resume. THE DELIVERY-CLAUSE HYPOTHESIS IS CONFIRMED, and it was the largest single win of the cycle. That run's judge journals (still readable under the other session's subagents/workflows/) showed the real cause was not F3 exhaustiveness but F1: both skills produced a PLAN and deferred the artifact. Judges' words: 'No implementation is written... Implementation is only referenced as something deferred'; 'No test bodies exist in the reply, only names and input values'; 'There is no login endpoint and no login response contract at all... Token scheme is left as open decision #1'. tdd-workflow eval:1 GREEN 4/7 -> 7/7 vs RED 2/7 (lift +5) after Step 0's 'Present the test list to the user' gained an exit condition, the 'not a gate on delivering' sentence, and a requirement to RUN the first red-green-refactor cycle in the same response — #3 (minimum code), #4 (refactor after green) and #6 (Arrange-Act-Assert) all went green together, which is what one shared cause looks like. api-design eval:1 GREEN 6/9 -> 9/9 vs RED 3/9 and eval:2 GREEN 5/7 -> 7/7 vs RED 1/7 (lift +6 each) after three edits to one cause: the Step 2 and Step 3 stalls were rewritten to deliver with stated defaults, a new '## The Deliverable' block names all six required parts of an API design up front (the section list templates/api-spec.md already carried), and the YAGNI bullet was rescoped to filtering/sorting because it had been handing the model a documented licence to omit pagination — directly opposing eval:1#5. That makes api-design and tdd-workflow occurrences SIX and SEVEN of the delivery-clause failure writing-skills calls the library's most-repeated authoring mistake; the fix shape from architecture-design Step 0 has now worked every time it has been applied. ONE FAILURE: cicd-pipeline eval:1#3 ('Docker build uses multi-stage and caching') is STILL RED at 8/9 despite a new Step 3 bullet naming multi-stage plus buildx cache-from/cache-to and a new containerization cross-skill reference. Per the writing-skills stop rule that hypothesis is dead and must not be reworded a third time. 8 assertions newly green across the four cases, 0 gate coverage given up. 2026-08-28, same run wf_ccd41fdb-964 RESUMED after the session limit: the final 2 of 6 cases, whose judges had all died. The resume replayed 62 cached agents and re-ran only the 10 dead judges — 72/72 done, 0 errored, 360k tokens against the first attempt's 2.3M, and no completed case was re-run. Both new rows IMPROVED. tdd-workflow eval:2 GREEN 5/6 -> 6/6 vs RED 4/6: the delivery clause was a regression GUARD here, not a target, and #5 ('uses Jest syntax correctly') went green as a side effect of the reply now actually writing tests rather than describing them — the same mechanism as eval:1, seen on a case that was not aimed at. test-suite-design eval:2 GREEN 5/7 -> 6/7 vs RED 5/7, breaking a lift +0 tie: #6 ('this coverage enables the refactoring skill to work safely') is now green in GREEN and red in RED, so the skill is supplying it and the unaided model is not. The fix was repositioning, not new content — the handoff already existed at SKILL.md:103 but sat inside Step 5 (untestable code) framed as 'for deeper structural improvement later', so a 'where do I start' question never reached it; it now leads a Cross-Skill References section. Third instance this cycle of a documented behavior failing purely because of where it was filed (see accessibility-design eval:3 and api-design's YAGNI/pagination contradiction). STILL RED: test-suite-design eval:2#5, and it is red in BOTH arms even after being reworded from 'references the testing pyramid (70/20/10 ratio)' to 'states an explicit target distribution across unit/integration/e2e and justifies it for this codebase'. The reword was the right call for a different reason (it stopped demanding recitation of a number the model reasonably departs from for an ORM-heavy Django app) but it did not move the row. The live second hypothesis, NOT yet tried: SKILL.md:83-86 hard-codes 70/20/10 as the pyramid, so the skill offers a fixed ratio rather than a method for choosing one; softening it into an adaptable starting point is a separate named cause. ASSERTION-SHAPE FIXES, both runs: 12 assertions newly green, 0 gate coverage given up, across 8 cases. 2026-08-28, branch eval-remediation / parent 9264066, run wf_a623011f-5b7, k=3: the three cross-skill delegation floors, ALL THREE CLOSED. deployment-repo eval:3 GREEN 3/4 -> 4/4 vs RED 1/4; gitops-delivery eval:3 GREEN 5/6 -> 6/6 vs RED 4/6; deployment-checklist eval:3 GREEN 5/6 -> 6/6 vs RED 5/6 (k=1 tie at lift +0 broken, now +1). THE PHASE'S PREMISE WAS WRONG AND THE JOURNALS CAUGHT IT. (a) A cross-skill one-liner is not the fix: gitops-delivery SKILL.md:313 is the SAME line that passes eval:1#6 and failed eval:3#5 — a delegation fires only when the step prose of the branch the prompt enters leads into it, and eval:3 enters the push-based branch at :30, which named only cicd-pipeline. Fixed by naming deployment-repo unconditionally in that branch ('worth adopting regardless of which side of this decision you land on') and decoupling :313 from the operator. (b) deployment-repo eval:3#2 was a STALE ASSERTION, not a missing delegation: it demanded a reference to test-suite-design, which contains NO Pact or contract-testing content, while test-data-strategy owns it (description lists 'contract testing, Pact'; references/data-generation-patterns.md:229 carries the consumer/provider recipes). GREEN routed to test-data-strategy in 3 of 3 generations and was failed for being right; a judge recorded 'if the assertion's target skill is stale relative to the library, it is the assertion that needs updating, not this verdict.' The assertion now names test-data-strategy and an edit naming test-suite-design was written and REVERTED — it would have routed users to a skill that cannot help them. (c) deployment-checklist gained a data-modeling handoff at the Database & Data checklist boxes, framed as 'this checklist verifies a migration, it does not design one'. Run hit a session limit with 4 of 7 cases losing all judges; those carry no row and keep their previous value pending the resume. 2026-08-28, same run wf_a623011f-5b7 RESUMED after the session limit: the final 4 of 7 cases, whose judges had all died. 84/84 agents, 0 errored, 851k tokens against the first attempt's 2.3M; no completed case was re-run and the skills/ fingerprint was byte-identical before, between and after both attempts, so no GREEN agent wrote to the repo. THE DELEGATION-FLOOR RUN IS A CLEAN SWEEP: all 7 cases score GREEN 47/47 vs RED 27/47, every targeted assertion closed, 0 gate coverage given up. All three RED+ rows are gone — the library now has no assertion where the unaided model beats the skill. dependency-impact-analysis eval:3 GREEN 3/4 -> 4/4 vs RED 3/4: #1 ('does not perform a blast radius analysis') needed more than a scope boundary, because the judges showed the skill declining IN WORDS and then walking its whole workflow as a generic template for an unnamed endpoint — 'find dependents, classify breaking vs additive, expand-contract plan' — so the new ## Scope Boundary states that declining means producing NO analysis, not producing it generically, and :108's api-design line no longer frames the handoff as downstream of the analysis. test-data-strategy eval:3 GREEN 6/8 -> 8/8 vs RED 4/8 (lift +1 -> +4): #5 was a plain content gap — no find/replace warning and no masking tool named anywhere in the repo, while RED supplied both unprompted — fixed with a 'masking is a pipeline, not a find-and-replace' block in Step 6 naming the four failure modes (referential integrity, format validity, free-text leakage, quasi-identifier re-identification) and a matching table in the reference; #4 ('concrete masking examples'), previously red in BOTH arms, recovered as a side effect. test-suite-design eval:3 GREEN 8/9 -> 9/9 vs RED 8/9, tie broken: #7 looked like a NAMING gap but the judges recorded 'no test names appear anywhere' — the skill stopped at a behavior map and an it.each table shape, deferring until the runner and four decisions were confirmed. That is F1, OCCURRENCE EIGHT of the delivery-clause failure, and a naming table was written and REPLACED by a delivery clause in Step 6 plus a non-gating line in Step 2. General rule now in writing-skills: when an assertion about the QUALITY of an output fails, first check that the output exists at all. cicd-pipeline eval:1 GREEN 8/9 -> 10/10 vs RED 2/10: the dead multi-stage hypothesis was retired by SPLITTING the compound assertion rather than rewording the skill a fourth time — #3 (multi-stage Dockerfile) and #4 (image-layer caching) are now separate and BOTH green, confirming the compound had been hiding two independent behaviors that the skill produced at different rates (5 of 6 vs 3 of 6, rarely together). k>=3 re-baseline run (wf_05604af7-78d): 10 tie cases at k=3; k=1 remaining 163 k>=3 re-baseline run (wf_8df805e9-17e): 10 tie cases at k=3; k=1 remaining 153 verification-before-completion pressure:7 re-measured at k=5 after deleting assertions #1/#2 as limitation-4 unmeasurable: GREEN 2/2 vs RED 2/2 (wf_bc1eb2d5-92c); k=1 remaining 153 k>=3 re-baseline run (wf_e6fe2fdc-065): 11 tie cases at k=3; k=1 remaining 142 k>=3 re-baseline run (wf_11ee864f-aa1): 11 tie cases at k=3; k=1 remaining 131 browser-verification eval:1 re-measured at k=5 after rewording assertions #1-#4 from accomplished acts to commitments (both harness arms are tool-less): GREEN 5/5 vs RED 4/5, so the prior +4 margin was mostly assertion wording and the honest lift is +1 (wf_16e36951-ee4); k=1 remaining 131 k>=3 re-baseline run (wf_a5913520-770): 10 tie cases + 2 riders at k=3 — COMPLETES the 52-case tie sweep; k=1 remaining 119 strategic-review eval:2 re-measured at k=5 after fixing the SKILL.md self-contradiction (wf_71838809-5bb): row identical to before — the fix is a correctness change with no measured eval effect strategic-review eval:2 at k=5 after splitting the compound forks/recommendation assertion AND adding a delivery clause (wf_cac45256-328): GREEN 6/6 vs RED 3/6, lift +1 -> +3; both halves of the former dead assertion now discriminate k>=3 re-baseline run (wf_c4331252-f96): 7 plan-execution cases at k=3; k=1 remaining 112 plan-execution eval:1 at k=5 after surfacing the binary checkpoint-reporting rule from Step 6 into Step 3 (wf_c4e21f7c-d30): GREEN 5/5 vs RED 1/5, #4 closed; k=1 remaining 112 k>=3 re-baseline run (wf_1075a4b7-a67): 11 cases at k=3; k=1 remaining 101 k>=3 re-baseline run (wf_2c4d009a-63e): 11 cases at k=3; k=1 remaining 90 project-documentation pressure:1 at k=5 after rewording the inverted assertion #3 (wf_2594af6d-e11): GREEN 4/4 vs RED 3/4, RED+ cleared; k=1 remaining 90 project-documentation eval:1 at k=5 after adding the unverified-marker placement rule (wf_d1f82f1c-641): GREEN 6/9 -> 8/9 vs RED 1/9; #7 copy-pasteable and #2 versions both closed, #8 still red (the deferred eval:1 #0-vs-#8 contradiction) k>=3 re-baseline run (wf_245224e3-ce0): 12 cases at k=3; k=1 remaining 78 ml-model-deployment eval:1 at k=5 after naming Pydantic validation in Step 3 and marking it the wrong latency cut (wf_44956c33-743): #3 input validation closed (GREEN false->true, RED held false); #2 containerization fell in BOTH arms, sampling not the edit; lift +2 -> +4 k>=3 re-baseline run (12 cases at k=3); k=1 remaining 66 writing-skills eval:2 at k=5 after rewording #2 off an unreachable cross-skill file read (wf_58cfada4-761): GREEN 5/5 vs RED 3/5, #2 now discriminates k>=3 re-baseline run (12 cases at k=3); k=1 remaining 54 browser-verification eval:2 at k=5 after rewording #4 off an unreachable conclusion-from-verification (wf_459fb1ac-765): GREEN 5/5 vs RED 4/5, parity broken, #4 now discriminates k>=3 re-baseline run (12 cases at k=3, GREEN 67/67 — first perfectly clean batch); k=1 remaining 42 k>=3 re-baseline run (12 cases at k=3, GREEN 64/64 — second consecutive clean batch); k=1 remaining 30 k>=3 re-baseline run (12 cases at k=3); k=1 remaining 18 tdd-workflow pressure:1 at k=5 after adding the deadline rationalization and stash-not-delete to the Iron Law (wf_b4fee70f-9e9): GREEN 4/4 vs RED 3/4, #2 closed k>=3 re-baseline run (12 cases at k=3, GREEN 63/63, every case positive lift); k=1 remaining 6 k>=3 re-baseline run (6 cases at k=3) — COMPLETES THE BURN-DOWN: k=1 remaining 0, every row in the library at k>=3 retrospective eval:2 at k=5 after rewording #5 off an un-nameable owner (wf_3a21ed96-c8e): GREEN 7/7 vs RED 2/7, #5 closed retrospective eval:1 at k=5 after simplifying #5 to two structural conjuncts (wf_74308be9-9f9): GREEN 8/8 vs RED 2/8, #5 closed — the last ungated row carried over from the first remediation pass 2026-09-07, branch evals-red-leak-enforcement / parent 661db8a: re-measured the five rows whose control arm had previously loaded the skill under test, this time under the prohibition, 5 cases.\n\nRefresh by re-running the in-session runner (pass { k, cases } to vote), or `python evals/run.py --all --update-baseline` (needs ANTHROPIC_API_KEY plus EVAL_GEN_MODEL/EVAL_JUDGE_MODEL). The gate (run.py / skill-evals.yml) fails if an assertion green here later goes red on a same-model row; rows recorded on a different model are reported 'not comparable' and skipped rather than flagged.\n\nNO CASE IN THE LIBRARY SCORES GREEN BELOW RED. The invariant — a skill must not make the model worse than no skill at all — was broken at k=3 by accessibility-design eval:3 (GREEN 7/8 vs RED 8/8) and is RESTORED as of 2026-08-28 (run wf_3858dd17-59d, k=5): that case is now GREEN 8/8 vs RED 5/8. The cause was crowding-out, not a missing behavior. Submit-time focus was documented at SKILL.md:72 in the Step 4 focus table, but references/accessibility-patterns.md § Form Accessibility — the material a forms prompt actually routes into — omitted it, so the skill steered the model away from a behavior it technically documented while the unaided model produced it naturally. Filing it under forms fixed it, and RED stayed true on that assertion, so the movement is the edit and not RED drift. Re-verify by sweeping the rows for green<red rather than by trusting this paragraph.\n\nNO ASSERTION IN THE LIBRARY SCORES RED TRUE / GREEN FALSE. As of 2026-08-28 (run wf_a623011f-5b7) the last three RED+ rows are closed: dependency-impact-analysis eval:3[1], test-data-strategy eval:3[5] and test-suite-design eval:3[7] are all green, so there is no longer any single assertion on which the unaided model beats the skill. Re-derive this by sweeping for red[i] && !green[i] rather than trusting this paragraph. The history is worth keeping, because the five rows that ever held this shape failed for four different reasons and only one was a plain content gap. Two accessibility rows left the list as ASSERTION BUGS with no skill edit at all — eval:1[0] named ARIA attributes that native <dialog> + showModal() supplies implicitly, and eval:2[2] was factually wrong about its own fixture, which renders the status as text. deployment-repo eval:3[2] was likewise a STALE assertion: it demanded a reference to test-suite-design, which contains no Pact or contract-testing content, while test-data-strategy owns it; GREEN routed correctly in 3 of 3 generations and was failed for it. test-suite-design eval:3[7] looked like a naming gap and was really the delivery-clause failure (the reply contained no test names because it contained no tests). Only test-data-strategy eval:3[5] was a straightforward missing-content row. SO: before treating a RED+ row as an authoring lead, check that the assertion is still true of correct code, true of its own fixture, and still names the skill that actually owns the behavior — and if it asserts the QUALITY of some output, check that the output is being produced at all.\n\n2026-08-27, branch main / parent 50c44b6, run wf_090cb90a-404: the delivery-clause and assertion-pruning pass. 11 cases were dispatched at k=3; 5 (rollback-strategy eval:3, strategic-review eval:2, skill-router eval:1, architecture-design eval:2, performance-optimization eval:2) died on a spend limit mid-judge and were NOT recorded. Of the 6 that completed, only 2 rows are merged here — deployment-checklist pressure:1 (green 2/4 -> 4/4) and verification-before-completion eval:3 (3/4 -> 4/4) — because those two cases had eval-wording changes only, with no SKILL.md edit before or after the run. The feature-planning rows (eval:1 measured 5/6 GREEN vs 1/6 RED, up from 1/6 lift +0) are deliberately NOT merged: feature-planning/SKILL.md was edited again after that run (the draft-vs-ask condition was tightened), so the rows describe content that no longer exists. verification-before-completion pressure:6 is likewise unmerged — an assertion was deleted after the run, shifting its indices. Re-run feature-planning eval:1-3, v-b-c pressure:6, and the 5 spend-limited cases before trusting their rows. Two rows were REMOVED rather than left stale: skill-router eval:1 and verification-before-completion pressure:6 each had an assertion deleted, so their stored arrays no longer align with evals.json (run.py compares positionally with zip, which truncates silently rather than erroring). A missing row skips the case in the gate; a misaligned row would gate the wrong assertions. Re-run both at k=3 to restore coverage. Three rows (skill-router eval:1, rollback-strategy eval:3, feature-planning eval:2) were dropped pending run wf_f5da45ee-80f: each had an assertion deleted or rewritten, so the stored arrays no longer align positionally. A missing row skips the case; a misaligned one gates the wrong assertions.",
+  "_note": "Content baseline for the library \u2014 complete: all 66 skills, all 234 cases. Recorded in-session via evals/workflow-runner.mjs (Workflow tool, subscription), option A (the GREEN generator may read files inside the skill's own directory; RED stays tool-less). 'model' is the resolved id the agents ran on; the runner's 'opus' pin is a harness shorthand and was substituted here. Runs executed on claude-opus-5 (the 1M-context variant tags itself claude-opus-5[1m]; it is the same model and is recorded under the base id, because run.py compares the model string exactly and a variant suffix would make those rows skip as 'not comparable' instead of gating).\n\nK IS PER ROW. The four sweep runs recorded k=1. Later runs re-recorded 12 cases at k=3 \u2014 a majority of three independent generate-and-judge rounds per arm, ties failing \u2014 covering every case where GREEN had scored below RED, plus regression coverage for the skills fixed as a result. Those rows supersede their k=1 predecessors. Trust a k=3 row over a k=1 one: of the four degradations left unfixed as a control, three evaporated at k=3, which is what k=1 noise looks like. RED moves between runs too \u2014 release-management eval:2 scored RED 5/5 then 4/5 on consecutive k=3 runs \u2014 so a one-assertion gap at k=1 is not evidence of anything.\n\nCOVERAGE, by run. 2026-08-15, branch main / parent 45aa919, run wf_225687a2-7f5: a 6-skill validation probe, 23 cases. 2026-08-18, branch feat/reference-aware-evals / parent 69cf2d3: the 25 skills whose references+templates outweigh their SKILL.md, 86 cases. 2026-08-19, parent 35dc048: the 22 skills with fewer reference bytes than SKILL.md, 86 cases. 2026-08-19, parent cb7c83e: the 13 skills with no references at all, 39 cases. 2026-08-20, parent 25ce06b, runs wf_91ce2dad-408 / wf_395b9ae6-ef3: the 12-case k=3 re-run of the degraded cases. 2026-08-20, same parent, run wf_5dddf7b6-a46: release-management at k=3, verifying its Step 2 fix. 2026-08-27, branch main / parent 50c44b6, run wf_090cb90a-404 (resumed after a spend limit killed 30 judges mid-flight; cached generators replayed, only the failed judges re-ran): the 5 spend-limited cases of the delivery-clause and assertion-pruning work, at k=3. Those rewordings confirmed working on architecture-design eval:2 (#0 now green, 5/5 vs RED 4/5) and performance-optimization eval:2 (#0 now green, 7/7 vs RED 5/7) \u2014 both had previously been assertions where RED passed and GREEN failed. strategic-review eval:2 #1 also went green. Two misses persist and are NOT harness artifacts: rollback-strategy eval:3 #3 (reworded once, still red) and skill-router eval:1 #1 ('Routes to feature-planning as the entry point'), the latter a real routing finding deferred to the k=3 re-baseline. strategic-review eval:2 #3 flipped green->red between two consecutive k=3 runs with no edit to that skill; treat as judge variance of the kind this note already records for release-management eval:2, not a regression. 2026-08-27, branch main / parent 50c44b6, run wf_c431e37a-a50: the 4 cases the resume could not serve, at k=3 against post-fix content. feature-planning eval:1-3 needed a FRESH run, not a resume: the generator's cache key is the prompt plus the skill PATH, not the skill's bytes, so resuming would have replayed generations made against the pre-delivery-clause SKILL.md. v-b-c pressure:6 needed one because an assertion was deleted after the earlier run. Result: the feature-planning delivery clause is confirmed \u2014 eval:1 green 1/6 -> 6/6 against RED 1/6 (lift +5), and eval:2 #0 ('Does not immediately produce a plan from this vague request') now holds, which the first, looser draft-vs-ask condition had broken (that run scored GREEN 3/5 BELOW RED 4/5). feature-planning overall: green 10/17 lift +0 -> green 16/17 lift +5. v-b-c pressure:6 is 4/4 after the dead assertion was dropped. One known-red remains: feature-planning eval:2 #3 fails in BOTH arms even after Step 1 gained a verification bullet \u2014 0/N in both arms is the docs/EVALS.md dead-signal tell, so it is a delete candidate for the next pass, not evidence about the skill. 2026-08-27, branch main / parent 50c44b6, run wf_f5da45ee-80f, k=5: the deferred items from the delivery-clause and assertion-pruning pass, plus feature-planning eval:1 as a stability control. skill-router eval:1 #1 now green (4/4 vs RED 3/4) after the Golden Path gained an explicit entry-point rule: feature-planning leads by default, but where a single costly-to-reverse structural decision dominates, architecture-design leads and feature-planning scopes what the ADR implies. GREEN had been routing that way in every round and arguing it well; the chain simply did not cover the case. rollback-strategy eval:3 and feature-planning eval:2 are 4/4 after their dead assertions were dropped. K=5 FINDING: for 4 of the 5 cases k=5 reproduced the k=3 verdict exactly, including the control (feature-planning eval:1 green 6/6 vs RED 1/6 at both k=3 and k=5). The value of k=5 here was settling one contested assertion, not surfacing new instability - so k=3 remains the sensible default and k=5 is a targeted tool for a disputed row. strategic-review eval:2 #3 is that row, and it did NOT resolve the way an earlier note guessed: it is red at k=3 AND at k=5, and red in BOTH arms, so it is not judge variance. Treat it as a live dead-signal candidate, not noise. 2026-08-27, branch main / parent 50c44b6, run wf_131037d5-926 (ungated re-measure, PARTIAL - 5 of 15 cases; the other 10 carry no row and keep their prior value): merged by the session that owned writes to this file at the time. Findings recorded by the re-measure session and confirmed by this merge. (a) cicd-pipeline eval:1 GREEN 6/9 -> 8/9: assertions #0 (parallel lint/test) and #7 (job timeouts) EVAPORATED at k=3, so two of the three cicd targets then queued were k=1 noise and that item shrinks to #3 (Docker multi-stage + caching) alone. (b) accessibility-design eval:3 now scores GREEN 7/8 BELOW RED 8/8, breaking the invariant that no case scores GREEN under RED; consistent with the skill being near-saturated in RED with no headroom, so it is an obsolescence-review input, not a re-measure fix. (c) api-design eval:2 #6 (401 vs 403) gave up gate coverage, green -> red, but RED went true -> false on the same assertion and the case still wins 5 vs 1. (d) RED is a sample, not a constant: it moved on 7 assertions across these 5 cases and api-design eval:2's RED collapsed 6/7 -> 1/7, so any later reasoning that treats a recorded RED as a fixed reference point is unsafe. Confirmed floors still red at k=3: accessibility-design eval:3#7, api-design eval:2#4, cicd-pipeline eval:1#3, dependency-impact-analysis eval:3#1, deployment-repo eval:3#2. 2026-08-27, branch main / parent 50c44b6, run wf_131037d5-926: the k=3 re-measure of cases holding ungated assertions, 15 cases (5 of them merged earlier from a partial and byte-identical to this final run). 2026-08-27, branch main / parent 50c44b6, run wf_65db0382-be8: k=3 re-measure, 12 cases. 2026-08-27, branch main / parent 50c44b6, run wf_c0b4aed5-eb6: k=3 re-measure, 11 cases. UNGATED RE-MEASURE COMPLETE: 38 cases, all 48 ungated assertions re-measured at k=3. Half the backlog was k=1 noise \u2014 24 of 48 assertions evaporated, 24 confirmed as real floors, 10 new floors surfaced. Noise rate rose by batch (45%, 43%, 67%) as the cases got thinner, which is what a variance-dominated tail looks like. The k=1 baseline was UNDERSTATING the library: over these 38 cases lift goes +63 -> +79 (GREEN 218->232, RED 155->153). That aggregate RED stability is cancellation, not constancy \u2014 RED moved on 44 individual assertions, so no recorded RED is a fixed reference point. 2026-08-28, branch eval-remediation / parent 0ca08b3, run wf_3858dd17-59d, k=5: accessibility-design eval:1-3 re-measured after filing submit-time focus into references/accessibility-patterns.md \u00a7 Form Accessibility (new '### Errors on submit': focus the first invalid field, or an error summary for long forms) and adding the matching Step 7 Validate checklist line. THE INVARIANT BREAK IS CLOSED: eval:3 goes GREEN 7/8 -> 8/8 while RED stayed true on the contested assertion, so #7 ('on submit with errors, focus moves to the first field with an error') was fixed by the edit, not by RED drifting. GREEN replies quote the new reference directly ('first invalid field in DOM order, not validator order'; 'must not stay on the submit button'), which is the causal tell. Diagnosis confirmed: the behavior was documented at SKILL.md:72 in the Step 4 focus table all along, but a forms prompt routed into the Form Accessibility material, which omitted it \u2014 crowding-out, not a content gap. COST: 2 assertions gave up gate coverage on the two re-run rows, and NEITHER is caused by this edit; both now fail in BOTH arms, the docs/EVALS.md dead-signal tell. eval:1#0 ('uses role=dialog and aria-modal=true') is an AGING assertion: all 10 modal generations used native <dialog> + showModal(), which supplies modality implicitly, and one deliberately used role=alertdialog; the judge's words are 'modality is left implicit via native showModal()'. eval:2#2 ('identifies color-only status indicator') is a DEFECTIVE assertion \u2014 factually wrong about its own fixture, which renders {status} as text, so color is not the only channel; 7 of 10 judges record the reply correctly RULING OUT WCAG 1.4.1 and flagging 1.4.3 contrast instead. Both are inverted-assertion rows (the assertion is wrong, not the skill) and are candidates for rewording, but that edit invalidates the rows and needs a re-run, so it is deliberately NOT done here. accessibility-design overall: GREEN 23/25 vs RED 20/25 (lift +3, was +7 at k=3, the change being RED movement on eval:3 \u2014 RED is a sample, not a constant). 2026-08-28, branch eval-remediation / parent e25dc44, run wf_ee7e5c11-32e, k=5: the two assertion bugs the accessibility-design re-measure surfaced, reworded and re-measured. BOTH REWORDS RECOVERED THEIR GATE COVERAGE, with no skill edit involved. eval:1#0 now reads 'establishes dialog semantics and modality \u2014 native <dialog> with showModal(), or role=dialog/alertdialog with aria-modal=true' and is green in BOTH arms (it had aged out: at k=5 all 10 generations built the modal on native <dialog>+showModal(), which supplies modality implicitly). eval:2#2 now targets the hard-coded inline red/green status color \u2014 contrast, loss under forced-colors, red/green as the worst colour-blind pair \u2014 instead of asserting a color-ONLY indicator the fixture never contained (it renders {status} as text), and is likewise green in both arms. eval:1 GREEN 8/9 -> 9/9 vs RED 7/9; eval:2 GREEN 7/8 -> 8/8 vs RED 8/8 (a saturated audit tie, long known). accessibility-design is now GREEN 25/25 vs RED 20/25, lift +5, with every case at or above RED. NOTE ON eval:1 RED STABILITY: across four measurements RED on that case reads 8/9 (k=1), 1/9 (k=3), 8/9 (k=5), 7/9 (k=5, this run, one assertion reworded). The k=3 value of 1/9 is confirmed as the outlier \u2014 it is what retracted finding F5 and dissolved the obsolescence phase, and it has now failed to reproduce twice. Do not quote the resulting 'lift +7'. 2026-08-28, branch eval-remediation / parent e25dc44, run wf_ccd41fdb-964, k=3: assertion-shape fixes, PARTIAL \u2014 4 of 6 cases; tdd-workflow eval:2 and test-suite-design eval:2 lost all their judges to a session limit and carry NO row, keeping their previous value pending the resume. THE DELIVERY-CLAUSE HYPOTHESIS IS CONFIRMED, and it was the largest single win of the cycle. That run's judge journals (still readable under the other session's subagents/workflows/) showed the real cause was not F3 exhaustiveness but F1: both skills produced a PLAN and deferred the artifact. Judges' words: 'No implementation is written... Implementation is only referenced as something deferred'; 'No test bodies exist in the reply, only names and input values'; 'There is no login endpoint and no login response contract at all... Token scheme is left as open decision #1'. tdd-workflow eval:1 GREEN 4/7 -> 7/7 vs RED 2/7 (lift +5) after Step 0's 'Present the test list to the user' gained an exit condition, the 'not a gate on delivering' sentence, and a requirement to RUN the first red-green-refactor cycle in the same response \u2014 #3 (minimum code), #4 (refactor after green) and #6 (Arrange-Act-Assert) all went green together, which is what one shared cause looks like. api-design eval:1 GREEN 6/9 -> 9/9 vs RED 3/9 and eval:2 GREEN 5/7 -> 7/7 vs RED 1/7 (lift +6 each) after three edits to one cause: the Step 2 and Step 3 stalls were rewritten to deliver with stated defaults, a new '## The Deliverable' block names all six required parts of an API design up front (the section list templates/api-spec.md already carried), and the YAGNI bullet was rescoped to filtering/sorting because it had been handing the model a documented licence to omit pagination \u2014 directly opposing eval:1#5. That makes api-design and tdd-workflow occurrences SIX and SEVEN of the delivery-clause failure writing-skills calls the library's most-repeated authoring mistake; the fix shape from architecture-design Step 0 has now worked every time it has been applied. ONE FAILURE: cicd-pipeline eval:1#3 ('Docker build uses multi-stage and caching') is STILL RED at 8/9 despite a new Step 3 bullet naming multi-stage plus buildx cache-from/cache-to and a new containerization cross-skill reference. Per the writing-skills stop rule that hypothesis is dead and must not be reworded a third time. 8 assertions newly green across the four cases, 0 gate coverage given up. 2026-08-28, same run wf_ccd41fdb-964 RESUMED after the session limit: the final 2 of 6 cases, whose judges had all died. The resume replayed 62 cached agents and re-ran only the 10 dead judges \u2014 72/72 done, 0 errored, 360k tokens against the first attempt's 2.3M, and no completed case was re-run. Both new rows IMPROVED. tdd-workflow eval:2 GREEN 5/6 -> 6/6 vs RED 4/6: the delivery clause was a regression GUARD here, not a target, and #5 ('uses Jest syntax correctly') went green as a side effect of the reply now actually writing tests rather than describing them \u2014 the same mechanism as eval:1, seen on a case that was not aimed at. test-suite-design eval:2 GREEN 5/7 -> 6/7 vs RED 5/7, breaking a lift +0 tie: #6 ('this coverage enables the refactoring skill to work safely') is now green in GREEN and red in RED, so the skill is supplying it and the unaided model is not. The fix was repositioning, not new content \u2014 the handoff already existed at SKILL.md:103 but sat inside Step 5 (untestable code) framed as 'for deeper structural improvement later', so a 'where do I start' question never reached it; it now leads a Cross-Skill References section. Third instance this cycle of a documented behavior failing purely because of where it was filed (see accessibility-design eval:3 and api-design's YAGNI/pagination contradiction). STILL RED: test-suite-design eval:2#5, and it is red in BOTH arms even after being reworded from 'references the testing pyramid (70/20/10 ratio)' to 'states an explicit target distribution across unit/integration/e2e and justifies it for this codebase'. The reword was the right call for a different reason (it stopped demanding recitation of a number the model reasonably departs from for an ORM-heavy Django app) but it did not move the row. The live second hypothesis, NOT yet tried: SKILL.md:83-86 hard-codes 70/20/10 as the pyramid, so the skill offers a fixed ratio rather than a method for choosing one; softening it into an adaptable starting point is a separate named cause. ASSERTION-SHAPE FIXES, both runs: 12 assertions newly green, 0 gate coverage given up, across 8 cases. 2026-08-28, branch eval-remediation / parent 9264066, run wf_a623011f-5b7, k=3: the three cross-skill delegation floors, ALL THREE CLOSED. deployment-repo eval:3 GREEN 3/4 -> 4/4 vs RED 1/4; gitops-delivery eval:3 GREEN 5/6 -> 6/6 vs RED 4/6; deployment-checklist eval:3 GREEN 5/6 -> 6/6 vs RED 5/6 (k=1 tie at lift +0 broken, now +1). THE PHASE'S PREMISE WAS WRONG AND THE JOURNALS CAUGHT IT. (a) A cross-skill one-liner is not the fix: gitops-delivery SKILL.md:313 is the SAME line that passes eval:1#6 and failed eval:3#5 \u2014 a delegation fires only when the step prose of the branch the prompt enters leads into it, and eval:3 enters the push-based branch at :30, which named only cicd-pipeline. Fixed by naming deployment-repo unconditionally in that branch ('worth adopting regardless of which side of this decision you land on') and decoupling :313 from the operator. (b) deployment-repo eval:3#2 was a STALE ASSERTION, not a missing delegation: it demanded a reference to test-suite-design, which contains NO Pact or contract-testing content, while test-data-strategy owns it (description lists 'contract testing, Pact'; references/data-generation-patterns.md:229 carries the consumer/provider recipes). GREEN routed to test-data-strategy in 3 of 3 generations and was failed for being right; a judge recorded 'if the assertion's target skill is stale relative to the library, it is the assertion that needs updating, not this verdict.' The assertion now names test-data-strategy and an edit naming test-suite-design was written and REVERTED \u2014 it would have routed users to a skill that cannot help them. (c) deployment-checklist gained a data-modeling handoff at the Database & Data checklist boxes, framed as 'this checklist verifies a migration, it does not design one'. Run hit a session limit with 4 of 7 cases losing all judges; those carry no row and keep their previous value pending the resume. 2026-08-28, same run wf_a623011f-5b7 RESUMED after the session limit: the final 4 of 7 cases, whose judges had all died. 84/84 agents, 0 errored, 851k tokens against the first attempt's 2.3M; no completed case was re-run and the skills/ fingerprint was byte-identical before, between and after both attempts, so no GREEN agent wrote to the repo. THE DELEGATION-FLOOR RUN IS A CLEAN SWEEP: all 7 cases score GREEN 47/47 vs RED 27/47, every targeted assertion closed, 0 gate coverage given up. All three RED+ rows are gone \u2014 the library now has no assertion where the unaided model beats the skill. dependency-impact-analysis eval:3 GREEN 3/4 -> 4/4 vs RED 3/4: #1 ('does not perform a blast radius analysis') needed more than a scope boundary, because the judges showed the skill declining IN WORDS and then walking its whole workflow as a generic template for an unnamed endpoint \u2014 'find dependents, classify breaking vs additive, expand-contract plan' \u2014 so the new ## Scope Boundary states that declining means producing NO analysis, not producing it generically, and :108's api-design line no longer frames the handoff as downstream of the analysis. test-data-strategy eval:3 GREEN 6/8 -> 8/8 vs RED 4/8 (lift +1 -> +4): #5 was a plain content gap \u2014 no find/replace warning and no masking tool named anywhere in the repo, while RED supplied both unprompted \u2014 fixed with a 'masking is a pipeline, not a find-and-replace' block in Step 6 naming the four failure modes (referential integrity, format validity, free-text leakage, quasi-identifier re-identification) and a matching table in the reference; #4 ('concrete masking examples'), previously red in BOTH arms, recovered as a side effect. test-suite-design eval:3 GREEN 8/9 -> 9/9 vs RED 8/9, tie broken: #7 looked like a NAMING gap but the judges recorded 'no test names appear anywhere' \u2014 the skill stopped at a behavior map and an it.each table shape, deferring until the runner and four decisions were confirmed. That is F1, OCCURRENCE EIGHT of the delivery-clause failure, and a naming table was written and REPLACED by a delivery clause in Step 6 plus a non-gating line in Step 2. General rule now in writing-skills: when an assertion about the QUALITY of an output fails, first check that the output exists at all. cicd-pipeline eval:1 GREEN 8/9 -> 10/10 vs RED 2/10: the dead multi-stage hypothesis was retired by SPLITTING the compound assertion rather than rewording the skill a fourth time \u2014 #3 (multi-stage Dockerfile) and #4 (image-layer caching) are now separate and BOTH green, confirming the compound had been hiding two independent behaviors that the skill produced at different rates (5 of 6 vs 3 of 6, rarely together). k>=3 re-baseline run (wf_05604af7-78d): 10 tie cases at k=3; k=1 remaining 163 k>=3 re-baseline run (wf_8df805e9-17e): 10 tie cases at k=3; k=1 remaining 153 verification-before-completion pressure:7 re-measured at k=5 after deleting assertions #1/#2 as limitation-4 unmeasurable: GREEN 2/2 vs RED 2/2 (wf_bc1eb2d5-92c); k=1 remaining 153 k>=3 re-baseline run (wf_e6fe2fdc-065): 11 tie cases at k=3; k=1 remaining 142 k>=3 re-baseline run (wf_11ee864f-aa1): 11 tie cases at k=3; k=1 remaining 131 browser-verification eval:1 re-measured at k=5 after rewording assertions #1-#4 from accomplished acts to commitments (both harness arms are tool-less): GREEN 5/5 vs RED 4/5, so the prior +4 margin was mostly assertion wording and the honest lift is +1 (wf_16e36951-ee4); k=1 remaining 131 k>=3 re-baseline run (wf_a5913520-770): 10 tie cases + 2 riders at k=3 \u2014 COMPLETES the 52-case tie sweep; k=1 remaining 119 strategic-review eval:2 re-measured at k=5 after fixing the SKILL.md self-contradiction (wf_71838809-5bb): row identical to before \u2014 the fix is a correctness change with no measured eval effect strategic-review eval:2 at k=5 after splitting the compound forks/recommendation assertion AND adding a delivery clause (wf_cac45256-328): GREEN 6/6 vs RED 3/6, lift +1 -> +3; both halves of the former dead assertion now discriminate k>=3 re-baseline run (wf_c4331252-f96): 7 plan-execution cases at k=3; k=1 remaining 112 plan-execution eval:1 at k=5 after surfacing the binary checkpoint-reporting rule from Step 6 into Step 3 (wf_c4e21f7c-d30): GREEN 5/5 vs RED 1/5, #4 closed; k=1 remaining 112 k>=3 re-baseline run (wf_1075a4b7-a67): 11 cases at k=3; k=1 remaining 101 k>=3 re-baseline run (wf_2c4d009a-63e): 11 cases at k=3; k=1 remaining 90 project-documentation pressure:1 at k=5 after rewording the inverted assertion #3 (wf_2594af6d-e11): GREEN 4/4 vs RED 3/4, RED+ cleared; k=1 remaining 90 project-documentation eval:1 at k=5 after adding the unverified-marker placement rule (wf_d1f82f1c-641): GREEN 6/9 -> 8/9 vs RED 1/9; #7 copy-pasteable and #2 versions both closed, #8 still red (the deferred eval:1 #0-vs-#8 contradiction) k>=3 re-baseline run (wf_245224e3-ce0): 12 cases at k=3; k=1 remaining 78 ml-model-deployment eval:1 at k=5 after naming Pydantic validation in Step 3 and marking it the wrong latency cut (wf_44956c33-743): #3 input validation closed (GREEN false->true, RED held false); #2 containerization fell in BOTH arms, sampling not the edit; lift +2 -> +4 k>=3 re-baseline run (12 cases at k=3); k=1 remaining 66 writing-skills eval:2 at k=5 after rewording #2 off an unreachable cross-skill file read (wf_58cfada4-761): GREEN 5/5 vs RED 3/5, #2 now discriminates k>=3 re-baseline run (12 cases at k=3); k=1 remaining 54 browser-verification eval:2 at k=5 after rewording #4 off an unreachable conclusion-from-verification (wf_459fb1ac-765): GREEN 5/5 vs RED 4/5, parity broken, #4 now discriminates k>=3 re-baseline run (12 cases at k=3, GREEN 67/67 \u2014 first perfectly clean batch); k=1 remaining 42 k>=3 re-baseline run (12 cases at k=3, GREEN 64/64 \u2014 second consecutive clean batch); k=1 remaining 30 k>=3 re-baseline run (12 cases at k=3); k=1 remaining 18 tdd-workflow pressure:1 at k=5 after adding the deadline rationalization and stash-not-delete to the Iron Law (wf_b4fee70f-9e9): GREEN 4/4 vs RED 3/4, #2 closed k>=3 re-baseline run (12 cases at k=3, GREEN 63/63, every case positive lift); k=1 remaining 6 k>=3 re-baseline run (6 cases at k=3) \u2014 COMPLETES THE BURN-DOWN: k=1 remaining 0, every row in the library at k>=3 retrospective eval:2 at k=5 after rewording #5 off an un-nameable owner (wf_3a21ed96-c8e): GREEN 7/7 vs RED 2/7, #5 closed retrospective eval:1 at k=5 after simplifying #5 to two structural conjuncts (wf_74308be9-9f9): GREEN 8/8 vs RED 2/8, #5 closed \u2014 the last ungated row carried over from the first remediation pass 2026-09-07, branch evals-red-leak-enforcement / parent 661db8a: re-measured the five rows whose control arm had previously loaded the skill under test, this time under the prohibition, 5 cases. Rewrote nine scope-boundary cases so the request mixes an in-scope half with one owned by a sibling the skill listing does not disambiguate, and re-measured them. Discrimination across the ten rewritten rows rose from 3 assertions to 9. Gave strategic-review an entry gate that matches the response to the size of the question, after its rewritten boundary case showed the skill launching a full review on a landing-page copy request and withholding the copy itself. Re-measured all three of its cases at k=5.\n\nRefresh by re-running the in-session runner (pass { k, cases } to vote), or `python evals/run.py --all --update-baseline` (needs ANTHROPIC_API_KEY plus EVAL_GEN_MODEL/EVAL_JUDGE_MODEL). The gate (run.py / skill-evals.yml) fails if an assertion green here later goes red on a same-model row; rows recorded on a different model are reported 'not comparable' and skipped rather than flagged.\n\nNO CASE IN THE LIBRARY SCORES GREEN BELOW RED. The invariant \u2014 a skill must not make the model worse than no skill at all \u2014 was broken at k=3 by accessibility-design eval:3 (GREEN 7/8 vs RED 8/8) and is RESTORED as of 2026-08-28 (run wf_3858dd17-59d, k=5): that case is now GREEN 8/8 vs RED 5/8. The cause was crowding-out, not a missing behavior. Submit-time focus was documented at SKILL.md:72 in the Step 4 focus table, but references/accessibility-patterns.md \u00a7 Form Accessibility \u2014 the material a forms prompt actually routes into \u2014 omitted it, so the skill steered the model away from a behavior it technically documented while the unaided model produced it naturally. Filing it under forms fixed it, and RED stayed true on that assertion, so the movement is the edit and not RED drift. Re-verify by sweeping the rows for green<red rather than by trusting this paragraph.\n\nNO ASSERTION IN THE LIBRARY SCORES RED TRUE / GREEN FALSE. As of 2026-08-28 (run wf_a623011f-5b7) the last three RED+ rows are closed: dependency-impact-analysis eval:3[1], test-data-strategy eval:3[5] and test-suite-design eval:3[7] are all green, so there is no longer any single assertion on which the unaided model beats the skill. Re-derive this by sweeping for red[i] && !green[i] rather than trusting this paragraph. The history is worth keeping, because the five rows that ever held this shape failed for four different reasons and only one was a plain content gap. Two accessibility rows left the list as ASSERTION BUGS with no skill edit at all \u2014 eval:1[0] named ARIA attributes that native <dialog> + showModal() supplies implicitly, and eval:2[2] was factually wrong about its own fixture, which renders the status as text. deployment-repo eval:3[2] was likewise a STALE assertion: it demanded a reference to test-suite-design, which contains no Pact or contract-testing content, while test-data-strategy owns it; GREEN routed correctly in 3 of 3 generations and was failed for it. test-suite-design eval:3[7] looked like a naming gap and was really the delivery-clause failure (the reply contained no test names because it contained no tests). Only test-data-strategy eval:3[5] was a straightforward missing-content row. SO: before treating a RED+ row as an authoring lead, check that the assertion is still true of correct code, true of its own fixture, and still names the skill that actually owns the behavior \u2014 and if it asserts the QUALITY of some output, check that the output is being produced at all.\n\n2026-08-27, branch main / parent 50c44b6, run wf_090cb90a-404: the delivery-clause and assertion-pruning pass. 11 cases were dispatched at k=3; 5 (rollback-strategy eval:3, strategic-review eval:2, skill-router eval:1, architecture-design eval:2, performance-optimization eval:2) died on a spend limit mid-judge and were NOT recorded. Of the 6 that completed, only 2 rows are merged here \u2014 deployment-checklist pressure:1 (green 2/4 -> 4/4) and verification-before-completion eval:3 (3/4 -> 4/4) \u2014 because those two cases had eval-wording changes only, with no SKILL.md edit before or after the run. The feature-planning rows (eval:1 measured 5/6 GREEN vs 1/6 RED, up from 1/6 lift +0) are deliberately NOT merged: feature-planning/SKILL.md was edited again after that run (the draft-vs-ask condition was tightened), so the rows describe content that no longer exists. verification-before-completion pressure:6 is likewise unmerged \u2014 an assertion was deleted after the run, shifting its indices. Re-run feature-planning eval:1-3, v-b-c pressure:6, and the 5 spend-limited cases before trusting their rows. Two rows were REMOVED rather than left stale: skill-router eval:1 and verification-before-completion pressure:6 each had an assertion deleted, so their stored arrays no longer align with evals.json (run.py compares positionally with zip, which truncates silently rather than erroring). A missing row skips the case in the gate; a misaligned row would gate the wrong assertions. Re-run both at k=3 to restore coverage. Three rows (skill-router eval:1, rollback-strategy eval:3, feature-planning eval:2) were dropped pending run wf_f5da45ee-80f: each had an assertion deleted or rewritten, so the stored arrays no longer align positionally. A missing row skips the case; a misaligned one gates the wrong assertions.",
   "model": "claude-opus-5",
-  "k": "3, except 19 cases at 5",
+  "k": "3, except 21 cases at 5",
   "runner": "workflow-runner.mjs",
   "option": "A",
   "summary": {
     "cases": 234,
     "excluded": 0,
-    "assertions": 1311,
-    "red": 854,
-    "green": 1283,
+    "assertions": 1315,
+    "red": 847,
+    "green": 1280,
     "skills": 66
   },
   "skills": {
@@ -140,9 +140,9 @@
         ],
         "red": [
           true,
+          false,
           true,
-          true,
-          false
+          true
         ],
         "model": "claude-opus-5",
         "k": 3,
@@ -398,15 +398,17 @@
       "eval:3": {
         "green": [
           true,
+          false,
           true,
           true,
           true
         ],
         "red": [
           true,
+          false,
           true,
           true,
-          false
+          true
         ],
         "model": "claude-opus-5",
         "k": 3,
@@ -2228,23 +2230,6 @@
         "k": 3,
         "runner": "workflow-runner.mjs"
       },
-      "eval:3": {
-        "green": [
-          true,
-          true,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          true,
-          true,
-          true
-        ],
-        "model": "claude-opus-5",
-        "k": 3,
-        "runner": "workflow-runner.mjs"
-      },
       "pressure:1": {
         "green": [
           true,
@@ -2256,6 +2241,25 @@
           true,
           true,
           false,
+          false
+        ],
+        "model": "claude-opus-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          true,
           false
         ],
         "model": "claude-opus-5",
@@ -2373,14 +2377,16 @@
         "green": [
           true,
           true,
+          false,
           true,
-          true
+          false
         ],
         "red": [
           true,
           true,
+          false,
           true,
-          true
+          false
         ],
         "model": "claude-opus-5",
         "k": 3,
@@ -2440,14 +2446,14 @@
           true,
           true,
           true,
-          true
+          false
         ],
         "red": [
           true,
+          false,
           true,
           true,
-          true,
-          true
+          false
         ],
         "model": "claude-opus-5",
         "k": 3,
@@ -3663,27 +3669,6 @@
       }
     },
     "retrospective": {
-      "eval:3": {
-        "green": [
-          true,
-          true,
-          true,
-          true,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          true,
-          true,
-          true,
-          true,
-          true
-        ],
-        "model": "claude-opus-5",
-        "k": 3,
-        "runner": "workflow-runner.mjs"
-      },
       "eval:2": {
         "green": [
           true,
@@ -3730,6 +3715,25 @@
         ],
         "model": "claude-opus-5",
         "k": 5,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-opus-5",
+        "k": 3,
         "runner": "workflow-runner.mjs"
       }
     },
@@ -4033,33 +4037,16 @@
           true
         ],
         "red": [
+          true,
+          true,
           false,
           false,
-          false,
-          false,
-          false,
+          true,
           false,
           false
         ],
         "model": "claude-opus-5",
-        "k": 3,
-        "runner": "workflow-runner.mjs"
-      },
-      "eval:3": {
-        "green": [
-          true,
-          true,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          true,
-          true,
-          true
-        ],
-        "model": "claude-opus-5",
-        "k": 3,
+        "k": 5,
         "runner": "workflow-runner.mjs"
       },
       "eval:2": {
@@ -4078,6 +4065,25 @@
           false,
           false,
           false
+        ],
+        "model": "claude-opus-5",
+        "k": 5,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          true
         ],
         "model": "claude-opus-5",
         "k": 5,
@@ -4266,23 +4272,6 @@
         "k": 3,
         "runner": "workflow-runner.mjs"
       },
-      "eval:3": {
-        "green": [
-          true,
-          true,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          true,
-          true,
-          true
-        ],
-        "model": "claude-opus-5",
-        "k": 3,
-        "runner": "workflow-runner.mjs"
-      },
       "pressure:1": {
         "green": [
           true,
@@ -4299,6 +4288,25 @@
           false,
           false,
           true
+        ],
+        "model": "claude-opus-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          false
         ],
         "model": "claude-opus-5",
         "k": 3,
@@ -4549,7 +4557,7 @@
           true,
           true,
           true,
-          false
+          true
         ],
         "model": "claude-opus-5",
         "k": 3,
@@ -4617,10 +4625,10 @@
         ],
         "red": [
           true,
+          false,
+          false,
           true,
-          true,
-          true,
-          true
+          false
         ],
         "model": "claude-opus-5",
         "k": 3,

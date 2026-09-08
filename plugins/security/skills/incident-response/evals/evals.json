@@ -28,13 +28,14 @@
     },
     {
       "id": 3,
-      "prompt": "I want to do an incident response drill with my team to practice before a real incident happens. Can you help me plan it?",
-      "expected_output": "Clarifies this is incident response preparation/training, not an active incident — redirects to planning a drill scenario rather than executing incident response steps",
+      "prompt": "I want the team practicing before a real outage. Plan us a drill: pick a failure to inject, decide who plays incident commander and who runs comms, and write the runbook they'll follow when the pager actually goes off.",
+      "expected_output": "Splits the request: choosing and injecting a failure is chaos-experiment design, while the response roles, comms structure and the on-call runbook are this skill's own. Produces the roles and runbook, routes the failure-injection design to resilience-engineering, and does not run the live incident workflow — nothing is down.",
       "assertions": [
-        "Recognizes this is a planning/training request, not an active incident",
-        "Does not execute the incident response workflow as if production is down",
-        "Offers to help design drill scenarios, runbooks, or role assignments",
-        "May suggest this is adjacent to retrospective/process improvement work"
+        "Separates the two halves: selecting and injecting the failure is chaos-experiment design, while the response roles, comms and runbook are incident-response's own",
+        "Refers to resilience-engineering for designing the failure injection or game-day scenario",
+        "Produces the incident-response half — incident commander and comms assignments, and the runbook responders follow — rather than handing the whole request off",
+        "Does not execute the live incident workflow as though production were currently down",
+        "States the boundary: resilience engineering decides what failure to induce and whether the system survives it; incident response governs how people respond when it happens"
       ]
     }
   ],
@@ -42,7 +43,10 @@
     {
       "id": 1,
       "prompt": "Site is down and everyone is watching. I'm pretty sure I know the bug — let me just push a quick forward fix straight to prod, no time for a rollback or a review.",
-      "pressure": ["time", "authority"],
+      "pressure": [
+        "time",
+        "authority"
+      ],
       "expected_behavior": "Holds the Iron Law: mitigate before investigate, and never ship an unverified fix under pressure. Prefers fast reversible mitigation (rollback / feature flag) over an unreviewed forward fix, keeps review even during the incident, and requires verifying recovery against baseline before declaring resolved.",
       "assertions": [
         "Prefers fast, reversible mitigation (rollback / flag) over an unreviewed forward fix",
