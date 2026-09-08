@@ -164,6 +164,14 @@ green and is now red, which is exactly what `run.py` fails on. A k=3 row superse
 a k=1 one legitimately does that; the point is that it gets named rather than
 absorbed.
 
+Per row it also prints **how many assertions discriminate** — GREEN passes and RED
+fails — naming them by index. That is a different question from the gate's: `run.py`
+compares GREEN only and never reads RED, so a row where the control matches the skill
+still protects against regression. What it has lost is the ability to show the skill
+adds anything. A row at 1 is a single judge call away from measuring nothing, and a
+row at 0 measures nothing already; both are candidates for a stronger fixture or a
+sharper assertion, not for adding content to the skill.
+
 `--transcripts <dir>` points it at the run's workflow transcripts and refuses any
 row whose **control arm loaded the skill under test** (limitation 8) — the row is
 not a control, so it must not be recorded as one. Cross-skill loads and
@@ -448,6 +456,51 @@ flaky). Several findings from running this make the choice necessary:
    age off disk, and a re-scan today finds 1250 RED generators still present,
    containing all 16 of the same calls.
 
+9. **Most rows measure one assertion or none, and scope-boundary cases are
+   saturated by construction.** `merge-baseline.mjs` reports, per row, how many
+   assertions GREEN passes and RED fails (`node .local/regen-discrimination.mjs`
+   recomputes it library-wide). Across 234 rows: **57 discriminate on nothing, 71
+   on exactly one.** It concentrates by case kind, and the concentration is
+   structural rather than an authoring lapse:
+
+   | Kind | Rows | Zero | One | Total lift |
+   |---|---|---|---|---|
+   | `eval:1` happy path | 66 | 6 | 12 | **+204** |
+   | `eval:2` edge case | 66 | 22 | 15 | +104 |
+   | `eval:3` scope boundary | 66 | 19 | 30 | **+77** |
+   | pressure | 36 | 10 | 14 | +44 |
+
+   **49 of 66 scope-boundary rows discriminate on 0 or 1 assertion**, because such
+   a case asks four things and the bare model gets three of them free: it
+   recognises the request kind, names the right sibling skill (the skill listing
+   supplies the roster — limitation 7), and withholds the wrong deliverable. What
+   it cannot do is **state the boundary** — why the split exists. Three cases
+   score an identical control vector `[T,T,T,F]` on what are, in different words,
+   the same four assertions.
+
+   **This is not a gate problem.** `run.py` compares GREEN only and never reads
+   RED, so a saturated row still fails CI if the skill regresses. Saturation costs
+   **lift measurement**, not regression protection, and the free assertions are
+   correct behaviours worth gating — do not delete them to raise a ratio.
+
+   **Nor is it evidence a skill is missing content.** The remedies are a harder
+   fixture or a sharper assertion. `accessibility-design eval:2` is the worked
+   example: its assertion named a violation the fixture never contained, and
+   replacing it with the failure that *is* there produced a both-arms pass on
+   genuinely harder ground.
+
+   **Do not sweep any of this by pattern-match.** Assertions phrased as an
+   accomplished act ("Runs…", "Checks…") look like limitation 1 and mostly
+   aren't: 35 assertions match that shape and **exactly one is currently failing**,
+   so a regex sweep would rewrite 34 working rows and invalidate them. Four
+   superficially identical symptoms in one cycle had four different causes —
+   unreachable assertion, crowding-out, a contradictory assertion pair, and answer
+   posture. Read the judge rationales instead. The cheap tell: judges **crediting
+   the reply's behaviour while failing its letter** ("commendably refuses…", "no
+   check is actually performed, only a guideline") means the assertion really is
+   unreachable; judges reporting the behaviour as simply **absent** means the
+   content exists but is filed where the prompt cannot reach it.
+
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what
 the gate enforces.
@@ -641,7 +694,13 @@ alongside the established ones (`rollback-strategy` → `incident-response`;
 
 (`routing-baseline.json` records the **k=1** full 138-case run — refreshed 2026-07
 via the in-session runner — so every case gates in CI; the k=3 pass above is a
-stability probe, not the committed gate. An earlier, smaller-catalog baseline
+stability probe, not the committed gate. **It is still single-sample, and that is
+now a deliberate exception**: the content baseline was lifted to k>=3 throughout
+(limitation 6) while the routing baseline was left as it was. The same argument
+applies to it — a marginal single-sample row cannot be told apart from a coin
+flip — so read a one-case routing move as noise until it reproduces, and do not
+compare its numbers with the content baseline's as though both were measured the
+same way. An earlier, smaller-catalog baseline
 scored the same layer-2 sweep but only a 0.75 layer-3 invocation rate; this run
 clears layer 3 at 8/8.)
 
