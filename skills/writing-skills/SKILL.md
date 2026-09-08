@@ -86,6 +86,20 @@ Every grounding step must carry three things, and they are cheap:
 than reinventing it. The tell in an eval is a GREEN reply that contains no artifact:
 no message, no document, no recommendation, just a plan to produce one.
 
+**The library's stated position, so this stops being argued case by case: ask
+alongside, never instead.** A skill may always ask — questions are often the most
+valuable thing it produces — but it must not make the answer conditional on a
+reply it cannot get. Deliver under stated assumptions in the same response, and
+put the open questions next to the draft rather than in place of it.
+
+Two things follow. **A skill that asks first is not thereby wrong** — the failure
+is withholding the artifact, not seeking context, and a skill whose whole job is
+opening up a question (`brainstorming`) is behaving correctly when it converges
+last. And **an eval score partly measures this posture rather than knowledge**: a
+control arm that chooses to ask instead of produce scores as ignorant, so two
+cases with the same margin can measure different things. Before reading a margin
+as skill quality, check *why* the control failed.
+
 ### Before adding content, check whether it is already there
 
 A behavior can be documented and still never appear, because it is filed where the
