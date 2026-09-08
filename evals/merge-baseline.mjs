@@ -271,12 +271,27 @@ for (const { skill, key, row, prev } of plan) {
   }
 }
 
+// Assertions the skill wins and the control loses. This — not GREEN, and not the
+// GREEN-RED total — is what the row actually measures: a row that discriminates on
+// one assertion is one judge call away from measuring nothing, and a row at zero
+// measures nothing already. Saturation costs LIFT MEASUREMENT, not gate coverage
+// (run.py compares GREEN only), so this is a suite-health readout, not a gate.
+const discriminating = (row) => {
+  const at = []
+  for (let i = 0; i < row.green.length; i++) if (row.green[i] && !row.red[i]) at.push(`#${i}`)
+  return at
+}
+
 console.log(`merging ${plan.length} row(s) into ${opts.baseline}`)
 for (const { skill, key, row, prev } of plan) {
   const g = row.green.filter(Boolean).length
   const r = row.red.filter(Boolean).length
   const was = prev ? `was GREEN ${prev.green.filter(Boolean).length}/${prev.green.length} (k=${prev.k})` : 'NEW'
   console.log(`  ${skill} ${key}: GREEN ${g}/${row.green.length} RED ${r}/${row.red.length} (k=${row.k}) — ${was}`)
+  const at = discriminating(row)
+  const before = prev ? ` (was ${discriminating(prev).length})` : ''
+  const note = at.length === 0 ? ' — measures no lift' : at.length === 1 ? ' — single-assertion margin' : ''
+  console.log(`      discriminates on ${at.length}${before}: ${at.join(' ') || '(none)'}${note}`)
 }
 console.log(`\nassertions newly green: ${gained}`)
 console.log(`gate coverage given up (was green, now red): ${lostGate.length}`)

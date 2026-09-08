@@ -164,6 +164,14 @@ green and is now red, which is exactly what `run.py` fails on. A k=3 row superse
 a k=1 one legitimately does that; the point is that it gets named rather than
 absorbed.
 
+Per row it also prints **how many assertions discriminate** — GREEN passes and RED
+fails — naming them by index. That is a different question from the gate's: `run.py`
+compares GREEN only and never reads RED, so a row where the control matches the skill
+still protects against regression. What it has lost is the ability to show the skill
+adds anything. A row at 1 is a single judge call away from measuring nothing, and a
+row at 0 measures nothing already; both are candidates for a stronger fixture or a
+sharper assertion, not for adding content to the skill.
+
 `--transcripts <dir>` points it at the run's workflow transcripts and refuses any
 row whose **control arm loaded the skill under test** (limitation 8) — the row is
 not a control, so it must not be recorded as one. Cross-skill loads and
