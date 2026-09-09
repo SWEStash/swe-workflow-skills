@@ -35,6 +35,12 @@ Before reviewing code line by line, map what's exposed:
 
 Record the attack surface map as the first section of the report — gaps in understanding here mean gaps in the audit, so anything you could not map (unreachable config, undocumented integrations) goes under Open questions rather than being assumed safe.
 
+**Kick off the dependency scan while you map.** `npm audit` / `pip-audit` / `govulncheck`
+(Step 5) is one command and needs no understanding of the system, so it is the cheapest
+early result in the whole audit — start it now and have findings waiting by the time the
+walkthrough reaches them. When someone asks where to start, this is the answer that costs
+them nothing while the real review is still being scoped.
+
 ### Step 2: Assess by OWASP Top 10
 
 Walk through each category systematically. See [references/owasp-top-10.md](references/owasp-top-10.md) for the detailed checklist.

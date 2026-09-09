@@ -112,10 +112,10 @@
       "id": "boundary:brainstorming:3",
       "kind": "boundary",
       "skill": "brainstorming",
-      "prompt": "We've settled on building a CLI that syncs design tokens to code \u2014 that decision is final. Break it into tasks with acceptance criteria for next sprint. We also still haven't worked out whether it watches files continuously or runs one-shot, or whether it emits CSS custom properties or a JS theme object. Sort those out too.",
+      "prompt": "Our nightly analytics reports are slow enough that people have started complaining. The team has split into two camps \u2014 precompute everything on a schedule, or generate on demand and stream results back \u2014 and we want to land on one this week so we can start building. Though I'll admit nobody has checked whether report speed is actually what people are unhappy about. Help us get to an answer.",
       "accept": [
         "brainstorming",
-        "feature-planning",
+        "architecture-design",
         "NONE"
       ]
     },
@@ -1230,10 +1230,10 @@
       "id": "boundary:threat-modeling:3",
       "kind": "boundary",
       "skill": "threat-modeling",
-      "prompt": "We're adding a partner-facing webhook API to our payments service next sprint \u2014 the design is still on the whiteboard, nothing is built. The payments service itself has been in production for two years and has never had a security review. Leadership asked for 'a security assessment' covering both. Where do we start?",
+      "prompt": "We're speccing a partner-facing webhook API for next sprint \u2014 partners will POST us payment events. Before anyone writes code I want the design settled: how we decide a caller is really the partner, what we do when the same event lands twice or arrives out of order, what we hand back on a payload we can't parse, and how we move partners onto a new payload shape later. Walk me through it.",
       "accept": [
         "threat-modeling",
-        "security-audit",
+        "api-design",
         "NONE"
       ]
     },

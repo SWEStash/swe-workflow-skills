@@ -27,13 +27,14 @@
     },
     {
       "id": 3,
-      "prompt": "We're adding a partner-facing webhook API to our payments service next sprint — the design is still on the whiteboard, nothing is built. The payments service itself has been in production for two years and has never had a security review. Leadership asked for 'a security assessment' covering both. Where do we start?",
-      "expected_output": "Splits the request: the unbuilt webhook API is design-time work this skill owns (trust boundaries, STRIDE per element, abuse cases, mitigations as security requirements), while the two-year-old production service needs a review of code that already runs. Delivers the design-time half and routes the existing service to security-audit, stating why the two need different instruments.",
+      "prompt": "We're speccing a partner-facing webhook API for next sprint — partners will POST us payment events. Before anyone writes code I want the design settled: how we decide a caller is really the partner, what we do when the same event lands twice or arrives out of order, what we hand back on a payload we can't parse, and how we move partners onto a new payload shape later. Walk me through it.",
+      "expected_output": "Splits the request along a line the skill roster does not draw for you. Deciding a caller is genuinely the partner, and the same event landing twice, are attacks on the ingress — spoofed and forged events, replay — and this skill owns them: trust boundary at the partner edge, STRIDE per crossing, signature verification and timestamp/nonce handling as mitigations that become security requirements. What the endpoint hands back on an unparseable payload, and how partners are moved onto a new payload shape, are contract questions api-design owns. Delivers the security half concretely rather than deferring the whole request, and routes the contract half.",
       "assertions": [
-        "Separates the two halves: the unbuilt webhook API is design-time analysis, while the two-year-old production service is a review of code that already exists",
-        "Refers to security-audit for the existing payments service, and does not route the unbuilt webhook design there",
-        "Delivers design-time threat-modeling work for the webhook API — trust boundaries, attack surface, or abuse cases — rather than deferring the whole request",
-        "States the boundary: threat modeling analyzes a design before it exists; a security audit reviews a system that is already running"
+        "Separates the two halves: which callers and which deliveries can be trusted, versus what the endpoint promises its consumers and how that promise changes",
+        "Refers to api-design for the error-response contract and the payload versioning strategy",
+        "Delivers the design-time security work itself — the partner ingress as a trust boundary with the threats crossing it named — rather than deferring the whole request",
+        "Treats repeat delivery as a replay threat with a mitigation, not only as an idempotency convenience",
+        "States the boundary: threat modeling asks how an interface is attacked, while API design asks what the interface promises its callers"
       ]
     }
   ]

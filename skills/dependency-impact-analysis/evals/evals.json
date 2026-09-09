@@ -21,7 +21,7 @@
       "assertions": [
         "Confirms this is a backwards-compatible (additive) change",
         "Notes that existing code ignores the new column and remains safe",
-        "May mention that ORM models should be updated to avoid unexpected behavior when they serialize full rows",
+        "Flags that code selecting whole rows — ORM models, serializers — will start returning the new column",
         "Does not require complex coordination or versioning",
         "Gives a clear 'safe to proceed' verdict with any minor caveats"
       ]
@@ -33,7 +33,7 @@
       "assertions": [
         "Recognizes this is not a dependency impact analysis request",
         "Does not perform a blast radius analysis for adding auth",
-        "May note that adding required auth to an existing endpoint is a breaking change for current consumers (brief impact observation)",
+        "Notes that adding required auth to a live endpoint is a breaking change for its current consumers",
         "Directs to security-audit or api-design skill for the actual implementation guidance"
       ]
     }

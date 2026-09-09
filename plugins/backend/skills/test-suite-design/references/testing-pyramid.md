@@ -8,7 +8,7 @@
 
 ## Layer Definitions
 
-### Unit Tests (70% of your suite)
+### Unit Tests (~70% by default)
 
 **Scope**: A single function, method, or class in isolation.
 **Speed**: Milliseconds per test.
@@ -29,7 +29,7 @@ What NOT to test here:
 - HTTP request/response cycles (use integration tests)
 - Third-party library behavior (trust but verify at integration level)
 
-### Integration Tests (20% of your suite)
+### Integration Tests (~20% by default)
 
 **Scope**: Two or more components working together.
 **Speed**: Hundreds of milliseconds to seconds per test.
@@ -49,7 +49,7 @@ Typical setup:
 - Seed data via factories, not fixtures (factories are dynamic, fixtures go stale)
 - Clean up after each test (transaction rollback or truncation)
 
-### E2E Tests (10% of your suite)
+### E2E Tests (~10% by default)
 
 **Scope**: Full user journey through the entire stack.
 **Speed**: Seconds to minutes per test.
@@ -62,6 +62,22 @@ What to test here:
 - Cross-service workflows
 
 Keep these minimal. Each E2E test is expensive to write, slow to run, and fragile to maintain. If you can test something at a lower level, do it there instead.
+
+## Adjusting the Ratio for the Codebase
+
+70/20/10 is the default, not the target. It assumes most behavior lives in code you can
+call directly, which is true of a service with a real domain layer and false of plenty of
+real codebases. Name the split you are aiming for and what moved it:
+
+| Codebase shape | Where it lands | Why |
+|---|---|---|
+| Domain logic in plain functions/classes | 70/20/10 | The default holds |
+| ORM-heavy (Django, Rails, Laravel) — logic is queries and view wiring | ~40/50/10 | A unit test against a mocked queryset asserts the mock, not the query |
+| Thin API over a third-party service | ~30/50/20 | The risk is the integration contract, not internal branching |
+| Data pipeline / transform-heavy | ~80/15/5 | Transforms are pure and cheap to test in isolation |
+
+The number is a communication device: it forces an explicit claim about where this
+codebase's risk actually sits. **A stated distribution with a reason beats a recited one.**
 
 ## Anti-patterns
 
