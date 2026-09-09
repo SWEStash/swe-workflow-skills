@@ -34,7 +34,7 @@
       "id": "boundary:ai-evaluation:3",
       "kind": "boundary",
       "skill": "ai-evaluation",
-      "prompt": "Set up MLflow for our fine-tuning experiments so we can log runs and compare hyperparameters across the team.",
+      "prompt": "We're fine-tuning a summarizer. I want every run's hyperparameters logged so the team can compare them, and I want that comparison ranked by how good the summaries actually are \u2014 not by training loss. What should we set up?",
       "accept": [
         "ai-evaluation",
         "ml-experiment-tracking",
@@ -112,7 +112,7 @@
       "id": "boundary:brainstorming:3",
       "kind": "boundary",
       "skill": "brainstorming",
-      "prompt": "We've settled on building a CLI tool that syncs our design tokens to code. Break it into tasks with acceptance criteria and dependencies so the team can start next sprint.",
+      "prompt": "We've settled on building a CLI that syncs design tokens to code \u2014 that decision is final. Break it into tasks with acceptance criteria for next sprint. We also still haven't worked out whether it watches files continuously or runs one-shot, or whether it emits CSS custom properties or a JS theme object. Sort those out too.",
       "accept": [
         "brainstorming",
         "feature-planning",
@@ -633,10 +633,10 @@
       "id": "boundary:incident-response:3",
       "kind": "boundary",
       "skill": "incident-response",
-      "prompt": "I want to do an incident response drill with my team to practice before a real incident happens. Can you help me plan it?",
+      "prompt": "I want the team practicing before a real outage. Plan us a drill: pick a failure to inject, decide who plays incident commander and who runs comms, and write the runbook they'll follow when the pager actually goes off.",
       "accept": [
         "incident-response",
-        "retrospective",
+        "resilience-engineering",
         "NONE"
       ]
     },
@@ -674,7 +674,7 @@
       "id": "boundary:llm-app-engineering:3",
       "kind": "boundary",
       "skill": "llm-app-engineering",
-      "prompt": "We rewrote our assistant's system prompt and the answers feel better. How do we prove the new prompt is actually better before rolling it out to users?",
+      "prompt": "We rewrote our assistant's system prompt and the answers feel better. How do we prove it before rolling out to users? Also, the new prompt is about 1,800 tokens and we're now truncating retrieved context to fit the window \u2014 could that be why some answers got vaguer?",
       "accept": [
         "llm-app-engineering",
         "ai-evaluation",
@@ -694,7 +694,7 @@
       "id": "boundary:metrics-and-okrs:3",
       "kind": "boundary",
       "skill": "metrics-and-okrs",
-      "prompt": "We defined the KR already. Here's the data: the A/B test on the new onboarding shows a 3.1% lift in activation, p = 0.06, n = 800 split across both arms. Is that a real effect? Do we ship it?",
+      "prompt": "Our activation key result is 'increase week-1 activation from 22% to 30% by Q3'. The A/B test on the new onboarding shows a 3.1% lift, p = 0.06, n = 800 split across both arms. Two questions: is that a real effect, and is the key result even the right one \u2014 should we be measuring week-1 activation or 30-day retention?",
       "accept": [
         "metrics-and-okrs",
         "statistical-analysis",
@@ -1034,10 +1034,10 @@
       "id": "boundary:retrospective:3",
       "kind": "boundary",
       "skill": "retrospective",
-      "prompt": "The payment service is down right now \u2014 checkout has been failing for about ten minutes and customers are tweeting at us. Let's start the post-mortem so we capture everything while it's fresh.",
+      "prompt": "Checkout was failing for about 40 minutes this morning. We rolled back and it's stable now. I want to run the post-mortem this afternoon while it's still fresh. One thing though \u2014 we don't actually know what caused it. The rollback just made it go away.",
       "accept": [
         "retrospective",
-        "incident-response",
+        "bug-investigating",
         "NONE"
       ]
     },
@@ -1113,7 +1113,7 @@
       "id": "boundary:strategic-review:3",
       "kind": "boundary",
       "skill": "strategic-review",
-      "prompt": "I'm writing the one-line tagline for our landing page. Should it say 'fast' or 'simple'?",
+      "prompt": "We're relaunching the landing page next week. I need the tagline \u2014 'fast' or 'simple' \u2014 and the three benefit bullets under it. Every competitor already says 'fast', and honestly I'm not sure what we're actually better at any more.",
       "accept": [
         "strategic-review",
         "NONE"
@@ -1171,9 +1171,10 @@
       "id": "boundary:technical-debt-review:3",
       "kind": "boundary",
       "skill": "technical-debt-review",
-      "prompt": "I found a function that's 20 lines with a bug in it. Can you help me refactor it?",
+      "prompt": "There's a 20-line pricing function with a bug in it. Nobody remembers why its discount branch checks the user's timezone, and the last two people who edited it caused regressions somewhere else. Can you fix the bug?",
       "accept": [
         "technical-debt-review",
+        "code-archaeology",
         "refactoring",
         "NONE"
       ]
@@ -1229,7 +1230,7 @@
       "id": "boundary:threat-modeling:3",
       "kind": "boundary",
       "skill": "threat-modeling",
-      "prompt": "Here's our Express API that's been in production for a year \u2014 can you go through the code and check it for vulnerabilities like SQL injection, XSS, and broken auth?",
+      "prompt": "We're adding a partner-facing webhook API to our payments service next sprint \u2014 the design is still on the whiteboard, nothing is built. The payments service itself has been in production for two years and has never had a security review. Leadership asked for 'a security assessment' covering both. Where do we start?",
       "accept": [
         "threat-modeling",
         "security-audit",
@@ -1249,7 +1250,7 @@
       "id": "boundary:ui-ux-design:3",
       "kind": "boundary",
       "skill": "ui-ux-design",
-      "prompt": "Flows and wireframes are approved. Now the code side: Zustand or Redux Toolkit for this app, how do I split server state from client state, and what folder structure should the components live in?",
+      "prompt": "Flows and wireframes are approved. Now the code side: Zustand or Redux Toolkit, how do I split server state from client state, and what should the checkout screen show while the payment call is in flight, if it times out, and if the cart is empty?",
       "accept": [
         "ui-ux-design",
         "frontend-architecture",

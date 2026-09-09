@@ -33,14 +33,14 @@
     },
     {
       "id": 3,
-      "prompt": "Flows and wireframes are approved. Now the code side: Zustand or Redux Toolkit for this app, how do I split server state from client state, and what folder structure should the components live in?",
-      "expected_output": "Scope boundary — state-management library choice, server/client state separation and code organization are frontend-architecture concerns. Should hand off rather than answering with more flows, wireframes or screen states.",
+      "prompt": "Flows and wireframes are approved. Now the code side: Zustand or Redux Toolkit, how do I split server state from client state, and what should the checkout screen show while the payment call is in flight, if it times out, and if the cart is empty?",
+      "expected_output": "Splits the request: which library holds state and how server and client state are separated are architecture decisions, while what the checkout screen shows in flight, on timeout, and when empty is a UX decision this skill owns. Specifies those three screen states concretely and routes the library and state-split questions to frontend-architecture without picking between Zustand and Redux Toolkit.",
       "assertions": [
-        "Recognizes that state management and code organization are frontend-architecture concerns",
-        "Hands off to or invokes the frontend-architecture skill",
-        "Does not answer with wireframes, user flows, or screen-state specifications",
-        "Does not pick between Zustand and Redux Toolkit inside the ui-ux-design workflow",
-        "May carry forward the approved flows as the constraints the architecture has to satisfy"
+        "Separates the state-management and code-organization questions from the screen-state questions",
+        "Refers to frontend-architecture for the Zustand-versus-Redux-Toolkit choice and the server/client state split",
+        "Does not pick between Zustand and Redux Toolkit",
+        "Specifies the checkout screen's in-flight, timeout, and empty-cart states concretely — the half that is this skill's own",
+        "States the boundary: which states a screen must account for is a UX decision; where that state lives in code is an architecture decision"
       ]
     }
   ]

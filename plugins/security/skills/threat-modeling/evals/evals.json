@@ -27,13 +27,13 @@
     },
     {
       "id": 3,
-      "prompt": "Here's our Express API that's been in production for a year — can you go through the code and check it for vulnerabilities like SQL injection, XSS, and broken auth?",
-      "expected_output": "Recognizes this as a reactive security review of existing code, not design-time threat modeling — refers to security-audit for the OWASP-style code review, stating the boundary: threat-modeling analyzes designs before they're built; security-audit reviews built systems",
+      "prompt": "We're adding a partner-facing webhook API to our payments service next sprint — the design is still on the whiteboard, nothing is built. The payments service itself has been in production for two years and has never had a security review. Leadership asked for 'a security assessment' covering both. Where do we start?",
+      "expected_output": "Splits the request: the unbuilt webhook API is design-time work this skill owns (trust boundaries, STRIDE per element, abuse cases, mitigations as security requirements), while the two-year-old production service needs a review of code that already runs. Delivers the design-time half and routes the existing service to security-audit, stating why the two need different instruments.",
       "assertions": [
-        "Recognizes the request as a security review of existing, deployed code rather than design-time analysis",
-        "Refers to the security-audit skill for the vulnerability review",
-        "Does not produce a design-time threat model (DFDs, STRIDE-per-boundary of a not-yet-built system) as the answer",
-        "States the boundary: threat-modeling is proactive/design-time, security-audit is the reactive review of built code"
+        "Separates the two halves: the unbuilt webhook API is design-time analysis, while the two-year-old production service is a review of code that already exists",
+        "Refers to security-audit for the existing payments service, and does not route the unbuilt webhook design there",
+        "Delivers design-time threat-modeling work for the webhook API — trust boundaries, attack surface, or abuse cases — rather than deferring the whole request",
+        "States the boundary: threat modeling analyzes a design before it exists; a security audit reviews a system that is already running"
       ]
     }
   ]

@@ -19,6 +19,42 @@ This is the **strategy lens**. For what's actually built and whether it works, r
 `project-review`; the two compose into a full pre-public review (see
 [templates/full-review-prompt.md](templates/full-review-prompt.md)).
 
+## First: match the response to the size of the question
+
+Not every positioning question is a strategic review, and running the five steps
+below on a small one is the most common way this skill makes an answer worse than
+no skill at all.
+
+**The test is what the user asked you to produce, not how uncertain they sound.**
+
+- They asked for a **specific small artifact** — a tagline, a headline, a benefit
+  bullet, a word choice, one competitor comparison. Deliver that artifact.
+- They asked about **the position itself** — "what makes us different", "is this
+  space too crowded", "are we ready to go public". That *is* the review. Run it,
+  even though no document was named.
+
+For the small case: **write the words, in the same response.** Pick the option,
+draft the copy, give the one-line reason. Do not make it conditional on research
+the user has not been asked for — where the positioning is genuinely unclear, name
+the reading you assumed and answer under it. **This is not a gate on delivering:
+state the assumption and deliver in the same reply.** A draft they correct beats a
+question they have to go away and answer.
+
+**Then name the strategic question in a sentence or two, if there is one.** "Every
+competitor already claims fast, so that word cannot differentiate you" is this
+skill's real contribution to a copy question, and it belongs in the answer.
+
+**What does not belong is the apparatus.** No market scan, no thesis statement, no
+strategic forks table, no discovery-data request, no "give me your win/loss notes
+first" — unless the user asked for the review, or the small question genuinely
+cannot be answered without it. **Offer the review; do not start it:** one line on
+what it would cover and what it needs, and let them choose. Steps 1-5 describe that
+review and begin only once it has been asked for.
+
+Exit condition, said in the reply itself: *"Here are the tagline and the three
+bullets. The underlying question is that 'fast' is table stakes in your category —
+I can run the full positioning review on that if you want it."*
+
 ## Ground rule: a thesis is a claim, not a fact
 
 State the project's strategic thesis in one sentence, then treat every load-bearing

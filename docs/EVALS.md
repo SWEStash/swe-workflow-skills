@@ -198,7 +198,7 @@ cases drops that skill's other rows.
 
 ### Results (content evals, full catalog)
 
-`claude-opus-5`, all 66 skills, 234 cases, 1311 assertions, **every row at k>=3**.
+`claude-opus-5`, all 66 skills, 234 cases, 1315 assertions, **every row at k>=3**.
 
 **What RED actually is.** RED answers the same prompt without the skill's *content* —
 it cannot read any `SKILL.md`, `references/` or `templates/`. Both arms do carry the
@@ -211,18 +211,18 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **854 / 1311 = 65.1%** |
-| Assertions passed, skill loaded (GREEN) | **1283 / 1311 = 97.9%** |
-| Gain | **+32.7 points** |
-| Cases where GREEN beats RED | **177 / 234** |
-| Cases where GREEN ties RED | **57 / 234** |
+| Assertions passed, no skill body (RED) | **847 / 1315 = 64.4%** |
+| Assertions passed, skill loaded (GREEN) | **1280 / 1315 = 97.3%** |
+| Gain | **+32.9 points** |
+| Cases where GREEN beats RED | **181 / 234** |
+| Cases where GREEN ties RED | **53 / 234** |
 | Cases where GREEN is *below* RED | **0 / 234** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
 content is worse than no skill at all. **There are also zero RED-true / GREEN-false
-assertions** anywhere in the library. The 57 ties are mostly cases where RED already
+assertions** anywhere in the library. The 53 ties are mostly cases where RED already
 saturates — no headroom left to show, not a skill doing nothing — and saturation
-concentrates by case kind: `eval:1` 5%, `eval:2` 33%, `eval:3` 28%, pressure 26%.
+concentrates by case kind: `eval:1` 5%, `eval:2` 32%, `eval:3` 18%, pressure 28%.
 Scope-boundary cases saturate because three of their four assertions (recognise the
 request, name the sibling skill, withhold the wrong deliverable) are satisfied by the
 roster alone; only "states the boundary" discriminates.
@@ -459,24 +459,44 @@ flaky). Several findings from running this make the choice necessary:
 9. **Most rows measure one assertion or none, and scope-boundary cases are
    saturated by construction.** `merge-baseline.mjs` reports, per row, how many
    assertions GREEN passes and RED fails (`node .local/regen-discrimination.mjs`
-   recomputes it library-wide). Across 234 rows: **57 discriminate on nothing, 71
+   recomputes it library-wide). Across 234 rows: **53 discriminate on nothing, 73
    on exactly one.** It concentrates by case kind, and the concentration is
    structural rather than an authoring lapse:
 
    | Kind | Rows | Zero | One | Total lift |
    |---|---|---|---|---|
-   | `eval:1` happy path | 66 | 6 | 12 | **+204** |
+   | `eval:1` happy path | 66 | 6 | 12 | **+201** |
    | `eval:2` edge case | 66 | 22 | 15 | +104 |
-   | `eval:3` scope boundary | 66 | 19 | 30 | **+77** |
+   | `eval:3` scope boundary | 66 | 15 | 32 | **+84** |
    | pressure | 36 | 10 | 14 | +44 |
 
-   **49 of 66 scope-boundary rows discriminate on 0 or 1 assertion**, because such
-   a case asks four things and the bare model gets three of them free: it
-   recognises the request kind, names the right sibling skill (the skill listing
-   supplies the roster — limitation 7), and withholds the wrong deliverable. What
-   it cannot do is **state the boundary** — why the split exists. Three cases
-   score an identical control vector `[T,T,T,F]` on what are, in different words,
-   the same four assertions.
+   **47 of 66 scope-boundary rows discriminate on 0 or 1 assertion.** The cause is
+   the shape of the case: it asks four things and a bare model gets three of them
+   free — it recognises the request kind, names the right sibling skill (the skill
+   listing supplies the roster — limitation 7), and withholds the wrong
+   deliverable. All that is left to test is whether the reply can **state the
+   boundary**. Before any were rewritten, three such cases scored an identical
+   control vector `[T,T,T,F]` on what were, in different words, the same four
+   assertions.
+
+   **Ten have since been rewritten, and the fix generalises.** Give the prompt an
+   in-scope half *and* a half owned by a sibling that the roster does not
+   disambiguate, and all four assertions become real decisions. Across those ten
+   rows discriminating assertions went 3 to 9. Two rules came out of doing it, both
+   learned by breaking them:
+
+   - **Never let the prompt's own facts state the boundary.** One rewrite said "the
+     design is still on the whiteboard" and "in production for two years" — which
+     *is* the design-time-versus-running distinction, so both arms simply read it
+     back and the row went from one discriminating assertion to none.
+   - **Two structural conjuncts, never three.** An assertion requiring a handoff to
+     name a task breakdown *and* acceptance criteria *and* dependencies is failed
+     on the missing third by judges who record the first two as present.
+
+   Budget the cost before repeating it: those ten rows added nine newly ungated
+   assertions, roughly one per row, and they are not all assertion bugs — a harder
+   fixture surfaces real gaps that then need fixing. Work in batches with a fix
+   budget, not one sweep.
 
    **This is not a gate problem.** `run.py` compares GREEN only and never reads
    RED, so a saturated row still fails CI if the skill regresses. Saturation costs

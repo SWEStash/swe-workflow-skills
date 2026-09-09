@@ -30,13 +30,14 @@
     },
     {
       "id": 3,
-      "prompt": "I'm writing the one-line tagline for our landing page. Should it say 'fast' or 'simple'?",
-      "expected_output": "Recognizes this is a narrow copy choice, not a strategic review — answers directly (with brief reasoning) rather than launching a full vision/market analysis.",
+      "prompt": "We're relaunching the landing page next week. I need the tagline — 'fast' or 'simple' — and the three benefit bullets under it. Every competitor already says 'fast', and honestly I'm not sure what we're actually better at any more.",
+      "expected_output": "Answers the copy question directly and briefly, then treats 'not sure what we're better at any more' as what it is: a positioning question, which is this skill's own subject. Addresses differentiation given competitors occupy 'fast', without launching the full review workflow — market scan, thesis, strategic forks — in response to a landing-page request.",
       "assertions": [
-        "Recognizes this is a small copy/messaging question, not a strategic review",
-        "Does not launch the full strategic-review workflow (thesis, market scan, forks)",
-        "Answers the tagline question directly with brief, practical reasoning",
-        "May note that messaging should follow from positioning if a deeper review is ever wanted"
+        "Answers the immediate tagline and benefit-bullet question directly rather than deferring it to a larger review",
+        "Recognises that 'not sure what we're better at any more' is a positioning question rather than a copy question",
+        "Does not launch the full strategic-review workflow — market scan, thesis, strategic forks — as the response to a landing-page request",
+        "Addresses the positioning half: what actually differentiates the product given competitors already occupy 'fast'",
+        "States the boundary: copy expresses a position, and cannot substitute for deciding what that position is"
       ]
     }
   ]
