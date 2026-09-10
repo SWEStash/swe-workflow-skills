@@ -198,7 +198,7 @@ cases drops that skill's other rows.
 
 ### Results (content evals, full catalog)
 
-`claude-opus-5`, all 66 skills, 234 cases, 1315 assertions, **every row at k>=3**.
+`claude-opus-5`, all 66 skills, 234 cases, 1316 assertions, **every row at k>=3**.
 
 **What RED actually is.** RED answers the same prompt without the skill's *content* —
 it cannot read any `SKILL.md`, `references/` or `templates/`. Both arms do carry the
@@ -211,11 +211,11 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **847 / 1315 = 64.4%** |
-| Assertions passed, skill loaded (GREEN) | **1280 / 1315 = 97.3%** |
-| Gain | **+32.9 points** |
-| Cases where GREEN beats RED | **181 / 234** |
-| Cases where GREEN ties RED | **53 / 234** |
+| Assertions passed, no skill body (RED) | **850 / 1316 = 64.6%** |
+| Assertions passed, skill loaded (GREEN) | **1285 / 1316 = 97.6%** |
+| Gain | **+33.0 points** |
+| Cases where GREEN beats RED | **183 / 234** |
+| Cases where GREEN ties RED | **51 / 234** |
 | Cases where GREEN is *below* RED | **0 / 234** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
@@ -451,26 +451,37 @@ flaky). Several findings from running this make the choice necessary:
    **Two caveats on the numbers above.** The prompt change means rows measured
    after it are not prompt-identical in the *control arm* to rows measured before.
    The gate is unaffected — `run.py` compares GREEN only and never reads RED — but
-   a lift comparison spanning that boundary is comparing two slightly different
-   controls. And the 1571 denominator was true when counted: workflow transcripts
-   age off disk, and a re-scan today finds 1250 RED generators still present,
-   containing all 16 of the same calls.
+   a lift comparison spanning that boundary compares two different controls, and
+   **the difference is not always small.** Measured on nine rows re-run across the
+   boundary: five comparable rows moved the control by 0 to 1 assertion, inside the
+   sampling floor — but `project-documentation eval:1` moved **six of nine**, its
+   control rising 1/9 to 7/9 while GREEN stayed byte-identical. Its old control
+   vector passed only "grounds the README in the real manifest" and failed every
+   content assertion, the signature of a control that **declined to produce the
+   artifact at all**; the current control writes one. So the exposure concentrates
+   in rows whose recorded control deferred rather than answered (limitation 10),
+   not uniformly across the baseline. Treat a large lift on a row measured under
+   the old control as unconfirmed until re-run.
+
+   And the 1571 denominator was true when counted: workflow transcripts age off
+   disk, and a re-scan today finds 1250 RED generators still present, containing
+   all 16 of the same calls.
 
 9. **Most rows measure one assertion or none, and scope-boundary cases are
    saturated by construction.** `merge-baseline.mjs` reports, per row, how many
    assertions GREEN passes and RED fails (`node .local/regen-discrimination.mjs`
-   recomputes it library-wide). Across 234 rows: **53 discriminate on nothing, 73
+   recomputes it library-wide). Across 234 rows: **51 discriminate on nothing, 71
    on exactly one.** It concentrates by case kind, and the concentration is
    structural rather than an authoring lapse:
 
    | Kind | Rows | Zero | One | Total lift |
    |---|---|---|---|---|
-   | `eval:1` happy path | 66 | 6 | 12 | **+201** |
-   | `eval:2` edge case | 66 | 22 | 15 | +104 |
-   | `eval:3` scope boundary | 66 | 15 | 32 | **+84** |
+   | `eval:1` happy path | 66 | 6 | 13 | **+195** |
+   | `eval:2` edge case | 66 | 22 | 14 | +105 |
+   | `eval:3` scope boundary | 66 | 13 | 30 | **+91** |
    | pressure | 36 | 10 | 14 | +44 |
 
-   **47 of 66 scope-boundary rows discriminate on 0 or 1 assertion.** The cause is
+   **43 of 66 scope-boundary rows discriminate on 0 or 1 assertion.** The cause is
    the shape of the case: it asks four things and a bare model gets three of them
    free — it recognises the request kind, names the right sibling skill (the skill
    listing supplies the roster — limitation 7), and withholds the wrong
@@ -482,9 +493,17 @@ flaky). Several findings from running this make the choice necessary:
    **Ten have since been rewritten, and the fix generalises.** Give the prompt an
    in-scope half *and* a half owned by a sibling that the roster does not
    disambiguate, and all four assertions become real decisions. Across those ten
-   rows discriminating assertions went 3 to 9. Two rules came out of doing it, both
-   learned by breaking them:
+   rows discriminating assertions went 3 to 9 on the first pass, and to **17** after
+   a second pass on the three that the first pass left measuring nothing. None of
+   the ten now measures nothing. Three rules came out of doing it, all learned by
+   breaking them:
 
+   - **Check the two descriptions against each other before choosing the sibling.**
+     If either skill's description names the other *with the boundary stated*, the
+     "names the right sibling" assertion cannot discriminate — the roster has
+     already answered it. One rewrite paired a skill with the sibling whose own
+     description reads "design-time analysis of a system not yet built → <the skill
+     under test>", so the control passed that assertion for free by construction.
    - **Never let the prompt's own facts state the boundary.** One rewrite said "the
      design is still on the whiteboard" and "in production for two years" — which
      *is* the design-time-versus-running distinction, so both arms simply read it
@@ -520,6 +539,28 @@ flaky). Several findings from running this make the choice necessary:
    check is actually performed, only a guideline") means the assertion really is
    unreachable; judges reporting the behaviour as simply **absent** means the
    content exists but is filed where the prompt cannot reach it.
+
+10. **Part of every lift figure is answer posture, not knowledge.** The harness
+    rewards producing an artifact and penalises gathering context first, in **both**
+    arms, on the same underlying behaviour. On a "set this up for me" prompt an arm
+    may legitimately either build or ask, and the score treats asking as ignorance.
+    Confirmed in both directions: a control that asked clarifying questions instead
+    of producing a schema scored 1/7 where a producing control scored 6/7, inflating
+    that row's gain to +6; and a treatment arm that asked for a staging URL before
+    concluding was failed on the letter while judges credited the honesty.
+
+    **The test that separates this from a genuinely unreachable assertion is cheap
+    and decisive: did any round produce the artifact?** If none could, the assertion
+    is unreachable (limitation 4). If some did and others deferred, it is posture.
+
+    **Consequences.** Two rows both at +6 are not comparable without knowing why the
+    control failed. A large control movement between runs is expected exactly where
+    the prompt invites a choice between building and asking. And a row whose control
+    vector passes only the "ground it in the real inputs" assertion while failing
+    every content assertion is showing the deferral signature — such a row's gain is
+    unconfirmed until re-measured. Sixteen rows in the current baseline carry that
+    signature, holding **+97** of the recorded total, so this is a material share of
+    the aggregate and not a rounding concern.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what
