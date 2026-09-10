@@ -211,11 +211,11 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **850 / 1316 = 64.6%** |
-| Assertions passed, skill loaded (GREEN) | **1285 / 1316 = 97.6%** |
-| Gain | **+33.0 points** |
-| Cases where GREEN beats RED | **183 / 234** |
-| Cases where GREEN ties RED | **51 / 234** |
+| Assertions passed, no skill body (RED) | **879 / 1316 = 66.8%** |
+| Assertions passed, skill loaded (GREEN) | **1282 / 1316 = 97.4%** |
+| Gain | **+30.6 points** |
+| Cases where GREEN beats RED | **181 / 234** |
+| Cases where GREEN ties RED | **53 / 234** |
 | Cases where GREEN is *below* RED | **0 / 234** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
@@ -458,10 +458,13 @@ flaky). Several findings from running this make the choice necessary:
    control rising 1/9 to 7/9 while GREEN stayed byte-identical. Its old control
    vector passed only "grounds the README in the real manifest" and failed every
    content assertion, the signature of a control that **declined to produce the
-   artifact at all**; the current control writes one. So the exposure concentrates
-   in rows whose recorded control deferred rather than answered (limitation 10),
-   not uniformly across the baseline. Treat a large lift on a row measured under
-   the old control as unconfirmed until re-run.
+   artifact at all**; the current control writes one. That is answer posture, and
+   limitation 10 records what happened when sixteen such rows were re-measured:
+   a third of their combined gain did not survive. **But the signature is not a
+   reliable predictor of which rows are affected** — see limitation 10 — so the
+   safe reading is simply that a large gain recorded under the old control is
+   unconfirmed until that row is re-run, with no shortcut for guessing which ones
+   will move.
 
    And the 1571 denominator was true when counted: workflow transcripts age off
    disk, and a re-scan today finds 1250 RED generators still present, containing
@@ -470,15 +473,15 @@ flaky). Several findings from running this make the choice necessary:
 9. **Most rows measure one assertion or none, and scope-boundary cases are
    saturated by construction.** `merge-baseline.mjs` reports, per row, how many
    assertions GREEN passes and RED fails (`node .local/regen-discrimination.mjs`
-   recomputes it library-wide). Across 234 rows: **51 discriminate on nothing, 71
+   recomputes it library-wide). Across 234 rows: **53 discriminate on nothing, 71
    on exactly one.** It concentrates by case kind, and the concentration is
    structural rather than an authoring lapse:
 
    | Kind | Rows | Zero | One | Total lift |
    |---|---|---|---|---|
-   | `eval:1` happy path | 66 | 6 | 13 | **+195** |
-   | `eval:2` edge case | 66 | 22 | 14 | +105 |
-   | `eval:3` scope boundary | 66 | 13 | 30 | **+91** |
+   | `eval:1` happy path | 66 | 8 | 13 | **+176** |
+   | `eval:2` edge case | 66 | 22 | 14 | +93 |
+   | `eval:3` scope boundary | 66 | 13 | 30 | **+90** |
    | pressure | 36 | 10 | 14 | +44 |
 
    **43 of 66 scope-boundary rows discriminate on 0 or 1 assertion.** The cause is
@@ -555,12 +558,35 @@ flaky). Several findings from running this make the choice necessary:
 
     **Consequences.** Two rows both at +6 are not comparable without knowing why the
     control failed. A large control movement between runs is expected exactly where
-    the prompt invites a choice between building and asking. And a row whose control
-    vector passes only the "ground it in the real inputs" assertion while failing
-    every content assertion is showing the deferral signature — such a row's gain is
-    unconfirmed until re-measured. Sixteen rows in the current baseline carry that
-    signature, holding **+97** of the recorded total, so this is a material share of
-    the aggregate and not a rounding concern.
+    the prompt invites a choice between building and asking.
+
+    **This has been measured, not just argued.** Sixteen rows whose control had
+    declined to produce an artifact were re-measured together, at their recorded k.
+    Their combined gain went **+97 to +65** — a third of it was posture, and the
+    library total moved +435 to +403. The treatment arm held on fourteen of the
+    sixteen. Six were confirmed posture artifacts, two of them collapsing to **zero**
+    gain (`metrics-and-okrs eval:1` and `data-modeling eval:1`, whose controls rose
+    to a perfect score); six were confirmed real gains that reproduced; two moved
+    only slightly; and two moved on the treatment side instead, which is a different
+    problem (see below).
+
+    **The effect is real, but do not trust a screen for it.** These sixteen were
+    selected by "control collapsed to 0-2 alongside near-perfect treatment", and
+    that predictor did not track the effect. The two rows with *entirely zero*
+    controls, predicted to move most, barely moved at all — one not by a single
+    assertion — while the two total collapses had non-zero controls and were not
+    flagged. A row's gain is confirmed by re-measuring that row, and by nothing
+    cheaper.
+
+    **A re-measure can also raise a gain.** `prd-writing eval:1` went +6 to +7 when
+    its control fell. The exposure is not one-directional.
+
+    **And a count-stable row is not a stable row.** `tdd-workflow eval:1` held its
+    control at 2 of 7 across two vectors with **no assertion in common**
+    (`FFTFFTF` then `TTFFFFF`). By contrast the three rows re-measured at k=5
+    reproduced byte-identically in both arms. That is the clearest evidence yet for
+    paying k=5 on a contested row: at k=3 a stable count can hide complete churn
+    underneath.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what
