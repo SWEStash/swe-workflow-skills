@@ -29,14 +29,14 @@
     },
     {
       "id": 3,
-      "prompt": "We need to rename our 'username' column to 'display_name' in the users table. We have 2M users and the column is used in about 15 places in the codebase. We can't have downtime. How should I approach this?",
-      "expected_output": "Should recommend the expand-contract migration pattern, not a simple column rename. Should produce multiple migration steps with deployment coordination.",
+      "prompt": "We're adding identity verification to onboarding, so for every new customer we'll be storing a passport number, a date of birth, and a scan of the document itself. Design the tables. Legal has already confirmed we're allowed to collect all three.",
+      "expected_output": "The prompt closes the question of whether the data may be collected, which leaves two open halves the roster does not separate. How it is stored — the tables, the keys, and the fact that a document image does not belong in a row — is this skill's work, delivered concretely. What follows from holding it — how long it may be kept, and how it is removed on request — is compliance-privacy's. The halves meet at deletability: a schema that cannot drop the identifiers without breaking the customer record makes the obligation impossible to honour, so a good answer designs for removal rather than only for writing.",
       "assertions": [
-        "Does NOT suggest a simple ALTER TABLE RENAME",
-        "Recommends expand-contract (add new column, dual-write, backfill, cut over, drop old)",
-        "Addresses the zero-downtime requirement explicitly",
-        "Warns about table locking on 2M rows",
-        "Produces reversible migration steps"
+        "Separates the two halves: how the data is shaped and stored, versus what obligations follow from holding it",
+        "Refers to compliance-privacy for retention periods and the erasure path",
+        "Delivers the schema itself, including where the document image lives rather than only the columns beside it",
+        "Designs for removal: the identifiers and the scan can be deleted without breaking the customer record",
+        "States the boundary: data modeling decides how data is stored, while privacy work decides how long it may be kept and how it is removed"
       ]
     }
   ]

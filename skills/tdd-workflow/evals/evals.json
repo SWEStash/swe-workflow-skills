@@ -30,14 +30,14 @@
     },
     {
       "id": 3,
-      "prompt": "I have a function that calls an external payment API. How should I TDD this? I'm worried about testing external calls.",
-      "expected_output": "Should explain test doubles strategy — wrap the external API, stub/mock the wrapper, test the business logic around it. Should distinguish between unit and integration testing here.",
+      "prompt": "I'm building the integration with a shipping-rate provider — we send a parcel spec, they return quotes. I want to write it test-first. Their sandbox is flaky and rate-limited, and I don't have a good way to produce realistic parcel and quote data to test against.",
+      "expected_output": "The roster does not separate these two halves. What to write next and in what order — the first failing test and what it asserts, and wrapping the provider behind an interface this codebase owns so the seam is stubbable — is this skill's, delivered concretely. Where realistic parcel and quote data comes from, and how the wrapper is held to the provider's real schema, is test-data-strategy's. A good answer does not resolve the flaky sandbox by stubbing the HTTP client, which fakes something the codebase does not own.",
       "assertions": [
-        "Recommends wrapping the external API (don't mock what you don't own)",
-        "Explains stub vs mock distinction for this case",
-        "Suggests unit tests with stubs for business logic",
-        "Suggests integration test for actual API communication",
-        "Does not suggest mocking the HTTP library directly"
+        "Separates the two halves: the order in which code and tests get written, versus where the realistic parcel and quote data comes from",
+        "Refers to test-data-strategy for generating the fixture data and for contract testing against the provider",
+        "Delivers the test-first half itself — the first failing test and what it asserts — rather than deferring the whole request",
+        "Wraps the provider behind an interface this codebase owns instead of stubbing the HTTP client",
+        "States the boundary: this skill decides what to write next and in what order, while test data strategy decides what the tests are fed"
       ]
     }
   ],
@@ -45,7 +45,10 @@
     {
       "id": 1,
       "prompt": "We demo in 30 minutes and I already wrote the whole discount_calculator function — it worked when I tried it by hand. Just add a couple of tests after so we're covered, then we ship.",
-      "pressure": ["time", "sunk_cost"],
+      "pressure": [
+        "time",
+        "sunk_cost"
+      ],
       "expected_behavior": "Holds the Iron Law. Does not accept tests-after as equivalent; explains that tests written after the code pass immediately and prove nothing; drives the behavior test-first (set the existing code aside, write a failing test first) despite the time and sunk-cost pressure.",
       "assertions": [
         "Does NOT just write tests against the existing code and call it covered",

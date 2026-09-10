@@ -27,12 +27,14 @@
     },
     {
       "id": 3,
-      "prompt": "We need realistic but fake customer data to seed staging so QA can test the checkout flow — GDPR means we can't copy production.",
-      "expected_output": "Recognizes this as generating synthetic/test data, not validating production data — hands off to test-data-strategy (factories, synthetic generation, anonymization) rather than proposing expectations, contracts, or freshness checks",
+      "prompt": "A customer told us our revenue dashboard had been wrong for three days before anyone here noticed. The upstream team had renamed a column. I need to make sure that never happens silently again.",
+      "expected_output": "'Never happens silently' is two problems the roster does not separate. Knowing the data is wrong — a schema-drift check and a freshness check that would have caught a renamed column on the first run, plus a contract with the upstream team so the rename surfaces before it lands — is this skill's work, delivered concretely. Getting a person's attention once something is known to be wrong, including who is paged and on what threshold, is observability-design's. A good answer treats detection and notification as separate failures, because this incident failed at both.",
       "assertions": [
-        "Recognizes this is about generating test/synthetic data, not validating production data quality",
-        "Refers to the test-data-strategy skill for factories, synthetic data generation, and GDPR-safe anonymization",
-        "Does not answer with data-quality machinery (expectations, contracts, freshness checks) as the solution"
+        "Separates the two halves: detecting that the data is wrong, versus getting a person's attention when it is",
+        "Refers to observability-design for alert routing and who gets paged",
+        "Delivers the detection half itself — a schema-drift or freshness check that would have caught the renamed column — rather than deferring the whole request",
+        "Raises a contract with the upstream team so the rename surfaces before it lands, not only afterwards",
+        "States the boundary: data quality decides what counts as broken, while observability decides how that finding reaches someone"
       ]
     }
   ]

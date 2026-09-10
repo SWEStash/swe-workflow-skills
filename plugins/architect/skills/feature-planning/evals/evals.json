@@ -17,7 +17,7 @@
     {
       "id": 2,
       "prompt": "plan adding dark mode to our vue app",
-      "expected_output": "The ask-first branch of Step 1: the request names no concrete behavior, persistence, or theming approach, so the reply asks before drafting (CSS variables vs theme library? System preference detection? Per-component or global? Persistence?) and says what it would need to start drafting. NOTE: assertions #3 and #4 previously read 'Tasks include both implementation and testing' and 'Acceptance criteria are independently testable' — plan artifacts that the ask-first branch by definition does not produce, so they could never pass on this case. They now test the coverage of the clarification itself. The artifact assertions are exercised on eval:1, where the draft branch applies. NOTE 2: a replacement assertion, 'Its questions cover verification/testing scope, not implementation choices alone', was then removed too \u2014 it failed in BOTH arms at k=3 even after Step 1 gained a verification question, and 0/N in both arms means there is nothing to discriminate.",
+      "expected_output": "The ask-first branch of Step 1: the request names no concrete behavior, persistence, or theming approach, so the reply asks before drafting (CSS variables vs theme library? System preference detection? Per-component or global? Persistence?) and says what it would need to start drafting. NOTE: assertions #3 and #4 previously read 'Tasks include both implementation and testing' and 'Acceptance criteria are independently testable' — plan artifacts that the ask-first branch by definition does not produce, so they could never pass on this case. They now test the coverage of the clarification itself. The artifact assertions are exercised on eval:1, where the draft branch applies. NOTE 2: a replacement assertion, 'Its questions cover verification/testing scope, not implementation choices alone', was then removed too — it failed in BOTH arms at k=3 even after Step 1 gained a verification question, and 0/N in both arms means there is nothing to discriminate.",
       "assertions": [
         "Does not immediately produce a plan from this vague request",
         "Asks at least 3 clarifying questions",
@@ -27,15 +27,14 @@
     },
     {
       "id": 3,
-      "prompt": "We need to migrate our REST API to GraphQL. It's a Django backend serving a React Native mobile app and a Next.js web app. We have about 40 endpoints. The CEO wants it done in 3 sprints. Help me plan this.",
-      "expected_output": "Should flag the complexity and risks, suggest an incremental migration strategy rather than big-bang, break into phased milestones, and identify the critical path.",
+      "prompt": "We've committed to building SSO for enterprise customers — SAML plus SCIM provisioning, with admin-managed roles. Sales has already told two prospects it lands next quarter. Break it up for the team, and tell me whether next quarter is real.",
+      "expected_output": "The request asks for two things the roster does not separate. Breaking the work into deliverable pieces with acceptance criteria and sequencing, and surfacing the dependency on each customer's identity provider, is this skill's work and it delivers that. Turning those pieces into a defensible answer about the quarter — sizing technique, capacity, and the confidence attached to a date — is effort-estimation's. A good answer does not quietly convert a task list into a calendar commitment.",
       "assertions": [
-        "Flags the risk of a full rewrite in 3 sprints",
-        "Suggests incremental or parallel migration strategy",
-        "Recommends architectural decisions be made first",
-        "References the architecture-design skill for ADR",
-        "Identifies external dependencies (mobile app release cycle)",
-        "Creates phased milestones, not just flat task list"
+        "Separates the two halves: breaking the work into deliverable pieces, versus deciding how much calendar those pieces add up to",
+        "Refers to effort-estimation for sizing the work and testing the next-quarter date against team capacity",
+        "Delivers the breakdown itself — scoped tasks with acceptance criteria — rather than deferring the whole request",
+        "Identifies the dependency outside the team's control, such as each customer's identity provider",
+        "States the boundary: planning decides what the pieces are, while estimation decides what they cost in time"
       ]
     }
   ]

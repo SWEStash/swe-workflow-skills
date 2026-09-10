@@ -19,26 +19,25 @@
     {
       "id": 2,
       "prompt": "Can you review the changes in my last git commit?",
-      "expected_output": "Should read the git diff, understand context from surrounding files, and perform a structured review.",
+      "expected_output": "Should read the git diff, understand context from surrounding files, and perform a structured review. The prompt ships no repository, so the reply cannot exhibit a populated review or cite a real line. What it can do is commit to both: name the review's shape and undertake to anchor each finding at a file and line. Assertions #3 and #4 ask for those commitments, not for a finished review.",
       "assertions": [
         "Names the command that reads the change (git show / git diff HEAD~1) and scopes the review to that commit",
         "Establishes the surrounding code as context for the review rather than judging the hunk in isolation",
         "For any new helper, export, or block, states it will search the repo beyond the diff for an existing twin, for importers, and for consumers (duplication / dead export / unconsumed surface are invisible in a single hunk)",
-        "Follows the structured review format (summary, blockers, suggestions, nits)",
-        "Provides specific file:line references for findings"
+        "States the shape the review will take — a summary plus findings separated by severity (blockers, suggestions, nits) — rather than promising \"a review\"",
+        "Commits to citing each finding by file and line rather than describing findings in prose"
       ]
     },
     {
       "id": 3,
-      "prompt": "Review this TypeScript code:\n\nexport const UserService = {\n  async getUser(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id } });\n    return user;\n  },\n  async getUserWithPosts(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id }, include: { posts: true } });\n    return user;\n  },\n  async getUserWithPostsAndComments(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id }, include: { posts: { include: { comments: true } } } });\n    return user;\n  }\n};",
-      "expected_output": "Should flag DRY violation (three nearly identical functions), Promise<any> types, and suggest a more flexible approach (e.g., include options parameter). Should be constructive and suggest a concrete refactoring.",
+      "prompt": "Review this Django view that shipped last week — support says the orders page takes about eight seconds for our larger accounts.\n\n```python\ndef order_list(request):\n    orders = Order.objects.filter(customer=request.user.customer)\n    rows = []\n    for o in orders:\n        rows.append({\n            'id': o.id,\n            'total': sum(i.price * i.qty for i in o.items.all()),\n            'shipper': o.shipment.carrier.name,\n            'status': o.status,\n        })\n    return JsonResponse({'orders': rows})\n```",
+      "expected_output": "The eight seconds invites a different skill than the code does, and the roster does not separate them. Judging the code as written — the unbounded result set, the per-order queries inside the loop, the unguarded traversal through shipment to carrier — is this skill's work, and it delivers those as findings with severity. Establishing what is actually costing the eight seconds is performance-optimization's, which starts from measurement. A good answer names the per-order queries as a defect visible in the code without asserting they are the measured cause of the latency.",
       "assertions": [
-        "Flags DRY violation across the three functions",
-        "Flags the use of any return type",
-        "Suggests consolidation with an options/includes parameter",
-        "Does not just say 'this is bad' — provides a refactored version",
-        "Notes that this might be a case for a single flexible query function",
-        "Applies KISS — suggested solution is not over-engineered"
+        "Separates the two halves: what is wrong with the code as written, versus establishing what is actually making the page slow",
+        "Refers to performance-optimization for profiling and confirming the cause of the eight seconds",
+        "Delivers the review itself — findings on the code as written, with severity — rather than deferring to a profiling exercise",
+        "Names the per-order queries in the loop as a review finding without asserting they are the measured cause",
+        "States the boundary: a review judges code against what it can see, while performance work is driven by measurement"
       ]
     }
   ],

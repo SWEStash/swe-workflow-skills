@@ -54,9 +54,10 @@
       "id": "boundary:api-design:3",
       "kind": "boundary",
       "skill": "api-design",
-      "prompt": "We have an existing API with these endpoints:\nGET /getUsers\nGET /getUserById?id=123\nPOST /createUser\nPOST /updateUser\nGET /deleteUser?id=123\n\nThis doesn't feel right. Can you redesign it following proper REST conventions?",
+      "prompt": "We're adding a /transactions endpoint to our finance API. Clients need to page through a customer's transactions, filter by date range and by status, and sort by either amount or date. The table has around 400 million rows. I want the design settled before anyone writes code \u2014 what does the endpoint look like, and what has to be true underneath it to serve that?",
       "accept": [
         "api-design",
+        "data-modeling",
         "NONE"
       ]
     },
@@ -92,10 +93,10 @@
       "id": "boundary:architecture-documentation:3",
       "kind": "boundary",
       "skill": "architecture-documentation",
-      "prompt": "We're debating whether to extract our authentication logic into a separate service or keep it in the monolith. Can you also create architecture diagrams showing what the system would look like after the split?",
+      "prompt": "Three engineers joined this month and all three got stuck the same way: they can't work out which of our nine services actually calls which, and they couldn't get the stack running locally. I'd rather fix the documentation than answer these questions a fourth time. Where do we start?",
       "accept": [
         "architecture-documentation",
-        "architecture-design",
+        "project-documentation",
         "NONE"
       ]
     },
@@ -192,7 +193,7 @@
       "id": "boundary:cicd-pipeline:3",
       "kind": "boundary",
       "skill": "cicd-pipeline",
-      "prompt": "The pipeline itself is fine. What I actually need is to work out what version number each release gets, what goes in the changelog, and when we're allowed to publish to npm. Can you just build all that into the workflow file?",
+      "prompt": "We publish our SDK to npm from GitHub Actions. Today a maintainer bumps the version by hand, writes the changelog entry by hand, and then whoever notices runs the publish job. We've shipped a wrong version twice. I want one reliable process \u2014 sort it out.",
       "accept": [
         "cicd-pipeline",
         "release-management",
@@ -232,10 +233,10 @@
       "id": "boundary:code-reviewing:3",
       "kind": "boundary",
       "skill": "code-reviewing",
-      "prompt": "Review this TypeScript code:\n\nexport const UserService = {\n  async getUser(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id } });\n    return user;\n  },\n  async getUserWithPosts(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id }, include: { posts: true } });\n    return user;\n  },\n  async getUserWithPostsAndComments(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id }, include: { posts: { include: { comments: true } } } });\n    return user;\n  }\n};",
+      "prompt": "Review this Django view that shipped last week \u2014 support says the orders page takes about eight seconds for our larger accounts.\n\n```python\ndef order_list(request):\n    orders = Order.objects.filter(customer=request.user.customer)\n    rows = []\n    for o in orders:\n        rows.append({\n            'id': o.id,\n            'total': sum(i.price * i.qty for i in o.items.all()),\n            'shipper': o.shipment.carrier.name,\n            'status': o.status,\n        })\n    return JsonResponse({'orders': rows})\n```",
       "accept": [
         "code-reviewing",
-        "refactoring",
+        "performance-optimization",
         "NONE"
       ]
     },
@@ -252,11 +253,10 @@
       "id": "boundary:code-slop-cleanup:3",
       "kind": "boundary",
       "skill": "code-slop-cleanup",
-      "prompt": "deslop this diff please:\n\n```diff\n+++ b/src/report/paginate.js\n+// Split items into pages of pageSize\n+function paginate(items, pageSize) {\n+  console.log('paginate called');\n+  const pages = [];\n+  for (let i = 0; i <= items.length; i += pageSize) {\n+    pages.push(items.slice(i, i + pageSize));\n+  }\n+  return pages;\n+}\n```",
+      "prompt": "This branch is 14 commits of me thrashing \u2014 messages like 'wip', 'fix', 'fix again', and two that revert each other. There's also debug logging I left in and a scratch file I never deleted. I want it presentable before I open the PR.",
       "accept": [
         "code-slop-cleanup",
-        "bug-investigating",
-        "code-reviewing",
+        "git-workflow",
         "NONE"
       ]
     },
@@ -333,9 +333,10 @@
       "id": "boundary:data-modeling:3",
       "kind": "boundary",
       "skill": "data-modeling",
-      "prompt": "We need to rename our 'username' column to 'display_name' in the users table. We have 2M users and the column is used in about 15 places in the codebase. We can't have downtime. How should I approach this?",
+      "prompt": "We're adding identity verification to onboarding, so for every new customer we'll be storing a passport number, a date of birth, and a scan of the document itself. Design the tables. Legal has already confirmed we're allowed to collect all three.",
       "accept": [
         "data-modeling",
+        "compliance-privacy",
         "NONE"
       ]
     },
@@ -352,10 +353,10 @@
       "id": "boundary:data-pipeline-design:3",
       "kind": "boundary",
       "skill": "data-pipeline-design",
-      "prompt": "Design the data pipeline that produces training features for our churn model \u2014 we need point-in-time correct features and a training set refreshed weekly.",
+      "prompt": "Our nightly dbt run takes five hours and the warehouse bill has doubled since January. Most of the models are full refreshes over the whole event table. Leadership wants both numbers down before the next board meeting.",
       "accept": [
         "data-pipeline-design",
-        "ml-pipeline-design",
+        "finops-cost-optimization",
         "NONE"
       ]
     },
@@ -372,10 +373,10 @@
       "id": "boundary:data-quality:3",
       "kind": "boundary",
       "skill": "data-quality",
-      "prompt": "We need realistic but fake customer data to seed staging so QA can test the checkout flow \u2014 GDPR means we can't copy production.",
+      "prompt": "A customer told us our revenue dashboard had been wrong for three days before anyone here noticed. The upstream team had renamed a column. I need to make sure that never happens silently again.",
       "accept": [
         "data-quality",
-        "test-data-strategy",
+        "observability-design",
         "NONE"
       ]
     },
@@ -533,10 +534,10 @@
       "id": "boundary:feature-planning:3",
       "kind": "boundary",
       "skill": "feature-planning",
-      "prompt": "We need to migrate our REST API to GraphQL. It's a Django backend serving a React Native mobile app and a Next.js web app. We have about 40 endpoints. The CEO wants it done in 3 sprints. Help me plan this.",
+      "prompt": "We've committed to building SSO for enterprise customers \u2014 SAML plus SCIM provisioning, with admin-managed roles. Sales has already told two prospects it lands next quarter. Break it up for the team, and tell me whether next quarter is real.",
       "accept": [
         "feature-planning",
-        "architecture-design",
+        "effort-estimation",
         "NONE"
       ]
     },
@@ -973,9 +974,10 @@
       "id": "boundary:refactoring:3",
       "kind": "boundary",
       "skill": "refactoring",
-      "prompt": "Can you refactor my entire codebase to use better patterns?",
+      "prompt": "Everyone on the team agrees the codebase is a mess and nobody agrees what to do about it. I have budget for roughly one engineer-month. Tell me what we should spend it on, and then start making the change.",
       "accept": [
         "refactoring",
+        "technical-debt-review",
         "NONE"
       ]
     },
@@ -1152,9 +1154,10 @@
       "id": "boundary:tdd-workflow:3",
       "kind": "boundary",
       "skill": "tdd-workflow",
-      "prompt": "I have a function that calls an external payment API. How should I TDD this? I'm worried about testing external calls.",
+      "prompt": "I'm building the integration with a shipping-rate provider \u2014 we send a parcel spec, they return quotes. I want to write it test-first. Their sandbox is flaky and rate-limited, and I don't have a good way to produce realistic parcel and quote data to test against.",
       "accept": [
         "tdd-workflow",
+        "test-data-strategy",
         "NONE"
       ]
     },
