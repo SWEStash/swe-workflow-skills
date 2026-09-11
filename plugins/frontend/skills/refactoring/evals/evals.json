@@ -36,8 +36,7 @@
         "Separates the two halves: deciding which parts of the codebase are worth the month, versus carrying out the change on one of them",
         "Refers to technical-debt-review for surveying the codebase and prioritising where the month goes",
         "Delivers the refactoring half itself — how a chosen target is changed safely, in steps — rather than deferring the whole request",
-        "Does not walk its own workflow across the entire codebase as a generic template",
-        "States the boundary: debt review decides what to work on, while refactoring is how the chosen code changes without altering behaviour"
+        "Does not walk its own workflow across the entire codebase as a generic template"
       ]
     }
   ]

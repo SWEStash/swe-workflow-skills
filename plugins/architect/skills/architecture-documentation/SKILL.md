@@ -20,6 +20,13 @@ Understand what exists and what's needed before creating anything:
 
 A simple monolith may only need one conceptual diagram. A distributed system with 5+ services likely needs canonical and runtime levels too.
 
+**Split the ask before you start.** "Onboarding documentation" usually bundles two
+different deliverables, and only one is this skill's. A reader who cannot tell which
+service calls which needs a structural view — that is the work below. A reader who
+cannot get the system running needs setup instructions, which live in the README and
+belong to `project-documentation`. Say which half you are producing; a diagram does not
+fix a broken local setup, and a README does not substitute for a container view.
+
 ### Step 2: Choose Abstraction Levels
 
 Architecture documentation works at three distinct levels. Not every system needs all three — apply YAGNI.

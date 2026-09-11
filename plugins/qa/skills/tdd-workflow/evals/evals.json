@@ -36,8 +36,7 @@
         "Separates the two halves: the order in which code and tests get written, versus where the realistic parcel and quote data comes from",
         "Refers to test-data-strategy for generating the fixture data and for contract testing against the provider",
         "Delivers the test-first half itself — the first failing test and what it asserts — rather than deferring the whole request",
-        "Wraps the provider behind an interface this codebase owns instead of stubbing the HTTP client",
-        "States the boundary: this skill decides what to write next and in what order, while test data strategy decides what the tests are fed"
+        "Wraps the provider behind an interface this codebase owns instead of stubbing the HTTP client"
       ]
     }
   ],

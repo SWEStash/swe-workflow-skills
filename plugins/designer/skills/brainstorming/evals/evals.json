@@ -33,8 +33,7 @@
         "Separates the two questions: whether slow reports are the real complaint is still open, while precompute-versus-on-demand is a decision waiting to be made",
         "Refers to architecture-design for choosing between precompute and on-demand and recording the trade-off",
         "Probes what users are actually unhappy about before the two camps are compared, rather than accepting report speed as the settled problem",
-        "Generates options beyond the two the team has already named",
-        "States the boundary: brainstorming opens the option space while the question is still open, while architecture-design closes a decision and records why"
+        "Generates options beyond the two the team has already named"
       ]
     }
   ]

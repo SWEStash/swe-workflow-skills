@@ -36,8 +36,7 @@
         "Separates the two halves: what content should not ship, versus how the commits and the pull request are arranged",
         "Refers to git-workflow for restructuring the commit history and writing the pull request description",
         "Delivers the cleanup half itself — naming what in the working tree should not ship — rather than deferring the whole request",
-        "Keeps the cleanup to removals that do not change behaviour, instead of folding in improvements while tidying",
-        "States the boundary: this skill decides what the diff should contain, while git workflow decides how that diff is presented"
+        "Keeps the cleanup to removals that do not change behaviour, instead of folding in improvements while tidying"
       ]
     }
   ],

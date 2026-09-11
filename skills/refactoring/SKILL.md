@@ -14,6 +14,14 @@ Guide safe, incremental code improvements that preserve behavior while enhancing
 
 ## Workflow
 
+**First, check you have one target.** This workflow restructures a named piece of code. It
+does not decide *which* code deserves the effort — asked to "clean up the codebase" or
+handed a fixed budget, the prioritising is `technical-debt-review`'s: hotspots, churn,
+where the pain actually costs money. Get a target from there, then run the steps below on
+it. **Declining to pick the target does not mean declining to help** — say what you would
+need to choose one, and run this workflow properly on a single target rather than walking
+these steps across the whole repo as a generic template.
+
 ### Step 1: Ensure Test Coverage
 
 Before refactoring anything, verify that tests exist for the behavior you're about to restructure. If tests are missing:

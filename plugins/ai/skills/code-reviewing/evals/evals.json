@@ -36,8 +36,7 @@
         "Separates the two halves: what is wrong with the code as written, versus establishing what is actually making the page slow",
         "Refers to performance-optimization for profiling and confirming the cause of the eight seconds",
         "Delivers the review itself — findings on the code as written, with severity — rather than deferring to a profiling exercise",
-        "Names the per-order queries in the loop as a review finding without asserting they are the measured cause",
-        "States the boundary: a review judges code against what it can see, while performance work is driven by measurement"
+        "Names the per-order queries in the loop as a review finding without asserting they are the measured cause"
       ]
     }
   ],

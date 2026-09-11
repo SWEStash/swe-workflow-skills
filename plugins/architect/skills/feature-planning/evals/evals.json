@@ -33,8 +33,7 @@
         "Separates the two halves: breaking the work into deliverable pieces, versus deciding how much calendar those pieces add up to",
         "Refers to effort-estimation for sizing the work and testing the next-quarter date against team capacity",
         "Delivers the breakdown itself — scoped tasks with acceptance criteria — rather than deferring the whole request",
-        "Identifies the dependency outside the team's control, such as each customer's identity provider",
-        "States the boundary: planning decides what the pieces are, while estimation decides what they cost in time"
+        "Identifies the dependency outside the team's control, such as each customer's identity provider"
       ]
     }
   ]

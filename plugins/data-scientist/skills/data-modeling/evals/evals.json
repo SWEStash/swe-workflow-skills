@@ -35,8 +35,7 @@
         "Separates the two halves: how the data is shaped and stored, versus what obligations follow from holding it",
         "Refers to compliance-privacy for retention periods and the erasure path",
         "Delivers the schema itself, including where the document image lives rather than only the columns beside it",
-        "Designs for removal: the identifiers and the scan can be deleted without breaking the customer record",
-        "States the boundary: data modeling decides how data is stored, while privacy work decides how long it may be kept and how it is removed"
+        "Designs for removal: the identifiers and the scan can be deleted without breaking the customer record"
       ]
     }
   ]

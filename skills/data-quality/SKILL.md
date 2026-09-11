@@ -24,6 +24,13 @@ staleness → freshness, broken joins → `relationships`. Wins from day one, an
 the suite grows the same way tests do after bugs — every new incident adds a
 check that would have caught it.
 
+**An incident that nobody noticed failed twice, and you only own the first failure.**
+Not knowing the data was wrong is a detection gap — the checks below close it. Knowing and
+not telling anyone is a routing gap: who gets paged, on what threshold, and through which
+channel is `observability-design`'s work. Build the check that would have caught this
+incident, then say explicitly that a check nobody is paged for will produce the same
+outcome next time.
+
 ### Step 2: Check at the Right Layer — Boundary First
 
 Where a check runs matters as much as what it checks:

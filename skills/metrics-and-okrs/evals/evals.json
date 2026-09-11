@@ -37,8 +37,7 @@
         "Separates the two questions: whether the lift is real is an inference question, while whether week-1 activation is the right key result is a metric-definition question",
         "Refers to statistical-analysis for the significance, power, and sample-size judgment",
         "Does not declare the result significant or issue a ship verdict from the p-value alone",
-        "Answers the metric-definition half — whether week-1 activation or 30-day retention is the better key result here, and on what grounds",
-        "States the boundary: metric definition decides what to measure and what target counts as success; statistical analysis decides whether an observed difference is real"
+        "Answers the metric-definition half — whether week-1 activation or 30-day retention is the better key result here, and on what grounds"
       ]
     }
   ]

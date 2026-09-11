@@ -198,7 +198,7 @@ cases drops that skill's other rows.
 
 ### Results (content evals, full catalog)
 
-`claude-opus-5`, all 66 skills, 234 cases, 1315 assertions, **every row at k>=3**.
+`claude-opus-5`, all 66 skills, 234 cases, 1303 assertions, **every row at k>=3**.
 
 **What RED actually is.** RED answers the same prompt without the skill's *content* —
 it cannot read any `SKILL.md`, `references/` or `templates/`. Both arms do carry the
@@ -211,9 +211,9 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **855 / 1315 = 65.0%** |
-| Assertions passed, skill loaded (GREEN) | **1266 / 1315 = 96.3%** |
-| Gain | **+31.3 points** |
+| Assertions passed, no skill body (RED) | **855 / 1303 = 65.6%** |
+| Assertions passed, skill loaded (GREEN) | **1266 / 1303 = 97.2%** |
+| Gain | **+31.6 points** |
 | Cases where GREEN beats RED | **188 / 234** |
 | Cases where GREEN ties RED | **46 / 234** |
 | Cases where GREEN is *below* RED | **0 / 234** |
@@ -510,14 +510,26 @@ flaky). Several findings from running this make the choice necessary:
    assertion now separates the arms wherever the skill routes at all. The other six
    are real cross-skill gaps rather than measurement artifacts.
 
-   **And "states the boundary" is only about a third effective.** Of the 22 such
-   assertions in the library, 7 discriminate and **12 fail in both arms** — neither
-   the skill nor the bare model articulates the split as a principle, though both
-   act on it. The two ideas are in tension: the harder the roster finds the split,
-   the less either arm states it as a rule. Where it still works, the boundary is
-   crisp enough to name (`api-design` against storage design, `cicd-pipeline`
-   against release policy). Treat it as optional, not as the load-bearing assertion
-   the four-part shape once assumed.
+   **And "states the boundary" turned out to be only about a third effective, so
+   most of them are gone.** Of 22 such assertions, 7 discriminated and **12 failed in
+   both arms** — neither the skill nor the bare model articulates the split as a
+   principle, though both act on it. The two ideas are in tension: the harder the
+   roster finds the split, the less either arm states it as a rule. The 12 dead ones
+   were **deleted**, on the grounds that they duplicate the "separates the two
+   halves" assertion and then add a demand to state a rule *about* the answer — the
+   compound-assertion trap in a different costume. They also gated nothing in either
+   arm, so the usual objection to deleting a free assertion (it still protects GREEN
+   against regression) did not apply. The 7 that work are kept: there the boundary is
+   crisp enough to name (`api-design` against storage design, `cicd-pipeline` against
+   release policy). **Treat this assertion as optional and justify it per case**, not
+   as the load-bearing part of the shape.
+
+   Deleting them needed no re-measurement, which is worth knowing as a technique:
+   generators never see the assertion list (`workflow-runner.mjs` passes only the
+   prompt), so removing the **last** assertion and popping the matching verdict off
+   each arm leaves every other verdict measured against an unchanged reply. Six of
+   the twelve were re-measured anyway for an unrelated fix, which doubles as a check
+   on that reasoning.
 
    Three rules came out of doing it, all learned by breaking them:
 

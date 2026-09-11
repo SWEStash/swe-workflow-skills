@@ -34,8 +34,7 @@
         "Separates the two halves: how the models are built and refreshed, versus how the warehouse spend is sized and attributed",
         "Refers to finops-cost-optimization for warehouse sizing and attributing the bill",
         "Delivers the pipeline half itself — moving the full refreshes onto incremental builds — rather than deferring the whole request",
-        "Establishes what share of the bill this job actually accounts for before promising a reduction",
-        "States the boundary: pipeline design changes what work runs, while cost work changes what that work is charged at"
+        "Establishes what share of the bill this job actually accounts for before promising a reduction"
       ]
     }
   ]

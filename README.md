@@ -38,9 +38,9 @@ don't cover:
   ([how it works](docs/ROLES.md)).
 - **Tested like code, not prose.** Every skill ships 3 evals; two LLM-as-judge
   harnesses (content quality and routing accuracy) replay them with skill loaded vs
-  absent and gate regressions in CI. Across all 66 skills — 234 cases, 1315 assertions,
-  every row measured at k>=3 — the same model passes **65.0%** of assertions without the
-  skill's content and **96.3%** with the skill loaded, and **no skill scores below the
+  absent and gate regressions in CI. Across all 66 skills — 234 cases, 1303 assertions,
+  every row measured at k>=3 — the same model passes **65.6%** of assertions without the
+  skill's content and **97.2%** with the skill loaded, and **no skill scores below the
   no-content baseline on any case**
   ([results](docs/EVALS.md#results-content-evals-full-catalog)). Safety-critical skills
   (deploys, releases, tests, incidents, security) are **hardened**: an Iron Law, a

@@ -33,8 +33,7 @@
         "Separates the two halves: detecting that the data is wrong, versus getting a person's attention when it is",
         "Refers to observability-design for alert routing and who gets paged",
         "Delivers the detection half itself — a schema-drift or freshness check that would have caught the renamed column — rather than deferring the whole request",
-        "Raises a contract with the upstream team so the rename surfaces before it lands, not only afterwards",
-        "States the boundary: data quality decides what counts as broken, while observability decides how that finding reaches someone"
+        "Raises a contract with the upstream team so the rename surfaces before it lands, not only afterwards"
       ]
     }
   ]

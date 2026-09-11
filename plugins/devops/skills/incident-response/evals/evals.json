@@ -34,8 +34,7 @@
         "Separates the two halves: selecting and injecting the failure is chaos-experiment design, while the response roles, comms and runbook are incident-response's own",
         "Refers to resilience-engineering for designing the failure injection or game-day scenario",
         "Produces the incident-response half — incident commander and comms assignments, and the runbook responders follow — rather than handing the whole request off",
-        "Does not execute the live incident workflow as though production were currently down",
-        "States the boundary: resilience engineering decides what failure to induce and whether the system survives it; incident response governs how people respond when it happens"
+        "Does not execute the live incident workflow as though production were currently down"
       ]
     }
   ],
