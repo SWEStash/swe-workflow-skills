@@ -38,7 +38,7 @@
         "Separates the two halves: the map of which services call which, versus the instructions for getting the stack running locally",
         "Refers to project-documentation for the README and the local setup instructions",
         "Delivers the architecture-documentation half itself — which diagram levels answer the what-calls-what question — rather than deferring the whole request",
-        "Treats the diagrams as generated and kept current from source rather than drawn once by hand"
+        "Names what triggers a diagram update and who owns it, rather than leaving the diagrams' accuracy to good intentions"
       ]
     }
   ]

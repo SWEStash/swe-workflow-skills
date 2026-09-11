@@ -144,6 +144,39 @@ The delegation that worked, in `test-suite-design`, has four ingredients:
 So: state explicitly what stays in this skill's answer. A reference that transfers
 the topic will transfer the behavior with it.
 
+### Where a handoff sits decides whether it fires — and a new first step displaces the old one
+
+**Naming a sibling skill does not make the model route to it.** Measured across eleven
+cases: of the skills whose `SKILL.md` named the sibling, the model routed to it in **1 of
+5**; of those that never named it, **4 of 6** routed. Four of the failures named the
+sibling only in the trailing Cross-Skill References list — which a question entering at
+Step 1 never reaches. Put the split in the **step prose of the branch the prompt enters**.
+Moving five such handoffs into Step 1 turned the routing assertion from failing in both
+arms to passing in the skill's arm on all five.
+
+**But do not solve it with a new gate above the existing first step.** The same batch added
+a scope gate to `refactoring` — *"First, check you have one target"* — immediately above
+Step 1 *Ensure Test Coverage*. The skill's strongest row fell from **9/9 to 5/9**, and the
+first thing it lost was "asks about existing tests": the new first question displaced the
+old one. Three more went with it, including one the unaided model then passed and the skill
+did not. **A step inserted before Step 1 becomes Step 1.** If the entry needs a scope
+decision, put it *inside* the existing first step rather than ahead of it.
+
+Two details worth copying:
+
+- **The gate failed at its own job anyway** — the case it was written for still did not
+  route (1 of 3). A change that costs a strong row and does not fix the target row is a
+  revert, not a tuning problem.
+- **Watch the phrasing for accidental prohibitions.** That gate ended "rather than walking
+  these steps across the whole repo as a generic template", meaning *don't apply them
+  generically*. The row also lost "shows each transformation step separately". Read every
+  negative clause as though the model will obey the shortest reading of it.
+
+**This was caught because the row was measured as a guard, not because anyone suspected
+it.** When an edit lands in prose that another case also passes through, re-run that case
+in the same batch. A skill's strongest row is exactly the one an entry-point edit puts at
+risk, and a perfect row can only lose.
+
 ## Description discipline (the highest-leverage line)
 
 The `description` decides whether the skill ever runs. Agents follow the

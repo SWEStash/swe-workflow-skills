@@ -198,7 +198,7 @@ cases drops that skill's other rows.
 
 ### Results (content evals, full catalog)
 
-`claude-opus-5`, all 66 skills, 234 cases, 1303 assertions, **every row at k>=3**.
+`claude-opus-5`, all 66 skills, 233 cases, 1299 assertions, **every row at k>=3**.
 
 **What RED actually is.** RED answers the same prompt without the skill's *content* —
 it cannot read any `SKILL.md`, `references/` or `templates/`. Both arms do carry the
@@ -211,12 +211,12 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **855 / 1303 = 65.6%** |
-| Assertions passed, skill loaded (GREEN) | **1266 / 1303 = 97.2%** |
-| Gain | **+31.6 points** |
-| Cases where GREEN beats RED | **188 / 234** |
-| Cases where GREEN ties RED | **46 / 234** |
-| Cases where GREEN is *below* RED | **0 / 234** |
+| Assertions passed, no skill body (RED) | **853 / 1299 = 65.7%** |
+| Assertions passed, skill loaded (GREEN) | **1269 / 1299 = 97.7%** |
+| Gain | **+32.0 points** |
+| Cases where GREEN beats RED | **190 / 233** |
+| Cases where GREEN ties RED | **43 / 233** |
+| Cases where GREEN is *below* RED | **0 / 233** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
 content is worse than no skill at all. **There are also zero RED-true / GREEN-false
@@ -244,7 +244,7 @@ they gained the *most* with nothing to read, so the gain comes from the instruct
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at **k>=3 for every row** (210 at k=3, 24 at k=5) as of 2026-09-10; `k` is
+Recorded at **k>=3 for every row** (209 at k=3, 24 at k=5) as of 2026-09-11; `k` is
 per row. All 173 remaining single-sample cases have since been re-measured, so the
 k=1 caveat that used to sit here no longer applies.
 
@@ -475,7 +475,7 @@ flaky). Several findings from running this make the choice necessary:
 9. **Most rows measure one assertion or none, and scope-boundary cases are
    saturated by construction.** `merge-baseline.mjs` reports, per row, how many
    assertions GREEN passes and RED fails (`node .local/regen-discrimination.mjs`
-   recomputes it library-wide). Across 234 rows: **46 discriminate on nothing, 76
+   recomputes it library-wide). Across 233 rows: **43 discriminate on nothing, 76
    on exactly one.** It concentrates by case kind, and the concentration is
    structural rather than an authoring lapse:
 
@@ -483,10 +483,10 @@ flaky). Several findings from running this make the choice necessary:
    |---|---|---|---|---|
    | `eval:1` happy path | 66 | 8 | 13 | **+176** |
    | `eval:2` edge case | 66 | 22 | 14 | +92 |
-   | `eval:3` scope boundary | 66 | **6** | 35 | **+99** |
+   | `eval:3` scope boundary | 65 | **3** | 35 | **+104** |
    | pressure | 36 | 10 | 14 | +44 |
 
-   **41 of 66 scope-boundary rows discriminate on 0 or 1 assertion, but only 6 now
+   **38 of 65 scope-boundary rows discriminate on 0 or 1 assertion, but only 3 now
    measure nothing at all.** The cause is
    the shape of the case: it asks four things and a bare model gets three of them
    free — it recognises the request kind, names the right sibling skill (the skill
