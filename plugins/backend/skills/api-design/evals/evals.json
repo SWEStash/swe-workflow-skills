@@ -33,15 +33,14 @@
     },
     {
       "id": 3,
-      "prompt": "We have an existing API with these endpoints:\nGET /getUsers\nGET /getUserById?id=123\nPOST /createUser\nPOST /updateUser\nGET /deleteUser?id=123\n\nThis doesn't feel right. Can you redesign it following proper REST conventions?",
-      "expected_output": "Should identify specific violations (verbs in URLs, GET for delete, query params for identity) and redesign using proper REST conventions.",
+      "prompt": "We're adding a /transactions endpoint to our finance API. Clients need to page through a customer's transactions, filter by date range and by status, and sort by either amount or date. The table has around 400 million rows. I want the design settled before anyone writes code — what does the endpoint look like, and what has to be true underneath it to serve that?",
+      "expected_output": "Splits a request whose halves the skill roster does not separate. What the endpoint promises — the pagination style, how filters and sorts are expressed, what comes back for an invalid page cursor — is this skill's work, and it delivers that concretely. Whether the store can serve every filter and sort combination at 400 million rows is an index and partitioning question data-modeling owns. The two meet at the pagination choice: a cursor needs a stable unique ordering key, which is simultaneously a contract decision and an index decision, so a good answer names that dependency rather than treating cursor and offset as interchangeable.",
       "assertions": [
-        "Identifies that URLs use verbs instead of nouns",
-        "Identifies that DELETE uses GET method",
-        "Identifies that identity is in query params instead of path",
-        "Redesigns to: GET /users, GET /users/:id, POST /users, PATCH /users/:id, DELETE /users/:id",
-        "Explains WHY each change matters (not just 'this is the convention')",
-        "Notes that this is a breaking change requiring versioning or migration plan"
+        "Separates the two halves: what the endpoint promises its clients, versus what the storage has to be shaped like to serve those promises",
+        "Refers to data-modeling for the index and partitioning strategy behind the filters and sorts",
+        "Delivers the endpoint contract itself — the pagination style and how filters and sorts are expressed — rather than deferring the whole request",
+        "Ties the pagination choice to a stable ordering key instead of presenting cursor and offset as interchangeable",
+        "States the boundary: API design fixes what the interface promises, while data modeling decides whether the store can keep that promise"
       ]
     }
   ]

@@ -86,9 +86,16 @@ Present the behavior map to the user and refine before writing tests.
 
 Apply the testing pyramid — see [references/testing-pyramid.md](references/testing-pyramid.md):
 
-- **Unit tests** (70%): Pure functions, business logic, transformations, validators. Fast, isolated, many of them.
-- **Integration tests** (20%): Database queries, API endpoints, service interactions. Slower, need setup/teardown, fewer of them.
-- **E2E tests** (10%): Critical user journeys only. Slowest, most brittle, fewest of them.
+- **Unit tests**: Pure functions, business logic, transformations, validators. Fast, isolated, many of them.
+- **Integration tests**: Database queries, API endpoints, service interactions. Slower, need setup/teardown, fewer of them.
+- **E2E tests**: Critical user journeys only. Slowest, most brittle, fewest of them.
+
+**70/20/10 is a starting point, not the answer.** It assumes most behavior lives in
+code you can call directly. Where the framework owns the behavior — an ORM-heavy
+Django or Rails app whose logic is queries and view wiring — the honest split shifts
+toward integration, because a unit test of a mocked queryset proves nothing. State the
+distribution you are targeting **for this codebase** and say what about the codebase
+moved it off the default.
 
 For each behavior from Step 3, assign it to the appropriate layer. Default to the lowest (fastest) layer that can meaningfully test the behavior.
 

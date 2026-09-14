@@ -54,9 +54,10 @@
       "id": "boundary:api-design:3",
       "kind": "boundary",
       "skill": "api-design",
-      "prompt": "We have an existing API with these endpoints:\nGET /getUsers\nGET /getUserById?id=123\nPOST /createUser\nPOST /updateUser\nGET /deleteUser?id=123\n\nThis doesn't feel right. Can you redesign it following proper REST conventions?",
+      "prompt": "We're adding a /transactions endpoint to our finance API. Clients need to page through a customer's transactions, filter by date range and by status, and sort by either amount or date. The table has around 400 million rows. I want the design settled before anyone writes code \u2014 what does the endpoint look like, and what has to be true underneath it to serve that?",
       "accept": [
         "api-design",
+        "data-modeling",
         "NONE"
       ]
     },
@@ -92,10 +93,10 @@
       "id": "boundary:architecture-documentation:3",
       "kind": "boundary",
       "skill": "architecture-documentation",
-      "prompt": "We're debating whether to extract our authentication logic into a separate service or keep it in the monolith. Can you also create architecture diagrams showing what the system would look like after the split?",
+      "prompt": "Three engineers joined this month and all three got stuck the same way: they can't work out which of our nine services actually calls which, and they couldn't get the stack running locally. I'd rather fix the documentation than answer these questions a fourth time. Where do we start?",
       "accept": [
         "architecture-documentation",
-        "architecture-design",
+        "project-documentation",
         "NONE"
       ]
     },
@@ -112,10 +113,10 @@
       "id": "boundary:brainstorming:3",
       "kind": "boundary",
       "skill": "brainstorming",
-      "prompt": "We've settled on building a CLI that syncs design tokens to code \u2014 that decision is final. Break it into tasks with acceptance criteria for next sprint. We also still haven't worked out whether it watches files continuously or runs one-shot, or whether it emits CSS custom properties or a JS theme object. Sort those out too.",
+      "prompt": "Our nightly analytics reports are slow enough that people have started complaining. The team has split into two camps \u2014 precompute everything on a schedule, or generate on demand and stream results back \u2014 and we want to land on one this week so we can start building. Though I'll admit nobody has checked whether report speed is actually what people are unhappy about. Help us get to an answer.",
       "accept": [
         "brainstorming",
-        "feature-planning",
+        "architecture-design",
         "NONE"
       ]
     },
@@ -192,7 +193,7 @@
       "id": "boundary:cicd-pipeline:3",
       "kind": "boundary",
       "skill": "cicd-pipeline",
-      "prompt": "The pipeline itself is fine. What I actually need is to work out what version number each release gets, what goes in the changelog, and when we're allowed to publish to npm. Can you just build all that into the workflow file?",
+      "prompt": "We publish our SDK to npm from GitHub Actions. Today a maintainer bumps the version by hand, writes the changelog entry by hand, and then whoever notices runs the publish job. We've shipped a wrong version twice. I want one reliable process \u2014 sort it out.",
       "accept": [
         "cicd-pipeline",
         "release-management",
@@ -232,10 +233,10 @@
       "id": "boundary:code-reviewing:3",
       "kind": "boundary",
       "skill": "code-reviewing",
-      "prompt": "Review this TypeScript code:\n\nexport const UserService = {\n  async getUser(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id } });\n    return user;\n  },\n  async getUserWithPosts(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id }, include: { posts: true } });\n    return user;\n  },\n  async getUserWithPostsAndComments(id: string): Promise<any> {\n    const user = await db.users.findUnique({ where: { id }, include: { posts: { include: { comments: true } } } });\n    return user;\n  }\n};",
+      "prompt": "Review this Django view that shipped last week \u2014 support says the orders page takes about eight seconds for our larger accounts.\n\n```python\ndef order_list(request):\n    orders = Order.objects.filter(customer=request.user.customer)\n    rows = []\n    for o in orders:\n        rows.append({\n            'id': o.id,\n            'total': sum(i.price * i.qty for i in o.items.all()),\n            'shipper': o.shipment.carrier.name,\n            'status': o.status,\n        })\n    return JsonResponse({'orders': rows})\n```",
       "accept": [
         "code-reviewing",
-        "refactoring",
+        "performance-optimization",
         "NONE"
       ]
     },
@@ -252,11 +253,10 @@
       "id": "boundary:code-slop-cleanup:3",
       "kind": "boundary",
       "skill": "code-slop-cleanup",
-      "prompt": "deslop this diff please:\n\n```diff\n+++ b/src/report/paginate.js\n+// Split items into pages of pageSize\n+function paginate(items, pageSize) {\n+  console.log('paginate called');\n+  const pages = [];\n+  for (let i = 0; i <= items.length; i += pageSize) {\n+    pages.push(items.slice(i, i + pageSize));\n+  }\n+  return pages;\n+}\n```",
+      "prompt": "This branch is 14 commits of me thrashing \u2014 messages like 'wip', 'fix', 'fix again', and two that revert each other. There's also debug logging I left in and a scratch file I never deleted. I want it presentable before I open the PR.",
       "accept": [
         "code-slop-cleanup",
-        "bug-investigating",
-        "code-reviewing",
+        "git-workflow",
         "NONE"
       ]
     },
@@ -273,10 +273,10 @@
       "id": "boundary:compliance-privacy:3",
       "kind": "boundary",
       "skill": "compliance-privacy",
-      "prompt": "Can you review our Express API code for injection vulnerabilities and check whether our JWT auth implementation is secure?",
+      "prompt": "Our support team debugs failed checkouts by searching Datadog for the customer's email address, and the platform team wants to start attaching full request bodies to our traces so they can see what was submitted. We keep logs for 15 months and a large share of our customers are in Germany. What should we change?",
       "accept": [
         "compliance-privacy",
-        "security-audit",
+        "observability-design",
         "NONE"
       ]
     },
@@ -333,9 +333,10 @@
       "id": "boundary:data-modeling:3",
       "kind": "boundary",
       "skill": "data-modeling",
-      "prompt": "We need to rename our 'username' column to 'display_name' in the users table. We have 2M users and the column is used in about 15 places in the codebase. We can't have downtime. How should I approach this?",
+      "prompt": "We're adding identity verification to onboarding, so for every new customer we'll be storing a passport number, a date of birth, and a scan of the document itself. Design the tables. Legal has already confirmed we're allowed to collect all three.",
       "accept": [
         "data-modeling",
+        "compliance-privacy",
         "NONE"
       ]
     },
@@ -352,10 +353,10 @@
       "id": "boundary:data-pipeline-design:3",
       "kind": "boundary",
       "skill": "data-pipeline-design",
-      "prompt": "Design the data pipeline that produces training features for our churn model \u2014 we need point-in-time correct features and a training set refreshed weekly.",
+      "prompt": "Our nightly dbt run takes five hours and the warehouse bill has doubled since January. Most of the models are full refreshes over the whole event table. Leadership wants both numbers down before the next board meeting.",
       "accept": [
         "data-pipeline-design",
-        "ml-pipeline-design",
+        "finops-cost-optimization",
         "NONE"
       ]
     },
@@ -372,10 +373,10 @@
       "id": "boundary:data-quality:3",
       "kind": "boundary",
       "skill": "data-quality",
-      "prompt": "We need realistic but fake customer data to seed staging so QA can test the checkout flow \u2014 GDPR means we can't copy production.",
+      "prompt": "A customer told us our revenue dashboard had been wrong for three days before anyone here noticed. The upstream team had renamed a column. I need to make sure that never happens silently again.",
       "accept": [
         "data-quality",
-        "test-data-strategy",
+        "observability-design",
         "NONE"
       ]
     },
@@ -533,10 +534,10 @@
       "id": "boundary:feature-planning:3",
       "kind": "boundary",
       "skill": "feature-planning",
-      "prompt": "We need to migrate our REST API to GraphQL. It's a Django backend serving a React Native mobile app and a Next.js web app. We have about 40 endpoints. The CEO wants it done in 3 sprints. Help me plan this.",
+      "prompt": "We've committed to building SSO for enterprise customers \u2014 SAML plus SCIM provisioning, with admin-managed roles. Sales has already told two prospects it lands next quarter. Break it up for the team, and tell me whether next quarter is real.",
       "accept": [
         "feature-planning",
-        "architecture-design",
+        "effort-estimation",
         "NONE"
       ]
     },
@@ -593,9 +594,10 @@
       "id": "boundary:git-workflow:3",
       "kind": "boundary",
       "skill": "git-workflow",
-      "prompt": "We're a team of 4 starting a new project. What branching strategy should we use? We deploy to production multiple times a day.",
+      "prompt": "We're a team of 4 on a new project and we deploy to production several times a day. Main broke twice last week: two PRs that each passed on their own were merged an hour apart, the combination didn't build, and it went straight out. What branching setup should we use so this stops happening?",
       "accept": [
         "git-workflow",
+        "cicd-pipeline",
         "NONE"
       ]
     },
@@ -973,9 +975,10 @@
       "id": "boundary:refactoring:3",
       "kind": "boundary",
       "skill": "refactoring",
-      "prompt": "Can you refactor my entire codebase to use better patterns?",
+      "prompt": "Everyone on the team agrees the codebase is a mess and nobody agrees what to do about it. I have budget for roughly one engineer-month. Tell me what we should spend it on, and then start making the change.",
       "accept": [
         "refactoring",
+        "technical-debt-review",
         "NONE"
       ]
     },
@@ -1093,10 +1096,10 @@
       "id": "boundary:statistical-analysis:3",
       "kind": "boundary",
       "skill": "statistical-analysis",
-      "prompt": "We're about to launch a new system prompt for our support chatbot and want to A/B test it live against the current one to see which gives better answers. Can you set this up?",
+      "prompt": "We want to test whether our redesigned onboarding flow works. The PM wants to measure engagement, growth cares about 7-day retention, and finance only cares about paid conversion. We get about 3,000 signups a week. How should we set up the test, and how long do we need to run it?",
       "accept": [
         "statistical-analysis",
-        "ai-evaluation",
+        "metrics-and-okrs",
         "NONE"
       ]
     },
@@ -1152,9 +1155,10 @@
       "id": "boundary:tdd-workflow:3",
       "kind": "boundary",
       "skill": "tdd-workflow",
-      "prompt": "I have a function that calls an external payment API. How should I TDD this? I'm worried about testing external calls.",
+      "prompt": "I'm building the integration with a shipping-rate provider \u2014 we send a parcel spec, they return quotes. I want to write it test-first. Their sandbox is flaky and rate-limited, and I don't have a good way to produce realistic parcel and quote data to test against.",
       "accept": [
         "tdd-workflow",
+        "test-data-strategy",
         "NONE"
       ]
     },
@@ -1230,10 +1234,10 @@
       "id": "boundary:threat-modeling:3",
       "kind": "boundary",
       "skill": "threat-modeling",
-      "prompt": "We're adding a partner-facing webhook API to our payments service next sprint \u2014 the design is still on the whiteboard, nothing is built. The payments service itself has been in production for two years and has never had a security review. Leadership asked for 'a security assessment' covering both. Where do we start?",
+      "prompt": "We're speccing a partner-facing webhook API for next sprint \u2014 partners will POST us payment events. Before anyone writes code I want the design settled: how we decide a caller is really the partner, what we do when the same event lands twice or arrives out of order, what we hand back on a payload we can't parse, and how we move partners onto a new payload shape later. Walk me through it.",
       "accept": [
         "threat-modeling",
-        "security-audit",
+        "api-design",
         "NONE"
       ]
     },

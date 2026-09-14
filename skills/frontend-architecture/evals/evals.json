@@ -39,7 +39,7 @@
         "Hands off to or invokes the accessibility-design skill",
         "Does not answer with component hierarchy, state management, or folder structure guidance",
         "Does not attempt a full WCAG audit inside the frontend-architecture workflow",
-        "May note where architectural choices (focus management, component composition) support the accessibility work"
+        "Names at least one architectural choice the accessibility work will depend on, such as where focus state lives or how the components are composed"
       ]
     }
   ]

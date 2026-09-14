@@ -144,6 +144,74 @@ The delegation that worked, in `test-suite-design`, has four ingredients:
 So: state explicitly what stays in this skill's answer. A reference that transfers
 the topic will transfer the behavior with it.
 
+### Where a handoff sits changes whether it fires
+
+**The reliable part: a handoff has to be reachable from where the prompt enters.** This is
+the best-supported pattern in the library's history — it has now held across an
+accessibility behaviour filed under the wrong step, a pagination rule licensed away by a
+YAGNI bullet, a reporting rule filed in Close Out and unreachable from "start executing",
+and five cross-skill handoffs that only fired once moved out of the trailing Cross-Skill
+References list into Step 1 prose.
+
+**The weaker part, stated with its evidence so it is not over-read:** across eleven cases,
+skills whose `SKILL.md` named the sibling routed to it in 1 of 5, and skills that never
+named it routed in 4 of 6. That is **eleven different skills with eleven different prompts
+— not a controlled comparison**, and it does not mean naming is useless: every one of the
+five relocations that worked *does* name the sibling, in step prose. What the numbers
+support is narrow — **naming in a trailing list is not enough on its own** — and nothing
+stronger.
+
+**Do not assume the entry point is the safe place to add anything.** A scope gate was added
+to `refactoring` immediately above Step 1 *Ensure Test Coverage*. Its strongest row fell
+from **9/9 to 5/9**, and the first casualty was "asks about existing tests" — the step the
+new text sat on top of. Three more went with it. **This is one case, not a law.** The
+hypothesis it suggests — that a step inserted before Step 1 competes with Step 1 rather
+than adding to it — is plausible and cheap to respect, so prefer putting an entry-point
+scope decision *inside* the existing first step. But it has not been confirmed on a second
+skill, and it should not be quoted as though it has.
+
+Two details from that failure worth copying:
+
+- **The gate failed at its own job anyway** — the case it was written for still did not
+  route (1 of 3). A change that costs a strong row and does not fix the target row is a
+  revert, not a tuning problem.
+- **Watch the phrasing for accidental prohibitions.** The gate ended "rather than walking
+  these steps across the whole repo as a generic template", meaning *don't apply them
+  generically*. The row also lost "shows each transformation step separately". Read every
+  negative clause as though the model will obey the shortest reading of it.
+
+**This was caught because the row was measured as a guard, not because anyone suspected
+it.** When an edit lands in prose another case also passes through, re-run that case in the
+same batch. A skill's strongest row is exactly what an entry-point edit puts at risk, and a
+perfect row can only lose.
+
+### Do not apply an authoring recipe corpus-wide without confirming it per skill
+
+**Every pattern in this file is a hypothesis with a sample size, and the library has been
+burned three times by treating one as a recipe.** Skills differ in what their prompts ask
+for, where their content lives, and what a good answer even looks like — so a change that
+closes a gap in one can open one in another.
+
+The three instances, all from the same programme:
+
+| Recipe applied uniformly | Result |
+|---|---|
+| The four-part scope-boundary assertion shape, including a "states the boundary" slot | Worked in the 10 cases it was derived from; the boundary slot then failed in both arms in 9 of 11 new cases. 12 of its 22 instances were retired |
+| "Move the handoff into the step the prompt enters", applied to 6 skills at once | Worked on 5; on the 6th it cost a 9/9 row four assertions and had to be reverted |
+| A vector signature used to predict which recorded gains were inflated | Selected 16 rows of which 8 moved, missed both of the two total collapses, and its two designated validation rows split 1-1 |
+
+**So: derive the pattern, then confirm it on a small batch before committing a large one.**
+Concretely — apply it to 3-4 cases rather than 12, include a guard row for any skill whose
+other cases share the edited prose, and read the per-row result before authoring the next
+batch. A pattern that holds on 3 of 4 is worth continuing; one that costs a strong row on
+the first attempt is worth stopping.
+
+**And when a pattern does fail on a skill, that is information about the skill, not only
+about the pattern.** The cases where the boundary assertion still works are the ones whose
+split is crisp enough to name; the skills where it does not are doing something genuinely
+more entangled. Record which skills a pattern does not fit and why, rather than forcing
+them into it.
+
 ## Description discipline (the highest-leverage line)
 
 The `description` decides whether the skill ever runs. Agents follow the

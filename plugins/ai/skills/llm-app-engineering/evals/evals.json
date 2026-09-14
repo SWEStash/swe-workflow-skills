@@ -32,7 +32,7 @@
       "assertions": [
         "Separates the two questions: proving the new prompt is better is a measurement question, while the context-budget interaction is a prompt and retrieval design question",
         "Refers to ai-evaluation for the comparison — both prompt variants over the same evaluation set",
-        "Does not design the evaluation suite itself (metrics, judge rubric, golden dataset) as the answer",
+        "Frames what it hands to ai-evaluation as inputs — the prompt variants, the question set, what to hold constant — rather than specifying the golden-set size, judge rubric, or calibration protocol itself",
         "Diagnoses the context-budget half: a 1,800-token system prompt displacing retrieved context is a design problem, with concrete remedies",
         "States the boundary: evaluation measures whether a change helped; context engineering decides what occupies the window and what gets cut"
       ]

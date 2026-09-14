@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Write a README for my project. It's a Node.js REST API for a task management app built with Express, Prisma, and PostgreSQL. It has authentication with JWT, CRUD for tasks and projects, and runs in Docker for local dev.",
-      "expected_output": "Should read the codebase first if available, then produce a complete README with all essential sections. Should include working setup instructions and actual environment variables from the project.",
+      "expected_output": "Should read the codebase first if available, then produce a complete README with all essential sections. Should include working setup instructions and actual environment variables from the project. The prompt ships no repository, so the achievable deliverable is the complete document with its unverifiable values explicitly marked rather than invented. Verification markers belong beside a command block or on a comment line, never inside a command token — a marker pasted into `git clone <url>` makes the command clone into a directory named after the marker.",
       "assertions": [
         "Grounds the README in the project's actual manifest/codebase, or states which files it must read to do so",
         "Starts with a clear one-line description of what the project does",
@@ -14,7 +14,7 @@
         "Lists environment variables needed with descriptions",
         "Includes verification step (e.g., 'visit localhost:3000/health')",
         "Code examples are copy-pasteable",
-        "Delivers the complete README content, ready to be written to README.md at the project root"
+        "Delivers the full README content in the reply rather than describing what it would contain, leaving any value it cannot verify as a marked placeholder instead of inventing one"
       ]
     },
     {

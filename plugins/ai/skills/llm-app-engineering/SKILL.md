@@ -9,8 +9,9 @@ allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 Design LLM applications as **systems, not prompts**: what goes into the context
 window, what the model is allowed to do, and what happens when it's wrong. The
 model is the one component you don't control — engineer everything around it.
-This skill designs and builds; proving a change helped is `ai-evaluation`'s job,
-and no design below is "done" until it has an eval harness.
+This skill designs and builds: it decides what occupies the context window and
+what gets cut. Proving a change helped is `ai-evaluation`'s job — it measures,
+this skill chooses. No design below is "done" until it has an eval harness.
 
 ## Workflow
 
@@ -74,10 +75,12 @@ compact stale history instead of letting it scroll off; store durable facts
 
 ### Step 6: Wire In Evaluation Before Shipping
 
-Hand the design to `ai-evaluation`: a golden dataset (including unanswerable
-and adversarial cases), RAG-stage metrics (retrieval vs generation scored
-separately), agent task-success rate, and a CI regression gate. "The answers
-feel better" is not evidence; a design without an eval harness is a prototype.
+Hand `ai-evaluation` the **inputs** it needs and let it design the instrument:
+the variants being compared, the question set they should be run over, and what
+must be held constant between them. Specifying the golden-set size, the judge
+rubric, or the calibration protocol here is doing the other skill's job — and
+badly, because this skill is not judged on it. "The answers feel better" is not
+evidence; a design without an eval harness is a prototype.
 
 Deeper pattern detail (chunking table, reranking, memory patterns, failure
 modes): [references/patterns.md](references/patterns.md).

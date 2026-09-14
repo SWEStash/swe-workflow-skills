@@ -34,6 +34,13 @@ Before reviewing line-by-line, understand the big picture:
   full `git diff` (or `git diff --staged`) when the stat summary isn't enough.
 - **What's the surrounding code like?** Read adjacent files for conventions and patterns.
 
+**A review request often arrives with a symptom attached** — "this endpoint is slow",
+"memory climbs overnight". Review the code against what you can actually see and report
+the defects you find, including the ones that plausibly explain the symptom. What you must
+not do is assert that a defect you spotted *is* the cause: that claim needs measurement,
+which is `performance-optimization`'s work. Name the suspect, say it is unconfirmed, and
+keep the review's findings standing on their own.
+
 ### Step 2: First Pass — Structural Review
 
 Look at the forest before the trees. Check:
@@ -137,6 +144,7 @@ These are the lenses through which code is examined:
 
 ## Cross-Skill References
 
+- `performance-optimization` — when a review turns up a suspected cause of a real latency or memory symptom, confirming it by measurement
 - `refactoring` — when the review surfaces code smells worth a structured cleanup
 - `code-slop-cleanup` — strip AI-slop patterns from the diff before (or instead of) debating them in review
 - `security-audit` — for a dedicated, deep security pass beyond the review checklist

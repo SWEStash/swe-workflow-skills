@@ -25,6 +25,12 @@ Branch state vs the default branch (live at skill load):
 
 Run the full `git diff <base>...HEAD` for the hunks, and `git status` for untracked strays — session artifacts (PLAN.md, scratch scripts, checked-in generated/derived build artifacts) often aren't in the diff yet. Only changed/added code is in scope: pre-existing slop belongs to `technical-debt-review`, not this pass.
 
+**"Make the branch presentable" is two jobs; this is one of them.** What the diff should
+*contain* is this pass. How the work is *arranged* — squashing a thrash of wip commits,
+rewriting messages, drafting the PR description — is `git-workflow`. Do the removals and
+hand the history over; a tidy diff spread across fourteen meaningless commits is still not
+reviewable, and rearranging commits does not delete a debug log.
+
 ### Step 2: Judge Each Hunk Against Its Surroundings
 
 Slop is relative — the same construct is correct in one place and slop in another. For each candidate, read the surrounding file and ask: is this **abnormal for this file's conventions and this codepath's trust level?** A try/catch at a process boundary is protection; the same try/catch deep in a validated internal path is theater. See [references/slop-patterns.md](references/slop-patterns.md) for the full catalog with per-pattern "when it's NOT slop" columns.

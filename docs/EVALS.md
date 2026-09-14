@@ -198,7 +198,7 @@ cases drops that skill's other rows.
 
 ### Results (content evals, full catalog)
 
-`claude-opus-5`, all 66 skills, 234 cases, 1315 assertions, **every row at k>=3**.
+`claude-opus-5`, all 66 skills, 234 cases, 1301 assertions, **every row at k>=3**.
 
 **What RED actually is.** RED answers the same prompt without the skill's *content* —
 it cannot read any `SKILL.md`, `references/` or `templates/`. Both arms do carry the
@@ -211,38 +211,40 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **847 / 1315 = 64.4%** |
-| Assertions passed, skill loaded (GREEN) | **1280 / 1315 = 97.3%** |
-| Gain | **+32.9 points** |
-| Cases where GREEN beats RED | **181 / 234** |
-| Cases where GREEN ties RED | **53 / 234** |
+| Assertions passed, no skill body (RED) | **853 / 1301 = 65.6%** |
+| Assertions passed, skill loaded (GREEN) | **1269 / 1301 = 97.5%** |
+| Gain | **+32.0 points** |
+| Cases where GREEN beats RED | **189 / 234** |
+| Cases where GREEN ties RED | **45 / 234** |
 | Cases where GREEN is *below* RED | **0 / 234** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
 content is worse than no skill at all. **There are also zero RED-true / GREEN-false
-assertions** anywhere in the library. The 53 ties are mostly cases where RED already
+assertions** anywhere in the library. The 45 ties are mostly cases where RED already
 saturates — no headroom left to show, not a skill doing nothing — and saturation
-concentrates by case kind: `eval:1` 5%, `eval:2` 32%, `eval:3` 18%, pressure 28%.
-Scope-boundary cases saturate because three of their four assertions (recognise the
-request, name the sibling skill, withhold the wrong deliverable) are satisfied by the
-roster alone; only "states the boundary" discriminates.
+concentrates by case kind: `eval:1` 8%, `eval:2` 32%, `eval:3` **3%**, pressure 28%.
+Scope-boundary cases used to saturate at 18% because three of their four assertions
+(recognise the request, name the sibling skill, withhold the wrong deliverable) were
+satisfied by the roster alone. Rewriting 24 of them against a sibling the roster cannot
+disambiguate took that to 3% — and moved the discriminating assertion from "states the
+boundary" to the routing assertion itself (limitation 9).
 
 **The gain does not track reference mass**, which is worth knowing before optimising
 for depth:
 
 | Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
 |---|---|---|---|
-| zero (no references at all) | 16 | 66.8% → 97.3% | **+30.5** |
-| light (0 < ratio < 1) | 22 | 69.2% → 93.9% | +24.7 |
-| heavy (ratio ≥ 1) | 28 | 65.6% → 93.7% | +28.1 |
+| zero (no references at all) | 16 | 65.5% → 98.8% | **+33.3** |
+| light (0 < ratio < 1) | 22 | 66.5% → 96.5% | +30.0 |
+| heavy (ratio ≥ 1) | 28 | 64.9% → 97.8% | +32.9 |
 
-Pearson r between reference ratio and GREEN gain is **−0.06** across the 66 skills —
+Pearson r between reference ratio and GREEN gain is **−0.02** across the 66 skills —
 no relationship. The zero-reference skills are the control that makes this readable:
 they gained the *most* with nothing to read, so the gain comes from the instruction
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at **k>=3 for every row** (215 at k=3, 19 at k=5) as of 2026-09-07; `k` is
+Recorded at **k>=3 for every row** (210 at k=3, 24 at k=5) as of 2026-09-14; `k` is
 per row. All 173 remaining single-sample cases have since been re-measured, so the
 k=1 caveat that used to sit here no longer applies.
 
@@ -451,26 +453,41 @@ flaky). Several findings from running this make the choice necessary:
    **Two caveats on the numbers above.** The prompt change means rows measured
    after it are not prompt-identical in the *control arm* to rows measured before.
    The gate is unaffected — `run.py` compares GREEN only and never reads RED — but
-   a lift comparison spanning that boundary is comparing two slightly different
-   controls. And the 1571 denominator was true when counted: workflow transcripts
-   age off disk, and a re-scan today finds 1250 RED generators still present,
-   containing all 16 of the same calls.
+   a lift comparison spanning that boundary compares two different controls, and
+   **the difference is not always small.** Measured on nine rows re-run across the
+   boundary: five comparable rows moved the control by 0 to 1 assertion, inside the
+   sampling floor — but `project-documentation eval:1` moved **six of nine**, its
+   control rising 1/9 to 7/9 while GREEN stayed byte-identical. Its old control
+   vector passed only "grounds the README in the real manifest" and failed every
+   content assertion, the signature of a control that **declined to produce the
+   artifact at all**; the current control writes one. That is answer posture, and
+   limitation 10 records what happened when sixteen such rows were re-measured:
+   a third of their combined gain did not survive. **But the signature is not a
+   reliable predictor of which rows are affected** — see limitation 10 — so the
+   safe reading is simply that a large gain recorded under the old control is
+   unconfirmed until that row is re-run, with no shortcut for guessing which ones
+   will move.
+
+   And the 1571 denominator was true when counted: workflow transcripts age off
+   disk, and a re-scan today finds 1250 RED generators still present, containing
+   all 16 of the same calls.
 
 9. **Most rows measure one assertion or none, and scope-boundary cases are
    saturated by construction.** `merge-baseline.mjs` reports, per row, how many
    assertions GREEN passes and RED fails (`node .local/regen-discrimination.mjs`
-   recomputes it library-wide). Across 234 rows: **53 discriminate on nothing, 73
+   recomputes it library-wide). Across 234 rows: **45 discriminate on nothing, 74
    on exactly one.** It concentrates by case kind, and the concentration is
    structural rather than an authoring lapse:
 
    | Kind | Rows | Zero | One | Total lift |
    |---|---|---|---|---|
-   | `eval:1` happy path | 66 | 6 | 12 | **+201** |
-   | `eval:2` edge case | 66 | 22 | 15 | +104 |
-   | `eval:3` scope boundary | 66 | 15 | 32 | **+84** |
+   | `eval:1` happy path | 66 | 8 | 13 | **+176** |
+   | `eval:2` edge case | 66 | 22 | 14 | +92 |
+   | `eval:3` scope boundary | 66 | **5** | 33 | **+104** |
    | pressure | 36 | 10 | 14 | +44 |
 
-   **47 of 66 scope-boundary rows discriminate on 0 or 1 assertion.** The cause is
+   **38 of 66 scope-boundary rows discriminate on 0 or 1 assertion, but only 5 now
+   measure nothing at all.** The cause is
    the shape of the case: it asks four things and a bare model gets three of them
    free — it recognises the request kind, names the right sibling skill (the skill
    listing supplies the roster — limitation 7), and withholds the wrong
@@ -479,12 +496,51 @@ flaky). Several findings from running this make the choice necessary:
    control vector `[T,T,T,F]` on what were, in different words, the same four
    assertions.
 
-   **Ten have since been rewritten, and the fix generalises.** Give the prompt an
-   in-scope half *and* a half owned by a sibling that the roster does not
-   disambiguate, and all four assertions become real decisions. Across those ten
-   rows discriminating assertions went 3 to 9. Two rules came out of doing it, both
-   learned by breaking them:
+   **Twenty-one have since been rewritten, and the fix works — but not the way it
+   was expected to.** Give the prompt an in-scope half *and* a half owned by a
+   sibling that the roster does not disambiguate. Across the first ten rows,
+   discriminating assertions went 3 to 9, then to **17** after a second pass on the
+   three left measuring nothing. Eleven more followed: scope-boundary rows measuring
+   nothing dropped from 13 to **6** library-wide and their total gain rose to +99.
 
+   **What actually became the discriminator was the routing assertion, not the
+   boundary statement.** Across those eleven rows the control named the correct
+   sibling **0 times out of 11** — the roster genuinely could not settle the split,
+   which is exactly what the design is for. The treatment named it 5 times, so that
+   assertion now separates the arms wherever the skill routes at all. The other six
+   are real cross-skill gaps rather than measurement artifacts.
+
+   **And "states the boundary" turned out to be only about a third effective, so
+   most of them are gone.** Of 22 such assertions, 7 discriminated and **12 failed in
+   both arms** — neither the skill nor the bare model articulates the split as a
+   principle, though both act on it. The two ideas are in tension: the harder the
+   roster finds the split, the less either arm states it as a rule. The 12 dead ones
+   were **deleted**, on the grounds that they duplicate the "separates the two
+   halves" assertion and then add a demand to state a rule *about* the answer — the
+   compound-assertion trap in a different costume. They also gated nothing in either
+   arm, so the usual objection to deleting a free assertion (it still protects GREEN
+   against regression) did not apply. The 7 that work are kept: there the boundary is
+   crisp enough to name (`api-design` against storage design, `cicd-pipeline` against
+   release policy). **Treat this assertion as optional and justify it per case**, not
+   as the load-bearing part of the shape.
+
+   Deleting them needed no re-measurement, which is worth knowing as a technique:
+   generators never see the assertion list (`workflow-runner.mjs` passes only the
+   prompt), so removing the **last** assertion and popping the matching verdict off
+   each arm leaves every other verdict measured against an unchanged reply. Six of
+   the twelve were re-measured anyway for an unrelated fix, which doubles as a check
+   on that reasoning.
+
+   Three rules came out of doing it, all learned by breaking them. **All three are
+   patterns with a sample size, not laws — see limitation 11 before applying any of
+   them to a batch:**
+
+   - **Check the two descriptions against each other before choosing the sibling.**
+     If either skill's description names the other *with the boundary stated*, the
+     "names the right sibling" assertion cannot discriminate — the roster has
+     already answered it. One rewrite paired a skill with the sibling whose own
+     description reads "design-time analysis of a system not yet built → <the skill
+     under test>", so the control passed that assertion for free by construction.
    - **Never let the prompt's own facts state the boundary.** One rewrite said "the
      design is still on the whiteboard" and "in production for two years" — which
      *is* the design-time-versus-running distinction, so both arms simply read it
@@ -493,10 +549,39 @@ flaky). Several findings from running this make the choice necessary:
      name a task breakdown *and* acceptance criteria *and* dependencies is failed
      on the missing third by judges who record the first two as present.
 
-   Budget the cost before repeating it: those ten rows added nine newly ungated
-   assertions, roughly one per row, and they are not all assertion bugs — a harder
-   fixture surfaces real gaps that then need fixing. Work in batches with a fix
-   budget, not one sweep.
+   Budget the cost before repeating it, and budget it higher than seems reasonable:
+   the first ten rows added nine newly ungated assertions, and the next eleven added
+   sixteen — two thirds of them concentrated in the boundary assertion above and in
+   genuine routing gaps. Library-wide ungated assertions went 34 to 49 in one batch.
+   These are not all assertion bugs; a harder fixture surfaces real gaps that then
+   need fixing. Work in batches with a fix budget, not one sweep.
+
+   **Naming a sibling only in a trailing cross-reference section is not enough on
+   its own.** Measured across the eleven rows: of the five skills whose `SKILL.md`
+   named the sibling, the treatment routed to it in **one**; of the six that never
+   named it, it routed in **four**. Read that as suggestive and no more — it is
+   eleven different skills with eleven different prompts, **not a controlled
+   comparison**, and it does not mean naming is useless: all five handoffs that were
+   successfully relocated *do* name the sibling, in the step prose the prompt enters.
+   Relocating those five took the routing assertion from failing in both arms to
+   passing in the skill's arm on all five.
+
+   **A later four-case run cannot tell placement from overlap.** The routing
+   assertion discriminated on two rows and failed in every round of both arms on the
+   other two. The two failures are the skills whose sibling appears only in a
+   trailing list — but they are also the two whose own steps already cover the
+   sibling's half (choosing a primary metric; pseudonymising an identifier), and one
+   of the two passes names its sibling nowhere at all. Placement and content overlap
+   separate those four rows equally well. On one failure the skill did name the
+   sibling, attached to the half it already owns, and then did the sibling's work
+   itself — which is what a skill whose body covers that work would be expected to do.
+
+   **The same batch shows the pattern is not universal.** A sixth skill got an
+   entry-point intervention of the same kind — a scope gate above its first step —
+   and its strongest row fell from 9/9 to 5/9, losing first the behaviour the
+   displaced step owned. That was reverted. **Confirm a placement change on a few
+   cases, with a guard row for any skill whose other cases share the edited prose,
+   before applying it across a batch of twelve.** See limitation 11.
 
    **This is not a gate problem.** `run.py` compares GREEN only and never reads
    RED, so a saturated row still fails CI if the skill regresses. Saturation costs
@@ -520,6 +605,74 @@ flaky). Several findings from running this make the choice necessary:
    check is actually performed, only a guideline") means the assertion really is
    unreachable; judges reporting the behaviour as simply **absent** means the
    content exists but is filed where the prompt cannot reach it.
+
+10. **Part of every lift figure is answer posture, not knowledge.** The harness
+    rewards producing an artifact and penalises gathering context first, in **both**
+    arms, on the same underlying behaviour. On a "set this up for me" prompt an arm
+    may legitimately either build or ask, and the score treats asking as ignorance.
+    Confirmed in both directions: a control that asked clarifying questions instead
+    of producing a schema scored 1/7 where a producing control scored 6/7, inflating
+    that row's gain to +6; and a treatment arm that asked for a staging URL before
+    concluding was failed on the letter while judges credited the honesty.
+
+    **The test that separates this from a genuinely unreachable assertion is cheap
+    and decisive: did any round produce the artifact?** If none could, the assertion
+    is unreachable (limitation 4). If some did and others deferred, it is posture.
+
+    **Consequences.** Two rows both at +6 are not comparable without knowing why the
+    control failed. A large control movement between runs is expected exactly where
+    the prompt invites a choice between building and asking.
+
+    **This has been measured, not just argued.** Sixteen rows whose control had
+    declined to produce an artifact were re-measured together, at their recorded k.
+    Their combined gain went **+97 to +65** — a third of it was posture, and the
+    library total moved +435 to +403. The treatment arm held on fourteen of the
+    sixteen. Six were confirmed posture artifacts, two of them collapsing to **zero**
+    gain (`metrics-and-okrs eval:1` and `data-modeling eval:1`, whose controls rose
+    to a perfect score); six were confirmed real gains that reproduced; two moved
+    only slightly; and two moved on the treatment side instead, which is a different
+    problem (see below).
+
+    **The effect is real, but do not trust a screen for it.** These sixteen were
+    selected by "control collapsed to 0-2 alongside near-perfect treatment", and
+    that predictor did not track the effect. The two rows with *entirely zero*
+    controls, predicted to move most, barely moved at all — one not by a single
+    assertion — while the two total collapses had non-zero controls and were not
+    flagged. A row's gain is confirmed by re-measuring that row, and by nothing
+    cheaper.
+
+    **A re-measure can also raise a gain.** `prd-writing eval:1` went +6 to +7 when
+    its control fell. The exposure is not one-directional.
+
+    **And a count-stable row is not a stable row.** `tdd-workflow eval:1` held its
+    control at 2 of 7 across two vectors with **no assertion in common**
+    (`FFTFFTF` then `TTFFFFF`). By contrast the three rows re-measured at k=5
+    reproduced byte-identically in both arms. That is the clearest evidence yet for
+    paying k=5 on a contested row: at k=3 a stable count can hide complete churn
+    underneath.
+
+11. **These limitations describe patterns with sample sizes, not rules that transfer
+    to every skill.** Skills differ in what their prompts ask for, where their content
+    sits, and what a good answer looks like, so a change that closes a gap in one can
+    open one in another. Three times in one programme a pattern derived from a handful
+    of cases was applied to a batch and made something worse:
+
+    | Applied uniformly | Outcome |
+    |---|---|
+    | The four-part scope-boundary assertion shape | Held in the 10 cases it was derived from; its "states the boundary" slot then failed in **both** arms in 9 of 11 new cases, and 12 of 22 instances were retired |
+    | "Move the handoff into the step the prompt enters", to 6 skills at once | Worked on 5; on the 6th it cost a 9/9 row four assertions and was reverted |
+    | A control-vector signature predicting which recorded gains were posture-inflated | Selected 16 rows of which 8 moved, missed **both** of the two total collapses, and its 2 designated validation rows split 1-1 |
+
+    **So derive the pattern, then confirm it small.** Apply a new authoring or
+    assertion pattern to 3-4 cases rather than 12; include a guard row for any skill
+    whose other cases share the prose being edited; read the per-row result before
+    authoring the next batch. A pattern holding on 3 of 4 is worth continuing; one that
+    costs a strong row on its first outing is worth stopping.
+
+    **And a pattern that fails on a skill is telling you about that skill.** The cases
+    where the boundary assertion still discriminates are the ones whose split is crisp
+    enough to name; the skills where it does not are doing something more entangled.
+    Record which skills a pattern does not fit, and why, instead of forcing them into it.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what

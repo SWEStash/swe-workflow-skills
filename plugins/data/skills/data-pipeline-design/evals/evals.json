@@ -28,13 +28,13 @@
     },
     {
       "id": 3,
-      "prompt": "Design the data pipeline that produces training features for our churn model — we need point-in-time correct features and a training set refreshed weekly.",
-      "expected_output": "Recognizes this as an ML training/feature pipeline, not analytics ELT — hands off to ml-pipeline-design, flagging point-in-time correctness/leakage as the ML-specific concern that a BI-oriented warehouse design does not address",
+      "prompt": "Our nightly dbt run takes five hours and the warehouse bill has doubled since January. Most of the models are full refreshes over the whole event table. Leadership wants both numbers down before the next board meeting.",
+      "expected_output": "Two numbers, two owners, and the roster does not say which is which. Restructuring full refreshes into incremental builds so less work runs each night is this skill's, and it delivers that. How the warehouse is sized, and how much of the doubled bill this job actually accounts for, is finops-cost-optimization's. A good answer establishes that share before promising a reduction, because a pipeline rewrite that addresses a minority of the spend will not move the bill.",
       "assertions": [
-        "Recognizes this is an ML training/feature pipeline, not an analytics/BI ELT pipeline",
-        "Refers to the ml-pipeline-design skill for feature engineering and training orchestration",
-        "Flags point-in-time correctness / data leakage as the ML-specific concern that distinguishes this from BI work",
-        "Does not answer with a BI-oriented warehouse/dbt marts design as the primary solution"
+        "Separates the two halves: how the models are built and refreshed, versus how the warehouse spend is sized and attributed",
+        "Refers to finops-cost-optimization for warehouse sizing and attributing the bill",
+        "Delivers the pipeline half itself — moving the full refreshes onto incremental builds — rather than deferring the whole request",
+        "Establishes what share of the bill this job actually accounts for before promising a reduction"
       ]
     }
   ]

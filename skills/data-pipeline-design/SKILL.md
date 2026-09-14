@@ -25,6 +25,13 @@ magnitude cheaper to build and operate than streaming — don't buy streaming
 because "real-time" sounds better; buy it when a consumer decision genuinely
 changes within minutes.
 
+**If the ask arrives with a bill attached, separate the two questions.** Changing what
+work runs each night — full refreshes to incremental, narrower scans, fewer rebuilds — is
+this skill's, and the steps below do it. What that work is *charged at*, and how much of
+the invoice this job even accounts for, is `finops-cost-optimization`'s. Find out this
+job's share of the spend before promising a number: a rewrite that halves a job
+responsible for a fifth of the bill moves the total by a tenth.
+
 ### Step 2: Choose ELT (and Say Why)
 
 For a cloud warehouse (Snowflake, BigQuery, Redshift, Databricks), default to
@@ -108,6 +115,7 @@ warehouses make it very easy to spend quietly.
 
 ## Cross-Skill References
 
+- `finops-cost-optimization` — warehouse sizing, spend attribution, and whether this job is actually driving the bill
 - `data-quality` — tests, contracts, and freshness checks between the layers
 - `data-modeling` — the schema design of the marts this pipeline produces
 - `ml-pipeline-design` — when the consumer is model training, not BI

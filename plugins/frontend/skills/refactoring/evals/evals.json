@@ -30,14 +30,13 @@
     },
     {
       "id": 3,
-      "prompt": "Can you refactor my entire codebase to use better patterns?",
-      "expected_output": "Should push back on the scope — suggest identifying the highest-impact areas first, then refactoring incrementally. Should not attempt a sweeping rewrite.",
+      "prompt": "Everyone on the team agrees the codebase is a mess and nobody agrees what to do about it. I have budget for roughly one engineer-month. Tell me what we should spend it on, and then start making the change.",
+      "expected_output": "Two jobs the roster does not split, and the request explicitly asks for both. Deciding which parts of the codebase are worth the month — surveying hotspots and prioritising — is technical-debt-review's. Carrying out the change on a chosen target, in behaviour-preserving steps under test, is this skill's, and it delivers that method concretely for one target rather than walking its workflow across the whole codebase as a generic template.",
       "assertions": [
-        "Does not attempt to refactor everything at once",
-        "Suggests identifying highest-impact areas first",
-        "Recommends incremental approach",
-        "Asks which areas cause the most pain or confusion",
-        "Applies KISS to the refactoring process itself"
+        "Separates the two halves: deciding which parts of the codebase are worth the month, versus carrying out the change on one of them",
+        "Refers to technical-debt-review for surveying the codebase and prioritising where the month goes",
+        "Delivers the refactoring half itself — how a chosen target is changed safely, in steps — rather than deferring the whole request",
+        "Does not walk its own workflow across the entire codebase as a generic template"
       ]
     }
   ]

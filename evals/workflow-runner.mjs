@@ -168,7 +168,17 @@ const results = await pipeline(
     const n = it.assertions.length
     // A judge that returns no verdicts is indistinguishable from the null case
     // above once toBools() has run: 0 verdicts -> n false booleans. Drop it too.
-    const noVerdicts = (x) => !Array.isArray(x?.v?.verdicts) || x.v.verdicts.length === 0
+    // A PARTIAL list is the same defect wearing a smaller number: toBools() fills
+    // every index the judge skipped with `false`, so a judge that scored 1 of 4
+    // assertions is recorded as 1 pass and 3 fails rather than as the incomplete
+    // round it is. Observed in the field — it changed no verdict there only because
+    // the majority covered it. Require full, in-range coverage of 0..n-1.
+    const incomplete = (x) => {
+      const v = x?.v?.verdicts
+      if (!Array.isArray(v) || v.length === 0) return true
+      const seen = new Set(v.map((d) => d.index).filter((i) => Number.isInteger(i) && i >= 0 && i < n))
+      return seen.size !== n
+    }
     const judgeArm = async (arm, gs) => {
       const js = await Promise.all(
         gs.map((gen, r) =>
@@ -177,7 +187,10 @@ const results = await pipeline(
             : Promise.resolve({ ok: false, e: 'generator failed' })
         )
       )
-      return js.filter((j) => j.ok && !noVerdicts(j)).map((j) => toBools(j.v, n))
+      const usable = js.filter((j) => j.ok && !incomplete(j))
+      const dropped = js.filter((j) => j.ok && incomplete(j)).length
+      if (dropped) log(`${it.skill} ${key}: dropped ${dropped} ${arm} round(s) with an incomplete verdict list`)
+      return usable.map((j) => toBools(j.v, n))
     }
     const [redR, greenR] = await Promise.all([judgeArm('red', red), judgeArm('green', green)])
     // A round that died is a round we don't have, not a round of falses. Vote on
