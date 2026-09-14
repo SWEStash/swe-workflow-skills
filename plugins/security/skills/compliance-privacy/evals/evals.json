@@ -28,13 +28,13 @@
     },
     {
       "id": 3,
-      "prompt": "Can you review our Express API code for injection vulnerabilities and check whether our JWT auth implementation is secure?",
-      "expected_output": "Recognizes this as a technical vulnerability review of existing code — refers to security-audit for the injection/auth analysis, stating the boundary: compliance-privacy handles regulatory and privacy obligations (GDPR/SOC 2, data rights, retention); security-audit finds technical vulnerabilities",
+      "prompt": "Our support team debugs failed checkouts by searching Datadog for the customer's email address, and the platform team wants to start attaching full request bodies to our traces so they can see what was submitted. We keep logs for 15 months and a large share of our customers are in Germany. What should we change?",
+      "expected_output": "Notices that the email-as-search-key habit and the request-bodies-on-spans plan raise two different questions. What personal data the logs and traces may hold, where it is scrubbed, and how long it is kept is this skill's work, and it delivers that — a retention period that is justified rather than inherited, and scrubbing at the logging layer. How support finds and follows a failing checkout once the email is no longer the search key — correlation IDs, a pseudonymous customer identifier on spans, what the trace carries instead of the body — is instrumentation design that observability-design owns. A good answer does not solve the privacy problem by leaving support unable to debug.",
       "assertions": [
-        "Recognizes the request as a technical security review of code, not a regulatory/privacy obligation question",
-        "Refers to the security-audit skill for the injection and auth review",
-        "Does not produce a compliance workflow (data mapping, DSR machinery, SOC 2 controls) as the answer",
-        "States the boundary: compliance-privacy covers regulatory/privacy obligations; security-audit covers technical vulnerabilities"
+        "Separates the two halves: what personal data the logs and traces may hold, versus how engineers find a failing request once the email is no longer the search key",
+        "Refers to observability-design for the correlation-ID or trace design that replaces searching by email",
+        "Delivers the privacy half itself — a retention period and where personal data is scrubbed — rather than deferring the whole request",
+        "Treats request bodies on spans as personal data to minimise before they are captured, not as a storage-cost question"
       ]
     }
   ]

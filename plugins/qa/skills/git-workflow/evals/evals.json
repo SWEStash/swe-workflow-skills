@@ -29,15 +29,13 @@
     },
     {
       "id": 3,
-      "prompt": "We're a team of 4 starting a new project. What branching strategy should we use? We deploy to production multiple times a day.",
-      "expected_output": "Should recommend a simple strategy (main + short-lived feature branches) given small team and continuous deployment. Should NOT suggest GitFlow or other complex models.",
+      "prompt": "We're a team of 4 on a new project and we deploy to production several times a day. Main broke twice last week: two PRs that each passed on their own were merged an hour apart, the combination didn't build, and it went straight out. What branching setup should we use so this stops happening?",
+      "expected_output": "Notices that the breakage has two causes that are fixed in different places. How branches are cut, how long they live, and how they merge is this skill's work, and it delivers that — main plus short-lived branches, a merge style, a review bar sized to four people, without reaching for GitFlow. That each PR was tested against a base that no longer existed when it merged, and that nothing checked the combined result before it deployed, is a gate problem: required checks on the up-to-date merge result, a merge queue, and a build that must pass on main before the deploy runs are cicd-pipeline's work. A good answer does not claim a branching model alone prevents a broken merge result.",
       "assertions": [
-        "Recommends simple branching (main + feature branches)",
-        "Does NOT recommend GitFlow (too heavy for 4 devs + continuous deployment)",
-        "Recommends short-lived branches (1-3 days max)",
-        "Suggests squash-merge as default merge strategy",
-        "Includes branch naming conventions",
-        "Mentions PR review requirements appropriate for team size"
+        "Separates the two halves: how branches are arranged and merged, versus the checks that must pass on the merged result before it reaches production",
+        "Refers to cicd-pipeline for the required checks on the merged result and the gate before deploy",
+        "Delivers the branching strategy itself — main plus short-lived branches and a merge style — rather than deferring the whole request",
+        "Explains that each PR was tested against a stale base rather than against the combined result"
       ]
     }
   ],

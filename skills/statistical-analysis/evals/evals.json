@@ -30,13 +30,13 @@
     },
     {
       "id": 3,
-      "prompt": "We're about to launch a new system prompt for our support chatbot and want to A/B test it live against the current one to see which gives better answers. Can you set this up?",
-      "expected_output": "Should recognize this as online A/B evaluation of an LLM app and hand off to the ai-evaluation skill for the evaluation design (answer-quality metrics, LLM-as-judge or human feedback, eval gates); statistical-analysis contributes at most the underlying experiment statistics (sample size, significance), not the AI evaluation design.",
+      "prompt": "We want to test whether our redesigned onboarding flow works. The PM wants to measure engagement, growth cares about 7-day retention, and finance only cares about paid conversion. We get about 3,000 signups a week. How should we set up the test, and how long do we need to run it?",
+      "expected_output": "Notices that 'how do we know it works' is being asked before anyone has agreed what working means. Which outcome the business counts as success — and what 'engagement' would even have to be defined as — is a success-metric decision that metrics-and-okrs owns. Designing a test that can detect a change in whichever metric is chosen is this skill's work, and it delivers that: one pre-registered primary metric with the others labelled secondary, a sample size from a stated minimum detectable effect and power, and the run length that 3,000 signups a week implies. A good answer does not quietly pick the metric for the business, and does not test all three as co-primary without correcting for it.",
       "assertions": [
-        "Recognizes this as AI-app evaluation territory and hands off to or invokes the ai-evaluation skill",
-        "Raises AI-specific measurement concerns (defining answer quality, LLM-as-judge or human feedback signals) rather than treating it as a pure two-sample statistics problem",
-        "Does not respond with only a generic A/B test design ignoring how answer quality gets measured",
-        "If it retains anything, retains only the experiment statistics (sample size, significance testing) as this skill's contribution"
+        "Separates the two halves: agreeing which outcome counts as the onboarding flow working, versus designing a test that can detect a change in it",
+        "Refers to metrics-and-okrs for choosing the success metric",
+        "Delivers the experiment design itself — one pre-registered primary metric and a sample size from power — rather than deferring the whole request",
+        "Turns the roughly 3,000 signups a week into a run length for a stated minimum detectable effect"
       ]
     }
   ]

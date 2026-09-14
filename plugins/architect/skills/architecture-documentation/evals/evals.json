@@ -33,7 +33,7 @@
     {
       "id": 3,
       "prompt": "Three engineers joined this month and all three got stuck the same way: they can't work out which of our nine services actually calls which, and they couldn't get the stack running locally. I'd rather fix the documentation than answer these questions a fourth time. Where do we start?",
-      "expected_output": "Notices that the two complaints are not one problem. The map of which service calls which is this skill's work — which diagram levels answer that question, and keeping them generated from source rather than drawn once — and it delivers that. Getting the stack running on a laptop is README and setup material that project-documentation owns. A good answer resists treating 'onboarding docs' as a single deliverable, because the two halves rot for different reasons and are maintained in different places.",
+      "expected_output": "Notices that the two complaints are not one problem. The map of which service calls which is this skill's work — which diagram levels answer that question, and what triggers an update and who owns it so the map does not drift once drawn — and it delivers that. Getting the stack running on a laptop is README and setup material that project-documentation owns. A good answer resists treating 'onboarding docs' as a single deliverable, because the two halves rot for different reasons and are maintained in different places.",
       "assertions": [
         "Separates the two halves: the map of which services call which, versus the instructions for getting the stack running locally",
         "Refers to project-documentation for the README and the local setup instructions",

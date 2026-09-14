@@ -273,10 +273,10 @@
       "id": "boundary:compliance-privacy:3",
       "kind": "boundary",
       "skill": "compliance-privacy",
-      "prompt": "Can you review our Express API code for injection vulnerabilities and check whether our JWT auth implementation is secure?",
+      "prompt": "Our support team debugs failed checkouts by searching Datadog for the customer's email address, and the platform team wants to start attaching full request bodies to our traces so they can see what was submitted. We keep logs for 15 months and a large share of our customers are in Germany. What should we change?",
       "accept": [
         "compliance-privacy",
-        "security-audit",
+        "observability-design",
         "NONE"
       ]
     },
@@ -594,9 +594,10 @@
       "id": "boundary:git-workflow:3",
       "kind": "boundary",
       "skill": "git-workflow",
-      "prompt": "We're a team of 4 starting a new project. What branching strategy should we use? We deploy to production multiple times a day.",
+      "prompt": "We're a team of 4 on a new project and we deploy to production several times a day. Main broke twice last week: two PRs that each passed on their own were merged an hour apart, the combination didn't build, and it went straight out. What branching setup should we use so this stops happening?",
       "accept": [
         "git-workflow",
+        "cicd-pipeline",
         "NONE"
       ]
     },
@@ -1095,10 +1096,10 @@
       "id": "boundary:statistical-analysis:3",
       "kind": "boundary",
       "skill": "statistical-analysis",
-      "prompt": "We're about to launch a new system prompt for our support chatbot and want to A/B test it live against the current one to see which gives better answers. Can you set this up?",
+      "prompt": "We want to test whether our redesigned onboarding flow works. The PM wants to measure engagement, growth cares about 7-day retention, and finance only cares about paid conversion. We get about 3,000 signups a week. How should we set up the test, and how long do we need to run it?",
       "accept": [
         "statistical-analysis",
-        "ai-evaluation",
+        "metrics-and-okrs",
         "NONE"
       ]
     },

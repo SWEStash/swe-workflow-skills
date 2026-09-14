@@ -5,11 +5,11 @@
   "runner": "workflow-runner.mjs",
   "option": "A",
   "summary": {
-    "cases": 233,
+    "cases": 230,
     "excluded": 0,
-    "assertions": 1299,
-    "red": 853,
-    "green": 1269,
+    "assertions": 1285,
+    "red": 842,
+    "green": 1255,
     "skills": 66
   },
   "skills": {
@@ -988,23 +988,6 @@
           true,
           true,
           true
-        ],
-        "model": "claude-opus-5",
-        "k": 3,
-        "runner": "workflow-runner.mjs"
-      },
-      "eval:3": {
-        "green": [
-          true,
-          true,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          true,
-          true,
-          false
         ],
         "model": "claude-opus-5",
         "k": 3,
@@ -2005,27 +1988,6 @@
           true,
           false,
           false,
-          false,
-          true
-        ],
-        "model": "claude-opus-5",
-        "k": 3,
-        "runner": "workflow-runner.mjs"
-      },
-      "eval:3": {
-        "green": [
-          true,
-          true,
-          true,
-          true,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          true,
-          true,
-          true,
           false,
           true
         ],
@@ -3961,23 +3923,6 @@
           true,
           true,
           true
-        ],
-        "model": "claude-opus-5",
-        "k": 3,
-        "runner": "workflow-runner.mjs"
-      },
-      "eval:3": {
-        "green": [
-          true,
-          true,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          true,
-          true,
-          false
         ],
         "model": "claude-opus-5",
         "k": 3,
