@@ -231,9 +231,9 @@ good skills in advance.
 - The limits the tooling enforces — the `description` and combined listing caps.
 
 **Defaults — measured, with sample sizes, and a skill may depart from them:** the
-delivery clause, ask versus deliver, where a handoff sits, the assertion shapes, the
-~350-character listing target. Depart when the skill's own evals show the departure
-gives a better answer, and put the condition that justifies it in the skill.
+delivery clause, ask versus deliver, where a handoff sits, the assertion shapes. Depart
+when the skill's own evals show the departure gives a better answer, and put the
+condition that justifies it in the skill.
 
 **Then feed it back.** A departure that measures well is evidence about the default.
 Record its condition here as a documented exception — the way `feature-planning`'s
