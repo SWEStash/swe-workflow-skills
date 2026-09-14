@@ -86,11 +86,16 @@ Every grounding step must carry three things, and they are cheap:
 than reinventing it. The tell in an eval is a GREEN reply that contains no artifact:
 no message, no document, no recommendation, just a plan to produce one.
 
-**The library's stated position, so this stops being argued case by case: ask
-alongside, never instead.** A skill may always ask — questions are often the most
-valuable thing it produces — but it must not make the answer conditional on a
-reply it cannot get. Deliver under stated assumptions in the same response, and
-put the open questions next to the draft rather than in place of it.
+**The default: ask alongside, not instead.** A skill may always ask — questions are
+often the most valuable thing it produces — but by default it should not make the
+answer conditional on a reply it cannot get. Deliver under stated assumptions in the
+same response, and put the open questions next to the draft rather than in place of it.
+
+**A default, not a law — and `feature-planning` departs from it on purpose.** When not
+one acceptance criterion can be written without inventing the feature's core behaviour,
+it asks first and says what it needs to start drafting, because a plan built on an
+invented feature is worse than a question. That is the shape a legitimate departure
+takes: a stated condition, inside the skill, that decides which branch applies.
 
 Two things follow. **A skill that asks first is not thereby wrong** — the failure
 is withholding the artifact, not seeking context, and a skill whose whole job is
@@ -211,6 +216,30 @@ about the pattern.** The cases where the boundary assertion still works are the 
 split is crisp enough to name; the skills where it does not are doing something genuinely
 more entangled. Record which skills a pattern does not fit and why, rather than forcing
 them into it.
+
+### What is fixed, and what is a default
+
+The guidance in this file is not all the same kind, and treating it as one kind limits
+good skills in advance.
+
+**Fixed — about evidence, and it does not bend for a skill:**
+
+- Reproduce the failure before writing the fix (the Iron Law).
+- Measure the skill against no skill: three evals, GREEN never below RED, and a guard
+  row whenever an edit lands in prose another case passes through.
+- Verify before claiming a change works (`verification-before-completion`).
+- The limits the tooling enforces — the `description` and combined listing caps.
+
+**Defaults — measured, with sample sizes, and a skill may depart from them:** the
+delivery clause, ask versus deliver, where a handoff sits, the assertion shapes. Depart
+when the skill's own evals show the departure gives a better answer, and put the
+condition that justifies it in the skill.
+
+**Then feed it back.** A departure that measures well is evidence about the default.
+Record its condition here as a documented exception — the way `feature-planning`'s
+ask-first branch is recorded above — rather than forcing the skill back into line or
+letting the two quietly disagree. Good guidance shapes skills, and skills that work are
+how the guidance gets corrected.
 
 ## Description discipline (the highest-leverage line)
 

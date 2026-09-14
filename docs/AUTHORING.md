@@ -27,6 +27,11 @@ skill-name/
 3. **Appropriate freedom** — Strict where fragile, flexible where creative.
 4. **Feedback loops** — Validate-fix-repeat for quality-critical operations.
 5. **Composable** — Skills can be used independently or combined in workflows.
+6. **Evidence is fixed; the rest is a default** — reproducing a failure before fixing it,
+   measuring each skill against no skill, and verifying before claiming a change works
+   are not negotiable. Most other guidance here is a measured default that a skill may
+   depart from when its own evals show a better result; a departure that works is
+   recorded back into the guidance (see `writing-skills`).
 
 ## Description Is Everything
 
