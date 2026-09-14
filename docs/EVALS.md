@@ -531,7 +531,9 @@ flaky). Several findings from running this make the choice necessary:
    the twelve were re-measured anyway for an unrelated fix, which doubles as a check
    on that reasoning.
 
-   Three rules came out of doing it, all learned by breaking them:
+   Three rules came out of doing it, all learned by breaking them. **All three are
+   patterns with a sample size, not laws — see limitation 11 before applying any of
+   them to a batch:**
 
    - **Check the two descriptions against each other before choosing the sibling.**
      If either skill's description names the other *with the boundary stated*, the
@@ -554,12 +556,22 @@ flaky). Several findings from running this make the choice necessary:
    These are not all assertion bugs; a harder fixture surfaces real gaps that then
    need fixing. Work in batches with a fix budget, not one sweep.
 
-   **A cross-reference in the skill body does not make the model route.** Measured
-   across the eleven rows: of the five skills whose `SKILL.md` names the sibling,
-   the treatment routed to it in **one**; of the six that never name it, it routed in
-   **four**. Naming is not what fires a handoff — the step prose of the branch the
-   prompt enters is. A skill that lists a sibling only in a trailing cross-reference
-   section will not reach it from a question that enters at Step 1.
+   **Naming a sibling only in a trailing cross-reference section is not enough on
+   its own.** Measured across the eleven rows: of the five skills whose `SKILL.md`
+   named the sibling, the treatment routed to it in **one**; of the six that never
+   named it, it routed in **four**. Read that as suggestive and no more — it is
+   eleven different skills with eleven different prompts, **not a controlled
+   comparison**, and it does not mean naming is useless: all five handoffs that were
+   successfully relocated *do* name the sibling, in the step prose the prompt enters.
+   Relocating those five took the routing assertion from failing in both arms to
+   passing in the skill's arm on all five.
+
+   **The same batch shows the pattern is not universal.** A sixth skill got an
+   entry-point intervention of the same kind — a scope gate above its first step —
+   and its strongest row fell from 9/9 to 5/9, losing first the behaviour the
+   displaced step owned. That was reverted. **Confirm a placement change on a few
+   cases, with a guard row for any skill whose other cases share the edited prose,
+   before applying it across a batch of twelve.** See limitation 11.
 
    **This is not a gate problem.** `run.py` compares GREEN only and never reads
    RED, so a saturated row still fails CI if the skill regresses. Saturation costs
@@ -628,6 +640,29 @@ flaky). Several findings from running this make the choice necessary:
     reproduced byte-identically in both arms. That is the clearest evidence yet for
     paying k=5 on a contested row: at k=3 a stable count can hide complete churn
     underneath.
+
+11. **These limitations describe patterns with sample sizes, not rules that transfer
+    to every skill.** Skills differ in what their prompts ask for, where their content
+    sits, and what a good answer looks like, so a change that closes a gap in one can
+    open one in another. Three times in one programme a pattern derived from a handful
+    of cases was applied to a batch and made something worse:
+
+    | Applied uniformly | Outcome |
+    |---|---|
+    | The four-part scope-boundary assertion shape | Held in the 10 cases it was derived from; its "states the boundary" slot then failed in **both** arms in 9 of 11 new cases, and 12 of 22 instances were retired |
+    | "Move the handoff into the step the prompt enters", to 6 skills at once | Worked on 5; on the 6th it cost a 9/9 row four assertions and was reverted |
+    | A control-vector signature predicting which recorded gains were posture-inflated | Selected 16 rows of which 8 moved, missed **both** of the two total collapses, and its 2 designated validation rows split 1-1 |
+
+    **So derive the pattern, then confirm it small.** Apply a new authoring or
+    assertion pattern to 3-4 cases rather than 12; include a guard row for any skill
+    whose other cases share the prose being edited; read the per-row result before
+    authoring the next batch. A pattern holding on 3 of 4 is worth continuing; one that
+    costs a strong row on its first outing is worth stopping.
+
+    **And a pattern that fails on a skill is telling you about that skill.** The cases
+    where the boundary assertion still discriminates are the ones whose split is crisp
+    enough to name; the skills where it does not are doing something more entangled.
+    Record which skills a pattern does not fit, and why, instead of forcing them into it.
 
 The useful, stable signal is: **GREEN ≥ RED on every skill** (the skill never
 hurts), and **GREEN doesn't drop between commits** (no regression). That's what
