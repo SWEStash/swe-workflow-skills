@@ -5,11 +5,11 @@
   "runner": "workflow-runner.mjs",
   "option": "A",
   "summary": {
-    "cases": 234,
+    "cases": 230,
     "excluded": 0,
-    "assertions": 1301,
-    "red": 853,
-    "green": 1269,
+    "assertions": 1285,
+    "red": 841,
+    "green": 1255,
     "skills": 66
   },
   "skills": {
@@ -710,23 +710,6 @@
         "model": "claude-opus-5",
         "k": 3,
         "runner": "workflow-runner.mjs"
-      },
-      "eval:3": {
-        "green": [
-          true,
-          true,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          true,
-          true,
-          false
-        ],
-        "model": "claude-opus-5",
-        "k": 3,
-        "runner": "workflow-runner.mjs"
       }
     },
     "code-reviewing": {
@@ -1003,23 +986,6 @@
           true,
           true,
           true,
-          true,
-          true
-        ],
-        "model": "claude-opus-5",
-        "k": 3,
-        "runner": "workflow-runner.mjs"
-      },
-      "eval:3": {
-        "green": [
-          true,
-          false,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          false,
           true,
           true
         ],
@@ -2671,23 +2637,6 @@
         "model": "claude-opus-5",
         "k": 3,
         "runner": "workflow-runner.mjs"
-      },
-      "eval:3": {
-        "green": [
-          true,
-          true,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          true,
-          true,
-          false
-        ],
-        "model": "claude-opus-5",
-        "k": 3,
-        "runner": "workflow-runner.mjs"
       }
     },
     "mobile-release": {
@@ -3972,23 +3921,6 @@
           true,
           true,
           true,
-          true,
-          true
-        ],
-        "model": "claude-opus-5",
-        "k": 3,
-        "runner": "workflow-runner.mjs"
-      },
-      "eval:3": {
-        "green": [
-          true,
-          false,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          false,
           true,
           true
         ],

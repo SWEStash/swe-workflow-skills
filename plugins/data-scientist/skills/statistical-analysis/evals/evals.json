@@ -30,13 +30,13 @@
     },
     {
       "id": 3,
-      "prompt": "We want to test whether our redesigned onboarding flow works. The PM wants to measure engagement, growth cares about 7-day retention, and finance only cares about paid conversion. We get about 3,000 signups a week. How should we set up the test, and how long do we need to run it?",
-      "expected_output": "Notices that 'how do we know it works' is being asked before anyone has agreed what working means. Which outcome the business counts as success — and what 'engagement' would even have to be defined as — is a success-metric decision that metrics-and-okrs owns. Designing a test that can detect a change in whichever metric is chosen is this skill's work, and it delivers that: one pre-registered primary metric with the others labelled secondary, a sample size from a stated minimum detectable effect and power, and the run length that 3,000 signups a week implies. A good answer does not quietly pick the metric for the business, and does not test all three as co-primary without correcting for it.",
+      "prompt": "Our checkout redesign test just finished: treatment converted 9% better than control, p = 0.01, and the PM wants to ship it today. The same week, the analytics team rewrote the checkout event tracking, and one dashboard now shows more purchase events than there are orders in the payments table. Is the result real?",
+      "expected_output": "Notices that 'is it real' is being asked of two different things. Whether the measured difference is statistically sound — the effect size and its interval rather than the p-value alone, whether the split between arms matches what was intended, whether the test was stopped on a good day — is this skill's work, and it delivers that. Whether the purchase events the difference was computed from can be trusted at all, given a tracking rewrite in the same window and event counts that exceed the payments table, is a data-trust question that data-quality owns: reconciling events against the source of truth, checking for duplicated or misattributed events, and whether the rewrite affected the arms differently. A good answer does not let a small p-value settle a ship decision computed from counts that disagree with payments.",
       "assertions": [
-        "Separates the two halves: agreeing which outcome counts as the onboarding flow working, versus designing a test that can detect a change in it",
-        "Refers to metrics-and-okrs for choosing the success metric",
-        "Delivers the experiment design itself — one pre-registered primary metric and a sample size from power — rather than deferring the whole request",
-        "Turns the roughly 3,000 signups a week into a run length for a stated minimum detectable effect"
+        "Separates the two halves: whether the measured difference is statistically sound, versus whether the purchase events it was computed from can be trusted",
+        "Refers to data-quality for reconciling the purchase events against the payments table",
+        "Delivers the statistical half itself — an effect size with a confidence interval and a check on how traffic was split — rather than deferring the whole request",
+        "Does not let the p-value settle the ship decision while the event counts disagree with the payments table"
       ]
     }
   ]

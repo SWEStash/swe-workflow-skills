@@ -28,13 +28,13 @@
     },
     {
       "id": 3,
-      "prompt": "Our codebase is a mess of tech debt — give me a prioritized assessment of what we should fix first and a remediation roadmap for the quarter.",
-      "expected_output": "Recognizes this as a debt assessment/prioritization request — refers to technical-debt-review for the hotspot analysis and remediation roadmap, noting the boundary: code-archaeology builds understanding of unfamiliar code; technical-debt-review assesses health and prioritizes fixes",
+      "prompt": "I've just inherited our warehouse-routing service. The two people who built it left last month, there's no README, and nobody can explain why orders for two of our regions go through a completely separate code path. I want to understand it, and I don't want the next person to go through this. Where do I start?",
+      "expected_output": "Notices that understanding the service and leaving it understood are related but different deliverables. Recovering how the service works and why the regional code path exists — surveying entry points, mining the history of that path, tracing one real order through it, and treating it as load-bearing until evidence says otherwise — is this skill's work, and it delivers that. Turning what was learned into a README and onboarding documentation the next person will actually find and keep current is project-documentation's. A good answer does not stop at a personal understanding that leaves with the next departure.",
       "assertions": [
-        "Recognizes the request as debt assessment and prioritization, not comprehension of unfamiliar code",
-        "Refers to the technical-debt-review skill for the hotspot analysis and roadmap",
-        "Does not produce an archaeology workflow (history mining, characterization tests) as the primary answer",
-        "States or implies the boundary: code-archaeology produces understanding; technical-debt-review assesses and prioritizes what to fix"
+        "Separates the two halves: recovering how the service works and why the regional code path exists, versus writing it down so the next person does not start from zero",
+        "Refers to project-documentation for the README and onboarding documentation",
+        "Delivers the comprehension half itself — history mining and tracing one order through the separate path — rather than deferring the whole request",
+        "Treats the separate regional code path as possibly load-bearing until history or production data says otherwise"
       ]
     }
   ]
