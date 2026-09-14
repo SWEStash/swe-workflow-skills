@@ -198,7 +198,7 @@ cases drops that skill's other rows.
 
 ### Results (content evals, full catalog)
 
-`claude-opus-5`, all 66 skills, 233 cases, 1299 assertions, **every row at k>=3**.
+`claude-opus-5`, all 66 skills, 234 cases, 1301 assertions, **every row at k>=3**.
 
 **What RED actually is.** RED answers the same prompt without the skill's *content* —
 it cannot read any `SKILL.md`, `references/` or `templates/`. Both arms do carry the
@@ -211,21 +211,21 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **853 / 1299 = 65.7%** |
-| Assertions passed, skill loaded (GREEN) | **1269 / 1299 = 97.7%** |
+| Assertions passed, no skill body (RED) | **853 / 1301 = 65.6%** |
+| Assertions passed, skill loaded (GREEN) | **1269 / 1301 = 97.5%** |
 | Gain | **+32.0 points** |
-| Cases where GREEN beats RED | **190 / 233** |
-| Cases where GREEN ties RED | **43 / 233** |
-| Cases where GREEN is *below* RED | **0 / 233** |
+| Cases where GREEN beats RED | **189 / 234** |
+| Cases where GREEN ties RED | **45 / 234** |
+| Cases where GREEN is *below* RED | **0 / 234** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
 content is worse than no skill at all. **There are also zero RED-true / GREEN-false
-assertions** anywhere in the library. The 53 ties are mostly cases where RED already
+assertions** anywhere in the library. The 45 ties are mostly cases where RED already
 saturates — no headroom left to show, not a skill doing nothing — and saturation
 concentrates by case kind: `eval:1` 8%, `eval:2` 32%, `eval:3` **3%**, pressure 28%.
 Scope-boundary cases used to saturate at 18% because three of their four assertions
 (recognise the request, name the sibling skill, withhold the wrong deliverable) were
-satisfied by the roster alone. Rewriting 21 of them against a sibling the roster cannot
+satisfied by the roster alone. Rewriting 24 of them against a sibling the roster cannot
 disambiguate took that to 3% — and moved the discriminating assertion from "states the
 boundary" to the routing assertion itself (limitation 9).
 
@@ -234,17 +234,17 @@ for depth:
 
 | Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
 |---|---|---|---|
-| zero (no references at all) | 16 | 65.2% → 98.8% | **+33.6** |
-| light (0 < ratio < 1) | 22 | 66.1% → 95.4% | +29.3 |
-| heavy (ratio ≥ 1) | 28 | 64.1% → 95.8% | +31.7 |
+| zero (no references at all) | 16 | 65.5% → 98.8% | **+33.3** |
+| light (0 < ratio < 1) | 22 | 66.5% → 96.5% | +30.0 |
+| heavy (ratio ≥ 1) | 28 | 64.9% → 97.8% | +32.9 |
 
-Pearson r between reference ratio and GREEN gain is **−0.05** across the 66 skills —
+Pearson r between reference ratio and GREEN gain is **−0.02** across the 66 skills —
 no relationship. The zero-reference skills are the control that makes this readable:
 they gained the *most* with nothing to read, so the gain comes from the instruction
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at **k>=3 for every row** (209 at k=3, 24 at k=5) as of 2026-09-11; `k` is
+Recorded at **k>=3 for every row** (210 at k=3, 24 at k=5) as of 2026-09-14; `k` is
 per row. All 173 remaining single-sample cases have since been re-measured, so the
 k=1 caveat that used to sit here no longer applies.
 
@@ -475,7 +475,7 @@ flaky). Several findings from running this make the choice necessary:
 9. **Most rows measure one assertion or none, and scope-boundary cases are
    saturated by construction.** `merge-baseline.mjs` reports, per row, how many
    assertions GREEN passes and RED fails (`node .local/regen-discrimination.mjs`
-   recomputes it library-wide). Across 233 rows: **43 discriminate on nothing, 76
+   recomputes it library-wide). Across 234 rows: **45 discriminate on nothing, 74
    on exactly one.** It concentrates by case kind, and the concentration is
    structural rather than an authoring lapse:
 
@@ -483,10 +483,10 @@ flaky). Several findings from running this make the choice necessary:
    |---|---|---|---|---|
    | `eval:1` happy path | 66 | 8 | 13 | **+176** |
    | `eval:2` edge case | 66 | 22 | 14 | +92 |
-   | `eval:3` scope boundary | 65 | **3** | 35 | **+104** |
+   | `eval:3` scope boundary | 66 | **5** | 33 | **+104** |
    | pressure | 36 | 10 | 14 | +44 |
 
-   **38 of 65 scope-boundary rows discriminate on 0 or 1 assertion, but only 3 now
+   **38 of 66 scope-boundary rows discriminate on 0 or 1 assertion, but only 5 now
    measure nothing at all.** The cause is
    the shape of the case: it asks four things and a bare model gets three of them
    free — it recognises the request kind, names the right sibling skill (the skill
@@ -565,6 +565,16 @@ flaky). Several findings from running this make the choice necessary:
    successfully relocated *do* name the sibling, in the step prose the prompt enters.
    Relocating those five took the routing assertion from failing in both arms to
    passing in the skill's arm on all five.
+
+   **A later four-case run cannot tell placement from overlap.** The routing
+   assertion discriminated on two rows and failed in every round of both arms on the
+   other two. The two failures are the skills whose sibling appears only in a
+   trailing list — but they are also the two whose own steps already cover the
+   sibling's half (choosing a primary metric; pseudonymising an identifier), and one
+   of the two passes names its sibling nowhere at all. Placement and content overlap
+   separate those four rows equally well. On one failure the skill did name the
+   sibling, attached to the half it already owns, and then did the sibling's work
+   itself — which is what a skill whose body covers that work would be expected to do.
 
    **The same batch shows the pattern is not universal.** A sixth skill got an
    entry-point intervention of the same kind — a scope gate above its first step —
