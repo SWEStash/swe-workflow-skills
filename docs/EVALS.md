@@ -244,7 +244,7 @@ they gained the *most* with nothing to read, so the gain comes from the instruct
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at **k>=3 for every row** (210 at k=3, 24 at k=5) as of 2026-09-14; `k` is
+Recorded at **k>=3 for every row** (209 at k=3, 25 at k=5) as of 2026-09-14; `k` is
 per row. All 173 remaining single-sample cases have since been re-measured, so the
 k=1 caveat that used to sit here no longer applies.
 
