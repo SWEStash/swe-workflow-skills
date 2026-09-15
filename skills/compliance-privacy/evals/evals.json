@@ -28,13 +28,13 @@
     },
     {
       "id": 3,
-      "prompt": "Our support team debugs failed checkouts by searching Datadog for the customer's email address, and the platform team wants to start attaching full request bodies to our traces so they can see what was submitted. We keep logs for 15 months and a large share of our customers are in Germany. What should we change?",
-      "expected_output": "Notices that the email-as-search-key habit and the request-bodies-on-spans plan raise two different questions. What personal data the logs and traces may hold, where it is scrubbed, and how long it is kept is this skill's work, and it delivers that — a retention period that is justified rather than inherited, and scrubbing at the logging layer. How support finds and follows a failing checkout once the email is no longer the search key — correlation IDs, a pseudonymous customer identifier on spans, what the trace carries instead of the body — is instrumentation design that observability-design owns. A good answer does not solve the privacy problem by leaving support unable to debug.",
+      "prompt": "A customer in France has asked us to erase their account. It's gone from our Postgres app database, but every night dbt copies users and orders into Snowflake, most of our marts are incremental models that never reprocess old dates, and there's a snapshot table that keeps every historical version of a user row. Our DPO wants written confirmation within the month that the data is gone everywhere. What do we need to do?",
+      "expected_output": "Notices that 'gone everywhere' is two problems. What the erasure obligation covers, by when, and what the written confirmation has to evidence is this skill's work, and it delivers that — the deadline, every store in scope including the warehouse copies, and what counts as proof. Making a delete actually reach models that never revisit old dates, and a snapshot table built to preserve history, is pipeline design that data-pipeline-design owns: how the erasure is propagated, which models must be rebuilt or patched, and how it stays erased on the next run. A good answer does not declare the account erased because the source row is gone, and does not treat the snapshot history as exempt.",
       "assertions": [
-        "Separates the two halves: what personal data the logs and traces may hold, versus how engineers find a failing request once the email is no longer the search key",
-        "Refers to observability-design for the correlation-ID or trace design that replaces searching by email",
-        "Delivers the privacy half itself — a retention period and where personal data is scrubbed — rather than deferring the whole request",
-        "Treats request bodies on spans as personal data to minimise before they are captured, not as a storage-cost question"
+        "Separates the two halves: what the erasure obligation requires, versus how a delete is made to reach models and snapshots that never revisit old rows",
+        "Refers to data-pipeline-design for propagating the erasure through the incremental models and the snapshot table",
+        "Delivers the obligation half itself — the deadline, the stores in scope, and what the confirmation must show — rather than deferring the whole request",
+        "Treats the snapshot table's history as personal data in scope for erasure rather than as an exempt archive"
       ]
     }
   ]

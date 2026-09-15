@@ -213,10 +213,10 @@
       "id": "boundary:code-archaeology:3",
       "kind": "boundary",
       "skill": "code-archaeology",
-      "prompt": "Our codebase is a mess of tech debt \u2014 give me a prioritized assessment of what we should fix first and a remediation roadmap for the quarter.",
+      "prompt": "I've just inherited our warehouse-routing service. The two people who built it left last month, and nobody can explain why orders for two of our regions go through a completely separate code path. Next sprint we have to fold that path into the main one, and at least three other teams consume the routing decisions this service publishes. Where do I start?",
       "accept": [
         "code-archaeology",
-        "technical-debt-review",
+        "dependency-impact-analysis",
         "NONE"
       ]
     },
@@ -273,10 +273,10 @@
       "id": "boundary:compliance-privacy:3",
       "kind": "boundary",
       "skill": "compliance-privacy",
-      "prompt": "Our support team debugs failed checkouts by searching Datadog for the customer's email address, and the platform team wants to start attaching full request bodies to our traces so they can see what was submitted. We keep logs for 15 months and a large share of our customers are in Germany. What should we change?",
+      "prompt": "A customer in France has asked us to erase their account. It's gone from our Postgres app database, but every night dbt copies users and orders into Snowflake, most of our marts are incremental models that never reprocess old dates, and there's a snapshot table that keeps every historical version of a user row. Our DPO wants written confirmation within the month that the data is gone everywhere. What do we need to do?",
       "accept": [
         "compliance-privacy",
-        "observability-design",
+        "data-pipeline-design",
         "NONE"
       ]
     },
@@ -776,10 +776,10 @@
       "id": "boundary:mobile-architecture:3",
       "kind": "boundary",
       "skill": "mobile-architecture",
-      "prompt": "Our React web dashboard is getting messy \u2014 we need to restructure the component hierarchy, pick a state management library (Zustand vs Redux), and organize our design tokens. How should we architect it?",
+      "prompt": "Our React Native app for delivery drivers now has to work offline: drivers mark stops complete and capture signatures with no signal, and dispatchers can reassign those same stops from the web console at the same time. The backend is Postgres. Where do we start?",
       "accept": [
         "mobile-architecture",
-        "frontend-architecture",
+        "data-modeling",
         "NONE"
       ]
     },
@@ -1096,10 +1096,10 @@
       "id": "boundary:statistical-analysis:3",
       "kind": "boundary",
       "skill": "statistical-analysis",
-      "prompt": "We want to test whether our redesigned onboarding flow works. The PM wants to measure engagement, growth cares about 7-day retention, and finance only cares about paid conversion. We get about 3,000 signups a week. How should we set up the test, and how long do we need to run it?",
+      "prompt": "Our checkout redesign test just finished: treatment converted 9% better than control, p = 0.01, and the PM wants to ship it today. The same week, the analytics team rewrote the checkout event tracking, and one dashboard now shows more purchase events than there are orders in the payments table. Is the result real?",
       "accept": [
         "statistical-analysis",
-        "metrics-and-okrs",
+        "data-quality",
         "NONE"
       ]
     },
