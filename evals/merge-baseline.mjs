@@ -233,19 +233,29 @@ if (degraded.length && !opts.allowDegraded) {
 // sibling is evidence about redundancy, not contamination.
 if (opts.transcripts) {
   const scan = scanRun(opts.transcripts, { cases: loadCases(opts.skillsDir) })
+  // A judge that read an evals.json voted with the expected_output in hand, so the
+  // row it scored is not a measurement of the reply. Same consequence, same gate.
   const dirty = new Set(scan.contaminated.map((c) => c.case).filter(Boolean))
-  const hit = plan.filter((p) => dirty.has(`${p.skill} ${p.key}`))
+  const keyRead = new Set(scan.judgeAnswerKey.map((c) => c.case).filter(Boolean))
+  const hit = plan.filter((p) => dirty.has(`${p.skill} ${p.key}`) || keyRead.has(`${p.skill} ${p.key}`))
   console.log(
     `leak scan (${opts.transcripts}): ${scan.redGens} RED / ${scan.greenGens} GREEN generators, ` +
       `${scan.contaminated.length} same-skill load(s), ${scan.crossSkill.length} cross-skill, ` +
-      `${scan.forked.length} fork call(s), ${scan.unattributed.length} unattributed`
+      `${scan.forked.length} fork call(s), ${scan.unattributed.length} unattributed; ` +
+      `${scan.judges} judges, ${scan.judgeAnswerKey.length} answer-key read(s), ${scan.judgeToolUse.length} other judge tool call(s)`
   )
   for (const c of scan.crossSkill) console.log(`  cross-skill (redundancy signal): ${c.skill} loaded on ${c.case}`)
   if (scan.unattributed.length)
     console.warn(`warning: ${scan.unattributed.length} load(s) match no current case prompt — prompts changed since the run.`)
+  if (scan.judgeToolUse.length)
+    console.warn(`warning: ${scan.judgeToolUse.length} judge tool call(s) outside the verdict on ${[...new Set(scan.judgeToolUse.map((c) => c.case ?? 'UNATTRIBUTED'))].join(', ')}`)
+  const unattributedKeyReads = scan.judgeAnswerKey.filter((c) => !c.case).length
+  if (unattributedKeyReads)
+    console.warn(`warning: ${unattributedKeyReads} answer-key read(s) match no current case prompt — cannot tell which row they affect.`)
   if (hit.length && !opts.allowContaminated) {
-    console.error(`refusing to merge — ${hit.length} row(s) whose control arm loaded the skill under test:`)
-    for (const h of hit) console.error(`  ${h.skill} ${h.key}`)
+    console.error(`refusing to merge — ${hit.length} row(s) whose control arm loaded the skill under test, or whose judge read the answer key:`)
+    for (const h of hit)
+      console.error(`  ${h.skill} ${h.key}${keyRead.has(`${h.skill} ${h.key}`) ? '  (judge read evals.json)' : '  (RED loaded the skill)'}`)
     console.error('Re-run those rows, or pass --allow-contaminated to record them anyway.')
     process.exit(1)
   }
