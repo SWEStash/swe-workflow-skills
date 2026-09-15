@@ -176,7 +176,8 @@ sharper assertion, not for adding content to the skill.
 row whose **control arm loaded the skill under test**, or whose **judge read an
 `evals.json`** (limitation 8) — the first row is not a control and the second was not
 judged on the reply, so neither may be recorded. Cross-skill loads, `context: fork`
-calls and other judge tool use are reported and allowed through.
+calls and judge calls that reach outside the reply are reported and allowed through;
+judge computation over the reply is allowed.
 `--allow-contaminated` records them anyway, the way `--allow-degraded` does for short
 rows.
 
@@ -446,13 +447,22 @@ flaky). Several findings from running this make the choice necessary:
    judges read the key and quoted it back in their verdicts. The same three layers now
    apply to judges:
 
-   - **Prevention.** `judgeP` tells the judge to use no tools and to open no file —
-     no `evals.json`, no `SKILL.md` — because checking a reply against the repo
-     measures the repo.
+   - **Prevention.** `judgeP` tells the judge to open, read or search no file,
+     directory or web page — no `evals.json`, no `SKILL.md` — because checking a reply
+     against the repo measures the repo. **It deliberately does not ban tools
+     outright.** A judge may compute over the quoted reply: count the characters of a
+     drafted description, or run a snippet the reply wrote to check its arithmetic.
+     Those calls make a length or correctness verdict more accurate, and a blanket ban
+     would take them away — the same trap as the generator ban that once hid every
+     skill's `references/` from scoring (limitation 3).
    - **Detection.** `check-red-leaks.mjs` also scans judges, attributing each to a row
-     by the prompt it quotes. A read of any `evals.json` or `expected_output` is an
-     **answer-key read** (fatal); any other tool call beyond the schema's own
-     `StructuredOutput` is reported.
+     by the prompt it quotes, and sorts every call beyond the schema's own
+     `StructuredOutput` three ways: a read of any `evals.json` or `expected_output` is
+     an **answer-key read** (fatal); a non-shell tool, or a shell command that names a
+     path or a file or network command, **reaches outside the reply** (reported); what
+     remains is **computation** (allowed). On every judge transcript on disk that
+     split is 14 / 103 / 8, and all 8 computation calls are character counts or re-runs
+     of code the reply contained.
    - **Merge gate.** `--transcripts` refuses a row whose judge read the answer key.
 
    **The same comparability caveat applies:** rows judged after the prompt change were

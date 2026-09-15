@@ -242,7 +242,8 @@ if (opts.transcripts) {
     `leak scan (${opts.transcripts}): ${scan.redGens} RED / ${scan.greenGens} GREEN generators, ` +
       `${scan.contaminated.length} same-skill load(s), ${scan.crossSkill.length} cross-skill, ` +
       `${scan.forked.length} fork call(s), ${scan.unattributed.length} unattributed; ` +
-      `${scan.judges} judges, ${scan.judgeAnswerKey.length} answer-key read(s), ${scan.judgeToolUse.length} other judge tool call(s)`
+      `${scan.judges} judges, ${scan.judgeAnswerKey.length} answer-key read(s), ${scan.judgeToolUse.length} other judge tool call(s), ` +
+      `${scan.judgeCompute.length} allowed computation call(s)`
   )
   for (const c of scan.crossSkill) console.log(`  cross-skill (redundancy signal): ${c.skill} loaded on ${c.case}`)
   if (scan.unattributed.length)

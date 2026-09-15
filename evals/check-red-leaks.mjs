@@ -44,9 +44,12 @@
 // JUDGES. A judge is meant to score the quoted reply and nothing else, but it runs
 // as a full-tool subagent too. A judge that opens an evals.json has the case's
 // expected_output — the answer key — in hand, so its verdict does not measure the
-// reply: that is fatal for the row. Any other judge tool call (grepping a SKILL.md
-// to check a claim) is a protocol breach worth reporting, not fatal. Judges are
-// attributed to a row by the prompt they quote after "under pressure:".
+// reply: that is fatal for the row. A judge call that reaches beyond the reply
+// otherwise (grepping a SKILL.md to check a claim) is a protocol breach worth
+// reporting, not fatal. Pure computation over the reply — counting a drafted
+// description's characters — is allowed: it judges the reply more accurately rather
+// than looking past it. Judges are attributed to a row by the prompt they quote
+// after "under pressure:".
 //
 // Exit 1 if RED loaded the body of the skill under test (or an unattributable
 // body), or if a judge read an answer key; exit 0 for cross-skill loads, fork
@@ -92,6 +95,12 @@ const attribute = (text, byPrompt, lead = 'Developer: ') => {
 // reply alone.
 const ANSWER_KEY = /evals\.json|expected_output/
 
+// A shell command that reaches beyond the quoted reply: a file or network command,
+// or anything naming a path or a file type. What is left is computation over
+// literal text — counting a drafted description's characters — which judges the
+// reply more accurately rather than looking past it.
+const REACHES_OUT = /\b(cat|sed|grep|rg|head|tail|less|more|ls|find|git|curl|wget|cd)\b|\/[\w.-]+\/|\.(md|json|ya?ml|m?js|py|txt)\b/
+
 // Judges must judge the quoted reply and nothing else. The schema's own
 // StructuredOutput call is how a verdict is returned, so it is not tool use.
 const scanJudge = (f, raw, byPrompt, out) => {
@@ -105,13 +114,17 @@ const scanJudge = (f, raw, byPrompt, out) => {
     if (msg?.role === 'user' && typeof msg.content === 'string') promptText += msg.content
     if (msg?.role !== 'assistant' || !Array.isArray(msg.content)) continue
     for (const b of msg.content)
-      if (b?.type === 'tool_use' && b.name !== 'StructuredOutput') calls.push({ tool: b.name, input: JSON.stringify(b.input ?? {}) })
+      if (b?.type === 'tool_use' && b.name !== 'StructuredOutput')
+        calls.push({ tool: b.name, input: JSON.stringify(b.input ?? {}), command: typeof b.input?.command === 'string' ? b.input.command : null })
   }
   if (!calls.length) return
   const c = attribute(promptText, byPrompt, 'under pressure:\n')
-  for (const { tool, input } of calls) {
+  for (const { tool, input, command } of calls) {
     const rec = { agent: f, tool, input: input.slice(0, 150), case: c ? `${c.skill} ${c.key}` : null }
-    ;(ANSWER_KEY.test(input) ? out.judgeAnswerKey : out.judgeToolUse).push(rec)
+    if (ANSWER_KEY.test(input)) out.judgeAnswerKey.push(rec)
+    // Every tool but a shell reads, searches or fetches by definition.
+    else if (tool !== 'Bash' || command === null || REACHES_OUT.test(command)) out.judgeToolUse.push(rec)
+    else out.judgeCompute.push(rec)
   }
 }
 
@@ -119,7 +132,7 @@ export const scanRun = (dir, { skillsDir = 'skills', cases } = {}) => {
   const { byPrompt, fork } = cases ?? loadCases(skillsDir)
   const out = {
     dir, redGens: 0, greenGens: 0, contaminated: [], crossSkill: [], forked: [], unattributed: [], otherToolUse: [],
-    judges: 0, judgeAnswerKey: [], judgeToolUse: [],
+    judges: 0, judgeAnswerKey: [], judgeToolUse: [], judgeCompute: [],
   }
 
   for (const f of readdirSync(dir).filter((n) => /^agent-.*\.jsonl$/.test(n))) {
@@ -171,20 +184,23 @@ export const rowsToRerun = (r) => [...new Set([...r.contaminated, ...(r.judgeAns
 // classification on every platform without depending on machine-local workflow
 // transcripts (those age off disk) or on any real case prompt staying unedited.
 const FIXTURES = 'evals/fixtures/red-leaks'
-const NO_JUDGE = { judges: 0, judgeAnswerKey: 0, judgeToolUse: 0 }
+const NO_JUDGE = { judges: 0, judgeAnswerKey: 0, judgeToolUse: 0, judgeCompute: 0 }
 const EXPECT = {
   'same-skill': { contaminated: 1, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 0, ...NO_JUDGE, exit: 1 },
   'cross-skill': { contaminated: 0, crossSkill: 1, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 0, ...NO_JUDGE, exit: 0 },
   fork: { contaminated: 0, crossSkill: 0, forked: 1, otherToolUse: 0, redGens: 1, greenGens: 0, ...NO_JUDGE, exit: 0 },
-  clean: { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 1, judges: 1, judgeAnswerKey: 0, judgeToolUse: 0, exit: 0 },
+  clean: { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 1, ...NO_JUDGE, judges: 1, exit: 0 },
   'other-tool-use': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 1, redGens: 1, greenGens: 0, ...NO_JUDGE, exit: 0 },
   // A judge that opens the case's evals.json has read the answer key: the
   // expected_output the generator never saw. That verdict is not a judgment of the
   // reply, so the row it voted on is not a measurement.
-  'judge-answer-key': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, judges: 1, judgeAnswerKey: 1, judgeToolUse: 0, exit: 1 },
+  'judge-answer-key': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, ...NO_JUDGE, judges: 1, judgeAnswerKey: 1, exit: 1 },
   // A judge that greps a skill file is checking the reply against the repo rather
   // than judging the reply alone. A protocol breach worth reporting, not fatal.
-  'judge-other-tool': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, judges: 1, judgeAnswerKey: 0, judgeToolUse: 1, exit: 0 },
+  'judge-other-tool': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, ...NO_JUDGE, judges: 1, judgeToolUse: 1, exit: 0 },
+  // A judge that computes over the quoted reply — counting a drafted description's
+  // characters — is judging the reply more accurately, not looking beyond it. Allowed.
+  'judge-compute': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, ...NO_JUDGE, judges: 1, judgeCompute: 1, exit: 0 },
 }
 
 const selfTest = () => {
@@ -196,6 +212,7 @@ const selfTest = () => {
       contaminated: r.contaminated.length, crossSkill: r.crossSkill.length, forked: r.forked.length,
       otherToolUse: r.otherToolUse.length, redGens: r.redGens, greenGens: r.greenGens,
       judges: r.judges, judgeAnswerKey: r.judgeAnswerKey?.length, judgeToolUse: r.judgeToolUse?.length,
+      judgeCompute: r.judgeCompute?.length,
       exit: r.contaminated.length + r.unattributed.length + (r.judgeAnswerKey?.length ?? 0) ? 1 : 0,
     }
     const bad = Object.keys(want).filter((k) => got[k] !== want[k])
@@ -245,7 +262,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   }
 
   const judgeList = (rows) => rows.forEach((l) => console.log(`  ${l.tool}  case=${l.case ?? 'UNATTRIBUTED'}  ${l.input}`))
-  console.log(`Judges: ${r.judges}`)
+  console.log(`Judges: ${r.judges}   (${r.judgeCompute.length} computation call(s) over the reply — allowed)`)
   if (r.judgeToolUse.length) {
     console.log(`\nNote — ${r.judgeToolUse.length} judge tool call(s) outside the verdict (the judge checked the`)
     console.log(`reply against the repo instead of judging the reply alone; not an answer-key read):`)
