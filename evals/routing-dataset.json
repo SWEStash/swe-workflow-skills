@@ -213,10 +213,10 @@
       "id": "boundary:code-archaeology:3",
       "kind": "boundary",
       "skill": "code-archaeology",
-      "prompt": "I've just inherited our warehouse-routing service. The two people who built it left last month, there's no README, and nobody can explain why orders for two of our regions go through a completely separate code path. I want to understand it, and I don't want the next person to go through this. Where do I start?",
+      "prompt": "I've just inherited our warehouse-routing service. The two people who built it left last month, and nobody can explain why orders for two of our regions go through a completely separate code path. Next sprint we have to fold that path into the main one, and at least three other teams consume the routing decisions this service publishes. Where do I start?",
       "accept": [
         "code-archaeology",
-        "project-documentation",
+        "dependency-impact-analysis",
         "NONE"
       ]
     },

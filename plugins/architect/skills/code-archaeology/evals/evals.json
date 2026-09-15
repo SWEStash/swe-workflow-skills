@@ -28,11 +28,11 @@
     },
     {
       "id": 3,
-      "prompt": "I've just inherited our warehouse-routing service. The two people who built it left last month, there's no README, and nobody can explain why orders for two of our regions go through a completely separate code path. I want to understand it, and I don't want the next person to go through this. Where do I start?",
-      "expected_output": "Notices that understanding the service and leaving it understood are related but different deliverables. Recovering how the service works and why the regional code path exists — surveying entry points, mining the history of that path, tracing one real order through it, and treating it as load-bearing until evidence says otherwise — is this skill's work, and it delivers that. Turning what was learned into a README and onboarding documentation the next person will actually find and keep current is project-documentation's. A good answer does not stop at a personal understanding that leaves with the next departure.",
+      "prompt": "I've just inherited our warehouse-routing service. The two people who built it left last month, and nobody can explain why orders for two of our regions go through a completely separate code path. Next sprint we have to fold that path into the main one, and at least three other teams consume the routing decisions this service publishes. Where do I start?",
+      "expected_output": "Notices that folding the path in safely needs two different kinds of knowledge. Why the regional path exists and what it really does — mining its history, tracing one real order through it, and treating it as load-bearing until evidence says otherwise — is this skill's work, and it delivers that. Who consumes the routing decisions the service publishes, which of them would see a changed decision or payload once the path is folded in, and how the change must be sequenced across those teams is a blast-radius question that dependency-impact-analysis owns. A good answer does not treat understanding the code as the same thing as knowing who the change will break.",
       "assertions": [
-        "Separates the two halves: recovering how the service works and why the regional code path exists, versus writing it down so the next person does not start from zero",
-        "Refers to project-documentation for the README and onboarding documentation",
+        "Separates the two halves: recovering why the regional path exists, versus finding who consumes its routing decisions and what folding it in would break for them",
+        "Refers to dependency-impact-analysis for mapping the consuming teams and what the change would break",
         "Delivers the comprehension half itself — history mining and tracing one order through the separate path — rather than deferring the whole request",
         "Treats the separate regional code path as possibly load-bearing until history or production data says otherwise"
       ]
