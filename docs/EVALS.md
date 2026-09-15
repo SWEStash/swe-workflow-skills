@@ -214,22 +214,22 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **853 / 1301 = 65.6%** |
-| Assertions passed, skill loaded (GREEN) | **1269 / 1301 = 97.5%** |
-| Gain | **+32.0 points** |
-| Cases where GREEN beats RED | **189 / 234** |
-| Cases where GREEN ties RED | **45 / 234** |
+| Assertions passed, no skill body (RED) | **848 / 1301 = 65.2%** |
+| Assertions passed, skill loaded (GREEN) | **1267 / 1301 = 97.4%** |
+| Gain | **+32.2 points** |
+| Cases where GREEN beats RED | **190 / 234** |
+| Cases where GREEN ties RED | **44 / 234** |
 | Cases where GREEN is *below* RED | **0 / 234** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
 content is worse than no skill at all. **There are also zero RED-true / GREEN-false
-assertions** anywhere in the library. The 45 ties are mostly cases where RED already
+assertions** anywhere in the library. The 44 ties are mostly cases where RED already
 saturates — no headroom left to show, not a skill doing nothing — and saturation
-concentrates by case kind: `eval:1` 8%, `eval:2` 32%, `eval:3` **3%**, pressure 28%.
+concentrates by case kind: `eval:1` 8%, `eval:2` 32%, `eval:3` **5%**, pressure 28%.
 Scope-boundary cases used to saturate at 18% because three of their four assertions
 (recognise the request, name the sibling skill, withhold the wrong deliverable) were
-satisfied by the roster alone. Rewriting 24 of them against a sibling the roster cannot
-disambiguate took that to 3% — and moved the discriminating assertion from "states the
+satisfied by the roster alone. Rewriting 26 of them against a sibling the roster cannot
+disambiguate took that to 5% — and moved the discriminating assertion from "states the
 boundary" to the routing assertion itself (limitation 9).
 
 **The gain does not track reference mass**, which is worth knowing before optimising
@@ -237,17 +237,17 @@ for depth:
 
 | Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
 |---|---|---|---|
-| zero (no references at all) | 16 | 65.5% → 98.8% | **+33.3** |
-| light (0 < ratio < 1) | 22 | 66.5% → 96.5% | +30.0 |
-| heavy (ratio ≥ 1) | 28 | 64.9% → 97.8% | +32.9 |
+| zero (no references at all) | 16 | 63.1% → 98.8% | **+35.7** |
+| light (0 < ratio < 1) | 22 | 67.0% → 96.7% | +29.7 |
+| heavy (ratio ≥ 1) | 28 | 64.7% → 97.3% | +32.6 |
 
-Pearson r between reference ratio and GREEN gain is **−0.02** across the 66 skills —
+Pearson r between reference ratio and GREEN gain is **−0.08** across the 66 skills —
 no relationship. The zero-reference skills are the control that makes this readable:
 they gained the *most* with nothing to read, so the gain comes from the instruction
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at **k>=3 for every row** (209 at k=3, 25 at k=5) as of 2026-09-14; `k` is
+Recorded at **k>=3 for every row** (209 at k=3, 25 at k=5) as of 2026-09-15; `k` is
 per row. All 173 remaining single-sample cases have since been re-measured, so the
 k=1 caveat that used to sit here no longer applies.
 
@@ -466,9 +466,13 @@ flaky). Several findings from running this make the choice necessary:
    - **Merge gate.** `--transcripts` refuses a row whose judge read the answer key.
 
    **The same comparability caveat applies:** rows judged after the prompt change were
-   judged under a different instruction than rows before it. Rows already in the
-   baseline whose latest run had an answer-key read are candidates for re-measurement;
-   the scan cannot see runs whose transcripts have aged off disk, so it is a floor.
+   judged under a different instruction than rows before it. The twelve baseline rows
+   whose latest run had a judge read an `evals.json` or grep a skill file were
+   re-measured under the new prompt, at their original k, with every judge scan clean:
+   seven came back identical, four lost one assertion and one gained two. One loss was
+   plainly answer-key-assisted — an assertion that a reply "uses the template" had been
+   passed by judges who opened the template itself. The scan cannot see runs whose
+   transcripts have aged off disk, so older rows may carry the same defect unmeasured.
 
    **Field-tested.** The five rows whose control arm had loaded the skill under
    test were re-measured under the prohibition: 15/15 RED rounds loaded nothing,
@@ -511,13 +515,13 @@ flaky). Several findings from running this make the choice necessary:
 9. **Most rows measure one assertion or none, and scope-boundary cases are
    saturated by construction.** `merge-baseline.mjs` reports, per row, how many
    assertions GREEN passes and RED fails (`node .local/regen-discrimination.mjs`
-   recomputes it library-wide). Across 234 rows: **45 discriminate on nothing, 74
+   recomputes it library-wide). Across 234 rows: **44 discriminate on nothing, 75
    on exactly one.** It concentrates by case kind, and the concentration is
    structural rather than an authoring lapse:
 
    | Kind | Rows | Zero | One | Total lift |
    |---|---|---|---|---|
-   | `eval:1` happy path | 66 | 8 | 13 | **+176** |
+   | `eval:1` happy path | 66 | 7 | 14 | **+179** |
    | `eval:2` edge case | 66 | 22 | 14 | +92 |
    | `eval:3` scope boundary | 66 | **5** | 33 | **+104** |
    | pressure | 36 | 10 | 14 | +44 |
