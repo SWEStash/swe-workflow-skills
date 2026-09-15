@@ -173,10 +173,13 @@ row at 0 measures nothing already; both are candidates for a stronger fixture or
 sharper assertion, not for adding content to the skill.
 
 `--transcripts <dir>` points it at the run's workflow transcripts and refuses any
-row whose **control arm loaded the skill under test** (limitation 8) — the row is
-not a control, so it must not be recorded as one. Cross-skill loads and
-`context: fork` calls are reported and allowed through. `--allow-contaminated`
-records them anyway, the way `--allow-degraded` does for short rows.
+row whose **control arm loaded the skill under test**, or whose **judge read an
+`evals.json`** (limitation 8) — the first row is not a control and the second was not
+judged on the reply, so neither may be recorded. Cross-skill loads, `context: fork`
+calls and judge calls that reach outside the reply are reported and allowed through;
+judge computation over the reply is allowed.
+`--allow-contaminated` records them anyway, the way `--allow-degraded` does for short
+rows.
 
 `--note` is checked before anything else: it **refuses** a planning label
 (`Cycle 2`, `Phase 3`, `CP1.4`) because the note ships inside `baseline.json`,
@@ -433,6 +436,39 @@ flaky). Several findings from running this make the choice necessary:
      fixtures and is wired into the `drift` CI job.
    - **Merge gate.** `merge-baseline.mjs --transcripts <dir>` refuses any row whose
      control arm loaded the skill under test.
+
+   **The judges had the same gap, and it was found the same way.** Judges run as
+   workflow subagents with the full tool set, and their prompt never said to judge
+   the quoted reply alone. A scan of every judge transcript still on disk — 4,661 of
+   them — found **65 (1.4%) making tool calls outside the verdict**. Most grepped a
+   skill file to check a reply's claim against the repo. **In 10 runs a judge opened
+   an `evals.json`**, which carries each case's `expected_output`: the answer key the
+   generator never saw. One such row was caught before merging when three of its six
+   judges read the key and quoted it back in their verdicts. The same three layers now
+   apply to judges:
+
+   - **Prevention.** `judgeP` tells the judge to open, read or search no file,
+     directory or web page — no `evals.json`, no `SKILL.md` — because checking a reply
+     against the repo measures the repo. **It deliberately does not ban tools
+     outright.** A judge may compute over the quoted reply: count the characters of a
+     drafted description, or run a snippet the reply wrote to check its arithmetic.
+     Those calls make a length or correctness verdict more accurate, and a blanket ban
+     would take them away — the same trap as the generator ban that once hid every
+     skill's `references/` from scoring (limitation 3).
+   - **Detection.** `check-red-leaks.mjs` also scans judges, attributing each to a row
+     by the prompt it quotes, and sorts every call beyond the schema's own
+     `StructuredOutput` three ways: a read of any `evals.json` or `expected_output` is
+     an **answer-key read** (fatal); a non-shell tool, or a shell command that names a
+     path or a file or network command, **reaches outside the reply** (reported); what
+     remains is **computation** (allowed). On every judge transcript on disk that
+     split is 14 / 103 / 8, and all 8 computation calls are character counts or re-runs
+     of code the reply contained.
+   - **Merge gate.** `--transcripts` refuses a row whose judge read the answer key.
+
+   **The same comparability caveat applies:** rows judged after the prompt change were
+   judged under a different instruction than rows before it. Rows already in the
+   baseline whose latest run had an answer-key read are candidates for re-measurement;
+   the scan cannot see runs whose transcripts have aged off disk, so it is a floor.
 
    **Field-tested.** The five rows whose control arm had loaded the skill under
    test were re-measured under the prohibition: 15/15 RED rounds loaded nothing,

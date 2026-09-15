@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Scan a workflow run's transcripts for RED-arm SKILL LOADING.
+// Scan a workflow run's transcripts for RED-arm SKILL LOADING, and for judges that
+// looked beyond the reply they were given (see JUDGES below).
 //
 //   node evals/check-red-leaks.mjs <workflow-transcript-dir> [--skills-dir skills]
 //   node evals/check-red-leaks.mjs --self-test        # committed fixtures, offline
@@ -40,8 +41,19 @@
 //     treated as fatal — the prompt has been edited since the run, so we cannot
 //     prove the load was cross-skill.
 //
+// JUDGES. A judge is meant to score the quoted reply and nothing else, but it runs
+// as a full-tool subagent too. A judge that opens an evals.json has the case's
+// expected_output — the answer key — in hand, so its verdict does not measure the
+// reply: that is fatal for the row. A judge call that reaches beyond the reply
+// otherwise (grepping a SKILL.md to check a claim) is a protocol breach worth
+// reporting, not fatal. Pure computation over the reply — counting a drafted
+// description's characters — is allowed: it judges the reply more accurately rather
+// than looking past it. Judges are attributed to a row by the prompt they quote
+// after "under pressure:".
+//
 // Exit 1 if RED loaded the body of the skill under test (or an unattributable
-// body); exit 0 for cross-skill loads, fork calls, and non-loading tool use.
+// body), or if a judge read an answer key; exit 0 for cross-skill loads, fork
+// calls, non-loading RED tool use, and other judge tool use.
 import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 
@@ -69,23 +81,66 @@ export const loadCases = (skillsDir = 'skills') => {
   return { byPrompt, fork }
 }
 
-// The prompt is the only thing tying a RED transcript to a row. Longest-first so
-// a prompt that is a prefix of another cannot claim the wrong case.
-const attribute = (text, byPrompt) => {
+// The prompt is the only thing tying a transcript to a row. Longest-first so a
+// prompt that is a prefix of another cannot claim the wrong case. Generators quote
+// it after `Developer: `, judges after `under pressure:` (see workflow-runner.mjs).
+const attribute = (text, byPrompt, lead = 'Developer: ') => {
   for (const [prompt, c] of [...byPrompt].sort((a, b) => b[0].length - a[0].length))
-    if (text.includes(`Developer: "${prompt}"`)) return c
+    if (text.includes(`${lead}"${prompt}"`)) return c
   return null
+}
+
+// A judge reading any evals.json has the assertions' expected_output in hand — the
+// answer key the generator never saw. Its verdict is no longer a judgment of the
+// reply alone.
+const ANSWER_KEY = /evals\.json|expected_output/
+
+// A shell command that reaches beyond the quoted reply: a file or network command,
+// or anything naming a path or a file type. What is left is computation over
+// literal text — counting a drafted description's characters — which judges the
+// reply more accurately rather than looking past it.
+const REACHES_OUT = /\b(cat|sed|grep|rg|head|tail|less|more|ls|find|git|curl|wget|cd)\b|\/[\w.-]+\/|\.(md|json|ya?ml|m?js|py|txt)\b/
+
+// Judges must judge the quoted reply and nothing else. The schema's own
+// StructuredOutput call is how a verdict is returned, so it is not tool use.
+const scanJudge = (f, raw, byPrompt, out) => {
+  out.judges++
+  let promptText = ''
+  const calls = []
+  for (const line of raw.split('\n')) {
+    let d
+    try { d = JSON.parse(line) } catch { continue }
+    const msg = d?.message
+    if (msg?.role === 'user' && typeof msg.content === 'string') promptText += msg.content
+    if (msg?.role !== 'assistant' || !Array.isArray(msg.content)) continue
+    for (const b of msg.content)
+      if (b?.type === 'tool_use' && b.name !== 'StructuredOutput')
+        calls.push({ tool: b.name, input: JSON.stringify(b.input ?? {}), command: typeof b.input?.command === 'string' ? b.input.command : null })
+  }
+  if (!calls.length) return
+  const c = attribute(promptText, byPrompt, 'under pressure:\n')
+  for (const { tool, input, command } of calls) {
+    const rec = { agent: f, tool, input: input.slice(0, 150), case: c ? `${c.skill} ${c.key}` : null }
+    if (ANSWER_KEY.test(input)) out.judgeAnswerKey.push(rec)
+    // Every tool but a shell reads, searches or fetches by definition.
+    else if (tool !== 'Bash' || command === null || REACHES_OUT.test(command)) out.judgeToolUse.push(rec)
+    else out.judgeCompute.push(rec)
+  }
 }
 
 export const scanRun = (dir, { skillsDir = 'skills', cases } = {}) => {
   const { byPrompt, fork } = cases ?? loadCases(skillsDir)
-  const out = { dir, redGens: 0, greenGens: 0, contaminated: [], crossSkill: [], forked: [], unattributed: [], otherToolUse: [] }
+  const out = {
+    dir, redGens: 0, greenGens: 0, contaminated: [], crossSkill: [], forked: [], unattributed: [], otherToolUse: [],
+    judges: 0, judgeAnswerKey: [], judgeToolUse: [], judgeCompute: [],
+  }
 
   for (const f of readdirSync(dir).filter((n) => /^agent-.*\.jsonl$/.test(n))) {
     const raw = readFileSync(join(dir, f), 'utf8')
     // Judges quote the generator's prompt verbatim, so they match GEN too and
-    // must be excluded before anything else.
-    if (!raw.includes(GEN) || raw.includes(JUDGE)) continue
+    // must be classified before anything else.
+    if (raw.includes(JUDGE)) { scanJudge(f, raw, byPrompt, out); continue }
+    if (!raw.includes(GEN)) continue
     if (raw.includes(GREEN_TELL)) { out.greenGens++; continue }
     out.redGens++
 
@@ -122,19 +177,30 @@ export const scanRun = (dir, { skillsDir = 'skills', cases } = {}) => {
   return out
 }
 
-export const rowsToRerun = (r) => [...new Set(r.contaminated.map((c) => c.case).filter(Boolean))]
+export const rowsToRerun = (r) => [...new Set([...r.contaminated, ...(r.judgeAnswerKey ?? [])].map((c) => c.case).filter(Boolean))]
 
 // ------------------------------------------------------------------- self-test
 // Runs against committed fixtures with a stub skills tree, so it proves the
 // classification on every platform without depending on machine-local workflow
 // transcripts (those age off disk) or on any real case prompt staying unedited.
 const FIXTURES = 'evals/fixtures/red-leaks'
+const NO_JUDGE = { judges: 0, judgeAnswerKey: 0, judgeToolUse: 0, judgeCompute: 0 }
 const EXPECT = {
-  'same-skill': { contaminated: 1, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 0, exit: 1 },
-  'cross-skill': { contaminated: 0, crossSkill: 1, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 0, exit: 0 },
-  fork: { contaminated: 0, crossSkill: 0, forked: 1, otherToolUse: 0, redGens: 1, greenGens: 0, exit: 0 },
-  clean: { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 1, exit: 0 },
-  'other-tool-use': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 1, redGens: 1, greenGens: 0, exit: 0 },
+  'same-skill': { contaminated: 1, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 0, ...NO_JUDGE, exit: 1 },
+  'cross-skill': { contaminated: 0, crossSkill: 1, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 0, ...NO_JUDGE, exit: 0 },
+  fork: { contaminated: 0, crossSkill: 0, forked: 1, otherToolUse: 0, redGens: 1, greenGens: 0, ...NO_JUDGE, exit: 0 },
+  clean: { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 1, ...NO_JUDGE, judges: 1, exit: 0 },
+  'other-tool-use': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 1, redGens: 1, greenGens: 0, ...NO_JUDGE, exit: 0 },
+  // A judge that opens the case's evals.json has read the answer key: the
+  // expected_output the generator never saw. That verdict is not a judgment of the
+  // reply, so the row it voted on is not a measurement.
+  'judge-answer-key': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, ...NO_JUDGE, judges: 1, judgeAnswerKey: 1, exit: 1 },
+  // A judge that greps a skill file is checking the reply against the repo rather
+  // than judging the reply alone. A protocol breach worth reporting, not fatal.
+  'judge-other-tool': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, ...NO_JUDGE, judges: 1, judgeToolUse: 1, exit: 0 },
+  // A judge that computes over the quoted reply — counting a drafted description's
+  // characters — is judging the reply more accurately, not looking beyond it. Allowed.
+  'judge-compute': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, ...NO_JUDGE, judges: 1, judgeCompute: 1, exit: 0 },
 }
 
 const selfTest = () => {
@@ -145,7 +211,9 @@ const selfTest = () => {
     const got = {
       contaminated: r.contaminated.length, crossSkill: r.crossSkill.length, forked: r.forked.length,
       otherToolUse: r.otherToolUse.length, redGens: r.redGens, greenGens: r.greenGens,
-      exit: r.contaminated.length + r.unattributed.length ? 1 : 0,
+      judges: r.judges, judgeAnswerKey: r.judgeAnswerKey?.length, judgeToolUse: r.judgeToolUse?.length,
+      judgeCompute: r.judgeCompute?.length,
+      exit: r.contaminated.length + r.unattributed.length + (r.judgeAnswerKey?.length ?? 0) ? 1 : 0,
     }
     const bad = Object.keys(want).filter((k) => got[k] !== want[k])
     if (bad.length) {
@@ -193,11 +261,28 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     r.otherToolUse.forEach((o) => console.log(`  ${o.tool}  ${o.input}`))
   }
 
+  const judgeList = (rows) => rows.forEach((l) => console.log(`  ${l.tool}  case=${l.case ?? 'UNATTRIBUTED'}  ${l.input}`))
+  console.log(`Judges: ${r.judges}   (${r.judgeCompute.length} computation call(s) over the reply — allowed)`)
+  if (r.judgeToolUse.length) {
+    console.log(`\nNote — ${r.judgeToolUse.length} judge tool call(s) outside the verdict (the judge checked the`)
+    console.log(`reply against the repo instead of judging the reply alone; not an answer-key read):`)
+    judgeList(r.judgeToolUse)
+  }
+
   const fatal = [...r.contaminated, ...r.unattributed]
-  if (!fatal.length) { console.log('\nOK — RED loaded no skill body under test'); process.exit(0) }
-  console.log(`\nCONTAMINATED: RED loaded the skill under test in ${fatal.length} round(s) — those are not controls:`)
-  list(fatal)
-  if (r.unattributed.length) console.log('\n(UNATTRIBUTED rounds match no current case prompt — the prompt was edited since the run.)')
+  if (!fatal.length && !r.judgeAnswerKey.length) {
+    console.log('\nOK — RED loaded no skill body under test, and no judge read an answer key')
+    process.exit(0)
+  }
+  if (fatal.length) {
+    console.log(`\nCONTAMINATED: RED loaded the skill under test in ${fatal.length} round(s) — those are not controls:`)
+    list(fatal)
+    if (r.unattributed.length) console.log('\n(UNATTRIBUTED rounds match no current case prompt — the prompt was edited since the run.)')
+  }
+  if (r.judgeAnswerKey.length) {
+    console.log(`\nJUDGE READ THE ANSWER KEY in ${r.judgeAnswerKey.length} call(s) — those verdicts do not judge the reply:`)
+    judgeList(r.judgeAnswerKey)
+  }
   const rows = rowsToRerun(r)
   if (rows.length) console.log(`\nAffected rows: ${rows.join(', ')}`)
   console.log('\nDo NOT merge these rows: re-run them.')
