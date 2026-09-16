@@ -217,9 +217,9 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **852 / 1306 = 65.2%** |
-| Assertions passed, skill loaded (GREEN) | **1275 / 1306 = 97.6%** |
-| Gain | **+32.4 points** |
+| Assertions passed, no skill body (RED) | **843 / 1306 = 64.5%** |
+| Assertions passed, skill loaded (GREEN) | **1277 / 1306 = 97.8%** |
+| Gain | **+33.2 points** |
 | Cases where GREEN beats RED | **191 / 234** |
 | Cases where GREEN ties RED | **43 / 234** |
 | Cases where GREEN is *below* RED | **0 / 234** |
@@ -243,15 +243,15 @@ for depth:
 |---|---|---|---|
 | zero (no references at all) | 16 | 63.0% → 98.8% | **+35.8** |
 | light (0 < ratio < 1) | 22 | 66.7% → 96.9% | +30.3 |
-| heavy (ratio ≥ 1) | 28 | 65.1% → 97.6% | +32.5 |
+| heavy (ratio ≥ 1) | 28 | 63.6% → 98.0% | +34.4 |
 
-Pearson r between reference ratio and GREEN gain is **−0.10** across the 66 skills —
+Pearson r between reference ratio and GREEN gain is **−0.07** across the 66 skills —
 no relationship. The zero-reference skills are the control that makes this readable:
 they gained the *most* with nothing to read, so the gain comes from the instruction
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at **k>=3 for every row** (201 at k=3, 33 at k=5) as of 2026-09-16; `k` is
+Recorded at **k>=3 for every row** (199 at k=3, 35 at k=5) as of 2026-09-16; `k` is
 per row. All 173 remaining single-sample cases have since been re-measured, so the
 k=1 caveat that used to sit here no longer applies.
 
@@ -540,15 +540,15 @@ flaky). Several findings from running this make the choice necessary:
 9. **Most rows measure one assertion or none, and scope-boundary cases are
    saturated by construction.** `merge-baseline.mjs` reports, per row, how many
    assertions GREEN passes and RED fails (`node .local/regen-discrimination.mjs`
-   recomputes it library-wide). Across 234 rows: **43 discriminate on nothing, 74
+   recomputes it library-wide). Across 234 rows: **43 discriminate on nothing, 73
    on exactly one.** It concentrates by case kind, and the concentration is
    structural rather than an authoring lapse:
 
    | Kind | Rows | Zero | One | Total lift |
    |---|---|---|---|---|
-   | `eval:1` happy path | 66 | 7 | 14 | **+179** |
-   | `eval:2` edge case | 66 | 20 | 15 | +96 |
-   | `eval:3` scope boundary | 66 | **6** | 31 | **+104** |
+   | `eval:1` happy path | 66 | 7 | 13 | **+186** |
+   | `eval:2` edge case | 66 | 20 | 15 | +101 |
+   | `eval:3` scope boundary | 66 | **6** | 31 | **+103** |
    | pressure | 36 | 10 | 14 | +44 |
 
    **37 of 66 scope-boundary rows discriminate on 0 or 1 assertion, but only 6 now
