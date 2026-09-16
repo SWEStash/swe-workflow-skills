@@ -459,11 +459,17 @@ flaky). Several findings from running this make the choice necessary:
    - **Detection.** `check-red-leaks.mjs` also scans judges, attributing each to a row
      by the prompt it quotes, and sorts every call beyond the schema's own
      `StructuredOutput` three ways: a read of any `evals.json` or `expected_output` is
-     an **answer-key read** (fatal); a non-shell tool, or a shell command that names a
-     path or a file or network command, **reaches outside the reply** (reported); what
-     remains is **computation** (allowed). On every judge transcript on disk that
-     split is 14 / 103 / 8, and all 8 computation calls are character counts or re-runs
-     of code the reply contained.
+     an **answer-key read** (fatal); a non-shell tool, or a shell command that reads a
+     path outside `/tmp` or runs anything but a compute verb, **reaches outside the
+     reply** (reported); what remains is **computation** (allowed). Judges compute in
+     their scratch space — the reply's code written to a file under `/tmp` and run, or
+     a `node -e` / `python3 -c` body — so the detector reads the command rather than
+     matching words in it: script bodies are checked for file, process and network
+     APIs, and every other path must sit under `/tmp`. Matching words alone had
+     reported every scratch run as a repo read. On the 3,763 judge transcripts on disk
+     on 2026-09-16 the split is 14 / 77 / 51; all 51 computation calls count characters,
+     check the reply's arithmetic or re-run code it contained, and all 77 reported
+     calls read a skill, doc or repo path.
    - **Merge gate.** `--transcripts` refuses a row whose judge read the answer key.
 
    **The same comparability caveat applies:** rows judged after the prompt change were
