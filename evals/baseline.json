@@ -2618,23 +2618,6 @@
         "model": "claude-opus-5",
         "k": 3,
         "runner": "workflow-runner.mjs"
-      },
-      "eval:3": {
-        "green": [
-          true,
-          true,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          true,
-          true,
-          true
-        ],
-        "model": "claude-opus-5",
-        "k": 5,
-        "runner": "workflow-runner.mjs"
       }
     },
     "mobile-architecture": {
