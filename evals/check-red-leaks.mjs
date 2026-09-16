@@ -56,6 +56,7 @@
 // calls, non-loading RED tool use, and other judge tool use.
 import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
+import { createHash } from 'node:crypto'
 
 const GEN = "You are a coding assistant in a developer's terminal"
 const JUDGE = 'You are a strict, skeptical evaluator'
@@ -213,6 +214,7 @@ export const scanRun = (dir, { skillsDir = 'skills', cases } = {}) => {
   const out = {
     dir, redGens: 0, greenGens: 0, contaminated: [], crossSkill: [], forked: [], unattributed: [], otherToolUse: [],
     judges: 0, judgeAnswerKey: [], judgeToolUse: [], judgeCompute: [],
+    listings: {}, redWithoutListing: 0,
   }
 
   for (const f of readdirSync(dir).filter((n) => /^agent-.*\.jsonl$/.test(n))) {
@@ -226,9 +228,11 @@ export const scanRun = (dir, { skillsDir = 'skills', cases } = {}) => {
 
     const loads = []
     let promptText = ''
+    let listing = null
     for (const line of raw.split('\n')) {
       let d
       try { d = JSON.parse(line) } catch { continue }
+      if (d?.attachment?.type === 'skill_listing') listing = (listing ?? '') + d.attachment.content
       const msg = d?.message
       if (msg?.role === 'user' && typeof msg.content === 'string') promptText += msg.content
       if (msg?.role !== 'assistant' || !Array.isArray(msg.content)) continue
@@ -240,6 +244,11 @@ export const scanRun = (dir, { skillsDir = 'skills', cases } = {}) => {
         else if (SKILL_FILE.test(input)) loads.push({ ...rec, via: 'file read', skill: input.match(/skills\/([\w.-]+)\//)?.[1] })
         else out.otherToolUse.push(rec)
       }
+    }
+    if (listing === null) out.redWithoutListing++
+    else {
+      const hash = createHash('sha256').update(listing).digest('hex').slice(0, 12)
+      out.listings[hash] = (out.listings[hash] ?? 0) + 1
     }
     if (!loads.length) continue
 
@@ -257,6 +266,21 @@ export const scanRun = (dir, { skillsDir = 'skills', cases } = {}) => {
   return out
 }
 
+// LISTING DRIFT. A control routes on the skill descriptions its session listed, and
+// which skills are listed in full rather than by name varies between sessions with
+// no change to the repo — one unchanged prompt's control named the sibling skill in
+// 0 of 5 rounds in one session and 5 of 5 in the next. A row stores the hash of the
+// listing its controls saw, so a later run can say whether a RED difference could be
+// the listing rather than the skill. `listings` is scanRun's hash -> control count.
+export const listingDrift = (prevHash, listings) => {
+  const hashes = Object.keys(listings)
+  if (hashes.length === 0) return { hash: null, drift: false, reason: 'no listing in the transcripts' }
+  if (hashes.length > 1) return { hash: null, drift: true, reason: `controls in this run saw ${hashes.length} different listings` }
+  const [hash] = hashes
+  if (!prevHash) return { hash, drift: false, reason: 'no previous listing recorded' }
+  return hash === prevHash ? { hash, drift: false, reason: 'same listing' } : { hash, drift: true, reason: 'listing changed since the last measurement' }
+}
+
 export const rowsToRerun = (r) => [...new Set([...r.contaminated, ...(r.judgeAnswerKey ?? [])].map((c) => c.case).filter(Boolean))]
 
 // ------------------------------------------------------------------- self-test
@@ -269,7 +293,7 @@ const EXPECT = {
   'same-skill': { contaminated: 1, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 0, ...NO_JUDGE, exit: 1 },
   'cross-skill': { contaminated: 0, crossSkill: 1, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 0, ...NO_JUDGE, exit: 0 },
   fork: { contaminated: 0, crossSkill: 0, forked: 1, otherToolUse: 0, redGens: 1, greenGens: 0, ...NO_JUDGE, exit: 0 },
-  clean: { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 1, ...NO_JUDGE, judges: 1, exit: 0 },
+  clean: { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 1, ...NO_JUDGE, judges: 1, listings: 0, redWithoutListing: 1, exit: 0 },
   'other-tool-use': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 1, redGens: 1, greenGens: 0, ...NO_JUDGE, exit: 0 },
   // A judge that opens the case's evals.json has read the answer key: the
   // expected_output the generator never saw. That verdict is not a judgment of the
@@ -288,6 +312,10 @@ const EXPECT = {
   // Repo reads stay reported however they are wrapped: a cd into /tmp first, a file
   // API inside an inline script, or a scratch run chained to a read.
   'judge-reach-out': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, ...NO_JUDGE, judges: 1, judgeToolUse: 8, exit: 0 },
+  // A control routes on whatever skill descriptions its session listed, and that
+  // listing is not fixed between sessions. Each distinct listing the controls saw is
+  // one hash; a control with no listing attachment contributes none.
+  'listing-drift': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 2, greenGens: 0, ...NO_JUDGE, listings: 2, redWithoutListing: 0, exit: 0 },
 }
 
 const selfTest = () => {
@@ -300,6 +328,7 @@ const selfTest = () => {
       otherToolUse: r.otherToolUse.length, redGens: r.redGens, greenGens: r.greenGens,
       judges: r.judges, judgeAnswerKey: r.judgeAnswerKey?.length, judgeToolUse: r.judgeToolUse?.length,
       judgeCompute: r.judgeCompute?.length,
+      listings: r.listings && Object.keys(r.listings).length, redWithoutListing: r.redWithoutListing,
       exit: r.contaminated.length + r.unattributed.length + (r.judgeAnswerKey?.length ?? 0) ? 1 : 0,
     }
     const bad = Object.keys(want).filter((k) => got[k] !== want[k])
@@ -307,6 +336,21 @@ const selfTest = () => {
       failed++
       console.error(`FAIL ${name}: ${bad.map((k) => `${k} want ${want[k]} got ${got[k]}`).join(', ')}`)
     } else console.log(`ok   ${name}`)
+  }
+  // Drift between a row's previous measurement and this run's listing.
+  const DRIFT = [
+    ['first measurement', undefined, { h1: 4 }, { hash: 'h1', drift: false, reason: 'no previous listing recorded' }],
+    ['same listing', 'h1', { h1: 4 }, { hash: 'h1', drift: false, reason: 'same listing' }],
+    ['changed listing', 'h1', { h2: 4 }, { hash: 'h2', drift: true, reason: 'listing changed since the last measurement' }],
+    ['mixed run', 'h1', { h1: 2, h2: 2 }, { hash: null, drift: true, reason: 'controls in this run saw 2 different listings' }],
+    ['no listing seen', 'h1', {}, { hash: null, drift: false, reason: 'no listing in the transcripts' }],
+  ]
+  for (const [name, prev, listings, want] of DRIFT) {
+    const got = listingDrift(prev, listings)
+    if (JSON.stringify(got) !== JSON.stringify(want)) {
+      failed++
+      console.error(`FAIL listingDrift ${name}: want ${JSON.stringify(want)} got ${JSON.stringify(got)}`)
+    } else console.log(`ok   listingDrift ${name}`)
   }
   // The GREEN fixture reads its own SKILL.md, which is the mechanism working as
   // designed; a detector that flagged it would fail every honest run.
@@ -331,6 +375,13 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const r = scanRun(dir, opts)
   const list = (rows) => rows.forEach((l) => console.log(`  [${l.via}] ${l.skill ?? '?'}  case=${l.case ?? 'UNATTRIBUTED'}  ${l.input}`))
   console.log(`RED generators: ${r.redGens}   GREEN generators: ${r.greenGens}`)
+  const hashes = Object.entries(r.listings)
+  console.log(`Skill listing seen by RED: ${hashes.map(([h, n]) => `${h} (${n})`).join(', ') || 'none recorded'}` +
+    (r.redWithoutListing ? `   ${r.redWithoutListing} RED generator(s) without one` : ''))
+  if (hashes.length > 1) {
+    console.log(`\nNote — controls in this run saw ${hashes.length} different skill listings. A control routes on the`)
+    console.log(`descriptions it was shown, so RED verdicts on routing assertions are not comparable across them.`)
+  }
 
   if (r.forked.length) {
     console.log(`\nNote — ${r.forked.length} call(s) to a \`context: fork\` skill. These launch a background`)
