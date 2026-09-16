@@ -756,10 +756,10 @@
       "id": "boundary:ml-pipeline-design:3",
       "kind": "boundary",
       "skill": "ml-pipeline-design",
-      "prompt": "I have a Jupyter notebook that pulls last month's sales from the warehouse, computes exec KPIs, and emails a report. I want it to run on a schedule instead of me running it by hand \u2014 how do I turn this notebook into production code?",
+      "prompt": "Our churn model retrains every Sunday from a cron job. Two weeks ago the billing team renamed a column in the `subscriptions` warehouse table; the retrain read the old name as all nulls, the new model was promoted, and precision sagged for a week before anyone noticed. Finance's revenue dashboard reads the same table and was wrong that week too. How do we make sure this doesn't happen again?",
       "accept": [
         "ml-pipeline-design",
-        "notebook-to-production",
+        "data-quality",
         "NONE"
       ]
     },

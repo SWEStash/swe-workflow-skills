@@ -16,13 +16,14 @@
     {
       "id": 2,
       "prompt": "Our shipped iOS/Android app assumed always-online and now users are furious about spinners everywhere. Retrofitting offline is the mandate. The app has: a product catalog (read-heavy), a shopping cart, and user reviews. How do we approach it?",
-      "expected_output": "Rejects one-size-fits-all: chooses a sync model per data domain — catalog as read cache (local store + background refresh), cart as offline-first with queued mutations and conflict handling (merge/last-write per field; cart merges across devices), reviews as queued writes with pending-state UI; introduces the repository boundary so the UI stops knowing about the network, sequences the retrofit incrementally by domain, and flags conflict resolution and idempotency as the design decisions to make before coding",
+      "expected_output": "Rejects one-size-fits-all: chooses a sync model per data domain — catalog as read cache (local store + background refresh), cart as offline-first with queued mutations and conflict handling (merge/last-write per field; cart merges across devices), reviews as queued writes with pending-state UI; introduces the repository boundary so the UI stops knowing about the network, sequences the retrofit incrementally by domain, and flags conflict resolution and idempotency as the design decisions to make before coding NOTE: final assertion added 2026-09-16. Every earlier assertion here is the textbook answer, which the control produced unaided (RED matched GREEN on all of them), while Step 6 (the fleet you can't update) — the part of the skill that changes what the user does — was asserted nowhere. The assertion is drafted from that step, not from a treatment reply.",
       "assertions": [
         "Chooses a sync strategy per data domain (read cache for catalog, offline-first/queued mutations for cart and reviews) instead of one blanket approach",
         "Introduces a repository/data-layer boundary so UI code stops depending on network availability directly",
         "Addresses conflict resolution explicitly for the mutable domains (cart across devices) as a decision made before implementation",
         "Includes idempotency for queued/retried mutations and visible pending/unsynced state in the UI",
-        "Sequences the retrofit incrementally (domain by domain) rather than a big-bang rewrite"
+        "Sequences the retrofit incrementally (domain by domain) rather than a big-bang rewrite",
+        "Plans for the installed fleet: old app versions keep calling the API for months, so the retrofit ships behind remote config or keeps API changes compatible with old clients"
       ]
     },
     {

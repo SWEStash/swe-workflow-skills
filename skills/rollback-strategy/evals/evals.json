@@ -17,12 +17,13 @@
     {
       "id": 2,
       "prompt": "We need to rename the 'email' column to 'email_address' in our users table. What's the safest way to do this and be able to roll back?",
-      "expected_output": "Recommends the expand-contract pattern (4-step phased approach) rather than a single rename, explaining why a direct rename is a breaking change that cannot be safely rolled back",
+      "expected_output": "Recommends the expand-contract pattern (4-step phased approach) rather than a single rename, explaining why a direct rename is a breaking change that cannot be safely rolled back. NOTE: edited 2026-09-16. Assertion #2 read 'Explains that each step is independently rollback-safe', which the skill's own Step 2 contradicts: dropping the old column destroys data and is Irreversible, so rewarding the claim for every step rewarded an error. The final assertion is new. Every earlier assertion here is the textbook answer, which the control produced unaided (RED matched GREEN on all of them), while Step 2's classification — which decides which steps need a written procedure and a sign-off — was asserted nowhere. It is drafted from that step, not from a treatment reply.",
       "assertions": [
         "Warns that a direct column rename is a breaking change for any running application code",
         "Recommends the expand-contract pattern: add new column → backfill → migrate reads/writes → drop old column",
-        "Explains that each step is independently rollback-safe",
-        "Notes that the old column should not be dropped until all references to it are confirmed removed"
+        "Explains that each step before the drop is independently rollback-safe",
+        "Notes that the old column should not be dropped until all references to it are confirmed removed",
+        "Classifies the steps by how they roll back, identifying the final drop of the old column as the one step that cannot be undone"
       ]
     },
     {
