@@ -201,7 +201,7 @@ cases drops that skill's other rows.
 
 ### Results (content evals, full catalog)
 
-`claude-opus-5`, all 66 skills, 234 cases, 1301 assertions, **every row at k>=3**.
+`claude-opus-5`, all 66 skills, 234 cases, 1302 assertions, **every row at k>=3**.
 
 **What RED actually is.** RED answers the same prompt without the skill's *content* —
 it cannot read any `SKILL.md`, `references/` or `templates/`. Both arms do carry the
@@ -214,40 +214,41 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **848 / 1301 = 65.2%** |
-| Assertions passed, skill loaded (GREEN) | **1267 / 1301 = 97.4%** |
-| Gain | **+32.2 points** |
-| Cases where GREEN beats RED | **190 / 234** |
-| Cases where GREEN ties RED | **44 / 234** |
+| Assertions passed, no skill body (RED) | **851 / 1302 = 65.4%** |
+| Assertions passed, skill loaded (GREEN) | **1271 / 1302 = 97.6%** |
+| Gain | **+32.3 points** |
+| Cases where GREEN beats RED | **189 / 234** |
+| Cases where GREEN ties RED | **45 / 234** |
 | Cases where GREEN is *below* RED | **0 / 234** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
 content is worse than no skill at all. **There are also zero RED-true / GREEN-false
-assertions** anywhere in the library. The 44 ties are mostly cases where RED already
+assertions** anywhere in the library. The 45 ties are mostly cases where RED already
 saturates — no headroom left to show, not a skill doing nothing — and saturation
-concentrates by case kind: `eval:1` 8%, `eval:2` 32%, `eval:3` **5%**, pressure 28%.
+concentrates by case kind: `eval:1` 8%, `eval:2` 32%, `eval:3` **6%**, pressure 28%.
 Scope-boundary cases used to saturate at 18% because three of their four assertions
 (recognise the request, name the sibling skill, withhold the wrong deliverable) were
 satisfied by the roster alone. Rewriting 26 of them against a sibling the roster cannot
-disambiguate took that to 5% — and moved the discriminating assertion from "states the
-boundary" to the routing assertion itself (limitation 9).
+disambiguate took that to 5% (6% since, from a row outside the rewrite) — and moved the
+discriminating assertion from "states the boundary" to the routing assertion itself
+(limitation 9).
 
 **The gain does not track reference mass**, which is worth knowing before optimising
 for depth:
 
 | Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
 |---|---|---|---|
-| zero (no references at all) | 16 | 63.1% → 98.8% | **+35.7** |
-| light (0 < ratio < 1) | 22 | 67.0% → 96.7% | +29.7 |
-| heavy (ratio ≥ 1) | 28 | 64.7% → 97.3% | +32.6 |
+| zero (no references at all) | 16 | 63.3% → 98.8% | **+35.5** |
+| light (0 < ratio < 1) | 22 | 67.0% → 96.9% | +30.0 |
+| heavy (ratio ≥ 1) | 28 | 65.0% → 97.6% | +32.6 |
 
-Pearson r between reference ratio and GREEN gain is **−0.08** across the 66 skills —
+Pearson r between reference ratio and GREEN gain is **−0.09** across the 66 skills —
 no relationship. The zero-reference skills are the control that makes this readable:
 they gained the *most* with nothing to read, so the gain comes from the instruction
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at **k>=3 for every row** (209 at k=3, 25 at k=5) as of 2026-09-15; `k` is
+Recorded at **k>=3 for every row** (205 at k=3, 29 at k=5) as of 2026-09-16; `k` is
 per row. All 173 remaining single-sample cases have since been re-measured, so the
 k=1 caveat that used to sit here no longer applies.
 
@@ -515,18 +516,18 @@ flaky). Several findings from running this make the choice necessary:
 9. **Most rows measure one assertion or none, and scope-boundary cases are
    saturated by construction.** `merge-baseline.mjs` reports, per row, how many
    assertions GREEN passes and RED fails (`node .local/regen-discrimination.mjs`
-   recomputes it library-wide). Across 234 rows: **44 discriminate on nothing, 75
+   recomputes it library-wide). Across 234 rows: **45 discriminate on nothing, 73
    on exactly one.** It concentrates by case kind, and the concentration is
    structural rather than an authoring lapse:
 
    | Kind | Rows | Zero | One | Total lift |
    |---|---|---|---|---|
    | `eval:1` happy path | 66 | 7 | 14 | **+179** |
-   | `eval:2` edge case | 66 | 22 | 14 | +92 |
-   | `eval:3` scope boundary | 66 | **5** | 33 | **+104** |
+   | `eval:2` edge case | 66 | 22 | 14 | +93 |
+   | `eval:3` scope boundary | 66 | **6** | 31 | **+104** |
    | pressure | 36 | 10 | 14 | +44 |
 
-   **38 of 66 scope-boundary rows discriminate on 0 or 1 assertion, but only 5 now
+   **37 of 66 scope-boundary rows discriminate on 0 or 1 assertion, but only 6 now
    measure nothing at all.** The cause is
    the shape of the case: it asks four things and a bare model gets three of them
    free — it recognises the request kind, names the right sibling skill (the skill
