@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Design the UI for a project management dashboard. Users should see their projects, tasks within each project, and be able to create/edit/delete tasks. It's a React web app. We don't have a designer — I need to figure out the screens and flows myself.",
-      "expected_output": "Should map the user flow first (dashboard → project → task), then specify each screen with all states (loading, empty, error, loaded), define interaction patterns for CRUD operations, and include responsive behavior.",
+      "expected_output": "Should map the user flow first (dashboard → project → task), then specify each screen with all states (loading, empty, error, loaded), define interaction patterns for CRUD operations, and include responsive behavior. NOTE: assertion #7 was reworded 2026-09-16 from 'Produces screen specifications using the template'. The old passes came from judges that opened templates/screen-spec.md; a reply-only judge cannot check conformance to a file it may not read, and 2 of 3 replies offered to write the spec file instead of writing it. Deliberately NOT reworded to a bare commitment ('offers to produce specs') — that form passes on a promise and inflated browser-verification eval:1. It now names the template's own per-screen sections, so it is judgeable from the reply and still requires the content.",
       "assertions": [
         "Maps the user flow before designing individual screens",
         "Defines at least 3 screens (dashboard, project detail, task detail/modal)",
@@ -13,7 +13,7 @@
         "CRUD interactions have specified feedback (toast, inline, redirect)",
         "Delete has a confirmation pattern",
         "Responsive behavior defined for mobile vs desktop",
-        "Produces screen specifications using the template"
+        "Specifies each screen in the reply in one consistent per-screen structure — purpose, where the user arrives from and goes next, content hierarchy, and states — rather than only offering to write spec files later"
       ]
     },
     {

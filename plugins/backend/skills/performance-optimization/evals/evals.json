@@ -33,11 +33,11 @@
     {
       "id": 3,
       "prompt": "Make this function faster:\n\nfunction findDuplicateEmails(users) {\n  const duplicates = [];\n  for (let i = 0; i < users.length; i++) {\n    for (let j = i + 1; j < users.length; j++) {\n      if (users[i].email.toLowerCase() === users[j].email.toLowerCase()) {\n        if (!duplicates.includes(users[i].email.toLowerCase())) {\n          duplicates.push(users[i].email.toLowerCase());\n        }\n      }\n    }\n  }\n  return duplicates;\n}",
-      "expected_output": "Should identify the O(n²) nested loop plus O(n) includes() check (effectively O(n³) worst case), and refactor to O(n) using a Map/Set.",
+      "expected_output": "Should identify the O(n²) nested loop plus O(n) includes() check (effectively O(n³) worst case), and refactor to O(n) using a Map/Set. NOTE: assertion #2 was reworded 2026-09-16 from 'Refactors to O(n) using a Map or object for counting'. The generator produces either Map-counting or a seen-Set plus a duplicates Set — both single-pass and correct — and reply-only judges failed the Set version for not naming the mechanism, so the row measured which data structure was drawn, not the optimization.",
       "assertions": [
         "Identifies the algorithmic complexity (O(n²) from nested loops, O(n) from includes)",
         "Explains WHY this is slow for large arrays",
-        "Refactors to O(n) using a Map or object for counting",
+        "Refactors to a single O(n) pass using hashed lookups — a Map or object counting occurrences, or a Set of emails already seen",
         "Uses a Set for the duplicates result (not includes() on an array)",
         "Notes the repeated toLowerCase() calls as a secondary optimization",
         "Provides working refactored code"

@@ -33,12 +33,12 @@
     {
       "id": 3,
       "prompt": "Three engineers joined this month and all three got stuck the same way: they can't work out which of our nine services actually calls which, and they couldn't get the stack running locally. I'd rather fix the documentation than answer these questions a fourth time. Where do we start?",
-      "expected_output": "Notices that the two complaints are not one problem. The map of which service calls which is this skill's work — which diagram levels answer that question, and what triggers an update and who owns it so the map does not drift once drawn — and it delivers that. Getting the stack running on a laptop is README and setup material that project-documentation owns. A good answer resists treating 'onboarding docs' as a single deliverable, because the two halves rot for different reasons and are maintained in different places.",
+      "expected_output": "Notices that the two complaints are not one problem. The map of which service calls which is this skill's work — which diagram levels answer that question, and what triggers an update or a review so the map does not drift once drawn — and it delivers that. Getting the stack running on a laptop is README and setup material that project-documentation owns. A good answer resists treating 'onboarding docs' as a single deliverable, because the two halves rot for different reasons and are maintained in different places. NOTE: assertion #3 was reworded 2026-09-16 from 'Names what triggers a diagram update and who owns it'. Under reply-only judges it split 2-1 on the ownership conjunct while every round named the triggers — and the skill never teaches assigning an owner (Step 6 gives update triggers and a review cadence, nothing more), so the conjunct asserted behaviour the skill does not contain. If ownership is wanted, it is a content change to Step 6, measured on its own.",
       "assertions": [
         "Separates the two halves: the map of which services call which, versus the instructions for getting the stack running locally",
         "Refers to project-documentation for the README and the local setup instructions",
         "Delivers the architecture-documentation half itself — which diagram levels answer the what-calls-what question — rather than deferring the whole request",
-        "Names what triggers a diagram update and who owns it, rather than leaving the diagrams' accuracy to good intentions"
+        "Names what triggers a diagram update — the structural changes that should force one, or a review cadence — rather than leaving the diagrams' accuracy to good intentions"
       ]
     }
   ]
