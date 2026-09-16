@@ -20,7 +20,7 @@
     {
       "id": 2,
       "prompt": "Audit this React component for accessibility issues:\n\n<div className=\"card\" onClick={() => navigate(`/project/${id}`)}>\n  <div className=\"title\">{name}</div>\n  <img src={thumbnail} />\n  <div className=\"badge\" style={{color: status === 'active' ? 'green' : 'red'}}>\n    {status}\n  </div>\n  <div className=\"actions\">\n    <div className=\"btn\" onClick={(e) => { e.stopPropagation(); onDelete(id); }}>\n      🗑️\n    </div>\n  </div>\n</div>",
-      "expected_output": "Should identify all accessibility issues: clickable div instead of link/button, missing alt on img, color-only status indicator, icon button without label, no keyboard support. Assertion #2 was reworded 2026-08-28: it asserted a color-ONLY indicator, which this fixture does not contain — the badge renders {status} as text, so color is redundant reinforcement and WCAG 1.4.1 is not violated. At k=5, 7 of 10 judges recorded the reply correctly ruling 1.4.1 out and flagging 1.4.3 contrast instead; the assertion was punishing the right answer. It now targets the failure the fixture really has.",
+      "expected_output": "Should identify all accessibility issues: clickable div instead of link/button, missing alt on img, color-only status indicator, icon button without label, no keyboard support. Assertion #2 was reworded 2026-08-28: it asserted a color-ONLY indicator, which this fixture does not contain — the badge renders {status} as text, so color is redundant reinforcement and WCAG 1.4.1 is not violated. At k=5, 7 of 10 judges recorded the reply correctly ruling 1.4.1 out and flagging 1.4.3 contrast instead; the assertion was punishing the right answer. It now targets the failure the fixture really has. NOTE: final assertion added 2026-09-16. Every earlier assertion here is the textbook answer, which the control produced unaided (RED matched GREEN on all of them), while Step 7 (validate) — which changes what the user does next — was asserted nowhere. Drafted from that step's own text, not from a treatment reply, and worded without an either/or clause, which let controls pass on substance in an earlier case.",
       "assertions": [
         "Identifies clickable div should be an <a> or <Link> (for navigation)",
         "Identifies missing alt attribute on the image",
@@ -29,7 +29,8 @@
         "Identifies emoji icon without accessible label (aria-label needed)",
         "Notes that div+onClick has no keyboard support (no Enter/Space handling)",
         "Provides corrected accessible version of the component",
-        "Corrected version uses semantic HTML (a, button, img alt)"
+        "Corrected version uses semantic HTML (a, button, img alt)",
+        "Recommends validating the corrected component manually with a keyboard-only pass and a screen reader, not only by reading the code or running an automated checker"
       ]
     },
     {

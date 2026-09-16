@@ -18,14 +18,15 @@
     {
       "id": 2,
       "prompt": "We measured 20 different metrics in our experiment and 2 came out significant at p < 0.05. Which ones should we report as wins?",
-      "expected_output": "Should identify the multiple-comparisons problem (about one false positive is expected by chance at that rate), recommend a correction (Holm/Bonferroni or FDR), distinguish pre-registered primary metrics from exploratory ones, and treat the 2 hits as hypotheses for a confirmatory follow-up — not report them as wins.",
+      "expected_output": "Should identify the multiple-comparisons problem (about one false positive is expected by chance at that rate), recommend a correction (Holm/Bonferroni or FDR), distinguish pre-registered primary metrics from exploratory ones, and treat the 2 hits as hypotheses for a confirmatory follow-up — not report them as wins. NOTE: final assertion added 2026-09-16. Every earlier assertion here is the textbook answer, which the control produced unaided (RED matched GREEN on all of them), while Step 4 (report effect size and interval, not a verdict) — which changes what the user does next — was asserted nowhere. Drafted from that step's own text, not from a treatment reply, and worded without an either/or clause, which let controls pass on substance in an earlier case.",
       "assertions": [
         "Identifies the multiple-comparisons problem explicitly — with 20 tests, roughly one false positive at p < 0.05 is expected by chance",
         "Recommends a concrete correction (Bonferroni, Holm, or FDR / Benjamini-Hochberg) and notes the trade-off between them",
         "Warns against reporting the 2 nominal hits as wins (p-hacking / cherry-picking)",
         "Distinguishes pre-registered primary metrics from exploratory findings",
         "Recommends treating the surviving hits as hypotheses for a follow-up confirmatory experiment",
-        "Does not simply declare the two significant metrics real effects"
+        "Does not simply declare the two significant metrics real effects",
+        "Bases the decision on each surviving hit's effect size and confidence interval, not on its p-value"
       ]
     },
     {
