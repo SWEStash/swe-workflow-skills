@@ -95,11 +95,91 @@ const attribute = (text, byPrompt, lead = 'Developer: ') => {
 // reply alone.
 const ANSWER_KEY = /evals\.json|expected_output/
 
-// A shell command that reaches beyond the quoted reply: a file or network command,
-// or anything naming a path or a file type. What is left is computation over
-// literal text — counting a drafted description's characters — which judges the
-// reply more accurately rather than looking past it.
-const REACHES_OUT = /\b(cat|sed|grep|rg|head|tail|less|more|ls|find|git|curl|wget|cd)\b|\/[\w.-]+\/|\.(md|json|ya?ml|m?js|py|txt)\b/
+// A shell command reaches beyond the quoted reply unless it is computation over
+// literal text — counting a drafted description's characters, or running the reply's
+// own code — which judges the reply more accurately rather than looking past it.
+// Judges do that computation in their scratch space: a heredoc or inline script
+// written under /tmp and run. So the command is read, not pattern-matched: script
+// bodies are set aside and checked for file, process or network APIs, and every
+// remaining simple command must be a compute verb touching no path outside /tmp.
+const SCRIPT_REACHES_OUT = /readFileSync|readdirSync|readFile\b|\bopen\(|child_process|subprocess|\bos\.(system|popen|listdir|walk)|pathlib|\bglob\b|\bfetch\(|urllib|requests\.|\bexecSync\b|\bspawn/
+const COMPUTE = new Set(['node', 'python', 'python3', 'cat', 'printf', 'echo', 'wc', 'mkdir', 'cd', 'true'])
+const SCRATCH = /^(\/tmp(\/|$)|\/dev\/null$)/
+
+// Splits a command into simple commands of words, lifting heredoc and quoted
+// bodies out as `scripts`. Unbalanced quoting returns null: unreadable is reported.
+const parseShell = (command) => {
+  const segments = [[]]
+  const scripts = []
+  const heredocs = []
+  let i = 0
+  const n = command.length
+  while (i < n) {
+    const ch = command[i]
+    if (ch === '\n') {
+      for (const delim of heredocs.splice(0)) {
+        const end = command.indexOf(`\n${delim}\n`, i) >= 0 ? command.indexOf(`\n${delim}\n`, i)
+          : command.endsWith(`\n${delim}`) ? n - delim.length - 1 : -1
+        if (end < 0) return null
+        scripts.push(command.slice(i + 1, end))
+        i = end + delim.length + 1
+      }
+      segments.push([])
+      i++
+    } else if (/\s/.test(ch)) i++
+    else if (/[;|&]/.test(ch)) {
+      segments.push([])
+      i += command.startsWith('&&', i) || command.startsWith('||', i) ? 2 : 1
+    } else if (command.startsWith('<<', i)) {
+      const m = /^<<-?\s*(['"]?)(\w+)\1/.exec(command.slice(i))
+      if (!m) return null
+      heredocs.push(m[2])
+      i += m[0].length
+    } else {
+      let word = ''
+      let quoted = false
+      // `&` directly after a redirect (`2>&1`) belongs to the word, not a separator.
+      while (i < n && !/[\s;|]/.test(command[i]) && !(command[i] === '&' && !/[<>]$/.test(word))) {
+        const q = command[i]
+        if (q === "'" || q === '"') {
+          let j = i + 1
+          while (j < n && command[j] !== q) j += q === '"' && command[j] === '\\' ? 2 : 1
+          if (j >= n) return null
+          word += command.slice(i + 1, j)
+          quoted = true
+          i = j + 1
+        } else word += command[i++]
+      }
+      if (word) segments.at(-1).push({ word, quoted })
+    }
+  }
+  return { segments: segments.filter((s) => s.length), scripts }
+}
+
+const reachesOut = (command) => {
+  const parsed = parseShell(command)
+  if (!parsed) return true
+  for (const s of parsed.scripts) if (SCRIPT_REACHES_OUT.test(s)) return true
+  for (const words of parsed.segments) {
+    const [verb, ...args] = words
+    if (!COMPUTE.has(verb.word)) return true
+    for (const [k, { word, quoted }] of args.entries()) {
+      // An inline script body (`node -e`, `python3 -c`) is code, not a path.
+      if (quoted && ['-e', '-c'].includes(args[k - 1]?.word)) {
+        if (SCRIPT_REACHES_OUT.test(word)) return true
+        continue
+      }
+      if (quoted || word.startsWith('-') || /^\d*[<>]+&?\d*$/.test(word)) continue
+      const target = word.replace(/^\d*[<>]+&?/, '')
+      if (SCRATCH.test(target)) continue
+      // Outside scratch space, a path or file name is the thing being detected, and
+      // any operand `cat` is not writing to is a file it reads.
+      const writes = /^\d*>/.test(word) || /^\d*>+$/.test(args[k - 1]?.word ?? '')
+      if (target.includes('/') || /\.\w+$/.test(target) || (verb.word === 'cat' && !writes)) return true
+    }
+  }
+  return false
+}
 
 // Judges must judge the quoted reply and nothing else. The schema's own
 // StructuredOutput call is how a verdict is returned, so it is not tool use.
@@ -123,7 +203,7 @@ const scanJudge = (f, raw, byPrompt, out) => {
     const rec = { agent: f, tool, input: input.slice(0, 150), case: c ? `${c.skill} ${c.key}` : null }
     if (ANSWER_KEY.test(input)) out.judgeAnswerKey.push(rec)
     // Every tool but a shell reads, searches or fetches by definition.
-    else if (tool !== 'Bash' || command === null || REACHES_OUT.test(command)) out.judgeToolUse.push(rec)
+    else if (tool !== 'Bash' || command === null || reachesOut(command)) out.judgeToolUse.push(rec)
     else out.judgeCompute.push(rec)
   }
 }
@@ -201,6 +281,13 @@ const EXPECT = {
   // A judge that computes over the quoted reply — counting a drafted description's
   // characters — is judging the reply more accurately, not looking beyond it. Allowed.
   'judge-compute': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, ...NO_JUDGE, judges: 1, judgeCompute: 1, exit: 0 },
+  // The same computation written to a scratch file and run — the reply's refactored
+  // function executed against the original, a drafted description counted. Paths
+  // under /tmp are the judge's own scratch space, not the repo.
+  'judge-compute-scratch': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, ...NO_JUDGE, judges: 1, judgeCompute: 8, exit: 0 },
+  // Repo reads stay reported however they are wrapped: a cd into /tmp first, a file
+  // API inside an inline script, or a scratch run chained to a read.
+  'judge-reach-out': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, ...NO_JUDGE, judges: 1, judgeToolUse: 8, exit: 0 },
 }
 
 const selfTest = () => {
