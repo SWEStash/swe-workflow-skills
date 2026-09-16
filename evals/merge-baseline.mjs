@@ -3,8 +3,9 @@
 //
 //   node evals/merge-baseline.mjs <results.json> --model <resolved-id> [options]
 //
-// Options include --transcripts <dir>, which scans the run's transcripts and
-// refuses any row whose control arm loaded the skill under test.
+// Options include --transcripts <dir>, which scans the run's transcripts, refuses
+// any row whose control arm loaded the skill under test, and stores the hash of the
+// skill listing the controls saw (warning when it changed since the row's last run).
 //
 // <results.json> is the { results, errored, total, baseline } object returned by
 // evals/workflow-runner.mjs (the Workflow arm). Rows are read from its
@@ -29,7 +30,7 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import { scanRun, loadCases } from './check-red-leaks.mjs'
+import { scanRun, loadCases, listingDrift } from './check-red-leaks.mjs'
 
 const HARNESS_SHORTHANDS = new Set(['opus', 'sonnet', 'haiku', 'fable'])
 const NON_ASCII = new RegExp('[\\u007f-\\uffff]', 'g')
@@ -250,6 +251,14 @@ if (opts.transcripts) {
     console.warn(`warning: ${scan.unattributed.length} load(s) match no current case prompt — prompts changed since the run.`)
   if (scan.judgeToolUse.length)
     console.warn(`warning: ${scan.judgeToolUse.length} judge tool call(s) outside the verdict on ${[...new Set(scan.judgeToolUse.map((c) => c.case ?? 'UNATTRIBUTED'))].join(', ')}`)
+  // Record which skill listing the controls saw, and say when it differs from the
+  // listing behind a row's previous measurement: a RED change on a routing
+  // assertion across the two may be the listing, not the skill.
+  for (const p of plan) {
+    const d = listingDrift(p.prev?.listing, scan.listings)
+    p.row.listing = d.hash
+    if (d.drift) console.warn(`warning: ${p.skill} ${p.key}: ${d.reason} — compare RED on routing assertions with care`)
+  }
   const unattributedKeyReads = scan.judgeAnswerKey.filter((c) => !c.case).length
   if (unattributedKeyReads)
     console.warn(`warning: ${unattributedKeyReads} answer-key read(s) match no current case prompt — cannot tell which row they affect.`)
@@ -320,6 +329,7 @@ for (const { skill, key, row } of plan) {
     model: opts.model,
     k: row.k,
     runner: row.runner ?? 'workflow-runner.mjs',
+    ...(row.listing ? { listing: row.listing } : {}),
   }
 }
 

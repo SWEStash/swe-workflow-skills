@@ -347,7 +347,8 @@
         ],
         "model": "claude-opus-5",
         "k": 5,
-        "runner": "workflow-runner.mjs"
+        "runner": "workflow-runner.mjs",
+        "listing": "a98a046ff2f4"
       }
     },
     "brainstorming": {
@@ -1336,7 +1337,8 @@
         ],
         "model": "claude-opus-5",
         "k": 5,
-        "runner": "workflow-runner.mjs"
+        "runner": "workflow-runner.mjs",
+        "listing": "a98a046ff2f4"
       }
     },
     "dependency-impact-analysis": {
@@ -2634,7 +2636,8 @@
         ],
         "model": "claude-opus-5",
         "k": 5,
-        "runner": "workflow-runner.mjs"
+        "runner": "workflow-runner.mjs",
+        "listing": "b82ae3a7af57"
       }
     },
     "mobile-architecture": {
@@ -2693,7 +2696,8 @@
         ],
         "model": "claude-opus-5",
         "k": 5,
-        "runner": "workflow-runner.mjs"
+        "runner": "workflow-runner.mjs",
+        "listing": "a98a046ff2f4"
       }
     },
     "mobile-release": {
@@ -2965,7 +2969,8 @@
         ],
         "model": "claude-opus-5",
         "k": 5,
-        "runner": "workflow-runner.mjs"
+        "runner": "workflow-runner.mjs",
+        "listing": "a98a046ff2f4"
       }
     },
     "plan-execution": {
@@ -3788,7 +3793,8 @@
         ],
         "model": "claude-opus-5",
         "k": 5,
-        "runner": "workflow-runner.mjs"
+        "runner": "workflow-runner.mjs",
+        "listing": "a98a046ff2f4"
       }
     },
     "security-audit": {
@@ -4004,7 +4010,8 @@
         ],
         "model": "claude-opus-5",
         "k": 5,
-        "runner": "workflow-runner.mjs"
+        "runner": "workflow-runner.mjs",
+        "listing": "a98a046ff2f4"
       }
     },
     "strategic-review": {
@@ -4570,7 +4577,8 @@
         ],
         "model": "claude-opus-5",
         "k": 5,
-        "runner": "workflow-runner.mjs"
+        "runner": "workflow-runner.mjs",
+        "listing": "a98a046ff2f4"
       },
       "eval:2": {
         "green": [
@@ -4860,7 +4868,8 @@
         ],
         "model": "claude-opus-5",
         "k": 5,
-        "runner": "workflow-runner.mjs"
+        "runner": "workflow-runner.mjs",
+        "listing": "a98a046ff2f4"
       }
     }
   }

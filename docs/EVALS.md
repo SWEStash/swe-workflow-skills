@@ -177,7 +177,9 @@ row whose **control arm loaded the skill under test**, or whose **judge read an
 `evals.json`** (limitation 8) — the first row is not a control and the second was not
 judged on the reply, so neither may be recorded. Cross-skill loads, `context: fork`
 calls and judge calls that reach outside the reply are reported and allowed through;
-judge computation over the reply is allowed.
+judge computation over the reply is allowed. It also records the hash of the skill
+listing the controls saw on each row, and warns when that listing differs from the
+row's previous measurement (limitation 7).
 `--allow-contaminated` records them anyway, the way `--allow-degraded` does for short
 rows.
 
@@ -378,7 +380,14 @@ flaky). Several findings from running this make the choice necessary:
    that sibling was listed in full only in the second. So a RED verdict on a
    description-satisfiable assertion holds for the session that produced it, and a
    RED change between two runs of such an assertion is not evidence of anything
-   until the listings are compared. What the gain measures is exactly the deployment-relevant question:
+   until the listings are compared. The comparison is now recorded rather than
+   remembered: `check-red-leaks.mjs` prints a hash of the listing the controls saw,
+   `merge-baseline.mjs --transcripts` stores it on each row as `listing`, and warns
+   when a row's controls saw a different listing than its previous measurement (or
+   when one run's controls saw more than one). Rows merged before this carry no hash
+   and are not compared.
+
+   What the gain measures is exactly the deployment-relevant question:
    **does a skill's body and references add value over that skill merely being
    installed and listed?** For a name-only library, where the listing is always
    in context, that is the right counterfactual, and the figure is neither
