@@ -1096,7 +1096,7 @@
       "id": "boundary:statistical-analysis:3",
       "kind": "boundary",
       "skill": "statistical-analysis",
-      "prompt": "Our checkout redesign test just finished: treatment converted 9% better than control, p = 0.01, and the PM wants to ship it today. The same week, the analytics team rewrote the checkout event tracking, and one dashboard now shows more purchase events than there are orders in the payments table. Is the result real?",
+      "prompt": "Our checkout redesign test just finished, on an intended 50/50 split: control converted 1,668 of 55,600 users and treatment 1,812 of 55,400 \u2014 9% better, p = 0.01 \u2014 and the PM wants to ship it today. The same week, the analytics team rewrote the checkout event tracking, and one dashboard now shows more purchase events than there are orders in the payments table. Is the result real?",
       "accept": [
         "statistical-analysis",
         "data-quality",
