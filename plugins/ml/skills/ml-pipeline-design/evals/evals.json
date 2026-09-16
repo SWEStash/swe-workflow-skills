@@ -32,12 +32,13 @@
     },
     {
       "id": 3,
-      "prompt": "I have a Jupyter notebook that pulls last month's sales from the warehouse, computes exec KPIs, and emails a report. I want it to run on a schedule instead of me running it by hand — how do I turn this notebook into production code?",
-      "expected_output": "Should recognize there is no model training involved — this is a general analysis/reporting notebook — and hand off to the notebook-to-production skill (modules, tests, parameterization, scheduling) rather than designing an ML training pipeline.",
+      "prompt": "Our churn model retrains every Sunday from a cron job. Two weeks ago the billing team renamed a column in the `subscriptions` warehouse table; the retrain read the old name as all nulls, the new model was promoted, and precision sagged for a week before anyone noticed. Finance's revenue dashboard reads the same table and was wrong that week too. How do we make sure this doesn't happen again?",
+      "expected_output": "Notices that 'make sure this doesn't happen again' covers two different guarantees. Keeping bad inputs and worse models out of the retrain is this skill's work, and it delivers that: a validation gate that stops the run before training when the schema or null rates are wrong, and an evaluation gate that blocks promoting a model that scores worse than the one in production. Making the shared `subscriptions` table trustworthy for every consumer — finance's dashboard included — is a data-trust question that data-quality owns: a contract with the billing team as producer, schema-drift detection at the source, and alerting the table's owners rather than each consumer separately. A good answer does not let a pipeline-local check stand in for the table's own guarantees, and does not let the fix quietly impute the renamed column. NOTE: rewritten 2026-09-16. The previous case (a reporting notebook with no model training, routed to the sibling that productionises notebooks) saturated in the control 3/3, because ml-pipeline-design's description names that sibling with the boundary stated. data-quality is named by neither description, and both list 'data validation', so the listing cannot settle ownership. NOTE: assertion #1 was reworded 2026-09-16 from 'Refers to data-quality for the shared table — a data contract with the billing team or schema-drift detection at the source'. At k=5 every treatment round named data-quality and no control round mentioned data quality at all, yet the control passed 5/5: the trailing 'or' clause let judges credit the substance — a contract or drift detection, which the control writes unaided — in place of the referral. The assertion now asks for the referral alone.",
       "assertions": [
-        "Recognizes no model training is involved, so this is not an ML training pipeline",
-        "Hands off to or invokes the notebook-to-production skill for the refactor",
-        "Does not propose ML-specific machinery (feature stores, training DAGs, model evaluation gates) for a reporting notebook"
+        "Separates the two halves: guarding the retrain against bad inputs and worse models, versus making the shared subscriptions table trustworthy for every consumer",
+        "Refers to data-quality for making the shared subscriptions table trustworthy for every consumer",
+        "Delivers the pipeline half itself — a validation gate that stops the run before training, and an evaluation gate that blocks promoting a worse model — rather than deferring the whole request",
+        "Makes the bad retrain fail loudly rather than imputing, defaulting or silently dropping the missing column"
       ]
     }
   ]

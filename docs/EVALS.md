@@ -201,31 +201,32 @@ cases drops that skill's other rows.
 
 ### Results (content evals, full catalog)
 
-`claude-opus-5`, all 66 skills, 234 cases, 1302 assertions, **every row at k>=3**.
+`claude-opus-5`, all 66 skills, 234 cases, 1306 assertions, **every row at k>=3**.
 
 **What RED actually is.** RED answers the same prompt without the skill's *content* —
 it cannot read any `SKILL.md`, `references/` or `templates/`. Both arms do carry the
 session's skill listing (~63KB of every skill's name, description and trigger
-keywords), so RED knows the library exists and what each skill claims; that is a
-constant on both sides and cancels. **So the gain measures what a skill's body and
+keywords), so RED knows the library exists and what each skill claims; within a run
+that is a constant on both sides and cancels (limitation 7 on why it is not constant
+between runs). **So the gain measures what a skill's body and
 references add over that skill merely being installed and listed** — the right
 counterfactual for a name-only library, where the listing is always in context.
 See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **851 / 1302 = 65.4%** |
-| Assertions passed, skill loaded (GREEN) | **1271 / 1302 = 97.6%** |
-| Gain | **+32.3 points** |
-| Cases where GREEN beats RED | **189 / 234** |
-| Cases where GREEN ties RED | **45 / 234** |
+| Assertions passed, no skill body (RED) | **852 / 1306 = 65.2%** |
+| Assertions passed, skill loaded (GREEN) | **1275 / 1306 = 97.6%** |
+| Gain | **+32.4 points** |
+| Cases where GREEN beats RED | **191 / 234** |
+| Cases where GREEN ties RED | **43 / 234** |
 | Cases where GREEN is *below* RED | **0 / 234** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
 content is worse than no skill at all. **There are also zero RED-true / GREEN-false
-assertions** anywhere in the library. The 45 ties are mostly cases where RED already
+assertions** anywhere in the library. The 43 ties are mostly cases where RED already
 saturates — no headroom left to show, not a skill doing nothing — and saturation
-concentrates by case kind: `eval:1` 8%, `eval:2` 32%, `eval:3` **6%**, pressure 28%.
+concentrates by case kind: `eval:1` 8%, `eval:2` 29%, `eval:3` **6%**, pressure 28%.
 Scope-boundary cases used to saturate at 18% because three of their four assertions
 (recognise the request, name the sibling skill, withhold the wrong deliverable) were
 satisfied by the roster alone. Rewriting 26 of them against a sibling the roster cannot
@@ -238,17 +239,17 @@ for depth:
 
 | Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
 |---|---|---|---|
-| zero (no references at all) | 16 | 63.3% → 98.8% | **+35.5** |
-| light (0 < ratio < 1) | 22 | 67.0% → 96.9% | +30.0 |
-| heavy (ratio ≥ 1) | 28 | 65.0% → 97.6% | +32.6 |
+| zero (no references at all) | 16 | 63.0% → 98.8% | **+35.8** |
+| light (0 < ratio < 1) | 22 | 66.7% → 96.9% | +30.3 |
+| heavy (ratio ≥ 1) | 28 | 65.1% → 97.6% | +32.5 |
 
-Pearson r between reference ratio and GREEN gain is **−0.09** across the 66 skills —
+Pearson r between reference ratio and GREEN gain is **−0.10** across the 66 skills —
 no relationship. The zero-reference skills are the control that makes this readable:
 they gained the *most* with nothing to read, so the gain comes from the instruction
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at **k>=3 for every row** (205 at k=3, 29 at k=5) as of 2026-09-16; `k` is
+Recorded at **k>=3 for every row** (201 at k=3, 33 at k=5) as of 2026-09-16; `k` is
 per row. All 173 remaining single-sample cases have since been re-measured, so the
 k=1 caveat that used to sit here no longer applies.
 
@@ -368,8 +369,16 @@ flaky). Several findings from running this make the choice necessary:
    28/28 RED agents in a sampled run carry it. RED is therefore not a model that
    has never heard of this library; it knows every skill exists and what each one
    claims, and can route by roster without reading any skill content.
-   **This is a constant, not a confound** — it is present on both sides and
-   cancels. What the gain measures is exactly the deployment-relevant question:
+   **Within a run this is a constant, not a confound** — it is present on both sides
+   and cancels. **Between runs it is not constant.** Which skills are listed with
+   their full description, rather than by name, varied between runner sessions with
+   no change to the repo, and a control's routing follows it: on one unchanged
+   scope-boundary prompt the control named the sibling skill in 0 of 5 rounds in one
+   session and 5 of 5 in the next, where a third skill's description that routes to
+   that sibling was listed in full only in the second. So a RED verdict on a
+   description-satisfiable assertion holds for the session that produced it, and a
+   RED change between two runs of such an assertion is not evidence of anything
+   until the listings are compared. What the gain measures is exactly the deployment-relevant question:
    **does a skill's body and references add value over that skill merely being
    installed and listed?** For a name-only library, where the listing is always
    in context, that is the right counterfactual, and the figure is neither
@@ -522,14 +531,14 @@ flaky). Several findings from running this make the choice necessary:
 9. **Most rows measure one assertion or none, and scope-boundary cases are
    saturated by construction.** `merge-baseline.mjs` reports, per row, how many
    assertions GREEN passes and RED fails (`node .local/regen-discrimination.mjs`
-   recomputes it library-wide). Across 234 rows: **45 discriminate on nothing, 73
+   recomputes it library-wide). Across 234 rows: **43 discriminate on nothing, 74
    on exactly one.** It concentrates by case kind, and the concentration is
    structural rather than an authoring lapse:
 
    | Kind | Rows | Zero | One | Total lift |
    |---|---|---|---|---|
    | `eval:1` happy path | 66 | 7 | 14 | **+179** |
-   | `eval:2` edge case | 66 | 22 | 14 | +93 |
+   | `eval:2` edge case | 66 | 20 | 15 | +96 |
    | `eval:3` scope boundary | 66 | **6** | 31 | **+104** |
    | pressure | 36 | 10 | 14 | +44 |
 
@@ -588,6 +597,11 @@ flaky). Several findings from running this make the choice necessary:
      already answered it. One rewrite paired a skill with the sibling whose own
      description reads "design-time analysis of a system not yet built → <the skill
      under test>", so the control passed that assertion for free by construction.
+     **Check every description that routes to the sibling, not only the pair's.** A
+     third skill's description that hands the sibling a matching problem ("contracts,
+     freshness → <sibling>") answers the assertion just as well whenever that
+     description is in the session's listing — and whether it is can differ between
+     sessions (limitation 7).
    - **Never let the prompt's own facts state the boundary.** One rewrite said "the
      design is still on the whiteboard" and "in production for two years" — which
      *is* the design-time-versus-running distinction, so both arms simply read it
