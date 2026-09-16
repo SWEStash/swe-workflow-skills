@@ -118,7 +118,17 @@ For each major layout section, specify what changes:
 
 ### Step 6: Produce the Specification
 
-Output using the template at [templates/screen-spec.md](templates/screen-spec.md). Save as `docs/ui/feature-name.md`. Link from the PRD if one exists.
+The deliverable is organized **by screen, not by topic**: one block per screen (and per modal or panel that acts as one, such as a create/edit form), every block carrying the same sections in the same order, from [templates/screen-spec.md](templates/screen-spec.md):
+
+1. **Purpose** — what the user accomplishes here
+2. **Arrives from → leads to** — the entry points, where the primary action goes, the secondary exits
+3. **Content hierarchy** — primary action first
+4. **States** — loading, empty, error, loaded, for *this* screen
+5. **Interactions** — its forms, CRUD feedback, destructive-action confirmation
+
+Steps 2–5 are how you think the design through; they are not the answer's outline. Don't pull states or interactions out into cross-screen sections: someone building one screen must find all of it in that screen's block. Shared patterns get stated once and referenced by name from each block.
+
+Give the specs in the same response, whether or not you also save them as `docs/ui/feature-name.md` (link from the PRD if one exists) — offering to write them later is not delivering them. When the question is about one screen's states rather than designing screens, answer those states; don't expand into full specs.
 
 ## Principles Applied
 
