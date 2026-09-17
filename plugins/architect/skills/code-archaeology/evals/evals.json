@@ -17,13 +17,14 @@
     {
       "id": 2,
       "prompt": "There's a bizarre guard clause in our payment processor: `if amount == 999999: amount = amount - 1`. No comment, no test, git blame just shows a 'fixes' commit from 2019 by someone who left. Everyone's afraid to delete it. Should I?",
-      "expected_output": "Does not say 'yes, delete it' outright: digs into the 2019 commit's full context (message, sibling changes, linked ticket, the PR discussion), searches for related production data or downstream systems that might depend on the cap, and if all sources come up empty, proposes proving it's dead (logging/telemetry on the branch for a period) plus a characterization test — removal only with evidence and a safety net, not on vibes",
+      "expected_output": "Does not say 'yes, delete it' outright: digs into the 2019 commit's full context (message, sibling changes, linked ticket, the PR discussion), searches for related production data or downstream systems that might depend on the cap, and if all sources come up empty, proposes proving it's dead (logging/telemetry on the branch for a period) plus a characterization test — removal only with evidence and a safety net, not on vibes NOTE: final assertion added 2026-09-16. Every earlier assertion here is the textbook answer, which the control produced unaided (RED matched GREEN on all of them), while Step 6 (leave the map better than you found it) — which changes what the user does next — was asserted nowhere. Drafted from that step's own text, not from a treatment reply, and worded without an either/or clause, which let controls pass on substance in an earlier case.",
       "assertions": [
         "Investigates the 2019 commit's full context (message, other files in the same commit, linked ticket/PR discussion) rather than accepting blame's surface result",
         "Considers that production data or a downstream system may depend on the behavior before judging it vestigial",
         "Proposes gathering runtime evidence (logging/telemetry on the branch) to prove the code path is dead rather than assuming it",
         "Recommends a characterization test or equivalent safety net around the behavior before/when removing it",
-        "Does not recommend immediate deletion based on the code looking senseless"
+        "Does not recommend immediate deletion based on the code looking senseless",
+        "Records the recovered reason for the guard where the next reader will find it, whether the guard is kept or removed"
       ]
     },
     {
