@@ -93,8 +93,12 @@ const attribute = (text, byPrompt, lead = 'Developer: ') => {
 
 // A judge reading any evals.json has the assertions' expected_output in hand — the
 // answer key the generator never saw. Its verdict is no longer a judgment of the
-// reply alone.
-const ANSWER_KEY = /evals\.json|expected_output/
+// reply alone. `.local/` counts with it: the run's brief, payload, results and
+// handback live there, and they carry each case's assertions, which assertion a
+// batch just added, and the hypothesis the batch is testing. A judge that opens one
+// is scoring with the question in hand — measured once, when three judges read a
+// brief that named the new assertion on every row it was scoring.
+const ANSWER_KEY = /evals\.json|expected_output|(^|[^\w])\.local\//
 
 // A shell command reaches beyond the quoted reply unless it is computation over
 // literal text — counting a drafted description's characters, or running the reply's
@@ -308,6 +312,10 @@ const EXPECT = {
   // The same computation written to a scratch file and run — the reply's refactored
   // function executed against the original, a drafted description counted. Paths
   // under /tmp are the judge's own scratch space, not the repo.
+  // The run's own brief, payload and results sit in .local/: they name each case's
+  // assertions, which one is new, and the hypothesis under test. A judge that reads
+  // them is scoring with the question in hand, so it counts with the answer key.
+  'judge-work-area': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, ...NO_JUDGE, judges: 2, judgeAnswerKey: 2, exit: 1 },
   'judge-compute-scratch': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, ...NO_JUDGE, judges: 1, judgeCompute: 8, exit: 0 },
   // Repo reads stay reported however they are wrapped: a cd into /tmp first, a file
   // API inside an inline script, or a scratch run chained to a read.

@@ -259,9 +259,20 @@ if (opts.transcripts) {
     p.row.listing = d.hash
     if (d.drift) console.warn(`warning: ${p.skill} ${p.key}: ${d.reason} — compare RED on routing assertions with care`)
   }
+  // An answer-key read that cannot be tied to a row taints every row in the run:
+  // there is no way to tell which case the judge was scoring when it read.
   const unattributedKeyReads = scan.judgeAnswerKey.filter((c) => !c.case).length
+  if (unattributedKeyReads && !opts.allowContaminated) {
+    console.error(
+      `refusing to merge — ${unattributedKeyReads} answer-key read(s) match no current case prompt, ` +
+        `so every row in this run is suspect:`
+    )
+    for (const c of scan.judgeAnswerKey.filter((x) => !x.case)) console.error(`  ${c.tool}  ${c.input}`)
+    console.error('Re-run the batch, or pass --allow-contaminated to record it anyway.')
+    process.exit(1)
+  }
   if (unattributedKeyReads)
-    console.warn(`warning: ${unattributedKeyReads} answer-key read(s) match no current case prompt — cannot tell which row they affect.`)
+    console.warn(`warning: ${unattributedKeyReads} unattributable answer-key read(s) merged on --allow-contaminated`)
   if (hit.length && !opts.allowContaminated) {
     console.error(`refusing to merge — ${hit.length} row(s) whose control arm loaded the skill under test, or whose judge read the answer key:`)
     for (const h of hit)
@@ -312,6 +323,11 @@ for (const { skill, key, row, prev } of plan) {
   const before = prev ? ` (was ${discriminating(prev).length})` : ''
   const note = at.length === 0 ? ' — measures no lift' : at.length === 1 ? ' — single-assertion margin' : ''
   console.log(`      discriminates on ${at.length}${before}: ${at.join(' ') || '(none)'}${note}`)
+  // RED-true / GREEN-false: the skill scores worse than no skill on that assertion.
+  // The library publishes zero of these, so a new one is a finding, not a statistic.
+  const redPlus = row.green.map((g, i) => (!g && row.red[i] ? `#${i}` : null)).filter(Boolean)
+  if (redPlus.length)
+    console.warn(`      warning: RED passes where GREEN fails at ${redPlus.join(' ')} — the skill underperforms no skill there`)
 }
 console.log(`\nassertions newly green: ${gained}`)
 console.log(`gate coverage given up (was green, now red): ${lostGate.length}`)
