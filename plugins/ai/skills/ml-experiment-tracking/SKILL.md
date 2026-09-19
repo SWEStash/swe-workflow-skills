@@ -30,6 +30,8 @@ Before running experiments, establish:
 
 Recommend MLflow for open-source simplicity, W&B for rich visualization needs. See [references/tracking-tools.md](references/tracking-tools.md) for setup patterns.
 
+**Training code the tracker can re-run.** A logged commit hash only means something if the commit contains the training run. A loop living in notebook cells doesn't qualify — cell execution order isn't in the commit, so two runs from "the same code" aren't comparable, which is the thing tracking exists to fix. Extract the training loop into a script or module the notebook (or the tracker) calls with parameters, and log from there. **This extraction stays in this skill** — it is what makes a run reproducible. Turning that script into a scheduled, tested production job is `notebook-to-production`'s work; naming that skill is not a reason to leave the training loop in the notebook.
+
 ### Step 2: Define What to Track
 
 For every experiment run, log:
