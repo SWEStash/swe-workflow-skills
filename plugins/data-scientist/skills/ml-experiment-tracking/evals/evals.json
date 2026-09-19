@@ -18,14 +18,15 @@
     {
       "id": 2,
       "prompt": "I've been training models in Jupyter notebooks for 3 months and I have results scattered across 40+ notebooks. How do I get organized?",
-      "expected_output": "Should recommend setting up tracking infrastructure, then systematically re-running or cataloging key experiments. Should be practical about not re-running everything.",
+      "expected_output": "Should recommend setting up tracking infrastructure, then systematically re-running or cataloging key experiments. Should be practical about not re-running everything. NOTE: final assertion added 2026-09-18. Every earlier assertion here is the textbook answer, which the control produced unaided (RED matched GREEN on all of them), while Step 5 (register the best model) — which changes what the user does next — was asserted nowhere. Drafted from that step's own text, not from a treatment reply, and worded without an either/or clause. Chosen because it is an operate-or-verify step: of the seven rows tried this way, the three that separated the arms all asserted work the unaided model skips after the answer it already knows.",
       "assertions": [
         "Does NOT suggest re-running all 40 notebooks",
         "Recommends setting up tracking for all future experiments",
         "Suggests cataloging the best results from notebooks into the tracker manually",
         "Recommends extracting reusable training code from notebooks into scripts",
         "Suggests data versioning to prevent future dataset ambiguity",
-        "Provides a practical migration path, not an all-or-nothing approach"
+        "Provides a practical migration path, not an all-or-nothing approach",
+        "Registers a chosen model with a stage tag and a link back to the run that produced it, so a model in production traces to its data, code and parameters"
       ]
     },
     {

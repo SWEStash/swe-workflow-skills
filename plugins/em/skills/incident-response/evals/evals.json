@@ -17,13 +17,14 @@
     {
       "id": 2,
       "prompt": "We have an incident where a background job is running but producing incorrect results — all order totals calculated in the last 2 hours are wrong by about 15%. No service is down, users aren't seeing errors. How should we handle this?",
-      "expected_output": "Recognizes this as a data integrity incident (potentially Sev1 despite no downtime), recommends stopping the job immediately, scoping the data impact, and planning data correction before communication",
+      "expected_output": "Recognizes this as a data integrity incident (potentially Sev1 despite no downtime), recommends stopping the job immediately, scoping the data impact, and planning data correction before communication NOTE: final assertion added 2026-09-18. Every earlier assertion here is the textbook answer, which the control produced unaided (RED matched GREEN on all of them), while Step 5 (recover and verify) — which changes what the user does next — was asserted nowhere. Drafted from that step's own text, not from a treatment reply, and worded without an either/or clause. Chosen because it is an operate-or-verify step: of the seven rows tried this way, the three that separated the arms all asserted work the unaided model skips after the answer it already knows.",
       "assertions": [
         "Recognizes data corruption as a high-severity issue even without service downtime",
         "Recommends stopping the job immediately to prevent more bad data",
         "Addresses scoping the affected records (which orders, time range, total count)",
         "Raises the question of customer communication and billing correction",
-        "Does not treat this as a low-priority issue just because no service is down"
+        "Does not treat this as a low-priority issue just because no service is down",
+        "Treats stopping the job as mitigation rather than resolution: the incident closes only once the affected totals are corrected and verified"
       ]
     },
     {

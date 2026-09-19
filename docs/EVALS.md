@@ -477,7 +477,9 @@ flaky). Several findings from running this make the choice necessary:
    - **Detection.** `check-red-leaks.mjs` also scans judges, attributing each to a row
      by the prompt it quotes, and sorts every call beyond the schema's own
      `StructuredOutput` three ways: a read of any `evals.json` or `expected_output` is
-     an **answer-key read** (fatal); a non-shell tool, or a shell command that reads a
+     an **answer-key read** (fatal) — and `.local/` counts as one, because the run's
+     brief, payload and results name each case's assertions and which one a batch just
+     added; a non-shell tool, or a shell command that reads a
      path outside `/tmp` or runs anything but a compute verb, **reaches outside the
      reply** (reported); what remains is **computation** (allowed). Judges compute in
      their scratch space — the reply's code written to a file under `/tmp` and run, or
@@ -488,7 +490,15 @@ flaky). Several findings from running this make the choice necessary:
      on 2026-09-16 the split is 14 / 77 / 51; all 51 computation calls count characters,
      check the reply's arithmetic or re-run code it contained, and all 77 reported
      calls read a skill, doc or repo path.
-   - **Merge gate.** `--transcripts` refuses a row whose judge read the answer key.
+   - **Merge gate.** `--transcripts` refuses a row whose judge read the answer key, and
+     refuses the **whole batch** when such a read cannot be attributed to a row — there is
+     then no way to tell which case that judge was scoring. It also warns per row when RED
+     passes an assertion GREEN fails, since the library publishes zero of those.
+
+   Measured once, and it is why the `.local/` rule exists: three judges in one batch read
+   that batch's own runner brief, which named the newly added assertion on every row they
+   were scoring. The reads were unattributable, so the two rows in that run were re-measured
+   rather than recorded.
 
    **The same comparability caveat applies:** rows judged after the prompt change were
    judged under a different instruction than rows before it. The twelve baseline rows
