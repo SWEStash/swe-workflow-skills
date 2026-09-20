@@ -18,14 +18,15 @@
     {
       "id": 2,
       "prompt": "Our VP wants a budget estimate for a 6-month data platform rebuild. We're in early discovery and a lot is still unknown. How do I estimate this responsibly?",
-      "expected_output": "Should recommend three-point estimation for high-uncertainty work, produce wide ranges, clearly state assumptions and unknowns, and suggest narrowing the estimate through phased discovery.",
+      "expected_output": "Should recommend three-point estimation for high-uncertainty work, produce wide ranges, clearly state assumptions and unknowns, and suggest narrowing the estimate through phased discovery. NOTE: final assertion added 2026-09-18. Every earlier assertion here is the textbook answer, which the control produced unaided (RED matched GREEN on all of them), while Step 5 (track and calibrate) — which changes what the user does next — was asserted nowhere. Drafted from that step's own text, not from a treatment reply, and worded without an either/or clause. Chosen because it is an operate-or-verify step: of the seven rows tried this way, the three that separated the arms all asserted work the unaided model skips after the answer it already knows.",
       "assertions": [
         "Recommends three-point estimation due to high uncertainty",
         "Produces wide initial ranges (appropriate for early discovery)",
         "Suggests a phased approach: estimate phase 1 tightly, phases 2-3 loosely",
         "Clearly states which assumptions drive the estimate",
         "Recommends a technical spike before committing to precise numbers",
-        "Does NOT produce a precise single-number estimate for 6 months of unknown work"
+        "Does NOT produce a precise single-number estimate for 6 months of unknown work",
+        "Commits to re-estimating against actuals as the work lands — comparing estimated with actual and recalibrating on recent data, rather than treating the first number as the budget"
       ]
     },
     {

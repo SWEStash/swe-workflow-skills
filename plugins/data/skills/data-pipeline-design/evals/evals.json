@@ -17,13 +17,14 @@
     {
       "id": 2,
       "prompt": "Our nightly job loads yesterday's orders into the warehouse. When it fails midway and we rerun it, we get duplicate rows — and backfilling last month means manually editing the date in the script 30 times. Fix the design.",
-      "expected_output": "Identifies the non-idempotent append-only load as the root cause; converts the job to an idempotent write pattern (delete+insert by partition, merge/upsert on a key, or partition overwrite) parameterized over a logical date, so backfill becomes running the same job over a range via the orchestrator — with a lookback window for late-arriving data",
+      "expected_output": "Identifies the non-idempotent append-only load as the root cause; converts the job to an idempotent write pattern (delete+insert by partition, merge/upsert on a key, or partition overwrite) parameterized over a logical date, so backfill becomes running the same job over a range via the orchestrator — with a lookback window for late-arriving data NOTE: final assertion added 2026-09-18. Every earlier assertion here is the textbook answer, which the control produced unaided (RED matched GREEN on all of them), while Step 7 (orchestrate and operate) — which changes what the user does next — was asserted nowhere. Drafted from that step's own text, not from a treatment reply, and worded without an either/or clause. Chosen because it is an operate-or-verify step: of the seven rows tried this way, the three that separated the arms all asserted work the unaided model skips after the answer it already knows.",
       "assertions": [
         "Identifies the root cause as a non-idempotent, append-only load",
         "Proposes an idempotent write pattern: delete+insert by partition, merge/upsert on a unique key, or partition-overwrite semantics",
         "Parameterizes the run over a logical date/window so any day can be run or re-run identically (backfill = the same job over a range)",
         "Recommends orchestrator-native backfill (or an equivalent parameterized range run) over hand-edited scripts",
-        "Considers late-arriving or corrected data (lookback window, watermark, or reprocessing policy), not just the happy path"
+        "Considers late-arriving or corrected data (lookback window, watermark, or reprocessing policy), not just the happy path",
+        "Makes a failed run visible: retries with an alert on final failure, so a load that fails is noticed rather than found later"
       ]
     },
     {
