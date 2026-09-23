@@ -59,6 +59,19 @@ MAX_READ_BYTES = 60_000
 
 client = anthropic.Anthropic()
 
+def verdict_schema(n: int) -> dict:
+    """One verdict per assertion, no more and no fewer.
+
+    An open-ended array lets a judge return a short list, which is then either
+    dropped (losing the round) or filled with false (recording fails the judge
+    never gave). Pinning the length makes a short answer unrepresentable.
+    """
+    schema = json.loads(json.dumps(VERDICT_SCHEMA))
+    schema["properties"]["verdicts"]["minItems"] = n
+    schema["properties"]["verdicts"]["maxItems"] = n
+    return schema
+
+
 VERDICT_SCHEMA = {
     "type": "object",
     "properties": {
@@ -195,7 +208,7 @@ def judge(prompt: str, reply: str, assertions: list[str]) -> list[bool]:
         max_tokens=2000,
         thinking={"type": "adaptive"},
         system="You are a strict, skeptical evaluator of assistant behavior.",
-        output_config={"format": {"type": "json_schema", "schema": VERDICT_SCHEMA}},
+        output_config={"format": {"type": "json_schema", "schema": verdict_schema(len(assertions))}},
         messages=[{"role": "user", "content": user}],
     )
     text = next(b.text for b in resp.content if b.type == "text")
