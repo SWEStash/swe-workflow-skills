@@ -39,10 +39,17 @@ Convert to time or cost via team velocity or loaded cost, add a 20-30% buffer fo
 unknowns, and communicate a range in stakeholder language — weeks and dollars, not
 story points. A single number becomes a commitment; a range communicates confidence.
 
+**Say when the number gets revisited.** A range nobody revisits hardens into the commitment
+you avoided giving — so hand over the estimate with its re-forecast attached: the next point
+where real data replaces assumption (a phase boundary, the end of a spike, the first sprints
+of actuals), and what would move the number. That sentence is what keeps an early-discovery
+estimate honest; without it, "wide range" is just a number the stakeholder rounds down.
+
 ### Step 5: Track and Calibrate
 
-Compare estimated vs actual each sprint, look for systematic bias, and recalibrate
-velocity on the last 3-5 sprints, not the all-time average.
+Compare estimated with actual — per sprint on delivery work, at each phase boundary on a
+project-sized estimate — look for systematic bias, and recalibrate on the last 3-5 data
+points, not the all-time average.
 
 ## Principles Applied
 
