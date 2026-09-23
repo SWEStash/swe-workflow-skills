@@ -381,7 +381,7 @@ baseline.k =
     ? String(sortedK[0][0])
     : `${sortedK[0][0]}, except ${sortedK
         .slice(1)
-        .map(([k, n]) => `${n} cases at ${k}`)
+        .map(([k, n]) => `${n} ${n === 1 ? 'case' : 'cases'} at ${k}`)
         .join(' and ')}`
 
 if (opts.note) {

@@ -55,7 +55,12 @@ export const meta = {
 }
 
 // Mirrors VERDICT_SCHEMA in evals/run.py — index-keyed, so verdict order is
-// guaranteed by the schema rather than requested in prose.
+// guaranteed by the schema rather than requested in prose. The length is pinned
+// per case by judgeSchema() below: an open-ended array lets a judge return one
+// verdict for a seven-assertion case, which `incomplete()` then has to drop —
+// costing the round, and with it the row's k. Observed in the field: 20 of 20
+// judges short on one case, twice in a row, and a resume cannot recover them
+// because it replays the same accepted answers.
 const JUDGE = {
   type: 'object',
   properties: {
@@ -146,6 +151,13 @@ const toBools = (j, n) => {
   return Array.from({ length: n }, (_, i) => m.get(i) === true)
 }
 
+// One verdict per assertion, no more and no fewer — the model cannot return a
+// short list and have it accepted.
+const judgeSchema = (n) => ({
+  ...JUDGE,
+  properties: { verdicts: { ...JUDGE.properties.verdicts, minItems: n, maxItems: n } },
+})
+
 const rounds = Array.from({ length: K }, (_, i) => i)
 
 const results = await pipeline(
@@ -183,7 +195,7 @@ const results = await pipeline(
       const js = await Promise.all(
         gs.map((gen, r) =>
           gen.ok
-            ? safe(agent(judgeP(it, gen.v), { label: `judge-${arm}:${it.skill}:${it.kind}${it.id}#${r}`, phase: 'Judge', schema: JUDGE, model: MODEL }))
+            ? safe(agent(judgeP(it, gen.v), { label: `judge-${arm}:${it.skill}:${it.kind}${it.id}#${r}`, phase: 'Judge', schema: judgeSchema(n), model: MODEL }))
             : Promise.resolve({ ok: false, e: 'generator failed' })
         )
       )

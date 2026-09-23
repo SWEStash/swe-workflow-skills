@@ -100,7 +100,10 @@ for a dbt-centric greenfield stack (asset/partition model matches warehouse
 thinking, first-class dbt integration); Airflow where the org already runs it
 or needs its ecosystem breadth (comparison and managed options:
 [references/orchestration.md](references/orchestration.md)). Then wire in
-operations: retries with alerting on final failure (`observability-design`),
+operations: retries, and **an alert on final failure that names who receives it** — a load
+that fails silently is the failure this step exists to prevent, so the alert is part of the
+pipeline design, not a monitoring afterthought. (SLOs, error budgets and instrumentation depth
+are `observability-design`'s; deciding that a failed run pages someone is not.) Alongside it,
 quality checks between layers (`data-quality`), and cost visibility per model —
 warehouses make it very easy to spend quietly.
 
