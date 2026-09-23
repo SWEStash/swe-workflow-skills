@@ -5,9 +5,9 @@ measurements put it anywhere from ~45% to ~84% depending on prompt and hook hack
 library replaces auto-triggering with an **orchestrator that routes intent to skills by
 name**, and it measures that routing the way you'd measure code: a 138-case harness,
 graded by accept-set, gated in CI against a committed baseline. On the current 66-skill
-catalog, routing on `claude-haiku-4-5` scores a **clean sweep — 65/65 top-1, 53/53
-boundary, 0/8 false activation, zero confusion pairs.** The numbers below are
-reproducible from the repo with no API key.
+catalog, routing on `claude-haiku-4-5` at k=3 scores **64/65 top-1, 64/65 boundary, 0/8
+false activation, and two confusion pairs**. The numbers below are reproducible from
+the repo with no API key.
 
 This is the one artifact worth reading if you're deciding whether "routed activation" is
 marketing or measurable. It's measurable.
@@ -80,22 +80,30 @@ The short version:
 
 ## Results (committed baseline, 66-skill catalog)
 
-Recorded 2026-07 over the then-126-case dataset; 13 cases re-recorded in-session
-2026-08 when the dataset grew to 138 (twelve skills' third evals, plus one rewritten
-positive prompt). All 13 pass, no misroutes.
+Recorded 2026-09 over all 138 cases at **k=3**: three independent samples per case,
+majority route. Every case was re-recorded, and nothing was carried forward.
 
 | Layer 2 metric | Result |
 |---|---|
-| Top-1 routing accuracy (positives) | **65 / 65 = 1.00** |
-| Boundary pass rate ("no wild misroute") | **65 / 65 = 1.00** |
+| Top-1 routing accuracy (positives) | **64 / 65 = 0.985** |
+| Boundary pass rate ("no wild misroute") | **64 / 65 = 0.985** |
 | False-activation rate (trivial → NONE) | **0 / 8 = 0.00** |
-| Confusion pairs | **none** |
+| Confusion pairs | `verification-before-completion → git-workflow`, `project-documentation → release-management` |
 
 Layer 3 (behavioral, 16 cases): router-invocation **8/8**, correct-invoke **8/8**,
-over-route **0/8**. Boundaries stayed nuanced in both directions — e.g.
-`notebook-to-production` ↔ `ml-pipeline-design`, `statistical-analysis` → `ai-evaluation`,
-`rollback-strategy` → `incident-response`, and `refactoring` / `strategic-review`
-boundaries → `NONE`.
+over-route **0/8**. 132 of 138 cases were unanimous across the three samples. Boundary
+routes make real discriminations: none of the 64 passing boundary cases fell back to
+`NONE`, and 38 chose a named sibling, for example `notebook-to-production` →
+`ml-pipeline-design`, `rollback-strategy` → `incident-response` and `refactoring` →
+`technical-debt-review`.
+
+**Earlier versions of this page reported a clean sweep, and those figures were not
+sound.** The runner that recorded them sent each agent to read the dataset file for its
+prompt. That file carries every case's accept set, so the agents routed with the answer
+in reach. And 28 of the 138 rows had been recorded against a prompt or accept set that
+has since changed. The runner now passes each prompt inline, and the leak scan fails a
+run in which an agent opens a routing dataset. The misroutes and the one split positive
+are described in [EVALS.md § Results](EVALS.md#results-haiku-and-the-haiku-recommendation).
 
 Source of record: [`evals/routing-baseline.json`](../evals/routing-baseline.json)
 (every case's chosen skill + pass/fail).
@@ -119,9 +127,9 @@ python evals/routing.py --run -k 3
 
 ## Honest caveats
 
-- **Haiku, single-vote by default.** The committed baseline is `k=1`; the harness
-  supports majority-of-k (`-k 3`) for lower variance. Routing quality can shift with the
-  model — the gate exists precisely to catch that.
+- **Haiku, majority of three.** The committed baseline is `k=3`, and six cases split
+  their votes. A route that splits can flip between runs without anything changing.
+  Routing quality can also shift with the model, and the gate exists to catch that.
 - **Accept-set grading is deliberately lenient on boundaries.** Boundary cases pass on
   `{home} ∪ {siblings} ∪ {NONE}` because scope-boundary evals are heterogeneous (some are
   genuine redirects, some in-scope edge cases). It measures "no *wild* misroute," not
@@ -131,13 +139,13 @@ python evals/routing.py --run -k 3
   realized value is the product of the two: *routing accuracy × (GREEN − RED gap)*.
 - **The committed set is mined from the skills' own evals — but cross-checked held-out.**
   Positive/boundary cases are written by the same hand as the descriptions, so the 138-case
-  gate could in principle be teaching to the test. To probe that, a separate **hand-authored
-  held-out set** (`evals/routing-heldout.json`) — no phrasing copied from any `evals.json`,
-  each skill's own trigger keywords deliberately avoided — was routed on haiku at k=3: a
-  perfect, fully-unanimous sweep (paraphrase 92/92, confusable 24/24 with zero confusion
-  pairs, trap 18/18, trivial 16/16, false-activation 0/21) **on the then-150-case version**;
-  the set has since grown to 162 and the additions are not yet routed. So the clean sweep
-  isn't an artifact of shared author phrasing. It's a periodic manual probe, **not** a CI
+  gate could in principle be teaching to the test. A separate **hand-authored held-out
+  set** (`evals/routing-heldout.json`) exists to probe that. It copies no phrasing from any
+  `evals.json` and deliberately avoids each skill's own trigger keywords. Its recorded
+  result, a perfect sweep on the then-150-case version, **is unverified**. It was made
+  with the runner that let agents read the file holding the accept sets, and it has not
+  been re-run since the fix. The set has since grown to 162 cases. It's a periodic
+  manual probe, **not** a CI
   gate (see [EVALS.md § Held-out generalization probe](EVALS.md#held-out-generalization-probe-independent)).
 - **The comparison isn't apples-to-apples.** The community numbers above measure native
   auto-triggering on small skill sets; ours measures orchestrator routing on a 66-skill
@@ -148,6 +156,6 @@ python evals/routing.py --run -k 3
 
 Native auto-triggering is a real, useful feature that degrades with scale. For a curated
 66-skill SDLC library, routing is what keeps every skill reachable *and* makes activation
-predictable enough to regression-test. The number to remember isn't "100%" — it's that
+predictable enough to regression-test. The number to remember isn't 64/65, it's that
 **activation is measured and gated at all**, which is not something the platform or the
 community libraries do at catalog scale.

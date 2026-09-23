@@ -4,6 +4,12 @@ Independent generalization probe for `skill-router`, run on **`claude-haiku-4-5`
 at **k=3** (majority vote of 3 independent samples per case) via
 `evals/routing-heldout-runner.mjs` against `evals/routing-heldout.json`.
 
+> **Unverified: these results predate a runner fix.** The runner that produced them
+> sent each agent to read `routing-heldout.json` for its prompt, and that file carries
+> each case's accept set, so the agents routed with the answer in reach. The runner
+> now passes prompts inline. Read every figure below as an upper bound until the probe
+> is re-run.
+
 **Why this exists.** The committed routing gate (`routing-dataset.json`) is *mined
 from each skill's own `evals/evals.json`* — prompts written by the same author as
 the skill description. It scores 64/64 positive, 52/52 boundary, 0/8

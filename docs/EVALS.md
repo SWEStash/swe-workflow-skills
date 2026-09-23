@@ -881,94 +881,90 @@ the API key is absent — like `skill-evals.yml`).
 
 ### Results (haiku) and the haiku recommendation
 
-Full run on `claude-haiku-4-5` over the then-126-case dataset (2026-07, 66-skill
-catalog), recorded at **k=1** (one sample per case). The committed baseline
-(`evals/routing-baseline.json`) now covers 138 cases: the 12 boundary cases the
-dataset gained when twelve skills got their missing third eval, plus one rewritten
-positive prompt, were re-recorded in-session and all pass, so the rates below still
-hold at 65/65, 65/65 and 0/8:
+Full run on `claude-haiku-4-5` over the 138-case dataset (2026-09, 66-skill
+catalog), recorded at **k=3**: three independent samples per case, majority route,
+all three votes stored in `evals/routing-baseline.json`. Every case was re-recorded
+in this run and nothing was carried forward.
 
-| Layer 2 metric | Result (k=1) |
+| Layer 2 metric | Result (k=3) |
 |---|---|
-| Top-1 routing accuracy (positives) | **65/65 = 1.00** |
-| Boundary pass rate ("no wild misroute") | **65/65 = 1.00** |
+| Top-1 routing accuracy (positives) | **64/65 = 0.985** |
+| Boundary pass rate ("no wild misroute") | **64/65 = 0.985** |
 | False-activation rate (trivial → NONE) | **0/8 = 0.00** |
-| Confusion pairs | **none** |
+| Confusion pairs | `verification-before-completion → git-workflow`, `project-documentation → release-management` |
 
-Layer 3 (behavioral, 16 cases): router-invocation rate **1.00** (8/8 substantial
-prompts invoked a skill), correct-invoke 8/8, over-route **0/8**.
+Layer 3 (behavioral, 16 cases, one sample each): router-invocation rate **1.00**
+(8/8 substantial prompts invoked a skill), correct-invoke 8/8, over-route **0/8**.
 
-A single-draw clean sweep invites the obvious question — *is the dataset just
-crafted to pass?* Two checks say the result is real but should be stated precisely,
-not as "everything perfect". (Both checks below were run on the **then-124-case**
-dataset — 64 positive / 52 boundary / 8 trivial — before the catalog grew to 66
-skills; their per-case counts are that run's, not today's.)
+**Earlier recordings of this table read 1.00 across the board, and they are not
+comparable.** The runner used to send each agent to read the dataset file to find
+its prompt, and that file carries every case's accept set beside the prompt. So
+those agents routed with the answer in reach. And 28 of the 138 rows had been
+recorded against a prompt or accept set that has since changed. The runner now
+passes each prompt inline and the agent reads only the catalog, and
+`check-red-leaks.mjs` fails a run in which a routing agent opens a routing dataset,
+baseline or held-out file. This run's scan was clean.
 
-**What the numbers actually establish.** Positive accept-sets are strict
-single-skill (`{home}`, top-1 exact), so 64/64 there is a genuine signal — and
-only 13/64 positive prompts even contain the skill's name as a phrase; the rest
-force intent inference from a scenario. The boundary sweep was *not* won on the
-`NONE` escape hatch: of 52 boundary cases only 4 routed to `NONE`; 18 hit home and
-30 chose a legitimate sibling — i.e. the router made real discriminations against a
-~60-skill wrong-answer space.
+**The two misroutes.**
 
-**Stability at k=3.** Re-running every case with **3 independent haiku samples +
-majority vote** (2026-07, via the in-session runner) reproduces the sweep —
-positive 64/64, boundary 52/52, false-activation 0/8, **0 majority failures** — so
-k=1 was not a lucky draw. The finer signal is *unanimity*: **120/124 cases were
-unanimous** across the three samples, including all 64 positives and all 8
-trivials. The only wobble was **4/52 boundary cases**, and every split resolved
-*inside* the accept-set:
+- `positive:verification-before-completion:1`: "…tell me it's done and commit it"
+  went to `git-workflow` on the majority (votes: `code-reviewing`, `git-workflow`,
+  `git-workflow`). The literal "commit it" pulls against the claim-of-done the case
+  is about. This is the one split positive.
+- `boundary:project-documentation:3`: "Generate a changelog from our recent git
+  history. We're about to release v2.1.0" went unanimously to `release-management`,
+  whose description lists changelogs and release notes. Its accept set is
+  `{project-documentation, NONE}`, so the case fails. Whether the router or the
+  accept set is wrong is open. The prompt is release-shaped, and
+  `release-management` is a defensible owner.
+
+**Stability.** **132/138 cases were unanimous** across the three samples, including
+all 8 trivials. The six splits are the positive above and five boundary cases, all
+of which resolved inside their accept set:
 
 | Boundary case | 3 votes | Majority |
 |---|---|---|
-| `architecture-documentation` | architecture-design ×2, architecture-documentation | architecture-design ✓ |
-| `gitops-delivery` | NONE ×2, gitops-delivery | NONE ✓ |
-| `test-suite-design` | NONE ×2, test-suite-design | NONE ✓ |
-| `project-review` | code-reviewing, bug-investigating, NONE | code-reviewing ✓ |
+| `bug-investigating` | bug-investigating ×2, performance-optimization | bug-investigating ✓ |
+| `statistical-analysis` | statistical-analysis ×2, data-quality | statistical-analysis ✓ |
+| `tdd-workflow` | test-data-strategy ×2, tdd-workflow | test-data-strategy ✓ |
+| `test-data-strategy` | test-data-strategy ×2, compliance-privacy | test-data-strategy ✓ |
+| `verification-before-completion` | verification-before-completion ×2, plan-execution | verification-before-completion ✓ |
 
-The last is the honest edge: three identical prompts produced *three different*
-answers, all in-accept — the router has no stable opinion there and the accept-set
-absorbs the coin-flip. That is the design working as intended (boundary measures
-"no wild misroute," not a single gold answer), but it means **boundary 1.00 is a
-soft claim**: ~8% of boundary prompts are genuinely ambiguous within their
-accept-set. The defensible summary is therefore:
+**What the numbers actually establish.** Positive accept sets are strict
+single-skill (`{home}`, top-1 exact), so 64/65 there is a genuine signal. Only 9 of
+the 65 positive prompts contain the skill's name, spaced or hyphenated; the rest
+force intent inference from a scenario. The boundary result was not won on the
+`NONE` escape hatch. Of the 64 passing boundary cases, none routed to `NONE`: 26
+stayed home and 38 chose a named sibling. The router made real discriminations
+against a ~60-skill wrong-answer space. Since the previous recording, 27 of the 65
+boundary prompts were rewritten, most of them so that the listing alone does not
+settle the owner.
 
-> **Positive top-1 routing is stable and correct (64/64, unanimous over 3 samples);
-> trivial rejection is stable (8/8, unanimous NONE); boundary prompts never wildly
-> misroute but are genuinely ambiguous in ~8% of cases.**
+> **Positive top-1 routing is correct on 64/65, with 64 of 65 unanimous; trivial
+> rejection is stable (8/8, unanimous NONE); boundary prompts misroute once in 65,
+> and 5 of the 65 are split within their accept set.**
 
-**Known limitations (what the sweep does *not* prove).** Coverage is one positive
+**Known limitations (what this does *not* prove).** Coverage is one positive
 + one boundary prompt per skill, all mined from each skill's own `evals.json` and
 written by the same hand as the descriptions — so this measures routing on
 author-anticipated phrasings, not held-out or adversarial ones (a mild
 teaching-to-the-test risk), and a skill can ace its single prompt yet misroute on
-paraphrases. Boundary accept-sets include `NONE` by construction. Closing these
-was a tracked follow-up — **now done**: an independent held-out / paraphrase
-prompt set, not mined from the skills' own evals, graded with the same accept-set
-logic. See [Held-out generalization probe](#held-out-generalization-probe-independent)
-below.
+paraphrases. Boundary accept-sets include `NONE` by construction. The independent
+held-out set below exists to probe this, but its recorded result predates the
+runner fix; see its section.
 
-Data-science boundaries held in both directions (`ml-pipeline-design` ↔
-`notebook-to-production`, `statistical-analysis`'s chatbot-A/B → `ai-evaluation`),
-alongside the established ones (`rollback-strategy` → `incident-response`;
-`incident-response` / `refactoring` / `strategic-review` boundaries → `NONE`).
+Boundary routes worth knowing: `notebook-to-production` → `ml-pipeline-design`,
+`ml-pipeline-design` → `data-quality`, `rollback-strategy` → `incident-response`,
+and `refactoring` → `technical-debt-review`, all unanimous.
 
-(`routing-baseline.json` records the **k=1** full 138-case run — refreshed 2026-07
-via the in-session runner — so every case gates in CI; the k=3 pass above is a
-stability probe, not the committed gate. **It is still single-sample, and that is
-now a deliberate exception**: the content baseline was lifted to k>=3 throughout
-(limitation 6) while the routing baseline was left as it was. The same argument
-applies to it — a marginal single-sample row cannot be told apart from a coin
-flip — so read a one-case routing move as noise until it reproduces, and do not
-compare its numbers with the content baseline's as though both were measured the
-same way. An earlier, smaller-catalog baseline
-scored the same layer-2 sweep but only a 0.75 layer-3 invocation rate; this run
-clears layer 3 at 8/8.)
+(`routing-baseline.json` is this k=3 run, so every case gates on a majority of three
+samples, like the content baseline's k>=3 rows. A single sample can't be told apart from a coin flip, and that
+was the reason to lift it. An earlier, smaller-catalog baseline scored only a 0.75
+layer-3 invocation rate; this run clears layer 3 at 8/8.)
 
-**Haiku recommendation: keep haiku.** Stable top-1 accuracy, no wild misroutes,
-and zero false activations across the full 66-skill catalog — reproduced at k=3 —
-say haiku is more than adequate for this routing task; nothing argues for sonnet.
+**Haiku recommendation: keep haiku.** Top-1 accuracy of 64/65, one boundary
+misroute, and zero false activations across the full 66-skill catalog, at k=3, say
+haiku is adequate for this routing task, and nothing argues for sonnet.
 The earlier watch-item (layer-3 invocation rate 0.75 on the earlier, smaller
 catalog) cleared at 8/8 in this run — worth re-checking as the catalog grows. If
 misroutes ever appear, the first lever is **improving catalog descriptions**
@@ -1014,6 +1010,12 @@ Workflow({ scriptPath: "evals/routing-heldout-runner.mjs", args: {
   cases: <the .cases array of evals/routing-heldout.json> }})
 ```
 
+**Unverified: this result predates the runner fix.** It was recorded with a
+runner that sent each agent to read the held-out file for its prompt, and that file
+carries each case's accept set, so its agents routed with the answer in reach. Read
+the figures below as an upper bound until the probe is re-run with the current
+runner.
+
 **Result (`claude-haiku-4-5`, k=3, 2026-07, on the then-150-case set — 451 route
 agents, 0 errors):** a
 perfect, fully-stable sweep — paraphrase **92/92**, confusable **24/24** (all 6
@@ -1032,7 +1034,7 @@ prompts are meant to find edges (a hard gate would be noisy), and ~450 agents/ru
 is too expensive per-PR. Unlike `routing-dataset.json` it is **hand-authored, not
 generated**, so it is deliberately **not** wired into `--build-dataset` /
 `--check-dataset` and does **not** touch `routing-baseline.json` (the committed
-gate stays the mined 138-case k=1 run).
+gate stays the mined 138-case k=3 run).
 
 ### TDD loop for routing (RED → GREEN)
 
@@ -1043,8 +1045,9 @@ routing eval until GREEN. This is the `writing-skills` baseline→counter loop w
 routing accuracy as the metric; descriptions are the shared tuning surface for both
 routing (the catalog) and direct auto-trigger, so one improvement pays twice.
 
-The current suite has **zero natural misroutes** (65/65 positive, 53/53 boundary,
-0 confusion — the committed CI baseline), so there is no live RED to fix. Exercising the loop synthetically (degrade one skill's
+The committed baseline has **two live REDs**, listed under Results above:
+`verification-before-completion`'s positive and `project-documentation`'s boundary.
+Neither has been worked through this loop yet. Exercising the loop synthetically (degrade one skill's
 `description`, regenerate the catalog, re-run that case) surfaced a finding worth
 recording:
 
