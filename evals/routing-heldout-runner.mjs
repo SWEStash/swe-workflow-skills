@@ -7,14 +7,16 @@
 // reporting on top of the standard accept-set grading.
 //
 //   Workflow({ scriptPath: "evals/routing-heldout-runner.mjs", args: {
-//     dataset: "<abs>/evals/routing-heldout.json",
-//     catalog: "<abs>/catalog.json" }})
+//     catalog: "<abs>/catalog.json",
+//     cases: [{ id, kind, skill, prompt, accept }, ...] }})   // routing-heldout.json .cases
 //
 // Each case is sampled K=3 times in parallel on haiku and majority-voted, exactly
-// like the mined-dataset k=3 stability probe. The authoring category is read from
-// the id prefix (para: / confuse: / trap: / trivial:) — the runner never needs
-// extra fields on the case, so the load projection stays id/kind/skill/accept.
-// Grading is unchanged: pass iff the majority winner is in the case's accept set.
+// like evals/routing-runner.mjs. The developer message goes inline and the agent
+// reads only the catalog: the held-out file carries each case's accept set beside
+// its prompt, so an agent sent to read it routes with the answer in hand. The
+// authoring category is read from the id prefix (para: / confuse: / trap: /
+// trivial:). Grading is unchanged: pass iff the majority winner is in the case's
+// accept set, which stays in the script.
 //
 // Resumable: a full sweep is ~450+ agents and will hit the session limit. Re-run
 // with Workflow({ scriptPath, resumeFromRunId: "<runId>" }) — cached agents
@@ -24,46 +26,17 @@
 export const meta = {
   name: 'routing-heldout-k3',
   description: 'k=3 held-out routing generalization probe on haiku (layer 2)',
-  phases: [{ title: 'Load' }, { title: 'Route' }],
+  phases: [{ title: 'Route' }],
 }
 
 const a = typeof args === 'string' ? JSON.parse(args) : args
 const MODEL = 'haiku'
 const K = 3
 
-// ---------------------------------------------------------------------------
-// Load — id/kind/skill/accept only (prompts stay canonical, read per-agent).
-// ---------------------------------------------------------------------------
-phase('Load')
-const CASES = {
-  type: 'object',
-  properties: {
-    cases: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'string' },
-          kind: { type: 'string', enum: ['positive', 'boundary', 'trivial'] },
-          skill: { type: 'string' },
-          accept: { type: 'array', items: { type: 'string' } },
-        },
-        required: ['id', 'kind', 'accept'],
-        additionalProperties: true,
-      },
-    },
-  },
-  required: ['cases'],
-  additionalProperties: false,
-}
-
-const loaded = await agent(
-  `Read the JSON file at ${a.dataset}. Return its .cases array, but for each case ` +
-    `include ONLY the fields id, kind, skill, and accept (omit prompt). Copy values verbatim.`,
-  { label: 'load:cases', phase: 'Load', model: MODEL, schema: CASES },
-)
-const cases = (loaded?.cases || []).map((c) => ({ ...c, skill: c.skill ?? null }))
-log(`loaded ${cases.length} held-out cases; sampling k=${K} each`)
+const cases = (a.cases || []).map((c) => ({ ...c, skill: c.skill ?? null }))
+if (!a.catalog || !cases.length || cases.some((c) => typeof c.prompt !== 'string' || !Array.isArray(c.accept)))
+  throw new Error('routing-heldout-runner: need args.catalog and args.cases[{id, kind, prompt, accept}]')
+log(`${cases.length} held-out cases; sampling k=${K} each`)
 
 // Authoring category + cluster are encoded in the id prefix.
 const catOf = (c) => c.id.split(':')[0] // para | confuse | trap | trivial
@@ -96,10 +69,9 @@ const CHOICE = {
 
 const routePrompt = (c) =>
   `${ROUTING_INSTRUCTION}\n\n` +
-  `Read the JSON file at ${a.dataset} and find the case whose id is "${c.id}". ` +
-  `Use that case's .prompt as the developer message. Then choose exactly one skill ` +
-  `name to activate, or "NONE" if no workflow applies. Put the chosen name (or ` +
-  `"NONE") in chosen_skill.`
+  `Read no file other than the catalog. The developer's message is:\n${JSON.stringify(c.prompt)}\n\n` +
+  `Choose exactly one skill name to activate, or "NONE" if no workflow applies. ` +
+  `Put the chosen name (or "NONE") in chosen_skill.`
 
 const majority = (arr) => {
   const h = {}

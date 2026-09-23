@@ -112,8 +112,9 @@ python evals/routing.py --run -k 3
 
 # Key-free, in-session (also runs layer 3) — via the Claude Code Workflow tool:
 #   Workflow({ scriptPath: "evals/routing-runner.mjs",
-#              args: { dataset: "<abs>/evals/routing-dataset.json",
-#                      catalog: "<abs>/catalog.json" } })
+#              args: { catalog: "<abs>/catalog.json",
+#                      cases: <the .cases array of evals/routing-dataset.json>,
+#                      k: 3 } })
 ```
 
 ## Honest caveats

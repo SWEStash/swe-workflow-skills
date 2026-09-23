@@ -862,8 +862,17 @@ In-session, no key (also runs layer 3) — via the Workflow tool:
 
 ```
 Workflow({ scriptPath: "evals/routing-runner.mjs", args: {
-  dataset: "<abs>/evals/routing-dataset.json", catalog: "<abs>/catalog.json" }})
+  catalog: "<abs>/catalog.json",
+  cases: <the .cases array of evals/routing-dataset.json>,
+  k: 3 }})
 ```
+
+The cases go in `args`, not as a path: each agent gets its developer message inline
+and reads only the catalog. The dataset carries every case's accept set beside its
+prompt, so an agent sent to read it would route with the answer in hand.
+`node evals/check-red-leaks.mjs <run-dir>` reports a routing agent that opens
+anything but the catalog, and fails the run if it opened a routing dataset,
+baseline or held-out file.
 
 CI: `.github/workflows/routing-evals.yml` runs `--check-dataset` (offline) then
 `--run --changed -k 3` on PRs touching `skills/`, `catalog.json`, or
@@ -1001,7 +1010,8 @@ samples), the in-session sibling of the mined runner:
 
 ```
 Workflow({ scriptPath: "evals/routing-heldout-runner.mjs", args: {
-  dataset: "<abs>/evals/routing-heldout.json", catalog: "<abs>/catalog.json" }})
+  catalog: "<abs>/catalog.json",
+  cases: <the .cases array of evals/routing-heldout.json> }})
 ```
 
 **Result (`claude-haiku-4-5`, k=3, 2026-07, on the then-150-case set — 451 route

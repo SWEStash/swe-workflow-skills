@@ -52,7 +52,7 @@
 // after "under pressure:".
 //
 // Exit 1 if RED loaded the body of the skill under test (or an unattributable
-// body), or if a judge read an answer key; exit 0 for cross-skill loads, fork
+// body), or if a judge or routing-runner agent read an answer key; exit 0 for cross-skill loads, fork
 // calls, non-loading RED tool use, and other judge tool use.
 import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
@@ -61,6 +61,7 @@ import { createHash } from 'node:crypto'
 const GEN = "You are a coding assistant in a developer's terminal"
 const JUDGE = 'You are a strict, skeptical evaluator'
 const GREEN_TELL = 'You have an installed skill at'
+const ROUTER = 'You are skill-router, the orchestrator'
 const SKILL_FILE = /skills\/[\w.-]+\/(SKILL\.md|references\/|templates\/)/
 
 // Every case in the library, keyed by its prompt. Both the fork flag and the
@@ -97,8 +98,9 @@ const attribute = (text, byPrompt, lead = 'Developer: ') => {
 // handback live there, and they carry each case's assertions, which assertion a
 // batch just added, and the hypothesis the batch is testing. A judge that opens one
 // is scoring with the question in hand — measured once, when three judges read a
-// brief that named the new assertion on every row it was scoring.
-const ANSWER_KEY = /evals\.json|expected_output|(^|[^\w])\.local\//
+// brief that named the new assertion on every row it was scoring. The routing
+// dataset, baseline and held-out set count too: each carries a case's accept set.
+const ANSWER_KEY = /evals\.json|expected_output|(^|[^\w])\.local\/|routing-(dataset|baseline|heldout)/
 
 // A shell command reaches beyond the quoted reply unless it is computation over
 // literal text — counting a drafted description's characters, or running the reply's
@@ -213,11 +215,35 @@ const scanJudge = (f, raw, byPrompt, out) => {
   }
 }
 
+// ROUTERS. A routing-runner agent is handed the developer message and told to read
+// the catalog, which is what the real skill-router reads at runtime. Anything else it
+// opens is reported; an answer-key read is fatal. A router's prompt names no case the
+// detector can resolve, so a fatal read refuses the whole run rather than one row.
+const CATALOG = /(^|\/)catalog\.json$/
+const scanRouter = (f, raw, out) => {
+  out.routers++
+  for (const line of raw.split('\n')) {
+    let d
+    try { d = JSON.parse(line) } catch { continue }
+    const msg = d?.message
+    if (msg?.role !== 'assistant' || !Array.isArray(msg.content)) continue
+    for (const b of msg.content) {
+      if (b?.type !== 'tool_use' || b.name === 'StructuredOutput') continue
+      if (b.name === 'Read' && CATALOG.test(b.input?.file_path ?? '')) continue
+      const input = JSON.stringify(b.input ?? {})
+      const rec = { agent: f, tool: b.name, input: input.slice(0, 150), case: null }
+      if (ANSWER_KEY.test(input)) out.routerAnswerKey.push(rec)
+      else out.routerToolUse.push(rec)
+    }
+  }
+}
+
 export const scanRun = (dir, { skillsDir = 'skills', cases } = {}) => {
   const { byPrompt, fork } = cases ?? loadCases(skillsDir)
   const out = {
     dir, redGens: 0, greenGens: 0, contaminated: [], crossSkill: [], forked: [], unattributed: [], otherToolUse: [],
     judges: 0, judgeAnswerKey: [], judgeToolUse: [], judgeCompute: [],
+    routers: 0, routerAnswerKey: [], routerToolUse: [],
     listings: {}, redWithoutListing: 0,
   }
 
@@ -226,6 +252,7 @@ export const scanRun = (dir, { skillsDir = 'skills', cases } = {}) => {
     // Judges quote the generator's prompt verbatim, so they match GEN too and
     // must be classified before anything else.
     if (raw.includes(JUDGE)) { scanJudge(f, raw, byPrompt, out); continue }
+    if (raw.includes(ROUTER)) { scanRouter(f, raw, out); continue }
     if (!raw.includes(GEN)) continue
     if (raw.includes(GREEN_TELL)) { out.greenGens++; continue }
     out.redGens++
@@ -292,7 +319,7 @@ export const rowsToRerun = (r) => [...new Set([...r.contaminated, ...(r.judgeAns
 // classification on every platform without depending on machine-local workflow
 // transcripts (those age off disk) or on any real case prompt staying unedited.
 const FIXTURES = 'evals/fixtures/red-leaks'
-const NO_JUDGE = { judges: 0, judgeAnswerKey: 0, judgeToolUse: 0, judgeCompute: 0 }
+const NO_JUDGE = { judges: 0, judgeAnswerKey: 0, judgeToolUse: 0, judgeCompute: 0, routers: 0, routerAnswerKey: 0, routerToolUse: 0 }
 const EXPECT = {
   'same-skill': { contaminated: 1, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 0, ...NO_JUDGE, exit: 1 },
   'cross-skill': { contaminated: 0, crossSkill: 1, forked: 0, otherToolUse: 0, redGens: 1, greenGens: 0, ...NO_JUDGE, exit: 0 },
@@ -323,6 +350,11 @@ const EXPECT = {
   // A control routes on whatever skill descriptions its session listed, and that
   // listing is not fixed between sessions. Each distinct listing the controls saw is
   // one hash; a control with no listing attachment contributes none.
+  // A routing agent routes on the developer message and the catalog, nothing else.
+  // Reading the catalog is the mechanism; the routing dataset carries every case's
+  // accept set beside its prompt, so an agent that opens it routes with the answer.
+  'router-clean': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, ...NO_JUDGE, routers: 1, exit: 0 },
+  'router-answer-key': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 0, greenGens: 0, ...NO_JUDGE, routers: 2, routerAnswerKey: 1, routerToolUse: 1, exit: 1 },
   'listing-drift': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 2, greenGens: 0, ...NO_JUDGE, listings: 2, redWithoutListing: 0, exit: 0 },
 }
 
@@ -336,8 +368,9 @@ const selfTest = () => {
       otherToolUse: r.otherToolUse.length, redGens: r.redGens, greenGens: r.greenGens,
       judges: r.judges, judgeAnswerKey: r.judgeAnswerKey?.length, judgeToolUse: r.judgeToolUse?.length,
       judgeCompute: r.judgeCompute?.length,
+      routers: r.routers, routerAnswerKey: r.routerAnswerKey?.length, routerToolUse: r.routerToolUse?.length,
       listings: r.listings && Object.keys(r.listings).length, redWithoutListing: r.redWithoutListing,
-      exit: r.contaminated.length + r.unattributed.length + (r.judgeAnswerKey?.length ?? 0) ? 1 : 0,
+      exit: r.contaminated.length + r.unattributed.length + (r.judgeAnswerKey?.length ?? 0) + (r.routerAnswerKey?.length ?? 0) ? 1 : 0,
     }
     const bad = Object.keys(want).filter((k) => got[k] !== want[k])
     if (bad.length) {
@@ -415,9 +448,15 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     judgeList(r.judgeToolUse)
   }
 
+  if (r.routers) console.log(`Routing agents: ${r.routers}`)
+  if (r.routerToolUse.length) {
+    console.log(`\nNote — ${r.routerToolUse.length} routing-agent tool call(s) beyond the catalog (not an answer-key read):`)
+    judgeList(r.routerToolUse)
+  }
+
   const fatal = [...r.contaminated, ...r.unattributed]
-  if (!fatal.length && !r.judgeAnswerKey.length) {
-    console.log('\nOK — RED loaded no skill body under test, and no judge read an answer key')
+  if (!fatal.length && !r.judgeAnswerKey.length && !r.routerAnswerKey.length) {
+    console.log('\nOK — RED loaded no skill body under test, and no judge or routing agent read an answer key')
     process.exit(0)
   }
   if (fatal.length) {
@@ -428,6 +467,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   if (r.judgeAnswerKey.length) {
     console.log(`\nJUDGE READ THE ANSWER KEY in ${r.judgeAnswerKey.length} call(s) — those verdicts do not judge the reply:`)
     judgeList(r.judgeAnswerKey)
+  }
+  if (r.routerAnswerKey.length) {
+    console.log(`\nROUTING AGENT READ THE ANSWER KEY in ${r.routerAnswerKey.length} call(s) — the run is not a measurement:`)
+    judgeList(r.routerAnswerKey)
   }
   const rows = rowsToRerun(r)
   if (rows.length) console.log(`\nAffected rows: ${rows.join(', ')}`)
