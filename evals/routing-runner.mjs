@@ -30,6 +30,7 @@
 //                 vs merely name, does it over-route on trivial prompts. One vote
 //                 per case; it is reported, not gated.
 //
+// A vote that comes back empty is drawn again, up to `tries` (default 3) times.
 // A case with no vote is errored and one with fewer than k is degraded; both are
 // returned by id and left out of the metrics and the baseline cases, so a short
 // run cannot pass as a complete one.
@@ -46,6 +47,20 @@ const a = typeof args === 'string' ? JSON.parse(args) : args
 const MODEL = 'haiku'
 const K = a.k ?? 3
 const LAYER3_PER_KIND = a.layer3PerKind ?? 8  // ?? not || — allow an explicit 0
+const TRIES = a.tries ?? 3
+
+// A haiku agent occasionally routes and then writes its structured answer as text
+// instead of calling the tool, so the vote comes back empty. That vote never
+// happened: drawing it again selects nothing, where resuming the run would re-run
+// every agent launched after it. Each retry gets its own label so a resume
+// replays it rather than conflating it with the failed attempt.
+const ask = async (prompt, opts, answered) => {
+  for (let t = 0; t < TRIES; t++) {
+    const r = await agent(prompt, { ...opts, label: t ? `${opts.label}~retry${t}` : opts.label })
+    if (answered(r)) return r
+  }
+  return null
+}
 
 const cases = (a.cases || []).map((c) => ({ ...c, skill: c.skill ?? null }))
 const malformed = cases.filter((c) => !c.id || !c.kind || typeof c.prompt !== 'string' || !Array.isArray(c.accept))
@@ -107,7 +122,7 @@ const majority = (votes) => {
 phase('Route')
 const routed = await pipeline(cases, (c) =>
   parallel(Array.from({ length: K }, (_, i) => () =>
-    agent(routePrompt(c), { label: `route:${c.id}#${i}`, phase: 'Route', model: MODEL, schema: CHOICE }),
+    ask(routePrompt(c), { label: `route:${c.id}#${i}`, phase: 'Route', model: MODEL, schema: CHOICE }, (r) => r?.chosen_skill),
   )).then((rs) => {
     // A null/empty result means the agent errored (e.g. rate/session limit) —
     // that is NOT a routing decision, so it is dropped rather than miscounted as
@@ -177,7 +192,7 @@ const layer3 = [
 phase('Behavioral')
 const behaved = await parallel(
   layer3.map((c) => () =>
-    agent(behaviorPrompt(c), { label: `behave:${c.id}`, phase: 'Behavioral', model: MODEL, schema: BEHAVIOR })
+    ask(behaviorPrompt(c), { label: `behave:${c.id}`, phase: 'Behavioral', model: MODEL, schema: BEHAVIOR }, (r) => r?.action)
       .then((r) => (r && r.action ? { ...c, action: r.action, skill: (r.skill ?? 'NONE').trim() } : null)),
   ),
 )
