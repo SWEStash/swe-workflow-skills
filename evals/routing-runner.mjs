@@ -182,7 +182,12 @@ const behaviorPrompt = (c) =>
   `${message(c)}\n\nDecide what you would actually DO right now: ` +
   `either invoke the Skill tool to activate one skill (action="invoke_skill", ` +
   `skill=<name>) or handle it yourself (action="answer_directly", skill="NONE"). Do ` +
-  `not merely name a skill in prose without invoking it — if a skill should run, invoke it.`
+  `not merely name a skill in prose without invoking it — if a skill should run, invoke it.\n\n` +
+  // The agent runs with real tools. Scoring reads only the structured action, and an
+  // agent that actually invoked a skill once went on to do the task and publish the
+  // result to the user's account.
+  `Record that decision in your structured answer only. Do not call the Skill tool or ` +
+  `any other tool besides reading the catalog, and do not carry out the developer's task.`
 
 const layer3 = [
   ...cases.filter((c) => c.kind === 'positive').slice(0, LAYER3_PER_KIND),
