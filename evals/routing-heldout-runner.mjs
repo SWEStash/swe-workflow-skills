@@ -32,6 +32,18 @@ export const meta = {
 const a = typeof args === 'string' ? JSON.parse(args) : args
 const MODEL = 'haiku'
 const K = 3
+const TRIES = a.tries ?? 3
+
+// An empty vote (the agent wrote its structured answer as text) is drawn again in
+// place rather than by resuming the run, which would re-run every agent launched
+// after it. See evals/routing-runner.mjs.
+const ask = async (prompt, opts) => {
+  for (let t = 0; t < TRIES; t++) {
+    const r = await agent(prompt, { ...opts, label: t ? `${opts.label}~retry${t}` : opts.label })
+    if (r?.chosen_skill) return r
+  }
+  return null
+}
 
 const cases = (a.cases || []).map((c) => ({ ...c, skill: c.skill ?? null }))
 if (!a.catalog || !cases.length || cases.some((c) => typeof c.prompt !== 'string' || !Array.isArray(c.accept)))
@@ -83,7 +95,7 @@ phase('Route')
 const routed = await pipeline(cases, (c) =>
   parallel(
     Array.from({ length: K }, (_, i) => () =>
-      agent(routePrompt(c), { label: `route:${c.id}#${i + 1}`, phase: 'Route', model: MODEL, schema: CHOICE })
+      ask(routePrompt(c), { label: `route:${c.id}#${i + 1}`, phase: 'Route', model: MODEL, schema: CHOICE })
         .then((r) => (r && r.chosen_skill ? r.chosen_skill.trim() : null)),
     ),
   ).then((votes) => {
@@ -96,13 +108,18 @@ const routed = await pipeline(cases, (c) =>
       votes: clean,
       unanimous: clean.length === K && clean.every((v) => v === clean[0]),
       pass: c.accept.includes(winner),
+      degraded: clean.length < K,
     }
   }),
 )
 
-const ok = routed.filter((r) => r && !r.errored)
+// A case with fewer than K votes is returned by id and left out of every metric,
+// so a short run cannot pass as a complete one.
+const ok = routed.filter((r) => r && !r.errored && !r.degraded)
 const errored = routed.filter((r) => r && r.errored)
+const degraded = routed.filter((r) => r && r.degraded)
 if (errored.length) log(`WARNING errored (excluded): ${errored.map((r) => r.id).join(', ')}`)
+if (degraded.length) log(`WARNING fewer than ${K} votes (excluded): ${degraded.map((r) => r.id).join(', ')}`)
 
 const rate = (rows) => (rows.length ? rows.filter((r) => r.pass).length / rows.length : null)
 const r3 = (x) => (x == null ? null : Math.round(x * 1000) / 1000)
@@ -186,4 +203,6 @@ return {
   unstable: unstable.map((r) => ({ id: r.id, votes: r.votes, majority: r.chosen, pass: r.pass })),
   failures: failures.map((r) => ({ id: r.id, gold: r.skill, chosen: r.chosen, accept: r.accept, votes: r.votes })),
   cases: Object.fromEntries(ok.map((r) => [r.id, { chosen: r.chosen, votes: r.votes, unanimous: r.unanimous, pass: r.pass }])),
+  errored: errored.map((r) => r.id),
+  degraded: degraded.map((r) => ({ id: r.id, votes: r.votes })),
 }
