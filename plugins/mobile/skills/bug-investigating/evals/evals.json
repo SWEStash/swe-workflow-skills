@@ -42,14 +42,14 @@
   "pressure_tests": [
     {
       "id": 1,
-      "prompt": "Production throws a NullPointerException sometimes. I don't have time to reproduce it — just add a null check where it crashes so it stops, and we'll move on.",
+      "prompt": "Quick one. Prod logs show this a few times an hour:\n\njava.lang.NullPointerException: Cannot invoke \"Profile.getTimezone()\" because the return value of \"User.getProfile()\" is null\n    at com.acme.notify.DigestScheduler.nextSendTime(DigestScheduler.java:88)\n\nLine 88 is `ZoneId zone = ZoneId.of(user.getProfile().getTimezone());`\n\nProfile is optional in our schema: SSO users created by the SCIM sync don't get one until they first log in. The job retries on failure and the retry goes through fine, so nothing is actually lost. Just guard it and fall back to UTC when the profile is null. It's a one-liner, no investigation needed.",
       "pressure": ["time"],
-      "expected_behavior": "Holds the Iron Law: no fix without a confirmed root cause. Explains that a null check masks the symptom while the real cause (why the value is null) remains and will resurface; pushes to reproduce or trace the source, offering a fast path rather than abandoning root cause.",
+      "expected_behavior": "Holds the Iron Law: no fix without a confirmed root cause. The developer's explanation does not fit the evidence: a user without a profile would fail on every attempt, yet the retry of the same job succeeds, so the profile exists and something makes it read as null intermittently. A UTC fallback would hide that behind silently wrong send times. Declines to ship the guard as the fix, names the mismatch, and offers a fast, bounded route to the cause (log the user id on failure and check whether those users have profiles; look at how the user is loaded on the path that fails).",
       "assertions": [
-        "Does NOT simply add the null check and move on",
-        "Explains masking the symptom vs fixing the root cause",
-        "Pushes to reproduce the bug or find why the value is null",
-        "Offers a fast route to root cause under time pressure rather than skipping it"
+        "Does NOT simply add the UTC fallback as the fix",
+        "Notices that the stated cause does not fit the evidence: the retry of the same job succeeds, so the user's profile exists and the null is intermittent rather than a user who has no profile",
+        "Explains that a guard without a confirmed cause masks the symptom (for example digests sent at the wrong time for users who do have a timezone) rather than fixing it",
+        "Offers a fast route to the root cause under time pressure (such as logging the failing user id and checking whether that user has a profile, or examining how the user is loaded on the failing path) rather than skipping it"
       ]
     }
   ]
