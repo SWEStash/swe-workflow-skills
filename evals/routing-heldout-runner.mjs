@@ -7,14 +7,16 @@
 // reporting on top of the standard accept-set grading.
 //
 //   Workflow({ scriptPath: "evals/routing-heldout-runner.mjs", args: {
-//     dataset: "<abs>/evals/routing-heldout.json",
-//     catalog: "<abs>/catalog.json" }})
+//     catalog: "<abs>/catalog.json",
+//     cases: [{ id, kind, skill, prompt, accept }, ...] }})   // routing-heldout.json .cases
 //
 // Each case is sampled K=3 times in parallel on haiku and majority-voted, exactly
-// like the mined-dataset k=3 stability probe. The authoring category is read from
-// the id prefix (para: / confuse: / trap: / trivial:) — the runner never needs
-// extra fields on the case, so the load projection stays id/kind/skill/accept.
-// Grading is unchanged: pass iff the majority winner is in the case's accept set.
+// like evals/routing-runner.mjs. The developer message goes inline and the agent
+// reads only the catalog: the held-out file carries each case's accept set beside
+// its prompt, so an agent sent to read it routes with the answer in hand. The
+// authoring category is read from the id prefix (para: / confuse: / trap: /
+// trivial:). Grading is unchanged: pass iff the majority winner is in the case's
+// accept set, which stays in the script.
 //
 // Resumable: a full sweep is ~450+ agents and will hit the session limit. Re-run
 // with Workflow({ scriptPath, resumeFromRunId: "<runId>" }) — cached agents
@@ -24,46 +26,29 @@
 export const meta = {
   name: 'routing-heldout-k3',
   description: 'k=3 held-out routing generalization probe on haiku (layer 2)',
-  phases: [{ title: 'Load' }, { title: 'Route' }],
+  phases: [{ title: 'Route' }],
 }
 
 const a = typeof args === 'string' ? JSON.parse(args) : args
 const MODEL = 'haiku'
 const K = 3
+const TRIES = a.tries ?? 3
 
-// ---------------------------------------------------------------------------
-// Load — id/kind/skill/accept only (prompts stay canonical, read per-agent).
-// ---------------------------------------------------------------------------
-phase('Load')
-const CASES = {
-  type: 'object',
-  properties: {
-    cases: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'string' },
-          kind: { type: 'string', enum: ['positive', 'boundary', 'trivial'] },
-          skill: { type: 'string' },
-          accept: { type: 'array', items: { type: 'string' } },
-        },
-        required: ['id', 'kind', 'accept'],
-        additionalProperties: true,
-      },
-    },
-  },
-  required: ['cases'],
-  additionalProperties: false,
+// An empty vote (the agent wrote its structured answer as text) is drawn again in
+// place rather than by resuming the run, which would re-run every agent launched
+// after it. See evals/routing-runner.mjs.
+const ask = async (prompt, opts) => {
+  for (let t = 0; t < TRIES; t++) {
+    const r = await agent(prompt, { ...opts, label: t ? `${opts.label}~retry${t}` : opts.label })
+    if (r?.chosen_skill) return r
+  }
+  return null
 }
 
-const loaded = await agent(
-  `Read the JSON file at ${a.dataset}. Return its .cases array, but for each case ` +
-    `include ONLY the fields id, kind, skill, and accept (omit prompt). Copy values verbatim.`,
-  { label: 'load:cases', phase: 'Load', model: MODEL, schema: CASES },
-)
-const cases = (loaded?.cases || []).map((c) => ({ ...c, skill: c.skill ?? null }))
-log(`loaded ${cases.length} held-out cases; sampling k=${K} each`)
+const cases = (a.cases || []).map((c) => ({ ...c, skill: c.skill ?? null }))
+if (!a.catalog || !cases.length || cases.some((c) => typeof c.prompt !== 'string' || !Array.isArray(c.accept)))
+  throw new Error('routing-heldout-runner: need args.catalog and args.cases[{id, kind, prompt, accept}]')
+log(`${cases.length} held-out cases; sampling k=${K} each`)
 
 // Authoring category + cluster are encoded in the id prefix.
 const catOf = (c) => c.id.split(':')[0] // para | confuse | trap | trivial
@@ -96,10 +81,9 @@ const CHOICE = {
 
 const routePrompt = (c) =>
   `${ROUTING_INSTRUCTION}\n\n` +
-  `Read the JSON file at ${a.dataset} and find the case whose id is "${c.id}". ` +
-  `Use that case's .prompt as the developer message. Then choose exactly one skill ` +
-  `name to activate, or "NONE" if no workflow applies. Put the chosen name (or ` +
-  `"NONE") in chosen_skill.`
+  `Read no file other than the catalog. The developer's message is:\n${JSON.stringify(c.prompt)}\n\n` +
+  `Choose exactly one skill name to activate, or "NONE" if no workflow applies. ` +
+  `Put the chosen name (or "NONE") in chosen_skill.`
 
 const majority = (arr) => {
   const h = {}
@@ -111,7 +95,7 @@ phase('Route')
 const routed = await pipeline(cases, (c) =>
   parallel(
     Array.from({ length: K }, (_, i) => () =>
-      agent(routePrompt(c), { label: `route:${c.id}#${i + 1}`, phase: 'Route', model: MODEL, schema: CHOICE })
+      ask(routePrompt(c), { label: `route:${c.id}#${i + 1}`, phase: 'Route', model: MODEL, schema: CHOICE })
         .then((r) => (r && r.chosen_skill ? r.chosen_skill.trim() : null)),
     ),
   ).then((votes) => {
@@ -124,13 +108,18 @@ const routed = await pipeline(cases, (c) =>
       votes: clean,
       unanimous: clean.length === K && clean.every((v) => v === clean[0]),
       pass: c.accept.includes(winner),
+      degraded: clean.length < K,
     }
   }),
 )
 
-const ok = routed.filter((r) => r && !r.errored)
+// A case with fewer than K votes is returned by id and left out of every metric,
+// so a short run cannot pass as a complete one.
+const ok = routed.filter((r) => r && !r.errored && !r.degraded)
 const errored = routed.filter((r) => r && r.errored)
+const degraded = routed.filter((r) => r && r.degraded)
 if (errored.length) log(`WARNING errored (excluded): ${errored.map((r) => r.id).join(', ')}`)
+if (degraded.length) log(`WARNING fewer than ${K} votes (excluded): ${degraded.map((r) => r.id).join(', ')}`)
 
 const rate = (rows) => (rows.length ? rows.filter((r) => r.pass).length / rows.length : null)
 const r3 = (x) => (x == null ? null : Math.round(x * 1000) / 1000)
@@ -214,4 +203,6 @@ return {
   unstable: unstable.map((r) => ({ id: r.id, votes: r.votes, majority: r.chosen, pass: r.pass })),
   failures: failures.map((r) => ({ id: r.id, gold: r.skill, chosen: r.chosen, accept: r.accept, votes: r.votes })),
   cases: Object.fromEntries(ok.map((r) => [r.id, { chosen: r.chosen, votes: r.votes, unanimous: r.unanimous, pass: r.pass }])),
+  errored: errored.map((r) => r.id),
+  degraded: degraded.map((r) => ({ id: r.id, votes: r.votes })),
 }

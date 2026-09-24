@@ -5,128 +5,139 @@ at **k=3** (majority vote of 3 independent samples per case) via
 `evals/routing-heldout-runner.mjs` against `evals/routing-heldout.json`.
 
 **Why this exists.** The committed routing gate (`routing-dataset.json`) is *mined
-from each skill's own `evals/evals.json`* — prompts written by the same author as
-the skill description. It scores 64/64 positive, 52/52 boundary, 0/8
-false-activation, but only measures routing on author-anticipated phrasings
-(`docs/EVALS.md` § "Known limitations"). This set is authored **independently**:
-no phrasing copied from any `evals.json`, and every prompt deliberately avoids its
-target skill's own `Triggers:` keywords (0/92 paraphrases contain an own-trigger
-phrase). It asks the harder question — *does the perfect in-dataset routing
-generalize?*
+from each skill's own `evals/evals.json`*: its prompts were written by the same
+author as the skill descriptions, one positive and one boundary prompt per skill.
+A good score there could partly mean the router recognises the author's phrasing
+(`docs/EVALS.md` § "Known limitations"). This set is authored **independently**.
+No phrasing is copied from any `evals.json`, and prompts deliberately avoid their
+target skill's own `Triggers:` keywords. It asks whether in-dataset routing
+generalizes.
 
-## Result: perfect sweep, fully stable
+## Result (2026-09, 162 cases, 486 route agents)
 
 | Metric | Result (k=3) |
 |---|---|
-| Paraphrase (positive) accuracy | **92/92 = 1.00** |
-| Confusable accuracy | **24/24 = 1.00** |
+| Paraphrase (positive) accuracy | **94/101 = 0.931** |
+| Confusable accuracy | **25/25 = 1.00** |
 | Trap accuracy (route-elsewhere or NONE) | **18/18 = 1.00** |
-| Harder-trivial accuracy (→ NONE) | **16/16 = 1.00** |
-| Kind: positive / boundary / trivial | 124/124 · 5/5 · 21/21 |
-| False-activation rate (21 NONE-expected cases) | **0/21 = 0.00** |
-| Confusion pairs | **none** |
-| Vote unanimity | **150/150 unanimous** (0 split, 0 unstable, 0 failures) |
+| Harder-trivial accuracy (→ NONE) | **18/18 = 1.00** |
+| Kind: positive / boundary / trivial | 126/133 · 6/6 · 23/23 |
+| False-activation rate (23 NONE-expected cases) | **0/23 = 0.00** |
+| Vote unanimity | **159/162 unanimous** |
 
-451/451 route agents completed with 0 errors (one session-limit interruption at
-301 agents; the resume replayed the cache and ran the remaining tail — no
-re-spend). Read-only throughout: no `SKILL.md`, `catalog.json`, or dataset files
-were touched.
+All 486 agents returned a vote, with no retry needed and no case short of three
+votes. Each agent got its prompt inline and read only `catalog.json`.
+`evals/check-red-leaks.mjs` passed over all 486 transcripts, with no read beyond
+the catalog.
 
-## What this establishes
+**An earlier record of this probe reported a perfect sweep on the then-150-case
+set, and it was made with a runner that let agents read the answer key.** That
+runner sent each agent to read this file for its prompt, and the file carries
+each case's accept set. The runner now passes prompts inline. On those same 150
+cases, this run is also **150/150 correct and unanimous**. The old sweep holds up
+without the answer key in reach. Every miss below is in the 12 cases added since,
+which had never been routed.
 
-- **Paraphrase generalization holds.** All 64 routable skills were hit with
-  intent-preserving prompts in a different register/vocabulary than their
-  descriptions, with their own trigger keywords removed; every one routed top-1 to
-  its home skill, unanimously. The mined suite's 64/64 is **not** an artifact of
-  shared author phrasing — routing survives when the keywords are stripped and the
-  wording is foreign.
+## The misses: terse completion claims
 
-- **The six adjacent clusters are cleanly separated.** Every cluster resolved 4/4
+All 7 failures, and all 3 split votes, are `verification-before-completion`
+paraphrases. Nine of them were added so that "I'm done" phrasings would reach the
+completion gate:
+
+| Case | Prompt | Votes | Result |
+|---|---|---|---|
+| `:1` | "I think I fixed the caching bug and I'm about to call it finished and push. Hold me to actually proving it works first…" | verification ×3 | ✓ |
+| `:2` | "Okay, that's everything on my list. Let's commit and move on." | git-workflow ×3 | ✗ |
+| `:3` | "I think we're done here — anything else before I call it?" | NONE ×3 | ✗ |
+| `:4` | "Ready to open the PR on this one." | verification, NONE, git-workflow | ✓ (first-seen tie-break) |
+| `:5` | "The fix is in. Ship it." | release-management ×2, deployment-checklist | ✗ |
+| `:6` | "Great, wrap this up and push it." | NONE, verification, git-workflow | ✗ (first-seen tie-break) |
+| `:7` | "All set on my end, go ahead and close this out." | NONE ×3 | ✗ |
+| `:8` | "Looks good to me, let's get it merged." | NONE ×3 | ✗ |
+| `:9` | "That should do it — mark the task finished." | NONE ×3 | ✗ |
+
+The one prompt that names the need to prove the work passes unanimously. Its
+terser siblings do not. The router reads them as conversational closings
+(`NONE`), or as the git or release action they mention. One vote on `:7` called
+it a "conversational closing statement … requires no workflow activation." That
+is the gap `verification-before-completion`'s routing has to close: in this
+library, a bare claim of done is where the gate belongs. The mined suite shows
+the same miss. Its `verification-before-completion` positive ("…tell me it's
+done and commit it") goes to `git-workflow`.
+
+## What else this establishes
+
+- **Paraphrase generalization holds for every other skill.** The 101 paraphrases
+  cover 65 skills. Apart from the completion claims above, every one routed top-1
+  to its home skill, unanimously.
+
+- **The adjacent clusters are cleanly separated.** Every cluster resolved fully,
   with zero confusion:
-  - `data-modeling` vs `api-design` (c1) — storage/records vs request/response
-    contract.
+  - `data-modeling` vs `api-design` (c1).
   - `ml-pipeline-design` vs `data-pipeline-design` vs `notebook-to-production` (c2).
   - `security-audit` vs `threat-modeling` vs `compliance-privacy` (c3).
   - `bug-investigating` vs `code-reviewing` vs `project-review` (c4).
   - `incident-response` vs `rollback-strategy` vs `resilience-engineering` (c5).
   - `brainstorming` vs `prd-writing` vs `feature-planning` (c6).
+  - `code-slop-cleanup` vs `refactoring` (one case).
 
-- **The 5 "genuinely ambiguous" boundary cases were decided, not coin-flipped.**
-  Each 2-skill-accept case landed unanimously on the *intended primary*:
-  `confuse:c2:4` → `ml-pipeline-design` (notebook that feeds training),
-  `confuse:c3:4` → `compliance-privacy` (auditor access controls),
-  `confuse:c4:4` → `bug-investigating`, `confuse:c5:4` → `incident-response`
-  (active-incident revert decision), `confuse:c6:4` → `prd-writing`. This is
-  *stronger* than the mined k=3 pass, where 4 boundary cases split inside their
-  accept-set — here the router had a stable opinion on all five.
+- **The 6 two-skill boundary cases were decided, not coin-flipped.** Each landed
+  unanimously on an accepted skill. Four went to the intended primary:
+  `confuse:c2:4` → `ml-pipeline-design`, `confuse:c3:4` → `compliance-privacy`,
+  `confuse:c5:4` → `incident-response`, `confuse:code-slop-cleanup:1` →
+  `code-slop-cleanup`. Two went to the other accepted skill:
+  `confuse:c4:4` → `code-reviewing` and `confuse:c6:4` → `feature-planning`.
 
-- **Scope/negation traps are handled correctly.** Prompts that name a skill's
-  keywords but should route elsewhere all went the right way — e.g. "the schema's
-  frozen, I need a tested rollout-with-undo" → `rollback-strategy` (not
-  `data-modeling`); "don't threat-model, the feature shipped — audit the real
-  code" → `security-audit`; "there's no model, it's a plain reporting notebook" →
-  `notebook-to-production`. 13 traps routed to the correct alternate skill, 5
-  correctly declined to `NONE`.
+- **Scope/negation traps are handled.** All 18 prompts that name one skill's
+  keywords but belong elsewhere went the right way. 13 routed to the correct
+  alternate skill, and 5 correctly declined to `NONE`.
 
-- **No over-routing.** All 16 harder trivials (conversational/factual questions
-  carrying domain keywords — "what does idempotent mean", "roughly what's a normal
-  default page size for paginated endpoints", "did the deploy go okay") plus the 5
-  NONE-traps declined to route. 0/21 false activations.
+- **No over-routing.** All 18 harder trivials (conversational or factual questions
+  carrying domain keywords) and the 5 NONE-traps declined to route. That makes 0/23
+  false activations.
 
 ## What this does *not* prove (honest limits)
 
 - **Still one evaluator.** These prompts are held out from the *skill authors* but
-  authored by a single evaluator with the catalog in view. It reduces the
-  teaching-to-the-test risk; it does not reproduce true in-the-wild user diversity.
-  Real usage will phrase things in ways neither author anticipated.
-- **Golds are pre-decided.** Confusables (including the 5 boundary cases) were
-  written with a decidable intent. A perfect score partly reflects that
-  decidability — genuinely undecidable phrasings were not heavily probed. The
-  boundary accept-sets still include a second legitimate skill by design.
-- **Thin per skill.** 1–2 paraphrases per skill (92 across 64). Coverage of each
-  skill's phrasing space is shallow; this is a breadth probe, not a depth one.
-- **k=3, not k=∞.** Unanimity across 3 samples is strong stability evidence but
-  not a guarantee at higher sampling or on stronger/weaker models.
+  authored by a single evaluator with the catalog in view. That reduces the
+  teaching-to-the-test risk. It does not reproduce true in-the-wild user diversity.
+- **Golds are pre-decided.** Confusables were written with a decidable intent, and
+  the boundary accept sets include a second legitimate skill by design.
+- **Thin per skill.** Most skills have one or two paraphrases. This is a breadth
+  probe, not a depth one. `verification-before-completion`, with nine, is the
+  exception, and it is where the misses are.
+- **k=3, not k=∞.** Three samples show stability, not a guarantee at higher
+  sampling or on other models.
 
 The defensible summary:
 
-> **On an independent, keyword-avoiding, 150-case held-out set, haiku routing
-> generalizes with no measured degradation — 150/150 correct and unanimous at
-> k=3, all six adjacent clusters cleanly separated, scope/negation traps handled,
-> zero false activations. The perfect in-dataset result is not an artifact of
-> author-shared phrasing. Caveat: still a single-evaluator probe with pre-decided
-> golds, so it lowers rather than eliminates the generalization risk.**
+> **On an independent, keyword-avoiding, 162-case held-out set, haiku routes
+> 155/162 correctly at k=3, with zero false activations and every adjacent
+> cluster separated. The cases the earlier record covered still score 150/150
+> without the answer key in reach. All seven misses are terse "I'm done" claims
+> meant for `verification-before-completion`, which the router treats as
+> conversation or as the git/release step they mention.**
 
 ## Recommendation: keep it a periodic manual probe, not a CI gate
 
 Do **not** wire this into the blocking CI routing gate:
 
-1. **It's expected to eventually surface ambiguity, and gating on that is noisy.**
-   Held-out/adversarial prompts are designed to find edges; a future prompt
-   landing in a genuinely-ambiguous spot would fail a hard gate without signaling
-   a real regression.
-2. **Cost.** ~450 agents (150 × k=3) per run is far too expensive to run on every
-   PR. The mined `routing.py --changed` gate (only cases for changed skills)
-   already guards per-PR regressions cheaply.
-3. **Its value is as a generalization probe**, run *periodically* or *when
-   descriptions change materially / the catalog grows*, not on each commit. This
-   run is the baseline reading for that cadence.
+1. **It is meant to find edges, and gating on them is noisy.** This run found one,
+   the completion claims, and that is a finding to work, not a regression to block
+   on.
+2. **Cost.** About 490 agents (162 × k=3), roughly 7M tokens, is far too expensive
+   to run on every PR. The mined `routing.py --changed` gate (only cases for
+   changed skills) guards per-PR regressions cheaply.
+3. **Its value is as a generalization probe**, run periodically or when
+   descriptions change materially or the catalog grows, not on each commit.
 
 Unlike `routing-dataset.json`, this file is **hand-authored, not generated**, so
-it must **not** be added to `routing.py --build-dataset` / `--check-dataset` drift
-checks — there is nothing to regenerate, and a drift check would be meaningless.
-
-**Optional middle ground:** if we want a manual regression signal, record a
-`routing-heldout-baseline.json` (same `{cases: {id: {chosen, pass}}}` shape as
-`routing-baseline.json`) from this run so a future manual re-run can diff against
-it. Given the perfect, unanimous result, that's low-value today; revisit if the
-catalog grows enough that hand-inspecting a re-run becomes impractical, or promote
-to a scheduled (non-blocking) CI job if the set proves stable across a few
-periodic runs.
+it must **not** be added to the `routing.py --build-dataset` / `--check-dataset`
+drift checks: there is nothing to regenerate.
 
 ---
 
-*Run: `claude-haiku-4-5`, k=3, 150 cases / 451 route agents, 0 errors. Runner:
+*Run: `claude-haiku-4-5`, k=3, 162 cases / 486 route agents, 0 errors. Runner:
 `evals/routing-heldout-runner.mjs`. Dataset: `evals/routing-heldout.json`. This
 probe is separate from the committed CI gate (`routing-baseline.json`) and does
 not modify it.*
