@@ -12,6 +12,33 @@ description, not here. Sections dated before 0.7.0 carry hand-written prose from
 file was curated manually.
 
 
+## [0.9.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.8.2...v0.9.0) (2026-09-24)
+
+
+### Added
+
+* **evals:** record which skill listing each row's controls saw ([#43](https://github.com/SWEStash/swe-workflow-skills/issues/43)) ([628eb14](https://github.com/SWEStash/swe-workflow-skills/commit/628eb14e9427fab747fb19af7bc75becaaf3343f))
+* **evals:** report what each row proves, and settle ask vs deliver ([#34](https://github.com/SWEStash/swe-workflow-skills/issues/34)) ([3e0e754](https://github.com/SWEStash/swe-workflow-skills/commit/3e0e754c38fe8066e2dc69b52af5a8cc68b9b0e6))
+
+
+### Fixed
+
+* **evals:** enforce and detect skill loading in the control arm ([#33](https://github.com/SWEStash/swe-workflow-skills/issues/33)) ([0397a2e](https://github.com/SWEStash/swe-workflow-skills/commit/0397a2e08296741d9d95f846c71a080346e46531))
+* **evals:** stop judges reading the answer key, without banning computation ([#38](https://github.com/SWEStash/swe-workflow-skills/issues/38)) ([c64117b](https://github.com/SWEStash/swe-workflow-skills/commit/c64117b4bf11bf3ea47915e8512b62a3e4a8f64d))
+* **evals:** stop reporting judges' scratch-script computation as repo reads ([#41](https://github.com/SWEStash/swe-workflow-skills/issues/41)) ([5d9dac1](https://github.com/SWEStash/swe-workflow-skills/commit/5d9dac1fbfa4774b0b6465b103e615fa6c6d7d97))
+* **evals:** treat a judge reading the eval working area as an answer-key read ([#46](https://github.com/SWEStash/swe-workflow-skills/issues/46)) ([bf14903](https://github.com/SWEStash/swe-workflow-skills/commit/bf149035bb7f664e9898bb05e9c176a83bdf6153))
+* **skills:** keep strategic-review proportionate to the question asked ([#35](https://github.com/SWEStash/swe-workflow-skills/issues/35)) ([1eb915e](https://github.com/SWEStash/swe-workflow-skills/commit/1eb915e5ba5114bad6823a97f7611a8882ec2716))
+* **skills:** keep the training-code extraction inside ml-experiment-tracking ([#47](https://github.com/SWEStash/swe-workflow-skills/issues/47)) ([0b8db32](https://github.com/SWEStash/swe-workflow-skills/commit/0b8db32f567337c8ad786b86fe8beae8d243cc68))
+* **skills:** make ui-ux-design deliver its screen specs one block per screen ([#44](https://github.com/SWEStash/swe-workflow-skills/issues/44)) ([36eb0d0](https://github.com/SWEStash/swe-workflow-skills/commit/36eb0d00800381facb5c5bc79d72f10b83aa6b8e))
+* **skills:** route terse "I'm done" messages to the completion gate ([#50](https://github.com/SWEStash/swe-workflow-skills/issues/50)) ([0443f0c](https://github.com/SWEStash/swe-workflow-skills/commit/0443f0cd8afbd9728b7f5f854157fa5b911babd4))
+* **skills:** stop two skills handing off work their own step owns ([#48](https://github.com/SWEStash/swe-workflow-skills/issues/48)) ([968d135](https://github.com/SWEStash/swe-workflow-skills/commit/968d1354f5e16f9abc1b00986737d380ba531d08))
+
+
+### Changed
+
+* **evals:** true RED contamination is 14, not 16 — fork and cross-skill calls differ ([#31](https://github.com/SWEStash/swe-workflow-skills/issues/31)) ([9440e80](https://github.com/SWEStash/swe-workflow-skills/commit/9440e803af57b13fe35ca9555afd2f6f0669e8f2))
+* **skills:** separate the fixed evidence rules from authoring defaults ([#37](https://github.com/SWEStash/swe-workflow-skills/issues/37)) ([a32d993](https://github.com/SWEStash/swe-workflow-skills/commit/a32d99341921ee7fee9e459e44429c7b03f52fb9))
+
 ## [0.8.2](https://github.com/SWEStash/swe-workflow-skills/compare/v0.8.1...v0.8.2) (2026-09-07)
 
 
