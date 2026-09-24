@@ -884,14 +884,16 @@ the API key is absent — like `skill-evals.yml`).
 Full run on `claude-haiku-4-5` over the 138-case dataset (2026-09, 66-skill
 catalog), recorded at **k=3**: three independent samples per case, majority route,
 all three votes stored in `evals/routing-baseline.json`. Every case was re-recorded
-in this run and nothing was carried forward.
+in this run and nothing was carried forward. After the description fix described
+below, the 22 mined cases nearest that skill were re-routed the same way and replace
+their rows.
 
 | Layer 2 metric | Result (k=3) |
 |---|---|
-| Top-1 routing accuracy (positives) | **64/65 = 0.985** |
+| Top-1 routing accuracy (positives) | **65/65 = 1.00** |
 | Boundary pass rate ("no wild misroute") | **64/65 = 0.985** |
 | False-activation rate (trivial → NONE) | **0/8 = 0.00** |
-| Confusion pairs | `verification-before-completion → git-workflow`, `project-documentation → release-management` |
+| Confusion pairs | `project-documentation → release-management` |
 
 Layer 3 (behavioral, 16 cases, one sample each): router-invocation rate **1.00**
 (8/8 substantial prompts invoked a skill), correct-invoke 8/8, over-route **0/8**.
@@ -905,12 +907,12 @@ passes each prompt inline and the agent reads only the catalog, and
 `check-red-leaks.mjs` fails a run in which a routing agent opens a routing dataset,
 baseline or held-out file. This run's scan was clean.
 
-**The two misroutes.**
+**The misroute, and one that was fixed.**
 
 - `positive:verification-before-completion:1`: "…tell me it's done and commit it"
-  went to `git-workflow` on the majority (votes: `code-reviewing`, `git-workflow`,
-  `git-workflow`). The literal "commit it" pulls against the claim-of-done the case
-  is about. This is the one split positive.
+  first went to `git-workflow` (votes: `code-reviewing`, `git-workflow`,
+  `git-workflow`). It now routes home, unanimously, after the description fix
+  under [TDD loop for routing](#tdd-loop-for-routing-red--green).
 - `boundary:project-documentation:3`: "Generate a changelog from our recent git
   history. We're about to release v2.1.0" went unanimously to `release-management`,
   whose description lists changelogs and release notes. Its accept set is
@@ -918,20 +920,20 @@ baseline or held-out file. This run's scan was clean.
   accept set is wrong is open. The prompt is release-shaped, and
   `release-management` is a defensible owner.
 
-**Stability.** **132/138 cases were unanimous** across the three samples, including
-all 8 trivials. The six splits are the positive above and five boundary cases, all
-of which resolved inside their accept set:
+**Stability.** **133/138 cases are unanimous** across the three samples, including
+every positive and all 8 trivials. The five splits are all boundary cases, and each
+resolved inside its accept set:
 
 | Boundary case | 3 votes | Majority |
 |---|---|---|
 | `bug-investigating` | bug-investigating ×2, performance-optimization | bug-investigating ✓ |
+| `deployment-checklist` | deployment-checklist ×2, dependency-impact-analysis | deployment-checklist ✓ |
 | `statistical-analysis` | statistical-analysis ×2, data-quality | statistical-analysis ✓ |
 | `tdd-workflow` | test-data-strategy ×2, tdd-workflow | test-data-strategy ✓ |
 | `test-data-strategy` | test-data-strategy ×2, compliance-privacy | test-data-strategy ✓ |
-| `verification-before-completion` | verification-before-completion ×2, plan-execution | verification-before-completion ✓ |
 
 **What the numbers actually establish.** Positive accept sets are strict
-single-skill (`{home}`, top-1 exact), so 64/65 there is a genuine signal. Only 9 of
+single-skill (`{home}`, top-1 exact), so 65/65 there is a genuine signal. Only 9 of
 the 65 positive prompts contain the skill's name, spaced or hyphenated; the rest
 force intent inference from a scenario. The boundary result was not won on the
 `NONE` escape hatch. Of the 64 passing boundary cases, none routed to `NONE`: 26
@@ -940,7 +942,7 @@ against a ~60-skill wrong-answer space. Since the previous recording, 27 of the 
 boundary prompts were rewritten, most of them so that the listing alone does not
 settle the owner.
 
-> **Positive top-1 routing is correct on 64/65, with 64 of 65 unanimous; trivial
+> **Positive top-1 routing is correct and unanimous on 65/65; trivial
 > rejection is stable (8/8, unanimous NONE); boundary prompts misroute once in 65,
 > and 5 of the 65 are split within their accept set.**
 
@@ -950,7 +952,8 @@ written by the same hand as the descriptions — so this measures routing on
 author-anticipated phrasings, not held-out or adversarial ones (a mild
 teaching-to-the-test risk), and a skill can ace its single prompt yet misroute on
 paraphrases. Boundary accept-sets include `NONE` by construction. The independent
-held-out set below probes this: 155/162, with every miss a terse completion claim.
+held-out set below probes this: 155/162, with every miss a terse completion claim,
+all nine of which route home after the description fix.
 
 Boundary routes worth knowing: `notebook-to-production` → `ml-pipeline-design`,
 `ml-pipeline-design` → `data-quality`, `rollback-strategy` → `incident-response`,
@@ -961,7 +964,7 @@ samples, like the content baseline's k>=3 rows. A single sample can't be told ap
 was the reason to lift it. An earlier, smaller-catalog baseline scored only a 0.75
 layer-3 invocation rate; this run clears layer 3 at 8/8.)
 
-**Haiku recommendation: keep haiku.** Top-1 accuracy of 64/65, one boundary
+**Haiku recommendation: keep haiku.** Top-1 accuracy of 65/65, one boundary
 misroute, and zero false activations across the full 66-skill catalog, at k=3, say
 haiku is adequate for this routing task, and nothing argues for sonnet.
 The earlier watch-item (layer-3 invocation rate 0.75 on the earlier, smaller
@@ -1017,9 +1020,11 @@ zero confusion), trap **18/18**, trivial **18/18**, false activation **0/23**, a
 `verification-before-completion`.** Examples: "Let's commit and move on" →
 `git-workflow`; "The fix is in. Ship it." → `release-management`; "All set on my
 end, go ahead and close this out" → `NONE`, read as a conversational closing. The
-one such prompt that asks for the work to be proved routes correctly. This is the
-same miss as the mined suite's `verification-before-completion` positive, and it
-is the open routing finding.
+one such prompt that asks for the work to be proved routes correctly. The mined
+suite's `verification-before-completion` positive missed the same way. **Fixed
+since:** after the description change below, all nine route home, unanimously.
+The fix was written with these failures in view, so treat that as weaker evidence
+than the miss was.
 
 An earlier record reported a perfect sweep on the then-150-case set, made with a
 runner that let agents read the accept sets. On those same 150 cases this run is
@@ -1047,9 +1052,19 @@ routing eval until GREEN. This is the `writing-skills` baseline→counter loop w
 routing accuracy as the metric; descriptions are the shared tuning surface for both
 routing (the catalog) and direct auto-trigger, so one improvement pays twice.
 
-The committed baseline has **two live REDs**, listed under Results above:
-`verification-before-completion`'s positive and `project-documentation`'s boundary.
-Neither has been worked through this loop yet. Exercising the loop synthetically (degrade one skill's
+**Worked example (2026-09).** `verification-before-completion`'s description said
+when the *assistant* should use it ("use before saying 'done'"), which matches
+nothing a user types. The router sent terse claims of done to `git-workflow`,
+`release-management` or `NONE`: the mined positive, and 7 of 9 held-out
+paraphrases. The fix was one instruction in the user's terms: route "a message
+that declares the work finished or asks to commit, push, merge, ship, or close it
+out, including a brief sign-off". A boundary line kept the commit message and PR
+text with `git-workflow`. Re-routed at k=3 with 64 guard cases (the neighbouring
+skills' mined and held-out prompts, every trap, every trivial): all 8 failures
+passed unanimously, and no guard changed its route. One RED remains,
+`project-documentation`'s boundary, and it is left as recorded.
+
+Exercising the loop synthetically (degrade one skill's
 `description`, regenerate the catalog, re-run that case) surfaced a finding worth
 recording:
 

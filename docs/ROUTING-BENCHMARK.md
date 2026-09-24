@@ -5,8 +5,8 @@ measurements put it anywhere from ~45% to ~84% depending on prompt and hook hack
 library replaces auto-triggering with an **orchestrator that routes intent to skills by
 name**, and it measures that routing the way you'd measure code: a 138-case harness,
 graded by accept-set, gated in CI against a committed baseline. On the current 66-skill
-catalog, routing on `claude-haiku-4-5` at k=3 scores **64/65 top-1, 64/65 boundary, 0/8
-false activation, and two confusion pairs**. The numbers below are reproducible from
+catalog, routing on `claude-haiku-4-5` at k=3 scores **65/65 top-1, 64/65 boundary, 0/8
+false activation, and one confusion pair**. The numbers below are reproducible from
 the repo with no API key.
 
 This is the one artifact worth reading if you're deciding whether "routed activation" is
@@ -85,13 +85,13 @@ majority route. Every case was re-recorded, and nothing was carried forward.
 
 | Layer 2 metric | Result |
 |---|---|
-| Top-1 routing accuracy (positives) | **64 / 65 = 0.985** |
+| Top-1 routing accuracy (positives) | **65 / 65 = 1.00** |
 | Boundary pass rate ("no wild misroute") | **64 / 65 = 0.985** |
 | False-activation rate (trivial → NONE) | **0 / 8 = 0.00** |
-| Confusion pairs | `verification-before-completion → git-workflow`, `project-documentation → release-management` |
+| Confusion pairs | `project-documentation → release-management` |
 
 Layer 3 (behavioral, 16 cases): router-invocation **8/8**, correct-invoke **8/8**,
-over-route **0/8**. 132 of 138 cases were unanimous across the three samples. Boundary
+over-route **0/8**. 133 of 138 cases are unanimous across the three samples. Boundary
 routes make real discriminations: none of the 64 passing boundary cases fell back to
 `NONE`, and 38 chose a named sibling, for example `notebook-to-production` →
 `ml-pipeline-design`, `rollback-strategy` → `incident-response` and `refactoring` →
@@ -102,7 +102,7 @@ sound.** The runner that recorded them sent each agent to read the dataset file 
 prompt. That file carries every case's accept set, so the agents routed with the answer
 in reach. And 28 of the 138 rows had been recorded against a prompt or accept set that
 has since changed. The runner now passes each prompt inline, and the leak scan fails a
-run in which an agent opens a routing dataset. The misroutes and the one split positive
+run in which an agent opens a routing dataset. The remaining misroute, and one fixed since,
 are described in [EVALS.md § Results](EVALS.md#results-haiku-and-the-haiku-recommendation).
 
 Source of record: [`evals/routing-baseline.json`](../evals/routing-baseline.json)
@@ -145,8 +145,9 @@ python evals/routing.py --run -k 3
   at k=3 with the fixed runner, it scores **155/162**: every adjacent cluster separated,
   every trap handled, and 0/23 false activations. **All seven misses are terse "I'm
   done" claims** ("Let's commit and move on", "Ship it") meant for
-  `verification-before-completion`. The router reads them as conversation or as the
-  git or release step they mention. That is the one routing gap this probe found.
+  `verification-before-completion`. The router read them as conversation or as the
+  git or release step they mention. A one-line routing instruction in that skill's
+  description has since fixed all nine, with no guard case moving.
   It's a periodic manual probe, **not** a CI
   gate (see [EVALS.md § Held-out generalization probe](EVALS.md#held-out-generalization-probe-independent)).
 - **The comparison isn't apples-to-apples.** The community numbers above measure native
@@ -158,6 +159,6 @@ python evals/routing.py --run -k 3
 
 Native auto-triggering is a real, useful feature that degrades with scale. For a curated
 66-skill SDLC library, routing is what keeps every skill reachable *and* makes activation
-predictable enough to regression-test. The number to remember isn't 64/65, it's that
+predictable enough to regression-test. The number to remember isn't 65/65, it's that
 **activation is measured and gated at all**, which is not something the platform or the
 community libraries do at catalog scale.

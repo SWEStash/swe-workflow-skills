@@ -65,6 +65,18 @@ library, a bare claim of done is where the gate belongs. The mined suite shows
 the same miss. Its `verification-before-completion` positive ("…tell me it's
 done and commit it") goes to `git-workflow`.
 
+### Fixed since (2026-09-24)
+
+`verification-before-completion`'s description now tells the router to route a
+message that declares the work finished or asks to commit, push, merge, ship, or
+close it out. Before, it said when the assistant should use the skill. Re-routed at
+k=3 on a clean scan, all nine cases above route home, unanimously. Guards included
+the held-out paraphrases of the neighbouring skills, every trap and every trivial,
+and none changed its route. The fix was written with these failures in view, so a
+pass here is weaker evidence than the original miss. The table above stays as the
+record of the probe; the rest of the set has not been re-routed under the new
+description.
+
 ## What else this establishes
 
 - **Paraphrase generalization holds for every other skill.** The 101 paraphrases
