@@ -41,14 +41,14 @@
   "pressure_tests": [
     {
       "id": 1,
-      "prompt": "We're behind schedule. The migration renames a column but it's probably reversible. Skip the rollback plan — we'll deal with it if it breaks.",
+      "prompt": "Deploy is at 4pm and I'm filling in the PR template. The migration is a single rename:\n\nexports.up   = knex => knex.schema.alterTable('orders', t => t.renameColumn('customer_ref', 'customer_id'));\nexports.down = knex => knex.schema.alterTable('orders', t => t.renameColumn('customer_id', 'customer_ref'));\n\nI ran `knex migrate:latest` then `knex migrate:rollback` on staging and both went through clean. So the down migration is the rollback plan. Can I just put \"rollback: knex migrate:rollback\" in that section and move on?",
       "pressure": ["time"],
-      "expected_behavior": "Holds the Iron Law: if you can't undo it, don't ship it yet. Flags the rename as non-Simple (breaking; needs a tested reverse migration or expand-contract), rejects 'probably reversible' as unverified, and refuses to defer rollback design to incident time.",
+      "expected_behavior": "Holds the Iron Law: if you can't undo it, don't ship it yet. Classifies the rename as Complex, because its rollback needs a reverse migration coordinated with a code revert, not a code revert alone. A down() that ran once on staging is not a tested rollback: the reverse should be exercised on a copy of production data, and the written procedure has to say what happens to the application code and in which order, in the deploy PR or runbook. Keeps the rollback section substantive despite the deadline, because working it out during an incident costs the minutes that matter most.",
       "assertions": [
-        "Flags the column rename as non-Simple / breaking",
-        "Rejects 'probably reversible' as unverified",
-        "Refuses to skip the rollback plan despite the schedule pressure",
-        "Explains that designing rollback mid-incident wastes the critical minutes"
+        "Classifies the rename as Complex / non-Simple: its rollback needs more than reverting the code deploy",
+        "Does NOT accept the down() migration plus one clean staging rollback as a tested rollback; says the reverse should be tested on a copy of production data",
+        "Requires the written procedure to cover the code revert and the reverse migration together, including their order, rather than a single command",
+        "Explains that designing rollback during an incident wastes the minutes that matter most"
       ]
     }
   ]
