@@ -1,5 +1,5 @@
 {
-  "_note": "Full haiku routing baseline, every case re-recorded on 2026-09-23 by evals/routing-runner.mjs (in-session, Workflow tool) over the committed 138-case dataset (65 positive / 65 boundary / 8 trivial), k=3: each case is routed by three independent agents and its route is the majority, first-seen breaking ties, as routing.py -k does; `votes` records all three. Each agent was given its developer message inline and read only catalog.json, and the transcripts were scanned with evals/check-red-leaks.mjs, which reports any read beyond the catalog and fails a run that opens a routing dataset, baseline or held-out file. Nothing is carried forward from earlier recordings: those runs sent agents to read the dataset file, which holds each case's accept set beside its prompt, and 28 of their rows had been recorded against a prompt or accept set that has since changed. Layer 3 (behavioral) is one vote per case and is reported, not gated. Refresh with `python evals/routing.py --run -k 3 --update-baseline` (needs ANTHROPIC_API_KEY) or the in-session runner. The gate (routing.py / routing-evals.yml) fails if any case that passed here later misroutes. Cases are keyed by id, so a case whose prompt or accept set changes must be re-recorded rather than carried forward.",
+  "_note": "Full haiku routing baseline, every case re-recorded on 2026-09-23 by evals/routing-runner.mjs (in-session, Workflow tool) over the committed 138-case dataset (65 positive / 65 boundary / 8 trivial), k=3: each case is routed by three independent agents and its route is the majority, first-seen breaking ties, as routing.py -k does; `votes` records all three. Each agent was given its developer message inline and read only catalog.json, and the transcripts were scanned with evals/check-red-leaks.mjs, which reports any read beyond the catalog and fails a run that opens a routing dataset, baseline or held-out file. Nothing is carried forward from earlier recordings: those runs sent agents to read the dataset file, which holds each case's accept set beside its prompt, and 28 of their rows had been recorded against a prompt or accept set that has since changed. Layer 3 (behavioral) is one vote per case and is reported, not gated. Refresh with `python evals/routing.py --run -k 3 --update-baseline` (needs ANTHROPIC_API_KEY) or the in-session runner. The gate (routing.py / routing-evals.yml) fails if any case that passed here later misroutes. Cases are keyed by id, so a case whose prompt or accept set changes must be re-recorded rather than carried forward. 2026-09-24: after verification-before-completion's description gained a user-side routing instruction, the 22 mined cases nearest it (its own, the neighbouring skills' positive and boundary cases, and the trivials) were re-routed with the same runner at k=3 on a clean scan and replace their rows; the rest are from the full run. Layer 3 was not re-run.",
   "model": "claude-haiku-4-5",
   "k": 3,
   "summary": {
@@ -8,14 +8,10 @@
       "n_positive": 65,
       "n_boundary": 65,
       "n_trivial": 8,
-      "positive_accuracy": 0.985,
+      "positive_accuracy": 1,
       "boundary_pass_rate": 0.985,
       "false_activation_rate": 0,
       "confusion_pairs": [
-        [
-          "verification-before-completion -> git-workflow",
-          1
-        ],
         [
           "project-documentation -> release-management",
           1
@@ -422,7 +418,7 @@
       "chosen": "deployment-checklist",
       "pass": true,
       "votes": [
-        "deployment-checklist",
+        "dependency-impact-analysis",
         "deployment-checklist",
         "deployment-checklist"
       ]
@@ -1166,12 +1162,12 @@
       ]
     },
     "positive:verification-before-completion:1": {
-      "chosen": "git-workflow",
-      "pass": false,
+      "chosen": "verification-before-completion",
+      "pass": true,
       "votes": [
-        "code-reviewing",
-        "git-workflow",
-        "git-workflow"
+        "verification-before-completion",
+        "verification-before-completion",
+        "verification-before-completion"
       ]
     },
     "boundary:verification-before-completion:3": {
@@ -1179,7 +1175,7 @@
       "pass": true,
       "votes": [
         "verification-before-completion",
-        "plan-execution",
+        "verification-before-completion",
         "verification-before-completion"
       ]
     },

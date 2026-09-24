@@ -26,7 +26,7 @@ don't cover:
   intent to the right skill(s) and chains them across phases. Community measurements put
   Claude's own description-based auto-triggering at roughly a coin flip to ~84%; here
   activation is *routed and deterministic* instead, and the routing eval harness measures
-  it (top-1 accuracy 64/65 and one boundary misroute in 65 on the committed k=3 baseline,
+  it (top-1 accuracy 65/65 and one boundary misroute in 65 on the committed k=3 baseline,
   regression-gated in CI) — see the [routing benchmark](docs/ROUTING-BENCHMARK.md). This is the one thing the
   platform still doesn't do for you.
 - **Every skill stays reachable, no pre-picking.** Claude Code injects skill descriptions
