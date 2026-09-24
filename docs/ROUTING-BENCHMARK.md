@@ -141,11 +141,13 @@ python evals/routing.py --run -k 3
   Positive/boundary cases are written by the same hand as the descriptions, so the 138-case
   gate could in principle be teaching to the test. A separate **hand-authored held-out
   set** (`evals/routing-heldout.json`) exists to probe that. It copies no phrasing from any
-  `evals.json` and deliberately avoids each skill's own trigger keywords. Its recorded
-  result, a perfect sweep on the then-150-case version, **is unverified**. It was made
-  with the runner that let agents read the file holding the accept sets, and it has not
-  been re-run since the fix. The set has since grown to 162 cases. It's a periodic
-  manual probe, **not** a CI
+  `evals.json` and deliberately avoids each skill's own trigger keywords. Routed on haiku
+  at k=3 with the fixed runner, it scores **155/162**: every adjacent cluster separated,
+  every trap handled, and 0/23 false activations. **All seven misses are terse "I'm
+  done" claims** ("Let's commit and move on", "Ship it") meant for
+  `verification-before-completion`. The router reads them as conversation or as the
+  git or release step they mention. That is the one routing gap this probe found.
+  It's a periodic manual probe, **not** a CI
   gate (see [EVALS.md § Held-out generalization probe](EVALS.md#held-out-generalization-probe-independent)).
 - **The comparison isn't apples-to-apples.** The community numbers above measure native
   auto-triggering on small skill sets; ours measures orchestrator routing on a 66-skill

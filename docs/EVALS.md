@@ -950,8 +950,7 @@ written by the same hand as the descriptions — so this measures routing on
 author-anticipated phrasings, not held-out or adversarial ones (a mild
 teaching-to-the-test risk), and a skill can ace its single prompt yet misroute on
 paraphrases. Boundary accept-sets include `NONE` by construction. The independent
-held-out set below exists to probe this, but its recorded result predates the
-runner fix; see its section.
+held-out set below probes this: 155/162, with every miss a terse completion claim.
 
 Boundary routes worth knowing: `notebook-to-production` → `ml-pipeline-design`,
 `ml-pipeline-design` → `data-quality`, `rollback-strategy` → `incident-response`,
@@ -978,28 +977,27 @@ The mined sweep above measures routing on *author-anticipated* phrasings. To clo
 the teaching-to-the-test gap, `evals/routing-heldout.json` is a **separate,
 hand-authored set** written **without** copying phrasing from any skill's
 `evals.json` and deliberately **avoiding each skill's own `Triggers:` keywords**
-(0/92 paraphrases contained an own-trigger phrase at the time of the run). Same
+(0 of the original 92 paraphrases contained an own-trigger phrase when written). Same
 `{ id, kind, skill, prompt, accept[] }` shape; the authoring category is encoded in
 the `id` prefix.
 
-**The file now holds 162 cases** (101 paraphrase · 25 confusable · 18 trap · 18
-trivial). The recorded run below was made on the **150-case** version; the 12 cases
-added since — the claim-shaped routing probes landed with the completion-gate work —
-have **not** been routed, so they are outside the result. Re-run the probe to bring
-the record forward. The 150-case composition it measured was:
+**The file holds 162 cases:**
 
-- **92 paraphrase positives** — every routable skill restated in a foreign
-  register, `accept = {home}` (strict top-1);
-- **24 confusables** across 6 adjacent clusters (`data-modeling`↔`api-design`;
+- **101 paraphrase positives**, restating each routable skill in a foreign register,
+  with `accept = {home}` (strict top-1). Nine of them are terse completion claims
+  meant for `verification-before-completion`.
+- **25 confusables** across 7 adjacent clusters: `data-modeling`↔`api-design`;
   `ml-pipeline-design`↔`data-pipeline-design`↔`notebook-to-production`;
   `security-audit`↔`threat-modeling`↔`compliance-privacy`;
   `bug-investigating`↔`code-reviewing`↔`project-review`;
   `incident-response`↔`rollback-strategy`↔`resilience-engineering`;
-  `brainstorming`↔`prd-writing`↔`feature-planning`) — single-gold where decidable,
-  5 two-skill boundary accepts where genuinely ambiguous;
-- **18 scope/negation traps** — name a skill's keywords but route elsewhere/`NONE`;
-- **16 harder trivials** — conversational/factual prompts carrying domain keywords
-  → `NONE` (double the mined set's 8, pushing harder on false activation).
+  `brainstorming`↔`prd-writing`↔`feature-planning`; and
+  `code-slop-cleanup`↔`refactoring`. Each has a single gold where decidable, and
+  6 are two-skill boundary accepts where genuinely ambiguous.
+- **18 scope/negation traps**, which name one skill's keywords but belong
+  elsewhere or to `NONE`.
+- **18 harder trivials**: conversational or factual prompts carrying domain
+  keywords, which should route to `NONE`.
 
 Run key-free via the Workflow tool at k=3 (majority of 3 independent haiku
 samples), the in-session sibling of the mined runner:
@@ -1010,27 +1008,31 @@ Workflow({ scriptPath: "evals/routing-heldout-runner.mjs", args: {
   cases: <the .cases array of evals/routing-heldout.json> }})
 ```
 
-**Unverified: this result predates the runner fix.** It was recorded with a
-runner that sent each agent to read the held-out file for its prompt, and that file
-carries each case's accept set, so its agents routed with the answer in reach. Read
-the figures below as an upper bound until the probe is re-run with the current
-runner.
+**Result (`claude-haiku-4-5`, k=3, 2026-09, 162 cases, 486 route agents, clean
+leak scan):** paraphrase **94/101**, confusable **25/25** (every cluster separated,
+zero confusion), trap **18/18**, trivial **18/18**, false activation **0/23**, and
+**159/162 unanimous**.
 
-**Result (`claude-haiku-4-5`, k=3, 2026-07, on the then-150-case set — 451 route
-agents, 0 errors):** a
-perfect, fully-stable sweep — paraphrase **92/92**, confusable **24/24** (all 6
-clusters cleanly separated, **zero confusion pairs**), trap **18/18**, trivial
-**16/16**, false-activation **0/21**, and **150/150 unanimous** across the three
-samples (0 split, 0 failures). The 5 genuinely-ambiguous boundary cases each landed
-unanimously on the *intended primary* — stronger than the mined k=3 pass, where 4
-boundary cases split inside their accept-set. So the mined suite's 64/64 is **not**
-an artifact of author-shared phrasing: routing survives when keywords are stripped
-and the wording is foreign. Honest limits: still a single-evaluator set with
-pre-decided golds and only 1–2 paraphrases per skill — it *lowers*, not eliminates,
-the generalization risk. Full write-up: `evals/routing-heldout-results.md`.
+**All seven misses are terse completion claims meant for
+`verification-before-completion`.** Examples: "Let's commit and move on" →
+`git-workflow`; "The fix is in. Ship it." → `release-management`; "All set on my
+end, go ahead and close this out" → `NONE`, read as a conversational closing. The
+one such prompt that asks for the work to be proved routes correctly. This is the
+same miss as the mined suite's `verification-before-completion` positive, and it
+is the open routing finding.
+
+An earlier record reported a perfect sweep on the then-150-case set, made with a
+runner that let agents read the accept sets. On those same 150 cases this run is
+also 150/150 and unanimous, so that sweep holds up without the answer key in
+reach. Every miss is among the 12 cases added since, which had never been routed.
+Two of the six boundary cases now land on their second accepted skill rather than
+the intended primary. Honest limits: this is still a single-evaluator set with
+pre-decided golds and one or two paraphrases for most skills, so it *lowers*, not
+eliminates, the generalization risk. Full write-up:
+`evals/routing-heldout-results.md`.
 
 This probe is a **periodic manual generalization check, not a CI gate** — held-out
-prompts are meant to find edges (a hard gate would be noisy), and ~450 agents/run
+prompts are meant to find edges (a hard gate would be noisy), and ~490 agents/run
 is too expensive per-PR. Unlike `routing-dataset.json` it is **hand-authored, not
 generated**, so it is deliberately **not** wired into `--build-dataset` /
 `--check-dataset` and does **not** touch `routing-baseline.json` (the committed
