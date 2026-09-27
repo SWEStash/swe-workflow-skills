@@ -203,7 +203,9 @@ cases drops that skill's other rows.
 
 ### Results (content evals, full catalog)
 
-`claude-opus-5`, all 66 skills, 234 cases, 1314 assertions, **every row at k>=3**.
+`claude-opus-5`, all 66 skills, 234 cases, 1314 assertions, **every row at k>=3**. Eight rows
+were measured on `claude-opus-5-5` and are recorded under that id; the gate skips them as
+not comparable while `EVAL_GEN_MODEL` is `claude-opus-5`. They are included in the figures below.
 
 **What RED actually is.** RED answers the same prompt without the skill's *content* —
 it cannot read any `SKILL.md`, `references/` or `templates/`. Both arms do carry the
@@ -217,18 +219,18 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **849 / 1314 = 64.6%** |
+| Assertions passed, no skill body (RED) | **851 / 1314 = 64.8%** |
 | Assertions passed, skill loaded (GREEN) | **1286 / 1314 = 97.9%** |
-| Gain | **+33.3 points** |
-| Cases where GREEN beats RED | **196 / 234** |
-| Cases where GREEN ties RED | **38 / 234** |
+| Gain | **+33.1 points** |
+| Cases where GREEN beats RED | **197 / 234** |
+| Cases where GREEN ties RED | **37 / 234** |
 | Cases where GREEN is *below* RED | **0 / 234** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
 content is worse than no skill at all. **There are also zero RED-true / GREEN-false
-assertions** anywhere in the library. The 38 ties are mostly cases where RED already
+assertions** anywhere in the library. The 37 ties are mostly cases where RED already
 saturates — no headroom left to show, not a skill doing nothing — and saturation
-concentrates by case kind: `eval:1` 8%, `eval:2` 23%, `eval:3` **6%**, pressure 25%.
+concentrates by case kind: `eval:1` 8%, `eval:2` 23%, `eval:3` **6%**, pressure 22%.
 Scope-boundary cases used to saturate at 18% because three of their four assertions
 (recognise the request, name the sibling skill, withhold the wrong deliverable) were
 satisfied by the roster alone. Rewriting 26 of them against a sibling the roster cannot
@@ -241,17 +243,17 @@ for depth:
 
 | Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
 |---|---|---|---|
-| zero (no references at all) | 16 | 63.3% → 98.8% | **+35.5** |
+| zero (no references at all) | 16 | 64.1% → 98.8% | **+34.7** |
 | light (0 < ratio < 1) | 22 | 66.4% → 97.2% | +30.7 |
 | heavy (ratio ≥ 1) | 28 | 63.8% → 98.0% | +34.2 |
 
-Pearson r between reference ratio and GREEN gain is **−0.09** across the 66 skills —
+Pearson r between reference ratio and GREEN gain is **−0.08** across the 66 skills —
 no relationship. The zero-reference skills are the control that makes this readable:
 they gained the *most* with nothing to read, so the gain comes from the instruction
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at **k>=3 for every row** (187 at k=3, 46 at k=5, 1 at k=4) as of 2026-09-24; `k` is
+Recorded at **k>=3 for every row** (186 at k=3, 47 at k=5, 1 at k=4) as of 2026-09-27; `k` is
 per row. All 173 remaining single-sample cases have since been re-measured, so the
 k=1 caveat that used to sit here no longer applies.
 
@@ -550,16 +552,16 @@ flaky). Several findings from running this make the choice necessary:
 9. **Most rows measure one assertion or none, and scope-boundary cases are
    saturated by construction.** `merge-baseline.mjs` reports, per row, how many
    assertions GREEN passes and RED fails (`node .local/regen-discrimination.mjs`
-   recomputes it library-wide). Across 234 rows: **38 discriminate on nothing, 77
+   recomputes it library-wide). Across 234 rows: **37 discriminate on nothing, 79
    on exactly one.** It concentrates by case kind, and the concentration is
    structural rather than an authoring lapse:
 
    | Kind | Rows | Zero | One | Total lift |
    |---|---|---|---|---|
-   | `eval:1` happy path | 66 | 7 | 13 | **+183** |
+   | `eval:1` happy path | 66 | 7 | 14 | **+180** |
    | `eval:2` edge case | 66 | 16 | 18 | +106 |
    | `eval:3` scope boundary | 66 | **6** | 31 | **+103** |
-   | pressure | 36 | 9 | 15 | +45 |
+   | pressure | 36 | 8 | 16 | +46 |
 
    **37 of 66 scope-boundary rows discriminate on 0 or 1 assertion, but only 6 now
    measure nothing at all.** The cause is
