@@ -66,6 +66,13 @@ working", "should work", or "done pending tests". Say this rule when you declare
 the checkpoints, so the reader knows what a status report from you will and will
 not contain. A half-state is how a false "done" enters the record.
 
+The rule holds hardest when there is no time to verify and the status is going
+somewhere public — a status page, a tracker, a table for a demo. Each unverified
+checkpoint's label still reads **Not done**, and nothing else; why it isn't done
+(not yet run, stale since a later change, reviewed but untested) goes in a
+separate column or note, never in the label. "Verification pending",
+"implemented", and "in progress" are the middle state under a softer name.
+
 **The checkpoint commit is part of this step, and it is checked.** A commit is the
 first irreversible thing a plan produces, so it gets the same treatment as the
 checkpoint claim: **invoke `verification-before-completion`** for the publish gate
@@ -158,6 +165,7 @@ that still describes the pre-drift design is a stale document like any other.
 | "This is an implementation detail, not an architecture decision" | Anything that persists — a table, a column, a config key, a shared module — is structure, whatever task it arrived under. Route it to the design skill. |
 | "We're 80% through; re-planning now wastes all that work" | Sunk cost. Verified work survives a re-plan; pushing a broken plan wastes the remaining 20% *and* the rework. |
 | "Marking them done unblocks the team; we'll backfill verification" | A false "done" misinforms every decision downstream. Report the honest state instead. |
+| "'Implemented, verification pending' is honest — it doesn't claim done" | It's a third state, and a stakeholder reads it as nearly done. The label is Not done; the reason goes beside it. |
 
 ## Red Flags — Stop and Check
 
