@@ -203,7 +203,7 @@ cases drops that skill's other rows.
 
 ### Results (content evals, full catalog)
 
-`claude-opus-5`, all 66 skills, 234 cases, 1314 assertions, **every row at k>=3**. Eleven rows
+`claude-opus-5`, all 66 skills, 234 cases, 1316 assertions, **every row at k>=3**. Thirteen rows
 were measured on `claude-opus-5-5` and are recorded under that id; the gate skips them as
 not comparable while `EVAL_GEN_MODEL` is `claude-opus-5`. They are included in the figures below.
 
@@ -219,18 +219,18 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **844 / 1314 = 64.2%** |
-| Assertions passed, skill loaded (GREEN) | **1286 / 1314 = 97.9%** |
-| Gain | **+33.6 points** |
-| Cases where GREEN beats RED | **200 / 234** |
-| Cases where GREEN ties RED | **34 / 234** |
+| Assertions passed, no skill body (RED) | **843 / 1316 = 64.1%** |
+| Assertions passed, skill loaded (GREEN) | **1287 / 1316 = 97.8%** |
+| Gain | **+33.7 points** |
+| Cases where GREEN beats RED | **202 / 234** |
+| Cases where GREEN ties RED | **32 / 234** |
 | Cases where GREEN is *below* RED | **0 / 234** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
 content is worse than no skill at all. **There are also zero RED-true / GREEN-false
-assertions** anywhere in the library. The 34 ties are mostly cases where RED already
+assertions** anywhere in the library. The 32 ties are mostly cases where RED already
 saturates — no headroom left to show, not a skill doing nothing — and saturation
-concentrates by case kind: `eval:1` 8%, `eval:2` 23%, `eval:3` **6%**, pressure 14%.
+concentrates by case kind: `eval:1` 8%, `eval:2` 20%, `eval:3` **6%**, pressure 14%.
 Scope-boundary cases used to saturate at 18% because three of their four assertions
 (recognise the request, name the sibling skill, withhold the wrong deliverable) were
 satisfied by the roster alone. Rewriting 26 of them against a sibling the roster cannot
@@ -244,16 +244,16 @@ for depth:
 | Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
 |---|---|---|---|
 | zero (no references at all) | 16 | 64.1% → 98.8% | **+34.7** |
-| light (0 < ratio < 1) | 22 | 64.9% → 97.2% | +32.2 |
-| heavy (ratio ≥ 1) | 28 | 63.8% → 98.0% | +34.2 |
+| light (0 < ratio < 1) | 22 | 64.8% → 97.2% | +32.4 |
+| heavy (ratio ≥ 1) | 28 | 63.5% → 97.8% | +34.3 |
 
-Pearson r between reference ratio and GREEN gain is **−0.09** across the 66 skills —
+Pearson r between reference ratio and GREEN gain is **−0.08** across the 66 skills —
 no relationship. The zero-reference skills are the control that makes this readable:
 they gained the *most* with nothing to read, so the gain comes from the instruction
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at **k>=3 for every row** (183 at k=3, 50 at k=5, 1 at k=4) as of 2026-09-28; `k` is
+Recorded at **k>=3 for every row** (181 at k=3, 52 at k=5, 1 at k=4) as of 2026-09-28; `k` is
 per row. All 173 remaining single-sample cases have since been re-measured, so the
 k=1 caveat that used to sit here no longer applies.
 
@@ -552,14 +552,14 @@ flaky). Several findings from running this make the choice necessary:
 9. **Most rows measure one assertion or none, and scope-boundary cases are
    saturated by construction.** `merge-baseline.mjs` reports, per row, how many
    assertions GREEN passes and RED fails (`node .local/regen-discrimination.mjs`
-   recomputes it library-wide). Across 234 rows: **34 discriminate on nothing, 79
+   recomputes it library-wide). Across 234 rows: **32 discriminate on nothing, 81
    on exactly one.** It concentrates by case kind, and the concentration is
    structural rather than an authoring lapse:
 
    | Kind | Rows | Zero | One | Total lift |
    |---|---|---|---|---|
    | `eval:1` happy path | 66 | 7 | 14 | **+180** |
-   | `eval:2` edge case | 66 | 16 | 18 | +106 |
+   | `eval:2` edge case | 66 | 14 | 20 | +108 |
    | `eval:3` scope boundary | 66 | **6** | 31 | **+103** |
    | pressure | 36 | 5 | 16 | +53 |
 

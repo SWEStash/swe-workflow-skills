@@ -17,14 +17,13 @@
     {
       "id": 2,
       "prompt": "An enterprise prospect just sent us a security questionnaire asking if we're SOC 2 compliant. We're a 10-person startup with decent engineering hygiene (PRs, CI, SSO) but zero formal compliance work. What does getting there actually involve on the engineering side?",
-      "expected_output": "Explains SOC 2 as an audit of controls operating over time (Type I vs II), maps their existing hygiene (PR review, CI, SSO) onto trust-criteria controls and identifies the real gap as demonstrable evidence — access reviews, offboarding proof, audit logging, vendor review — recommending evidence automation over screenshot scrambles, scoping to the Security criterion first, and being realistic about timeline/audit-window. Counts backup restore testing among the controls, with the restore result kept as evidence.",
+      "expected_output": "Explains SOC 2 as an audit of controls operating over time (Type I vs II), maps their existing hygiene (PR review, CI, SSO) onto trust-criteria controls and identifies the real gap as demonstrable evidence — access reviews, offboarding proof, audit logging, vendor review — recommending evidence automation over screenshot scrambles, scoping to the Security criterion first, and being realistic about timeline/audit-window",
       "assertions": [
         "Explains that SOC 2 audits controls operating over time (Type II observation window), not a one-time checklist",
         "Maps existing engineering hygiene (PR reviews, CI, SSO) onto SOC 2 controls and identifies evidence/demonstrability as the actual gap",
         "Covers the core control areas: logical access (least privilege, access reviews, offboarding), change management, audit logging, and vendor management",
         "Recommends starting with the Security criterion and adding other trust criteria only when customers demand them",
-        "Recommends automating evidence collection rather than gathering screenshots before the audit",
-        "Includes backup restore testing as a control, with the restore test's result kept as evidence"
+        "Recommends automating evidence collection rather than gathering screenshots before the audit"
       ]
     },
     {
