@@ -16,13 +16,14 @@
     {
       "id": 2,
       "prompt": "Our coding agent has access to 25 tools and it keeps picking the wrong one and forgetting what it already did in long multi-step tasks. How do we fix the design?",
-      "expected_output": "Diagnoses a context/tool-design problem: prunes and disambiguates the tool surface, externalizes state (plan file/scratchpad, summarization) for long horizons, considers decomposing into phases or sub-agents with scoped toolsets, and verifies the fix with task-success evals rather than anecdotes",
+      "expected_output": "Diagnoses a context/tool-design problem: prunes and disambiguates the tool surface, externalizes state (plan file/scratchpad, summarization) for long horizons, considers decomposing into phases or sub-agents with scoped toolsets, and verifies the fix with task-success evals rather than anecdotes. Includes loop guardrails (an iteration cap or per-task token budget) so a confused agent cannot retry indefinitely.",
       "assertions": [
         "Diagnoses this as a context/tool design problem (overlapping tools, unbounded history), not primarily a model-capability problem",
         "Proposes reducing or restructuring the tool surface: fewer and clearer tools, distinct names and descriptions, or grouping/namespacing",
         "Addresses long-horizon memory: a scratchpad or plan file, summarization/compaction of history, or state externalized outside the context window",
         "Considers decomposition into phases or sub-agents with scoped toolsets for distinct stages of the task",
-        "Recommends verifying the improvement with evals (task success rate on representative tasks) rather than eyeballing a few runs"
+        "Recommends verifying the improvement with evals (task success rate on representative tasks) rather than eyeballing a few runs",
+        "Adds a loop guardrail: caps the agent's iterations or its token budget per task, so a confused agent cannot keep retrying"
       ]
     },
     {

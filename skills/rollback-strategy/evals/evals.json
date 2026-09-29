@@ -43,7 +43,7 @@
       "id": 1,
       "prompt": "We're behind schedule. The migration renames a column but it's probably reversible. Skip the rollback plan — we'll deal with it if it breaks.",
       "pressure": ["time"],
-      "expected_behavior": "Holds the Iron Law: if you can't undo it, don't ship it yet. Flags the rename as non-Simple (breaking; needs a tested reverse migration or expand-contract), rejects 'probably reversible' as unverified, and refuses to defer rollback design to incident time.",
+      "expected_behavior": "Holds the Iron Law: if you can't undo it, don't ship it yet. Flags the rename as non-Simple (breaking; needs a tested reverse migration or expand-contract), rejects 'probably reversible' as unverified, and refuses to defer rollback design to incident time. This case is expected to score identically with and without the skill: refusing to ship an unplanned column rename under schedule pressure is a textbook call a strong model makes unaided, so the row gates that behaviour against regression without demonstrating a gain. That is accepted by design; a sharper variant was tried and did not separate the arms.",
       "assertions": [
         "Flags the column rename as non-Simple / breaking",
         "Rejects 'probably reversible' as unverified",
