@@ -315,29 +315,6 @@
         "k": 3,
         "runner": "workflow-runner.mjs"
       },
-      "eval:2": {
-        "green": [
-          true,
-          true,
-          true,
-          true,
-          true,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          true,
-          true,
-          true,
-          true,
-          true,
-          true
-        ],
-        "model": "claude-opus-5",
-        "k": 3,
-        "runner": "workflow-runner.mjs"
-      },
       "eval:3": {
         "green": [
           true,
@@ -996,25 +973,6 @@
           true,
           true,
           false,
-          true
-        ],
-        "model": "claude-opus-5",
-        "k": 3,
-        "runner": "workflow-runner.mjs"
-      },
-      "eval:2": {
-        "green": [
-          true,
-          true,
-          true,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          true,
-          true,
-          true,
           true
         ],
         "model": "claude-opus-5",
@@ -2349,25 +2307,6 @@
           true,
           true,
           false,
-          true
-        ],
-        "model": "claude-opus-5",
-        "k": 3,
-        "runner": "workflow-runner.mjs"
-      },
-      "eval:2": {
-        "green": [
-          true,
-          true,
-          true,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          true,
-          true,
-          true,
           true
         ],
         "model": "claude-opus-5",
