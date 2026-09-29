@@ -13,8 +13,7 @@
         "Targets are ambitious but not absurd (not 'zero outages ever')",
         "Reliability KRs use SLO-like framing (availability %, MTTR)",
         "Deployment KRs use DORA metrics (lead time, frequency)",
-        "Produces a complete OKR document",
-        "States that roughly 70% achievement of the key results is a healthy outcome, so the targets are stretch goals rather than commitments"
+        "Produces a complete OKR document"
       ]
     },
     {
