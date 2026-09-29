@@ -332,32 +332,6 @@
         "k": 5,
         "runner": "workflow-runner.mjs",
         "listing": "a98a046ff2f4"
-      },
-      "eval:2": {
-        "green": [
-          true,
-          true,
-          false,
-          true,
-          true,
-          true,
-          true,
-          true
-        ],
-        "red": [
-          true,
-          true,
-          false,
-          true,
-          true,
-          true,
-          true,
-          false
-        ],
-        "model": "claude-opus-5-5",
-        "k": 5,
-        "runner": "workflow-runner.mjs",
-        "listing": "1340d2c16922"
       }
     },
     "brainstorming": {

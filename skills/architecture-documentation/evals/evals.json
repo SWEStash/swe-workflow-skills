@@ -23,7 +23,7 @@
       "assertions": [
         "Pushes back on creating all four C4 levels for a simple monolith",
         "Applies YAGNI — recommends only the diagrams that add value for this system's complexity",
-        "Recommends at most a system context and a single container diagram",
+        "Keeps the recommended set sized to the system: a system context and one container diagram, optionally one deployment view, with anything further deferred to a stated future trigger rather than recommended now",
         "Explains that Code-level C4 diagrams are almost never worth maintaining manually",
         "Does not refuse the request entirely — provides a pragmatic subset",
         "Suggests conceptual-level documentation may be sufficient for this system",
