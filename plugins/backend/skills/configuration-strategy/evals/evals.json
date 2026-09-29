@@ -11,7 +11,8 @@
         "Suggests percentage-based rollout for the feature flag",
         "Warns against committing any credential to version control",
         "Recommends startup validation to fail fast if secrets are missing",
-        "Notes different values needed for dev/staging/production"
+        "Notes different values needed for dev/staging/production",
+        "Before adding the new keys, establishes what configuration already exists (existing keys or values, .env.example, config conventions), or says it cannot inspect the project and names what it would check"
       ]
     },
     {

@@ -22,7 +22,8 @@
         "Recommends fixing the shared contract/conventions first, before any fan-out, rather than gluing independently-designed pieces afterward",
         "Explains the failure mode: parallel agents without a shared contract produce incompatible outputs and costly reconciliation",
         "Offers a legitimate parallel structure instead — e.g. per-resource spec drafting against the fixed contract, or a multi-perspective review/judge panel of a single draft",
-        "Does not simply execute the 6-way split as requested"
+        "Does not simply execute the 6-way split as requested",
+        "Notes that subagents cannot ask clarifying questions mid-flight, so open questions must be resolved before any fan-out"
       ]
     },
     {

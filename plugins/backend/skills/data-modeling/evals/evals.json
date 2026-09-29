@@ -12,7 +12,8 @@
         "Includes indexes for common access patterns (order lookup by user, product search)",
         "Foreign keys have explicit ON DELETE behavior",
         "Includes created_at/updated_at timestamps",
-        "Validates schema against likely access patterns"
+        "Validates schema against likely access patterns",
+        "Before proposing tables, establishes what schema already exists, or says it is treating the project as greenfield or cannot inspect it and names what it would check"
       ]
     },
     {

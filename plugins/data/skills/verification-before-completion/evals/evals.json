@@ -19,7 +19,8 @@
       "assertions": [
         "Treats the prior CI run as stale, not as fresh evidence",
         "Does not rubber-stamp the merge on the 'only a comment' rationalization",
-        "Bases the go/no-go on the fresh output"
+        "Bases the go/no-go on the fresh output",
+        "Counts the static gates the repo configures (type checker, linter) as part of the fresh check, not the test suite alone"
       ]
     },
     {

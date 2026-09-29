@@ -13,7 +13,8 @@
         "Suggests computing averageRating in the database query, not in application code",
         "Does NOT start with micro-optimizations (variable names, array methods)",
         "Provides concrete refactored code",
-        "Suggests adding an index on reviews.productId if not present"
+        "Suggests adding an index on reviews.productId if not present",
+        "Assesses each recommended fix's effort or complexity and its risk, and orders the fixes by impact relative to effort"
       ]
     },
     {
@@ -40,7 +41,8 @@
         "Refactors to a single O(n) pass using hashed lookups — a Map or object counting occurrences, or a Set of emails already seen",
         "Uses a Set for the duplicates result (not includes() on an array)",
         "Notes the repeated toLowerCase() calls as a secondary optimization",
-        "Provides working refactored code"
+        "Provides working refactored code",
+        "Says to confirm before shipping that the rewrite returns the same results as the original (its tests, or a side-by-side comparison on realistic input), not only that it is faster"
       ]
     }
   ]

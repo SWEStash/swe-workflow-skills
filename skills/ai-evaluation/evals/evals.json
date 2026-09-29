@@ -10,7 +10,8 @@
         "Covers the RAG triad or equivalent — faithfulness/groundedness, answer relevance, and retrieval/context quality — and distinguishes retrieval metrics from generation metrics",
         "Recommends a concrete evaluation tool (ragas, deepeval, or promptfoo) and explains its role",
         "Addresses LLM-as-judge reliability with at least one concrete measure: rubric design, position/self-preference bias, majority voting, or calibrating the judge against human spot-checks",
-        "Proposes running the evals as a repeatable regression gate (in CI or before each prompt/pipeline change), not only as a one-off pre-launch check"
+        "Proposes running the evals as a repeatable regression gate (in CI or before each prompt/pipeline change), not only as a one-off pre-launch check",
+        "Specifies the judge rubric as a separate score per quality criterion on a binary or 3-point scale, rather than one overall score such as 1–10"
       ]
     },
     {
