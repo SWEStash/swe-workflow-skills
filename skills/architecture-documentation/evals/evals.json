@@ -19,15 +19,15 @@
     {
       "id": 2,
       "prompt": "I have a simple CRUD application — Express.js backend, PostgreSQL database, deployed on a single EC2 instance behind nginx. My manager read about C4 and wants me to create all four C4 levels plus deployment diagrams plus data flow diagrams. Can you help me set this up?",
-      "expected_output": "Edge case — pushing back on unnecessary documentation complexity. Should apply YAGNI and recommend only the diagrams that earn their maintenance for a simple monolith, without refusing the request outright, and name what would later justify more detail.",
+      "expected_output": "Edge case — pushing back on unnecessary documentation complexity. Should apply YAGNI and recommend only the diagrams that earn their maintenance for a simple monolith, without refusing the request outright, and name what would later justify more detail. Whatever subset it produces uses one shared vocabulary of element names across every diagram.",
       "assertions": [
         "Pushes back on creating all four C4 levels for a simple monolith",
         "Applies YAGNI — recommends only the diagrams that add value for this system's complexity",
-        "Recommends at most a system context and a single container diagram",
         "Explains that Code-level C4 diagrams are almost never worth maintaining manually",
         "Does not refuse the request entirely — provides a pragmatic subset",
         "Suggests conceptual-level documentation may be sufficient for this system",
-        "Explains what would trigger the need for more detailed documentation in the future"
+        "Explains what would trigger the need for more detailed documentation in the future",
+        "Establishes a shared naming vocabulary (a glossary of element names) that every diagram uses exactly"
       ]
     },
     {

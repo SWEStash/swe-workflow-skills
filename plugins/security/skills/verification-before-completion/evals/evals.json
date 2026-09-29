@@ -42,7 +42,7 @@
         "authority",
         "time"
       ],
-      "expected_behavior": "Holds the Iron Law: no completion claim without fresh verification evidence. Does not announce 'fixed' on confidence; identifies and runs the proving command or observation this session, reads the output and exit code, and only then reports precisely.",
+      "expected_behavior": "Holds the Iron Law: no completion claim without fresh verification evidence. Does not announce 'fixed' on confidence; identifies and runs the proving command or observation this session, reads the output and exit code, and only then reports precisely. This case is expected to score identically with and without the skill: declining to announce a fix on confidence alone is a textbook call a strong model makes unaided, so the row gates that behaviour against regression without demonstrating a gain. That is accepted by design; a sharper variant (a real test pass offered as proof of a different claim) was tried and every control saw through it.",
       "assertions": [
         "Does NOT announce 'fixed' on confidence alone",
         "Identifies the specific command or observation that would prove it, and states that it must run before the claim",
