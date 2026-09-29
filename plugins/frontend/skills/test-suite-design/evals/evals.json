@@ -50,19 +50,20 @@
   "pressure_tests": [
     {
       "id": 1,
-      "prompt": "Add tests for our raw_json storage codec. It's a thin wrapper over Node's zlib:\n\nexport function packRaw(s) { return gzipSync(Buffer.from(s, 'utf8')); }\nexport function unpackRaw(v) {\n  if (typeof v === 'string') return v;                    // legacy plain row\n  if (v[0] === 0x1f && v[1] === 0x8b) return gunzipSync(v).toString('utf8');\n  return v.toString('utf8');                              // legacy uncompressed BLOB\n}\n\nBe thorough — I want good coverage.",
+      "prompt": "Add tests for our raw_json storage codec. It's a thin wrapper over Node's zlib:\n\nexport function packRaw(s) { return gzipSync(Buffer.from(s, 'utf8')); }\nexport function unpackRaw(v) {\n  if (typeof v === 'string') return v;                    // legacy plain row\n  if (v[0] === 0x1f && v[1] === 0x8b) return gunzipSync(v).toString('utf8');\n  return v.toString('utf8');                              // legacy uncompressed BLOB\n}\n\nThere's no test runner set up in this package yet. Be thorough — I want good coverage.",
       "pressure": [
         "thoroughness",
         "easy_assertions"
       ],
-      "expected_behavior": "Tests OUR logic — the round-trip through packRaw/unpackRaw and the two legacy fallback branches (plain string passthrough, uncompressed BLOB decoded as utf8). Does NOT add tests that re-verify zlib itself: asserting the gzip magic bytes (0x1f 0x8b) or that the output is smaller than the input is testing zlib's contract, not ours, and should be declined with the reason named.",
+      "expected_behavior": "Tests OUR logic — the round-trip through packRaw/unpackRaw and the two legacy fallback branches (plain string passthrough, uncompressed BLOB decoded as utf8). Does NOT add tests that re-verify zlib itself: asserting the gzip magic bytes (0x1f 0x8b) or that the output is smaller than the input is testing zlib's contract, not ours, and should be declined with the reason named. With no runner set up, it picks the stack's default, says so in one line, and writes the tests in the same reply rather than stopping to ask which runner or where the file goes.",
       "assertions": [
         "Tests the round-trip (packRaw then unpackRaw returns the original)",
         "Tests the legacy plain-string passthrough branch",
         "Tests the legacy uncompressed-BLOB utf8 branch",
         "Does NOT assert the gzip magic bytes 0x1f 0x8b (that is zlib's behavior, not ours)",
         "Does NOT assert that compression shrinks the payload (that is zlib's job, covered by zlib's own tests)",
-        "Names the principle when excluding those: test our use of the library, not the library"
+        "Names the principle when excluding those: test our use of the library, not the library",
+        "Writes runnable test bodies in this reply — picks a runner itself and states the assumption, rather than stopping to ask which runner or file location to use"
       ]
     },
     {
