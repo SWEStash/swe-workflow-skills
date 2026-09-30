@@ -74,7 +74,7 @@ Two runners turn the loop above into something repeatable:
 | Runner | Use | Needs |
 |---|---|---|
 | `evals/workflow-runner.mjs` | Fast local RED/GREEN loop; **produces the committed baseline** | Claude Code Workflow tool |
-| `evals/run.py` | CI regression gate, scriptable; **consumes that baseline** | `ANTHROPIC_API_KEY` + `EVAL_GEN_MODEL`/`EVAL_JUDGE_MODEL` + `pip install -r evals/requirements.txt` |
+| `evals/run.py` | CI regression gate, scriptable; **consumes that baseline** | `ANTHROPIC_API_KEY` + `EVAL_GEN_MODEL` + `pip install -r evals/requirements.txt` |
 
 Both **generate** a candidate reply (with the skill loaded = GREEN; without =
 RED) and **judge** it with a skeptical LLM-as-judge using structured output
@@ -88,7 +88,7 @@ comparable: RED is tool-less in both, and GREEN in both may read files inside
 the skill's own directory (see "What the harnesses can see" below).
 
 ```bash
-export EVAL_GEN_MODEL=claude-opus-5 EVAL_JUDGE_MODEL=claude-opus-5
+export EVAL_GEN_MODEL=claude-opus-5-5,claude-opus-5   # a list; the first is the primary
 python evals/run.py --all --update-baseline      # record the golden baseline
 python evals/run.py --changed --base origin/main # CI: only changed skills
 python evals/run.py --skills tdd-workflow -k 3    # one skill, 3 votes
@@ -110,9 +110,13 @@ Two properties matter:
   commit in batches.
 - **Model is recorded, not pinned.** `run.py` has no default model on purpose:
   a stale hardcoded pin plus a committed baseline manufactures false regressions
-  library-wide the day a new model ships. The gate compares **only rows whose
-  recorded model matches the model now running**, and prints "not comparable"
-  otherwise rather than reporting a regression. `workflow-runner.mjs`'s
+  library-wide the day a new model ships. `EVAL_GEN_MODEL` is a comma-separated
+  list, and **each case re-runs on the model its row was recorded on**, so a
+  baseline spanning a model rollover stays gated row by row. A row recorded on a
+  model not in the list is not run, and is reported "not comparable" rather than
+  as a regression. The first model in the list runs cases that have no row yet.
+  `EVAL_JUDGE_MODEL` is optional: unset, each case is judged by the model that
+  generated it, which is how the workflow arm records its rows. `workflow-runner.mjs`'s
   `MODEL = 'opus'` is a harness shorthand, not a model id — the session that runs
   the sweep reports the resolved id, and that string goes into the provenance
   fields.
@@ -204,8 +208,8 @@ cases drops that skill's other rows.
 ### Results (content evals, full catalog)
 
 `claude-opus-5`, all 66 skills, 234 cases, 1315 assertions, **every row at k>=3**. Thirteen rows
-were measured on `claude-opus-5-5` and are recorded under that id; the gate skips them as
-not comparable while `EVAL_GEN_MODEL` is `claude-opus-5`. They are included in the figures below.
+were measured on `claude-opus-5-5` and are recorded under that id; the gate re-runs each of them
+on that model, because CI lists both. They are included in the figures below.
 
 **What RED actually is.** RED answers the same prompt without the skill's *content* —
 it cannot read any `SKILL.md`, `references/` or `templates/`. Both arms do carry the

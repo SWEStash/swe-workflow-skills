@@ -12,7 +12,9 @@ Runs each skill's `evals` and `pressure_tests` against the Claude API:
   4. Compare to a stored baseline; a previously-passing assertion that now
      fails is a REGRESSION and exits non-zero (the CI gate). Only rows recorded
      on the SAME model are compared — otherwise a model release would
-     manufacture regressions library-wide.
+     manufacture regressions library-wide. EVAL_GEN_MODEL may list several
+     models, so a baseline that spans a model rollover still gates every row
+     on the model that recorded it.
 
 GREEN (skill loaded) is the gate. RED (no skill) is tracked for delta only —
 base-model behavior varies, so we never gate on it.
@@ -23,7 +25,7 @@ evals/routing-baseline.json already uses.
 
 Usage:
   export ANTHROPIC_API_KEY=...
-  export EVAL_GEN_MODEL=claude-opus-5 EVAL_JUDGE_MODEL=claude-opus-5
+  export EVAL_GEN_MODEL=claude-opus-5-5,claude-opus-5   # first = primary
   python evals/run.py --all                      # every skill
   python evals/run.py --skills tdd-workflow,...  # specific skills
   python evals/run.py --changed --base origin/main   # only skills changed vs base
@@ -51,8 +53,16 @@ BASELINE = Path(__file__).resolve().parent / "baseline.json"
 # No hardcoded model default: a pinned model silently goes stale, and a stale
 # pin plus a committed baseline manufactures false regressions. The operator
 # names the model, and it is recorded in every baseline row.
-GEN_MODEL = os.environ.get("EVAL_GEN_MODEL")
-JUDGE_MODEL = os.environ.get("EVAL_JUDGE_MODEL")
+#
+# EVAL_GEN_MODEL is a comma-separated list. A case whose baseline row was
+# recorded on a listed model re-runs on THAT model, so a baseline spanning a
+# model rollover stays gated row by row. The first entry is the primary: it
+# runs cases with no row yet, and every case under --update-baseline.
+# EVAL_JUDGE_MODEL is optional: unset, each case is judged by the model that
+# generated it, which is how the workflow arm records its rows.
+GEN_MODELS = [m.strip() for m in os.environ.get("EVAL_GEN_MODEL", "").split(",") if m.strip()]
+PRIMARY_MODEL = GEN_MODELS[0] if GEN_MODELS else None
+JUDGE_MODEL = os.environ.get("EVAL_JUDGE_MODEL") or None
 
 RUNNER = "run.py"
 MAX_READ_BYTES = 60_000
@@ -168,12 +178,12 @@ RED_SYSTEM = (
 )
 
 
-def generate(skill: dict, prompt: str, with_skill: bool) -> str:
+def generate(skill: dict, prompt: str, with_skill: bool, model: str) -> str:
     """Produce a candidate assistant reply to `prompt`."""
     if not with_skill:
         # RED arm — unchanged, tool-less. The RED/GREEN contrast is the signal.
         resp = client.messages.create(
-            model=GEN_MODEL,
+            model=model,
             max_tokens=2000,
             thinking={"type": "adaptive"},
             system=RED_SYSTEM,
@@ -182,7 +192,7 @@ def generate(skill: dict, prompt: str, with_skill: bool) -> str:
         return "".join(b.text for b in resp.content if b.type == "text")
 
     runner = client.beta.messages.tool_runner(
-        model=GEN_MODEL,
+        model=model,
         max_tokens=2000,
         thinking={"type": "adaptive"},
         system=GREEN_SYSTEM.format(md=skill["md"]),
@@ -193,7 +203,7 @@ def generate(skill: dict, prompt: str, with_skill: bool) -> str:
     return "".join(b.text for b in final.content if b.type == "text")
 
 
-def judge(prompt: str, reply: str, assertions: list[str]) -> list[bool]:
+def judge(prompt: str, reply: str, assertions: list[str], model: str) -> list[bool]:
     """Return a pass/bool per assertion (index-aligned)."""
     listing = "\n".join(f"{i}. {a}" for i, a in enumerate(assertions))
     user = (
@@ -204,7 +214,7 @@ def judge(prompt: str, reply: str, assertions: list[str]) -> list[bool]:
         f"by index.\n\nAssertions:\n{listing}"
     )
     resp = client.messages.create(
-        model=JUDGE_MODEL,
+        model=model,
         max_tokens=2000,
         thinking={"type": "adaptive"},
         system="You are a strict, skeptical evaluator of assistant behavior.",
@@ -216,12 +226,12 @@ def judge(prompt: str, reply: str, assertions: list[str]) -> list[bool]:
     return [bool(verdicts.get(i, False)) for i in range(len(assertions))]
 
 
-def run_case(skill, prompt, assertions, with_skill, k):
+def run_case(skill, prompt, assertions, with_skill, k, model):
     """Majority-of-k: an assertion passes if it passes in > half the runs."""
     tallies = [0] * len(assertions)
     for _ in range(k):
-        reply = generate(skill, prompt, with_skill)
-        for i, ok in enumerate(judge(prompt, reply, assertions)):
+        reply = generate(skill, prompt, with_skill, model)
+        for i, ok in enumerate(judge(prompt, reply, assertions, JUDGE_MODEL or model)):
             tallies[i] += 1 if ok else 0
     return [t * 2 > k for t in tallies]
 
@@ -251,10 +261,10 @@ def main() -> int:
     ap.add_argument("--update-baseline", action="store_true")
     args = ap.parse_args()
 
-    if not GEN_MODEL or not JUDGE_MODEL:
+    if not GEN_MODELS:
         print(
-            "EVAL_GEN_MODEL and EVAL_JUDGE_MODEL must be set (e.g. claude-opus-5).\n"
-            "They are recorded in the baseline so the gate only compares "
+            "EVAL_GEN_MODEL must be set (e.g. claude-opus-5, or a comma-separated\n"
+            "list). It is recorded in the baseline so the gate only compares "
             "same-model rows; there is deliberately no default.",
             file=sys.stderr,
         )
@@ -287,34 +297,40 @@ def main() -> int:
         skill_res = {}
         for kind, cid, prompt, assertions in all_cases(s):
             key = f"{kind}:{cid}"
-            green = run_case(s, prompt, assertions, True, args.k)
-            row = {"green": green, "model": GEN_MODEL, "k": args.k, "runner": RUNNER}
-            gp = sum(green)
-            line = f"  {key}: GREEN {gp}/{len(green)}"
-            if args.mode in ("red", "both"):
-                red = run_case(s, prompt, assertions, False, args.k)
-                row["red"] = red
-                line += f"  RED {sum(red)}/{len(red)}"
-            print(line)
-            # Regression check: a baseline-green assertion now failing, compared
-            # only against a row recorded on the same model.
             base_row = base_skills.get(s["skill"], {}).get(key, {})
             base_green = base_row.get("green")
             base_model = base_row.get("model", baseline.get("model"))
-            if base_green:
-                if base_model != GEN_MODEL:
-                    skipped.append(f"{s['skill']} {key} (baseline {base_model})")
-                else:
-                    for i, (was, now) in enumerate(zip(base_green, green)):
-                        if was and not now:
-                            regressed.append(f"{s['skill']} {key} assertion #{i}")
+            # Run each case on the model its row was recorded on, so the gate
+            # compares like with like. A row on an unlisted model cannot be
+            # compared: skip it rather than spend a run with nothing to gate.
+            if args.update_baseline or not base_green:
+                model = PRIMARY_MODEL
+            elif base_model in GEN_MODELS:
+                model = base_model
+            else:
+                skipped.append(f"{s['skill']} {key} (baseline {base_model})")
+                continue
+            green = run_case(s, prompt, assertions, True, args.k, model)
+            row = {"green": green, "model": model, "k": args.k, "runner": RUNNER}
+            gp = sum(green)
+            line = f"  {key} [{model}]: GREEN {gp}/{len(green)}"
+            if args.mode in ("red", "both"):
+                red = run_case(s, prompt, assertions, False, args.k, model)
+                row["red"] = red
+                line += f"  RED {sum(red)}/{len(red)}"
+            print(line)
+            # Regression check: a baseline-green assertion now failing.
+            if base_green and model == base_model:
+                for i, (was, now) in enumerate(zip(base_green, green)):
+                    if was and not now:
+                        regressed.append(f"{s['skill']} {key} assertion #{i}")
             skill_res[key] = row
         results[s["skill"]] = skill_res
 
     if skipped:
         print(
-            f"\nNOT COMPARABLE — {len(skipped)} case(s) recorded on a different "
-            f"model than {GEN_MODEL}; not gated:"
+            f"\nNOT COMPARABLE — {len(skipped)} case(s) recorded on a model "
+            f"not in {', '.join(GEN_MODELS)}; not run, not gated:"
         )
         for r in skipped[:10]:
             print(f"  - {r}")
@@ -325,7 +341,7 @@ def main() -> int:
         # Preserve the hand-maintained provenance note rather than clobbering it.
         out = {
             "_note": baseline.get("_note", ""),
-            "model": GEN_MODEL,
+            "model": PRIMARY_MODEL,
             "k": args.k,
             "runner": RUNNER,
             "option": "A",

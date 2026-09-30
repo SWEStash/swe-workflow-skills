@@ -52,9 +52,11 @@ jobs:
           # run.py has no model default on purpose — a stale pin plus a committed
           # baseline manufactures false regressions. Name the model here, and it
           # gets recorded in every baseline row so the gate compares like with like.
-          # Bump this together with a baseline refresh, never on its own.
-          EVAL_GEN_MODEL: claude-opus-5
-          EVAL_JUDGE_MODEL: claude-opus-5
+          # A list: each case re-runs on the model its baseline row was recorded on
+          # (and is judged by it), so a baseline spanning a model rollover stays
+          # gated. The first entry runs cases with no row yet. Drop a model once no
+          # row is recorded under it; add one when its first row is merged.
+          EVAL_GEN_MODEL: claude-opus-5-5,claude-opus-5
           # Route GitHub context through env vars, never inline ${{ }} into the
           # run: script (that is the Actions script-injection sink).
           BASE_REF: ${{ github.base_ref || 'main' }}
