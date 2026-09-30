@@ -79,8 +79,10 @@ If you fork or self-host the release pipeline, confirm:
    push to `main` and can auto-push to the release PR branch; the model assumes only
    reviewed merges land there.
 2. **npm trusted-publisher binding** points at exactly this repo + `release.yml`.
-3. **Secrets inventory** — only `ANTHROPIC_API_KEY` and `RELEASE_PLEASE_TOKEN` should
-   exist, and the token should be fine-grained (repo-scoped, minimal permissions).
+3. **Secrets inventory** — at most `RELEASE_PLEASE_TOKEN` and, optionally,
+   `ANTHROPIC_API_KEY` should exist. The token should be fine-grained (repo-scoped,
+   minimal permissions). The API key only enables the API-billed eval jobs; this
+   repository does not set one.
 
 ## Reporting a vulnerability
 

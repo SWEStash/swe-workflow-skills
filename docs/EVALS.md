@@ -74,14 +74,24 @@ Two runners turn the loop above into something repeatable:
 | Runner | Use | Needs |
 |---|---|---|
 | `evals/workflow-runner.mjs` | Fast local RED/GREEN loop; **produces the committed baseline** | Claude Code Workflow tool |
-| `evals/run.py` | CI regression gate, scriptable; **consumes that baseline** | `ANTHROPIC_API_KEY` + `EVAL_GEN_MODEL` + `pip install -r evals/requirements.txt` |
+| `evals/run.py` | API-billed regression gate, scriptable; **consumes that baseline** | `ANTHROPIC_API_KEY` + `EVAL_GEN_MODEL` + `pip install -r evals/requirements.txt` |
 
 Both **generate** a candidate reply (with the skill loaded = GREEN; without =
 RED) and **judge** it with a skeptical LLM-as-judge using structured output
 (per-assertion pass/fail, keyed on assertion index). Both support
 majority-of-`k` voting; `run.py` adds a non-zero exit when a previously-green
 assertion regresses. The GitHub Actions workflow (`.github/workflows/skill-evals.yml`)
-runs it on PRs that touch `skills/`.
+runs it on PRs that touch `skills/`, but only when the repository has an
+`ANTHROPIC_API_KEY` secret; without one the job is skipped, not failed.
+
+**Where the regression check runs in this repository.** This repository sets no API
+key and spends no tokens in CI. Every eval runs in-session through the Workflow
+runners, and regressions are caught when a re-run is merged: `merge-baseline.mjs`
+reports every assertion that was green and is now red (see
+[Merging a run into the baseline](#merging-a-run-into-the-baseline-evalsmerge-baselinemjs)),
+which is the same comparison `run.py` fails on. CI still runs the offline checks
+(generated artifacts, dataset freshness, the leak detector's self-test, `verify.mjs`).
+The API-billed jobs stay in place for a fork that wants them.
 
 **The two arms present the model the same condition**, so their rows are
 comparable: RED is tool-less in both, and GREEN in both may read files inside
@@ -97,7 +107,7 @@ python evals/run.py --skills tdd-workflow -k 3    # one skill, 3 votes
 ### The shared baseline (`evals/baseline.json`)
 
 Written by the **in-session Workflow arm** (subscription-funded), committed, and
-consumed as the CI gate by the **Python arm** — the same split
+consumed by the **Python arm**'s regression gate when it runs. The same split
 `evals/routing-baseline.json` already uses. Shape: top-level `_note` / `model` /
 `k` / `runner` / `option` / `summary`, then `skills.<name>."{kind}:{id}"` rows
 carrying `green` and `red` **per-assertion boolean arrays** plus their own
@@ -780,7 +790,7 @@ skill only delivers its proven lift if `skill-router` routes to it. In short:
 
 | Runner | Layer | Use | Needs |
 |---|---|---|---|
-| `evals/routing.py` | 2 | CI regression gate, scriptable | `ANTHROPIC_API_KEY` + `pip install -r evals/requirements.txt` |
+| `evals/routing.py` | 2 | API-billed regression gate, scriptable | `ANTHROPIC_API_KEY` + `pip install -r evals/requirements.txt` |
 | `evals/routing-runner.mjs` | 2 + 3 | Fast in-session run on haiku, RED/GREEN loop | Claude Code Workflow tool (no key) |
 
 Both route on **haiku** (`claude-haiku-4-5` — `skill-router`'s shipping model).
@@ -880,10 +890,12 @@ prompt, so an agent sent to read it would route with the answer in hand.
 anything but the catalog, and fails the run if it opened a routing dataset,
 baseline or held-out file.
 
-CI: `.github/workflows/routing-evals.yml` runs `--check-dataset` (offline) then
-`--run --changed -k 3` on PRs touching `skills/`, `catalog.json`, or
-`evals/routing*`, gating on regression vs the baseline (skipped, not failed, when
-the API key is absent — like `skill-evals.yml`).
+CI: `.github/workflows/routing-evals.yml` runs `--check-dataset` (offline) on PRs
+touching `skills/`, `catalog.json`, or `evals/routing*`. With an `ANTHROPIC_API_KEY`
+secret it then runs `--run --changed -k 3` and gates on regression against the
+baseline; without one that step is skipped, not failed. This repository sets no key,
+so routing is re-run in-session with `routing-runner.mjs` and compared against
+`routing-baseline.json` there.
 
 ### Results (haiku) and the haiku recommendation
 
@@ -1085,7 +1097,7 @@ recording:
 
 Two takeaways: (1) the harness detects the regression and the catalog/eval pipeline
 round-trips cleanly (RED → GREEN via a `SKILL.md` edit + `build-plugins.mjs`), which
-is what the CI gate enforces against `routing-baseline.json`; and (2) the design
+is what the regression comparison against `routing-baseline.json` catches; and (2) the design
 note's "the fix is almost always a catalog-description edit" holds for *clear-named*
 skills only weakly — keyword tweaks barely move haiku, whereas **explicit
 when-to-use / when-NOT-to-use instructions in the description are the lever that
@@ -1099,8 +1111,8 @@ Anthropic's official `skill-creator` plugin (`claude-plugins-official`) now ship
 per-skill eval loop, and it overlaps ours by design — both keep test cases in
 `evals/evals.json` *inside the skill directory*, both compare the skill loaded vs
 absent, and both judge with an LLM. The two are complementary, not competing: use
-skill-creator to author and tune one skill; use this harness to **gate a whole catalog
-in CI**. The overlap and the gaps:
+skill-creator to author and tune one skill; use this harness to **hold a whole catalog
+to a committed baseline**. The overlap and the gaps:
 
 | Capability | skill-creator | this repo |
 |---|---|---|
@@ -1109,7 +1121,7 @@ in CI**. The overlap and the gaps:
 | LLM-as-judge grading | per-run `grading.json` | centralized in `run.py`, **majority-of-k** voting |
 | Description / trigger tuning | generates should/should-not-trigger prompts, measures hit rate, proposes edits | mined into the **routing** dataset (positive + boundary cases) |
 | Blind A/B of two skill versions | yes | no (out of scope) |
-| **CI regression-vs-baseline gate** | **no** (validate is structural only) | **yes** — content *and* routing, gated in CI |
+| **Regression-vs-baseline gate** | **no** (validate is structural only) | **yes**: content *and* routing, against committed baselines (in-session here; CI with an API key) |
 | **Catalog-level routing evals** ("which of N skills activates") | **no** (per-skill only) | **yes** — the routing harness above |
 | Pressure tests (adversarial rationalization) | no | yes, on hardened skills |
 
@@ -1124,6 +1136,7 @@ runs under skill-creator unchanged; the reverse needs only the 3-eval happy/edge
 contract and (for hardened skills) a `pressure_tests` block.
 
 **Positioning.** skill-creator is the better *authoring* and single-skill tuning tool;
-this harness is the **CI regression gate and catalog-level routing evaluator it doesn't
-provide**. The natural division of labor: tune a skill's description with skill-creator,
-then let `run.py` + `routing.py` keep it — and the other 64 — from regressing on every PR.
+this harness is the **regression-vs-baseline gate and catalog-level routing evaluator it
+doesn't provide**. The natural division of labor: tune a skill's description with
+skill-creator, then let the baselines keep it, and the other 65, from regressing as the
+catalog changes.
