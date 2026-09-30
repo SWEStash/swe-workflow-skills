@@ -22,7 +22,8 @@
         "Stops executing the affected phases instead of silently improvising a different approach under the old plan",
         "Explicitly triggers re-planning for the affected phases, involving the user or the feature-planning workflow",
         "Preserves and does not discard the completed, verified work from earlier phases",
-        "Communicates the drift, its impact on the remaining plan, and the options — rather than quietly continuing"
+        "Communicates the drift, its impact on the remaining plan, and the options — rather than quietly continuing",
+        "Routes the structural question the plan did not answer (such as where queued, in-flight or failed writes are stored) to data-modeling or architecture-design rather than settling it inline"
       ]
     },
     {
