@@ -4,7 +4,7 @@
 measurements put it anywhere from ~45% to ~84% depending on prompt and hook hacks. This
 library replaces auto-triggering with an **orchestrator that routes intent to skills by
 name**, and it measures that routing the way you'd measure code: a 138-case harness,
-graded by accept-set, gated in CI against a committed baseline. On the current 66-skill
+graded by accept-set, gated against a committed baseline. On the current 66-skill
 catalog, routing on `claude-haiku-4-5` at k=3 scores **65/65 top-1, 64/65 boundary, 0/8
 false activation, and one confusion pair**. The numbers below are reproducible from
 the repo with no API key.
@@ -75,8 +75,10 @@ The short version:
 - **Model:** `claude-haiku-4-5` — `skill-router`'s shipping model. If haiku routes it
   cleanly, stronger models are headroom, not a requirement.
 - **Gate:** regression-vs-baseline, never an absolute threshold. A case that routed
-  correctly in the committed `routing-baseline.json` must not later misroute. Wired into
-  `.github/workflows/routing-evals.yml`.
+  correctly in the committed `routing-baseline.json` must not later misroute.
+  `.github/workflows/routing-evals.yml` runs it on PRs when an `ANTHROPIC_API_KEY` secret
+  is set. This repository sets none, so the routing runs happen in-session (key-free) and
+  are compared against the baseline there.
 
 ## Results (committed baseline, 66-skill catalog)
 

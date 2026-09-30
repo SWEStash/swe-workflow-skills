@@ -320,5 +320,5 @@ Full policy: docs/AUTHORING.md § Obsolescence review.
 
 - docs/AUTHORING.md — the canonical rules and common mistakes.
 - [references/pressure-testing.md](references/pressure-testing.md) — running baseline scenarios and the pressure levers.
-- `docs/EVALS.md` — the automated RED/GREEN harness that replays evals through subagents and gates regressions in CI.
+- `docs/EVALS.md` — the automated RED/GREEN harness that replays evals through subagents and checks regressions against a committed baseline.
 - `verification-before-completion` — the discipline that proves a skill change works (run the eval, read the result).
