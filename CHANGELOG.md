@@ -12,6 +12,18 @@ description, not here. Sections dated before 0.7.0 carry hand-written prose from
 file was curated manually.
 
 
+## [0.9.1](https://github.com/SWEStash/swe-workflow-skills/compare/v0.9.0...v0.9.1) (2026-09-30)
+
+
+### Fixed
+
+* **evals:** gate each baseline row on the model that recorded it ([#55](https://github.com/SWEStash/swe-workflow-skills/issues/55)) ([fa8a878](https://github.com/SWEStash/swe-workflow-skills/commit/fa8a87832ddcc3816849938b204af58459ef8e69))
+
+
+### Changed
+
+* say where the eval regression check actually runs; tighten the README ([#58](https://github.com/SWEStash/swe-workflow-skills/issues/58)) ([9e0bc57](https://github.com/SWEStash/swe-workflow-skills/commit/9e0bc57715c162298d02aee00bf97ea7f80e07a3))
+
 ## [0.9.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.8.2...v0.9.0) (2026-09-29)
 
 
