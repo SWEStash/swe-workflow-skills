@@ -386,10 +386,17 @@ jobs:
           push: true
           tags: ghcr.io/org/user-service:${{ github.ref_name }}
 
+      - name: Mint a short-lived token for the deployment repo
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.DEPLOY_APP_ID }}
+          private-key: ${{ secrets.DEPLOY_APP_PRIVATE_KEY }}
+          repositories: deployment-repo
       - name: Trigger deployment repo update
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.DEPLOY_REPO_PAT }}
+          token: ${{ steps.app-token.outputs.token }}
           repository: org/deployment-repo
           event-type: version-bump
           client-payload: >
@@ -426,7 +433,6 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           title: "bump ${{ github.event.client_payload.service }} to ${{ github.event.client_payload.version }}"
           body: |
             Automated version bump triggered by [${{ github.event.client_payload.service }}](https://github.com/org/${{ github.event.client_payload.service }}/commit/${{ github.event.client_payload.commit_sha }}).

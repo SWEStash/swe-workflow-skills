@@ -112,12 +112,17 @@ is preferred.)
 
 ## Frontmatter Fields
 
-All fields are optional except that `description` is strongly recommended. The one we
-set on every skill:
+All fields are optional except that `description` is strongly recommended.
 
-| Field | Purpose | Used in this repo |
-|---|---|---|
-| `allowed-tools` | Restrict tools the skill can call | Most skills use `Read, Grep, Glob, Write, Edit`. Implementation- or infra-adjacent skills add `Bash`. Research-oriented skills (dependency-management, security-audit) add `WebFetch, WebSearch`. |
+**Do not set `allowed-tools`.** It does not restrict tools. It pre-approves the listed
+tools, so Claude uses them without a permission prompt during the turn that invokes the
+skill ([skill settings docs](https://code.claude.com/docs/en/skills)). A bare `Bash` or
+`Write` there lets an instruction injected through content the skill reads run shell
+commands or write files unprompted, and Anthropic's plugin directory holds any plugin
+that pre-approves broad shell access for manual review. Library skills leave every tool
+call to the user's permission settings. The read-only `git diff` / `git log` lines that
+some skills inject with `` !`…` `` need no grant: Claude Code allows read-only git
+commands by default.
 
 **Do not set `model`.** For inline skills the frontmatter `model` field is ignored at
 runtime (anthropics/claude-code#45191, closed not-planned), so a pin is dead metadata.
@@ -127,13 +132,14 @@ quota bucket (an `opus` pin can be refused on the monthly spend limit while the 
 session still has quota), and fails outright for plans or org allowlists without that
 model. Omit the field; skills inherit the session model everywhere.
 
-**Security rule for tool grants:** do not combine reading *untrusted content* (an
-arbitrary repo, a fetched page, a user-supplied file) with network tools
-(`WebFetch`/`WebSearch`) unless the skill genuinely needs it — that pairing is a
+**Security rule for network use:** do not have a skill combine reading *untrusted
+content* (an arbitrary repo, a fetched page, a user-supplied file) with network tools
+(`WebFetch`/`WebSearch`) unless it genuinely needs both — that pairing is a
 read-then-exfiltrate channel if the content carries prompt injection. When a skill
-must have both (e.g. `security-audit` reads a repo *and* looks up CVEs), keep the
-grant but note the exposure in the skill and record it as an accepted risk in
-[SECURITY.md](../SECURITY.md). Prefer the narrowest grant that still does the job.
+must do both (e.g. `security-audit` reads a repo *and* looks up CVEs), note the
+exposure in the skill and record it as an accepted risk in
+[SECURITY.md](../SECURITY.md). The user's permission prompts are the control, which is
+one more reason not to pre-approve those tools.
 
 Newer fields worth knowing (adopt where they fit; see the
 [skill settings docs](https://code.claude.com/docs/en/skills) for the full set):

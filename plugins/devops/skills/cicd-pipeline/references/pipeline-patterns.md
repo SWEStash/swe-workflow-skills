@@ -76,7 +76,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ github.token }}
       - uses: docker/build-push-action@v5
         with:
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}

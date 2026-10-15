@@ -87,7 +87,7 @@ Fail fast on missing config at application startup:
 
 ```python
 def validate_config():
-    required = ['DATABASE_URL', 'API_KEY', 'JWT_SECRET']
+    required = ['DATABASE_URL', 'PAYMENTS_BASE_URL', 'SESSION_TTL_SECONDS']
     missing = [key for key in required if not os.environ.get(key)]
     if missing:
         raise EnvironmentError(f"Missing required config: {', '.join(missing)}")

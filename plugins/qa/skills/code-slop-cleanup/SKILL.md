@@ -2,7 +2,6 @@
 name: code-slop-cleanup
 description: "Strip AI slop from a branch diff before PR — judge each hunk against the surrounding file's conventions, remove without changing behavior, re-run tests. Removal only: hunting bugs → code-reviewing; structural improvement → refactoring; repo-wide audit → technical-debt-review; pruning tests → test-suite-design."
 when_to_use: "Triggers: deslop, AI slop, slop cleanup, tighten this diff, remove AI artifacts, clean the diff before PR, debug leftovers, stray PLAN.md, obvious comments, unnecessary try/catch, backwards-compat shim nobody asked for, diff hygiene."
-allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # Code Slop Cleanup

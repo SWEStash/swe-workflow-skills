@@ -254,6 +254,10 @@ function build() {
       JSON.stringify(manifest, null, 2) + "\n",
     );
     writeFileSync(join(pluginDir, "README.md"), pluginReadme(key, r, skills, librarySize));
+    // Listing icon for the plugin directory; rendered by scripts/build-icons.mjs.
+    const icon = join(ROOT, "assets", "plugin-icons", `${key}.png`);
+    if (!existsSync(icon)) throw new Error(`role '${key}' has no icon; run node scripts/build-icons.mjs`);
+    cpSync(icon, join(pluginDir, ".claude-plugin", "icon.png"));
     cpSync(join(ROOT, "LICENSE"), join(pluginDir, "LICENSE"));
 
     marketplacePlugins.push({
@@ -267,7 +271,6 @@ function build() {
 
   const marketplace = {
     name: "swe-workflow",
-    displayName: "SWE Workflow Skills",
     description: "Role-scoped SDLC workflow skills. Install the plugin(s) for your role.",
     version: VERSION,
     owner: { name: "SWEStash" },

@@ -1,6 +1,5 @@
 {
   "name": "swe-workflow",
-  "displayName": "SWE Workflow Skills",
   "description": "Role-scoped SDLC workflow skills. Install the plugin(s) for your role.",
   "version": "0.10.0",
   "owner": {

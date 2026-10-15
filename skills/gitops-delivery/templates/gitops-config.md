@@ -85,10 +85,17 @@ spec:
 
 ```yaml
 # Add this step after building and pushing the Docker image
+- name: Mint a short-lived token for the deployment repo   # a GitHub App installed on the deployment repo; no long-lived PAT
+  id: app-token
+  uses: actions/create-github-app-token@v1
+  with:
+    app-id: ${{ vars.DEPLOY_APP_ID }}
+    private-key: ${{ secrets.DEPLOY_APP_PRIVATE_KEY }}
+    repositories: deployment-repo
 - name: Trigger deployment repo update
   uses: peter-evans/repository-dispatch@v3
   with:
-    token: ${{ secrets.DEPLOY_REPO_PAT }}   # PAT with repo scope on deployment repo
+    token: ${{ steps.app-token.outputs.token }}
     repository: <org>/deployment-repo
     event-type: version-bump
     client-payload: >

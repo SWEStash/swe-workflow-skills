@@ -2,7 +2,6 @@
 name: plan-execution
 description: "Execute an already-approved plan with discipline — batch tasks into verifiable checkpoints, verify each with fresh evidence before marking it done, log drift, and stop to re-plan when reality diverges from the plan's assumptions. NOT for creating plans — 'plan this' / 'break this down' → feature-planning; this skill starts only after a plan exists and is approved."
 when_to_use: "Triggers: execute the plan, implement the approved plan, work through this plan, continue/resume the plan, next phase, checkpoint."
-allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # Plan Execution
