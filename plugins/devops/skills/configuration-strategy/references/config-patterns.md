@@ -88,7 +88,7 @@ Fail fast on missing config at application startup:
 ```python
 def validate_config():
     required = ['DATABASE_URL', 'PAYMENTS_BASE_URL', 'SESSION_TTL_SECONDS']
-    missing = [key for key in required if not os.environ.get(key)]
+    missing = [name for name in required if not os.environ.get(name)]
     if missing:
         raise EnvironmentError(f"Missing required config: {', '.join(missing)}")
 
@@ -141,9 +141,9 @@ const config = {
   featureFlagServiceUrl: process.env.FEATURE_FLAG_URL ?? null,
 };
 
-function requireEnv(key: string): string {
-  const value = process.env[key];
-  if (!value) throw new Error(`Required environment variable ${key} is not set`);
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) throw new Error(`Required environment variable ${name} is not set`);
   return value;
 }
 ```

@@ -178,7 +178,8 @@ build:
   services:
     - docker:24-dind
   script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+    # Log in to $CI_REGISTRY first with GitLab's predefined registry credentials,
+    # piped to `docker login --password-stdin` so they never appear in the job log.
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
   only:
