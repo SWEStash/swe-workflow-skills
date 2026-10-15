@@ -4,7 +4,6 @@ description: "Comprehensive security analysis — OWASP Top 10, auth/authz flows
 when_to_use: "Triggers: security audit, vulnerability, is this secure, security review, pentest prep, OWASP, harden this, check for vulnerabilities, injection, XSS, CSRF, auth security."
 context: fork
 agent: general-purpose
-allowed-tools: Read, Grep, Glob, Write, Edit, WebFetch, WebSearch
 ---
 
 # Security Audit

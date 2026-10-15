@@ -4,7 +4,6 @@ description: "Review a project's strategic position before going public, launchi
 when_to_use: "Triggers: strategic review, positioning, go public, go-to-market, market analysis, competitive landscape, value proposition, is there a moat, who are our competitors, platform absorption risk, market positioning, comparable products."
 context: fork
 agent: general-purpose
-allowed-tools: Read, Grep, Glob, WebFetch, WebSearch, Write, Edit
 ---
 
 # Strategic Review

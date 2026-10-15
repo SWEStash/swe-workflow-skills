@@ -87,8 +87,12 @@ Fail fast on missing config at application startup:
 
 ```python
 def validate_config():
-    required = ['DATABASE_URL', 'API_KEY', 'JWT_SECRET']
-    missing = [key for key in required if not os.environ.get(key)]
+    required = {
+        'SERVICE_ENV': os.environ.get('SERVICE_ENV'),
+        'PAYMENTS_BASE_URL': os.environ.get('PAYMENTS_BASE_URL'),
+        'SESSION_TTL_SECONDS': os.environ.get('SESSION_TTL_SECONDS'),
+    }
+    missing = [name for name, value in required.items() if not value]
     if missing:
         raise EnvironmentError(f"Missing required config: {', '.join(missing)}")
 
@@ -135,15 +139,16 @@ Each environment should have a complete, independent configuration. Avoid sharin
 // TypeScript example with runtime validation
 const config = {
   port: parseInt(process.env.PORT ?? '3000', 10),
-  databaseUrl: requireEnv('DATABASE_URL'),
-  jwtSecret: requireEnv('JWT_SECRET'),
+  serviceEnv: required('SERVICE_ENV', process.env.SERVICE_ENV),
+  paymentsBaseUrl: required('PAYMENTS_BASE_URL', process.env.PAYMENTS_BASE_URL),
   logLevel: process.env.LOG_LEVEL ?? 'info',
   featureFlagServiceUrl: process.env.FEATURE_FLAG_URL ?? null,
 };
 
-function requireEnv(key: string): string {
-  const value = process.env[key];
-  if (!value) throw new Error(`Required environment variable ${key} is not set`);
+// Read each variable by its literal name: a lookup by computed name hides which
+// variables the app depends on.
+function required(name: string, value: string | undefined): string {
+  if (!value) throw new Error(`Required environment variable ${name} is not set`);
   return value;
 }
 ```

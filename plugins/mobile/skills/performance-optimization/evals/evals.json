@@ -38,7 +38,7 @@
       "assertions": [
         "Identifies the algorithmic complexity (O(n²) from nested loops, O(n) from includes)",
         "Explains WHY this is slow for large arrays",
-        "Refactors to a single O(n) pass using hashed lookups — a Map or object counting occurrences, or a Set of emails already seen",
+        "Refactors to a single O(n) traversal with hashed lookups — a Map or object counting occurrences, or a Set of emails already seen",
         "Removes the includes() scan over the result list: collects duplicates in a Set, or reads them off a Map of counts",
         "Notes the repeated toLowerCase() calls as a secondary optimization",
         "Provides working refactored code",

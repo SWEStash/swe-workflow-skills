@@ -1,7 +1,6 @@
 ---
 name: test-data-strategy
 description: "Design and generate test data — factories, synthetic data, property-based testing, boundary analysis, contract testing, load scenarios, GDPR-safe data. Triggers: test data, synthetic data, fake data, factory, seed data, fixtures, property-based testing, fuzz testing, boundary values, contract testing, Pact, load test data, anonymize, GDPR test data."
-allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Test Data Strategy
@@ -118,7 +117,7 @@ birth date — re-identify a person even with every direct identifier gone.
 
 Use a masking tool rather than a script: the dedicated anonymizers (Tonic, Gretel, Datanymizer,
 PostgreSQL Anonymizer) or your database's native dynamic data masking. What they supply and a hand-rolled
-pass does not is **deterministic, referentially-consistent substitution** — the same input maps to
+script does not is **deterministic, referentially-consistent substitution** — the same input maps to
 the same fake value everywhere it appears, so joins survive — plus format-preserving generators and
 a declarative per-column policy you can review and re-run. Mask on a one-way copy, never in place.
 

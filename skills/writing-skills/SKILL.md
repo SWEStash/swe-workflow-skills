@@ -2,7 +2,6 @@
 name: writing-skills
 description: "Use when authoring, editing, or reviewing a skill in this library — a new SKILL.md, one that under-triggers, or hardening an existing one. Covers description and listing-budget rules, frontmatter, progressive disclosure, the 3-eval rule, and pressure-testing against rationalizations."
 when_to_use: "Triggers: write a skill, new skill, edit a skill, skill isn't triggering."
-allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # Writing Skills
@@ -266,8 +265,8 @@ description over the body, so get it right.
 
 ## Structure and budget (brief — see AUTHORING.md for detail)
 
-- Frontmatter: `name`, `description`, `when_to_use`, `allowed-tools` — do NOT
-  set `model` (inline pins are ignored at runtime; on forked skills they
+- Frontmatter: `name`, `description`, `when_to_use`. Do NOT set
+  `allowed-tools` (it pre-approves tools, it doesn't restrict them) or `model` (inline pins are ignored at runtime; on forked skills they
   override the user's model choice and quota bucket — see AUTHORING.md
   "Frontmatter Fields"). Newer fields where they fit:
   `context: fork` + `agent` (heavy report-producing skills — must write the full

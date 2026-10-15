@@ -2,7 +2,6 @@
 name: project-documentation
 description: "Write project docs — README, contributing guides, API docs, changelogs, inline docs — and reconcile existing docs after a change made them wrong. Owns doc drift from the change in front of you; a repo-wide doc-rot audit belongs to technical-debt-review."
 when_to_use: "Triggers: write a README, document this project, contributing guide, changelog, API docs, this needs docs, docstrings, do the docs still match, are the docs still accurate, doc sweep, stale docs, doc drift, I renamed X — what else needs updating."
-allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Project Documentation

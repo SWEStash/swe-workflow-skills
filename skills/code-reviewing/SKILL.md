@@ -2,7 +2,6 @@
 name: code-reviewing
 description: "Structured code reviews enforcing DRY, KISS, YAGNI, SRP, best practices, and project conventions."
 when_to_use: "Triggers: review this code, code review, check my code, what do you think of this implementation, review this PR, is this code good, feedback on my code, review staged changes before commit."
-allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Code Reviewing
@@ -13,14 +12,10 @@ Perform thorough, constructive code reviews that catch bugs, enforce principles,
 
 ### Step 1: Understand the Context
 
-Working-tree changes right now (live at skill load; empty when the tree is clean,
-this isn't a git repo, or the review targets something else — e.g. pasted code or
-a PR):
-
-!`git diff --stat 2>/dev/null || true`
-
-If the summary above is empty or irrelevant to what you were asked to review,
-proceed with the code as provided.
+When the review target is local work, start from `git diff --stat` for the
+working-tree changes. If it's empty (a clean tree, not a git repo) or the review
+targets something else, such as pasted code or a PR, proceed with the code as
+provided.
 
 **Called from the pre-commit gate?** When `verification-before-completion` routes
 here before a commit, the review target is `git diff --staged` — the change about

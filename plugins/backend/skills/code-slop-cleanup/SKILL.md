@@ -2,7 +2,6 @@
 name: code-slop-cleanup
 description: "Strip AI slop from a branch diff before PR — judge each hunk against the surrounding file's conventions, remove without changing behavior, re-run tests. Removal only: hunting bugs → code-reviewing; structural improvement → refactoring; repo-wide audit → technical-debt-review; pruning tests → test-suite-design."
 when_to_use: "Triggers: deslop, AI slop, slop cleanup, tighten this diff, remove AI artifacts, clean the diff before PR, debug leftovers, stray PLAN.md, obvious comments, unnecessary try/catch, backwards-compat shim nobody asked for, diff hygiene."
-allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # Code Slop Cleanup
@@ -19,9 +18,8 @@ Slop cleanup that deletes a load-bearing check trades clutter for a bug — a st
 
 ### Step 1: Scope the Diff
 
-Branch state vs the default branch (live at skill load):
-
-!`git diff main...HEAD --stat 2>/dev/null || git diff master...HEAD --stat 2>/dev/null || true`
+Start from the branch state vs the default branch: `git diff <base>...HEAD --stat`
+(`main`, or `master` in older repos).
 
 Run the full `git diff <base>...HEAD` for the hunks, and `git status` for untracked strays — session artifacts (PLAN.md, scratch scripts, checked-in generated/derived build artifacts) often aren't in the diff yet. Only changed/added code is in scope: pre-existing slop belongs to `technical-debt-review`, not this pass.
 

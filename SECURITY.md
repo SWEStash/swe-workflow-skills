@@ -35,7 +35,7 @@ default, `~/.claude/` with `--global`, or `--dir`):
 | installed files → your shell (hook, `/role`) | local command execution | The printed hook snippet is shell-quoted (`$`, `` ` ``, `\`, `"` escaped) so a config path containing `$(…)` cannot run a command substitution. `/role` never assigns its argument to a shell variable — see [Accepted residual risks](#accepted-residual-risks). |
 | installer → your config dir | destructive writes | Positional args must exactly match known skill names before any `rmSync` (rejects path traversal). A skill directory this installer did not create is never overwritten or removed — provenance is tracked in `.swe-workflow-manifest.json` (`--force` to overwrite deliberately). |
 | PR content → CI | script injection, secret theft | Eval workflows trigger on `pull_request` (never `pull_request_target`), so fork PRs receive no secrets; `permissions: contents: read`; GitHub context values are passed through `env:`, never interpolated into `run:` scripts; Python harnesses use argv lists (no `shell=True`). |
-| untrusted repo content → the model | prompt injection / exfiltration | Each skill's `allowed-tools` frontmatter scopes its tool surface. Skills that read untrusted content while holding network tools carry an explicit note — see the authoring rule in [docs/AUTHORING.md](docs/AUTHORING.md). |
+| untrusted repo content → the model | prompt injection / exfiltration | Skills set no `allowed-tools`, so no tool is pre-approved: every tool call goes through the user's permission settings. Skills that read untrusted content and also use network tools carry an explicit note — see the authoring rule in [docs/AUTHORING.md](docs/AUTHORING.md). |
 
 ## Files that execute automatically — treat as trusted-integrity
 
@@ -63,11 +63,12 @@ review its contents in code review like any other committed code.
   `disable-model-invocation: true` (only a human types the argument), a compromised
   model already holds the Bash tool, and Claude Code's permission mode still gates the
   call. Owner: maintainers.
-- **Skills that read untrusted content while holding network tools.** `security-audit`
-  (and similar research skills) deliberately keep `WebFetch`/`WebSearch` for live CVE
+- **Skills that read untrusted content and use network tools.** `security-audit`
+  (and similar research skills) direct Claude to `WebFetch`/`WebSearch` for live CVE
   lookups while also reading a repository that may contain prompt injection — a
-  read-then-exfiltrate channel. This is a general Claude Code exposure; the grant is
-  **kept** for its legitimate use and documented as an authoring rule
+  read-then-exfiltrate channel. This is a general Claude Code exposure. The skills
+  pre-approve no tools, so those calls go through the user's permission settings; the
+  use is **kept** for its legitimate purpose and documented as an authoring rule
   ([docs/AUTHORING.md](docs/AUTHORING.md)). Run such skills only on repositories you
   are authorized to audit. Owner: maintainers.
 

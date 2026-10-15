@@ -1,7 +1,6 @@
 ---
 name: refactoring
 description: "Systematic code improvement via design principles, smell detection, and safe transformation patterns. Triggers: refactor this, clean this up, simplify this code, reduce complexity, extract this, this code is messy, tech debt, improve this code, code smell, rename, extract function, dead code."
-allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # Refactoring
@@ -81,7 +80,7 @@ After completing the planned sequence:
 - **YAGNI**: Don't introduce abstractions for hypothetical future needs during refactoring
 - **Functional Independence**: Refactoring should reduce coupling, not increase it
 - **Boy Scout Rule**: Leave the code cleaner than you found it — every refactoring session should improve the surrounding code slightly, not just the target. Small cleanups (renaming, removing dead code) near the area you're working in compound over time.
-- **Kent Beck's 4 Rules of Simple Design**: After refactoring, the code should: (1) pass all tests, (2) reveal intention clearly, (3) contain no duplication, (4) use the fewest classes and methods needed. Apply these as a checklist during Step 5 review.
+- **Kent Beck's 4 Rules of Simple Design**: After refactoring, the code should: (1) keep all tests green, (2) reveal intention clearly, (3) contain no duplication, (4) use the fewest classes and methods needed. Apply these as a checklist during Step 5 review.
 
 ## Cross-Skill References
 

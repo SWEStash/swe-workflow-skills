@@ -1,7 +1,6 @@
 ---
 name: gitops-delivery
 description: "Design GitOps continuous delivery with ArgoCD or Flux — declarative reconciliation, cross-repo CI/CD triggers, drift detection, progressive delivery. Triggers: ArgoCD, Flux, FluxCD, GitOps, git-based deployment, declarative delivery, auto-sync, drift detection, cross-repo trigger, reconciliation loop, pull-based deployment, canary GitOps."
-allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # GitOps Delivery
@@ -49,10 +48,17 @@ App repo CI triggers a workflow in the deployment repo:
 
 ```yaml
 # In app repo: .github/workflows/release.yml
+- name: Mint a short-lived token for the deployment repo
+  id: app-token
+  uses: actions/create-github-app-token@v1
+  with:
+    app-id: ${{ vars.DEPLOY_APP_ID }}
+    private-key: ${{ secrets.DEPLOY_APP_PRIVATE_KEY }}
+    repositories: deployment-repo
 - name: Trigger deployment repo update
   uses: peter-evans/repository-dispatch@v3
   with:
-    token: ${{ secrets.DEPLOY_REPO_TOKEN }}
+    token: ${{ steps.app-token.outputs.token }}
     repository: org/deployment-repo
     event-type: version-bump
     client-payload: |

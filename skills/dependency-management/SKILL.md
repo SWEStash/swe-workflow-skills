@@ -2,7 +2,6 @@
 name: dependency-management
 description: "Evaluate, audit, and upgrade project dependencies — assess libraries before adoption, audit CVEs, plan major upgrades, resolve conflicts."
 when_to_use: "Triggers: should I use this library, npm audit, upgrade dependencies, dependency vulnerability, outdated packages, evaluate this package, is this library maintained, dependency conflict, lock file, breaking changes in upgrade, slopsquatting, package hallucination, does this package exist, verify package name, AI suggested this library."
-allowed-tools: Read, Grep, Glob, Write, Edit, WebFetch, WebSearch
 ---
 
 # Dependency Management

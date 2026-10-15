@@ -4,7 +4,6 @@ description: "Strategic codebase health assessment — identify hotspots, catego
 when_to_use: "Triggers: technical debt, tech debt, debt review, codebase health, hotspots, debt assessment, remediation plan, what should we fix first, debt roadmap, code rot, legacy code audit."
 context: fork
 agent: general-purpose
-allowed-tools: Read, Grep, Glob, Write, Edit
 ---
 
 # Technical Debt Review

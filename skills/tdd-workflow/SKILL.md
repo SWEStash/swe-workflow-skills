@@ -2,7 +2,6 @@
 name: tdd-workflow
 description: "Guide test-driven development with red-green-refactor. For NEW code via test-first — use test-suite-design for adding tests to existing code."
 when_to_use: "Triggers: use tdd, test first, write the tests, red green refactor, test-driven, what should I test, write tests before code, failing test, implement using TDD."
-allowed-tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 
 # TDD Workflow

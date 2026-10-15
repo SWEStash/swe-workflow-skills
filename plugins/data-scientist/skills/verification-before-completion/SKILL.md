@@ -2,7 +2,6 @@
 name: verification-before-completion
 description: "Evidence gate before any claim that work is done, fixed, passing, or deployed. Route here when a message declares the work finished or asks to commit, push, merge, ship, or close it out, including a brief sign-off, and before git-workflow or release-management act on it. Writing the commit message or PR text itself → git-workflow."
 when_to_use: "Triggers: is it done, did it work, tests pass, verify, ready to commit, before I push, confirm the fix."
-allowed-tools: Read, Grep, Glob, Bash
 ---
 
 # Verification Before Completion

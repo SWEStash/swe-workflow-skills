@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="9" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" fill="#10161c"/>
+  <g filter="url(#glow)" fill="none" stroke="#7df9df" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M150 350 V240 Q150 150 240 150 H350" stroke-width="28"/><path d="M674 150 H784 Q874 150 874 240 V350" stroke-width="28"/><path d="M150 674 V784 Q150 874 240 874 H350" stroke-width="28"/><path d="M674 874 H784 Q874 874 874 784 V674" stroke-width="28"/>
+    <rect x="262" y="262" width="500" height="500" rx="72"/>
+    <g transform="translate(332 332) scale(1.2)" stroke-width="20"><path d="M130 50 Q140 150 240 160 Q140 170 130 270 Q120 170 20 160 Q120 150 130 50Z"/>
+       <path d="M240 15 Q244 56 285 60 Q244 64 240 105 Q236 64 195 60 Q236 56 240 15Z"/></g>
+  </g>
+</svg>

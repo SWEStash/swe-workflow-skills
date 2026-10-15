@@ -108,7 +108,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ github.token }}   # the job's built-in token; needs packages: write
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -125,10 +125,11 @@ jobs:
     timeout-minutes: 20
     environment: production       # Requires manual approval gate in GitHub environment settings
     steps:
+      # Authenticate to the cloud with OIDC (job needs `id-token: write`) rather than
+      # a long-lived deploy key stored as a secret.
       - name: Deploy
         env:
           IMAGE_TAG: ${{ needs.build.outputs.image-tag }}
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
         run: |
           # Replace with your deploy command: kubectl, fly deploy, aws ecs update-service, etc.
           echo "Deploying $IMAGE_TAG"
@@ -136,7 +137,7 @@ jobs:
       - name: Smoke test
         run: |
           # Verify the deployment is healthy before declaring success
-          curl --fail --retry 5 --retry-delay 5 https://your-app.example.com/health
+          curl --fail --retry 5 --retry-delay 5 "${{ vars.PRODUCTION_URL }}/health"
 ```
 
 ---
@@ -177,7 +178,8 @@ build:
   services:
     - docker:24-dind
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    # Log in to $CI_REGISTRY first with GitLab's predefined registry credentials,
+    # piped to `docker login --password-stdin` so they never appear in the job log.
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
   only:
@@ -187,7 +189,7 @@ deploy_production:
   stage: deploy
   environment:
     name: production
-    url: https://your-app.example.com
+    url: $PRODUCTION_URL
   script:
     - echo "Deploy $IMAGE_TAG to production"
     # kubectl set image deployment/app app=$IMAGE_TAG

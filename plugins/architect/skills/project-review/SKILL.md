@@ -4,7 +4,6 @@ description: "Review a built project's execution health before a milestone — s
 when_to_use: "Triggers: project review, execution review, are we on track, implementation vs roadmap, scope drift, readiness review, what's actually built, validation results review, pre-launch review."
 context: fork
 agent: general-purpose
-allowed-tools: Read, Grep, Glob, WebFetch, Write, Edit
 ---
 
 # Project Review
