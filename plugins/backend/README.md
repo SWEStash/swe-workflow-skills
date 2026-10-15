@@ -36,8 +36,7 @@ Claude loads a skill when your request matches it, or when you ask for it by nam
   on demand, and each skill's `evals/evals.json` test scenarios.
 - No hooks, MCP servers, commands, agents, or scripts. The plugin itself makes no
   network calls and collects no data.
-- When loaded, `code-reviewing`, `code-slop-cleanup`, and `git-workflow` run read-only `git diff` and `git log` summaries in the
-  current repository so Claude starts from your actual changes.
+- Skills run no commands on their own when they load.
 
 ## Install
 

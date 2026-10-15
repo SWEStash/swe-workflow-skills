@@ -137,10 +137,13 @@ export function skillSummary(description) {
   return s.replace(/\s—\s/g, () => (n++ ? "; " : ": "));
 }
 
-// Lines a skill runs when it loads (`!`cmd`` dynamic context). The directory's
-// security scan expects everything a plugin runs to be disclosed in its README.
-function loadCommands(skillMdPath) {
-  return [...readFileSync(skillMdPath, "utf-8").matchAll(/^!`([^`]+)`/gm)].map((m) => m[1]);
+// Inline shell (`!`cmd`` or a ```! block) runs when a skill loads. The plugin
+// directory pairs it with any credential-like word in the plugin into a policy hold
+// on every version, so library skills don't use it (docs/AUTHORING.md).
+function assertNoInlineShell(skillMdPath, name) {
+  if (/(^|\s)!`|^```!/m.test(readFileSync(skillMdPath, "utf-8"))) {
+    throw new Error(`skill '${name}' uses inline shell; write the command as an instruction instead`);
+  }
 }
 
 // The plugin's README doubles as its listing text in Anthropic's plugin directory
@@ -149,11 +152,10 @@ function pluginReadme(key, r, skills, librarySize) {
   const entries = skills
     .map((name) => {
       const md = join(SKILLS, name, "SKILL.md");
-      return { name, summary: skillSummary(parseFrontmatter(md, name).description), cmds: loadCommands(md) };
+      assertNoInlineShell(md, name);
+      return { name, summary: skillSummary(parseFrontmatter(md, name).description) };
     })
     .sort((a, b) => a.name.localeCompare(b.name));
-  const running = entries.filter((e) => e.cmds.length);
-  const gitCmds = [...new Set(running.flatMap((e) => e.cmds.flatMap((c) => c.match(/git (?:diff|log)\b/g) ?? [])))];
 
   const lines = [
     `# ${r.label}`,
@@ -175,15 +177,8 @@ function pluginReadme(key, r, skills, librarySize) {
     "  on demand, and each skill's `evals/evals.json` test scenarios.",
     "- No hooks, MCP servers, commands, agents, or scripts. The plugin itself makes no",
     "  network calls and collects no data.",
+    "- Skills run no commands on their own when they load.",
   ];
-  if (running.length) {
-    const names = new Intl.ListFormat("en", { type: "conjunction" }).format(running.map((e) => `\`${e.name}\``));
-    const cmds = gitCmds.map((c) => `\`${c}\``).join(" and ");
-    lines.push(
-      `- When loaded, ${names} ${running.length > 1 ? "run" : "runs"} read-only ${cmds} summaries in the`,
-      "  current repository so Claude starts from your actual changes.",
-    );
-  }
   lines.push(
     "",
     "## Install",

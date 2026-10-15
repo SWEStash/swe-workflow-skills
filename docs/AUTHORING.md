@@ -120,9 +120,7 @@ skill ([skill settings docs](https://code.claude.com/docs/en/skills)). A bare `B
 `Write` there lets an instruction injected through content the skill reads run shell
 commands or write files unprompted, and Anthropic's plugin directory holds any plugin
 that pre-approves broad shell access for manual review. Library skills leave every tool
-call to the user's permission settings. The read-only `git diff` / `git log` lines that
-some skills inject with `` !`…` `` need no grant: Claude Code allows read-only git
-commands by default.
+call to the user's permission settings.
 
 **Do not set `model`.** For inline skills the frontmatter `model` field is ignored at
 runtime (anthropics/claude-code#45191, closed not-planned), so a pin is dead metadata.
@@ -176,20 +174,14 @@ purely read-only work.
 SKILL.md bodies support substitutions resolved at load time: `$ARGUMENTS` (or `$1`,
 `$2`, named `$name`), `${CLAUDE_SKILL_DIR}`, `${CLAUDE_PROJECT_DIR}`,
 `${CLAUDE_SESSION_ID}`. Inline `` !`command` `` (and fenced ```` ```! ```` blocks) run
-shell *before* Claude reads the skill and inline the live output — e.g. a review skill
-can open with `` !`git diff --stat` `` so the diff is present without a tool call.
-Use sparingly: it runs on every invocation, costs tokens, and admins can disable it
-(`disableSkillShellExecution`). Our workflow skills mostly guide thinking and rarely
-need it; it shines for skills that always start from the same live state (a diff, a
-PR, test output). Injection rules for this library: substitution is preprocessing
-over the **whole file on every invocation** (a command in section 5 runs even when
-the user needed section 1), so (1) inject only **cheap summary forms** (`--stat`,
-`--oneline`, `--short`) and keep expensive full output as an explicit instruction
-step; (2) make every command **failure-tolerant** — end with `|| true` and don't
-assume a branch name (`main` vs `master`) or even a git repo, so the skill degrades
-to its manual instructions when the output is empty; (3) the body must read sensibly
-when the placeholder resolves to nothing (hosts can disable injection) — say what to
-do "if the output above is empty or irrelevant."
+shell *before* Claude reads the skill and inline the live output.
+
+**Library skills don't use inline shell.** Anthropic's plugin directory reads an
+injected command as a way to send data off the machine, and pairs it with any
+credential-like word elsewhere in the plugin (even "pass" or a variable named `key`)
+into a policy hold on every version. It also does nothing in claude.ai chat, where
+there is no repo. Write the command as the skill's first instruction instead
+("start from `git diff --stat`"); it costs one tool call.
 
 ## Content Lifecycle — Write Standing Instructions
 

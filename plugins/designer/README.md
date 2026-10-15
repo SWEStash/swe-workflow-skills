@@ -22,6 +22,7 @@ Claude loads a skill when your request matches it, or when you ask for it by nam
   on demand, and each skill's `evals/evals.json` test scenarios.
 - No hooks, MCP servers, commands, agents, or scripts. The plugin itself makes no
   network calls and collects no data.
+- Skills run no commands on their own when they load.
 
 ## Install
 

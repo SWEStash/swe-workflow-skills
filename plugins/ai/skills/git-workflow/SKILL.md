@@ -12,13 +12,8 @@ Help write clear commit messages, structured PR descriptions, and manage branchi
 
 ### Step 1: Analyze the Changes
 
-Currently staged (live at skill load; empty when nothing is staged, this isn't a
-git repo, or injection is disabled):
-
-!`git diff --staged --stat 2>/dev/null || true`
-
-If the summary above is empty or not enough to understand the change, run
-`git diff --staged` yourself for the full diff.
+Start from `git diff --staged --stat` for what's staged. If the summary is empty
+or not enough to understand the change, run `git diff --staged` for the full diff.
 
 Identify:
 - **What changed?** (files modified, functions added/removed, logic altered)
@@ -148,15 +143,8 @@ that gate looks for is precisely what makes skipping it feel harmless.
 
 ### Step 1: Analyze the Branch
 
-Branch state vs the default branch (live at skill load; tries `main` then
-`master`):
-
-!`git log main..HEAD --oneline 2>/dev/null || git log master..HEAD --oneline 2>/dev/null || true`
-
-!`git diff main...HEAD --stat 2>/dev/null || git diff master...HEAD --stat 2>/dev/null || true`
-
-If the output above is empty or the repo uses a different default branch, run the
-equivalents against the actual base branch. Understand the full scope of changes
+Start from the branch state vs the default branch (`main`, or `master` in older
+repos): `git log <base>..HEAD --oneline` and `git diff <base>...HEAD --stat`. Understand the full scope of changes
 across all commits — run the full `git diff <base>...HEAD` when the stat summary
 isn't enough.
 

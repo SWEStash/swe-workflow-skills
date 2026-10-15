@@ -96,20 +96,20 @@ jobs:
       - name: Smoke test
         run: |
           sleep 10
-          curl --fail https://staging.example.com/health
+          curl --fail "${{ vars.STAGING_URL }}/health"
 
   deploy-production:
     needs: [deploy-staging]
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://example.com
+      url: ${{ vars.PRODUCTION_URL }}
     timeout-minutes: 10
     steps:
       - name: Deploy to production
         run: echo "Deploy image ghcr.io/${{ github.repository }}:${{ github.sha }}"
       - name: Smoke test
-        run: curl --fail https://example.com/health
+        run: curl --fail "${{ vars.PRODUCTION_URL }}/health"
 ```
 
 ## GitLab CI: Full Pipeline
@@ -173,7 +173,7 @@ deploy-staging:
   stage: deploy
   environment:
     name: staging
-    url: https://staging.example.com
+    url: $STAGING_URL
   script:
     - echo "Deploy $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA to staging"
   only:
@@ -183,7 +183,7 @@ deploy-production:
   stage: deploy
   environment:
     name: production
-    url: https://example.com
+    url: $PRODUCTION_URL
   script:
     - echo "Deploy $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA to production"
   when: manual  # Require manual approval
@@ -199,7 +199,7 @@ deploy-production:
 
 **Long-running monolith pipeline**: A 45-minute pipeline that runs everything sequentially kills developer productivity. Parallelize independent jobs. Target: green in under 10 minutes for PR checks.
 
-**Secrets in pipeline logs**: Use masking. Never `echo $SECRET` or pass secrets as command-line arguments (visible in process lists). Use environment variables and ensure the CI platform masks them.
+**Secrets in pipeline logs**: Use masking. Never echo a secret or pass it as a command-line argument (visible in process lists). Use environment variables and ensure the CI platform masks them.
 
 **No concurrency control**: Without concurrency groups, pushing twice quickly queues two full pipeline runs. Cancel outdated runs on the same branch.
 

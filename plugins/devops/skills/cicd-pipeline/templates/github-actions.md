@@ -137,7 +137,7 @@ jobs:
       - name: Smoke test
         run: |
           # Verify the deployment is healthy before declaring success
-          curl --fail --retry 5 --retry-delay 5 https://your-app.example.com/health
+          curl --fail --retry 5 --retry-delay 5 "${{ vars.PRODUCTION_URL }}/health"
 ```
 
 ---
@@ -188,7 +188,7 @@ deploy_production:
   stage: deploy
   environment:
     name: production
-    url: https://your-app.example.com
+    url: $PRODUCTION_URL
   script:
     - echo "Deploy $IMAGE_TAG to production"
     # kubectl set image deployment/app app=$IMAGE_TAG

@@ -18,9 +18,8 @@ Slop cleanup that deletes a load-bearing check trades clutter for a bug — a st
 
 ### Step 1: Scope the Diff
 
-Branch state vs the default branch (live at skill load):
-
-!`git diff main...HEAD --stat 2>/dev/null || git diff master...HEAD --stat 2>/dev/null || true`
+Start from the branch state vs the default branch: `git diff <base>...HEAD --stat`
+(`main`, or `master` in older repos).
 
 Run the full `git diff <base>...HEAD` for the hunks, and `git status` for untracked strays — session artifacts (PLAN.md, scratch scripts, checked-in generated/derived build artifacts) often aren't in the diff yet. Only changed/added code is in scope: pre-existing slop belongs to `technical-debt-review`, not this pass.
 
