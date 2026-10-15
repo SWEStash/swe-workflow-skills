@@ -6,6 +6,9 @@
   "author": {
     "name": "SWEStash"
   },
+  "homepage": "https://github.com/SWEStash/swe-workflow-skills",
+  "repository": "https://github.com/SWEStash/swe-workflow-skills",
+  "license": "MIT",
   "keywords": [
     "skills",
     "sdlc",
