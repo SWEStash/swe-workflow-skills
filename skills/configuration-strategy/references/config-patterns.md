@@ -88,7 +88,7 @@ Fail fast on missing config at application startup:
 ```python
 def validate_config():
     required = {
-        'DATABASE_URL': os.environ.get('DATABASE_URL'),
+        'SERVICE_ENV': os.environ.get('SERVICE_ENV'),
         'PAYMENTS_BASE_URL': os.environ.get('PAYMENTS_BASE_URL'),
         'SESSION_TTL_SECONDS': os.environ.get('SESSION_TTL_SECONDS'),
     }
@@ -139,7 +139,7 @@ Each environment should have a complete, independent configuration. Avoid sharin
 // TypeScript example with runtime validation
 const config = {
   port: parseInt(process.env.PORT ?? '3000', 10),
-  databaseUrl: required('DATABASE_URL', process.env.DATABASE_URL),
+  serviceEnv: required('SERVICE_ENV', process.env.SERVICE_ENV),
   paymentsBaseUrl: required('PAYMENTS_BASE_URL', process.env.PAYMENTS_BASE_URL),
   logLevel: process.env.LOG_LEVEL ?? 'info',
   featureFlagServiceUrl: process.env.FEATURE_FLAG_URL ?? null,
