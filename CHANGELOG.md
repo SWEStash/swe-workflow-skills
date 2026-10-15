@@ -12,6 +12,13 @@ description, not here. Sections dated before 0.7.0 carry hand-written prose from
 file was curated manually.
 
 
+## [0.10.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.9.1...v0.10.0) (2026-10-15)
+
+
+### Added
+
+* **plugins:** ship a README and LICENSE in every role plugin ([#59](https://github.com/SWEStash/swe-workflow-skills/issues/59)) ([1712db3](https://github.com/SWEStash/swe-workflow-skills/commit/1712db3aa5a02e3110e1a7a87ee5f286b3f3339d))
+
 ## [0.9.1](https://github.com/SWEStash/swe-workflow-skills/compare/v0.9.0...v0.9.1) (2026-09-30)
 
 
