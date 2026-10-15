@@ -125,12 +125,105 @@ function buildCatalog() {
 // and would only waste a skill-listing-budget slot. Exclude it from plugins.
 const PLUGIN_EXCLUDE = new Set(["skill-router"]);
 
+const REPO_URL = "https://github.com/SWEStash/swe-workflow-skills";
+
+// One line per skill for a plugin README: the first sentence of its description,
+// before the trigger list, with em dashes rewritten (the README is a directory
+// listing, and the house style for it has none).
+export function skillSummary(description) {
+  let s = description.split(/\s+-?\s*Triggers?:/)[0];
+  s = s.split(/(?<=[a-z)])\.\s/)[0].replace(/\.$/, "");
+  let n = 0;
+  return s.replace(/\s—\s/g, () => (n++ ? "; " : ": "));
+}
+
+// Lines a skill runs when it loads (`!`cmd`` dynamic context). The directory's
+// security scan expects everything a plugin runs to be disclosed in its README.
+function loadCommands(skillMdPath) {
+  return [...readFileSync(skillMdPath, "utf-8").matchAll(/^!`([^`]+)`/gm)].map((m) => m[1]);
+}
+
+// The plugin's README doubles as its listing text in Anthropic's plugin directory
+// (40+ words outside code blocks, plus a LICENSE in the plugin folder, are required).
+function pluginReadme(key, r, skills, librarySize) {
+  const entries = skills
+    .map((name) => {
+      const md = join(SKILLS, name, "SKILL.md");
+      return { name, summary: skillSummary(parseFrontmatter(md, name).description), cmds: loadCommands(md) };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const running = entries.filter((e) => e.cmds.length);
+  const gitCmds = [...new Set(running.flatMap((e) => e.cmds.flatMap((c) => c.match(/git (?:diff|log)\b/g) ?? [])))];
+
+  const lines = [
+    `# ${r.label}`,
+    "",
+    `${r.description} Part of [SWE Workflow Skills](${REPO_URL}), a library of`,
+    "software-lifecycle workflow skills for Claude.",
+    "",
+    "Each skill is a step-by-step method, not a prompt snippet: it tells Claude what to",
+    "check, in what order, and what evidence to produce before calling the work done.",
+    "Claude loads a skill when your request matches it, or when you ask for it by name.",
+    "",
+    `## Skills (${entries.length})`,
+    "",
+    ...entries.map((e) => `- **${e.name}**: ${e.summary}.`),
+    "",
+    "## What the plugin contains",
+    "",
+    "- Skills only: `SKILL.md` instructions, the reference docs and templates they load",
+    "  on demand, and each skill's `evals/evals.json` test scenarios.",
+    "- No hooks, MCP servers, commands, agents, or scripts. The plugin itself makes no",
+    "  network calls and collects no data.",
+  ];
+  if (running.length) {
+    const names = new Intl.ListFormat("en", { type: "conjunction" }).format(running.map((e) => `\`${e.name}\``));
+    const cmds = gitCmds.map((c) => `\`${c}\``).join(" and ");
+    lines.push(
+      `- When loaded, ${names} ${running.length > 1 ? "run" : "runs"} read-only ${cmds} summaries in the`,
+      "  current repository so Claude starts from your actual changes.",
+    );
+  }
+  lines.push(
+    "",
+    "## Install",
+    "",
+    "In Claude Code:",
+    "",
+    "```text",
+    "/plugin marketplace add SWEStash/swe-workflow-skills",
+    `/plugin install swe-workflow-${key}@swe-workflow`,
+    "```",
+    "",
+    "## The full library",
+    "",
+    `This plugin is one role's subset. The full library has ${librarySize} skills and an`,
+    "orchestrator (`skill-router`) that routes each request to the right skills and chains",
+    "them across phases. It installs on the Claude Code CLI:",
+    "",
+    "```bash",
+    "npx swe-workflow-skills install --global",
+    "```",
+    "",
+    `See the [project README](${REPO_URL}#readme) for setup and the other roles.`,
+    "",
+    "## License",
+    "",
+    "MIT. See [LICENSE](LICENSE).",
+    "",
+  );
+  const text = lines.join("\n");
+  if (text.includes("—")) throw new Error(`plugins/${key}/README.md would contain an em dash`);
+  return text;
+}
+
 function build() {
   rmSync(PLUGINS, { recursive: true, force: true });
   rmSync(join(MARKET_DIR, "marketplace.json"), { force: true });
   mkdirSync(MARKET_DIR, { recursive: true });
 
   const marketplacePlugins = [];
+  const librarySize = readdirSync(SKILLS).filter((e) => statSync(join(SKILLS, e)).isDirectory()).length;
 
   for (const [key, r] of Object.entries(roles.roles)) {
     const pluginDir = join(PLUGINS, key);
@@ -150,6 +243,9 @@ function build() {
       description: r.description,
       version: VERSION,
       author: { name: "SWEStash" },
+      homepage: REPO_URL,
+      repository: REPO_URL,
+      license: "MIT",
       keywords: ["skills", "sdlc", key],
     };
     mkdirSync(join(pluginDir, ".claude-plugin"), { recursive: true });
@@ -157,6 +253,8 @@ function build() {
       join(pluginDir, ".claude-plugin", "plugin.json"),
       JSON.stringify(manifest, null, 2) + "\n",
     );
+    writeFileSync(join(pluginDir, "README.md"), pluginReadme(key, r, skills, librarySize));
+    cpSync(join(ROOT, "LICENSE"), join(pluginDir, "LICENSE"));
 
     marketplacePlugins.push({
       name: `swe-workflow-${key}`,
