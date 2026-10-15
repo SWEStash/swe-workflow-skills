@@ -36,6 +36,9 @@ Claude loads a skill when your request matches it, or when you ask for it by nam
 - No hooks, MCP servers, commands, agents, or scripts. The plugin itself makes no
   network calls and collects no data.
 - Skills run no commands on their own when they load.
+- Some skills have Claude use a public service, through Claude's own tools and
+  your permission settings:
+  - `deployment-checklist` suggests `npm audit` / `pip audit`, which send the dependency list to the registry's advisory service.
 
 ## Install
 

@@ -127,6 +127,18 @@ const PLUGIN_EXCLUDE = new Set(["skill-router"]);
 
 const REPO_URL = "https://github.com/SWEStash/swe-workflow-skills";
 
+// Skills whose instructions have Claude contact a public service (through its own
+// tools, under the user's permission settings). The directory's data-handling form
+// asks whether any skill sends data beyond declared connectors, and a "yes" must be
+// listed in the README, so keep this in step with the skill bodies.
+const EXTERNAL_SERVICES = {
+  "build-vs-buy": "reads vendor pricing pages and open-source repositories on the web",
+  "dependency-management": "runs `npm audit` and checks package registries such as npm and PyPI, which receive the package names",
+  "deployment-checklist": "suggests `npm audit` / `pip audit`, which send the dependency list to the registry's advisory service",
+  "security-audit": "runs dependency scanners such as `npm audit` or `pip-audit`, which send the dependency list to the registry's advisory service",
+  "strategic-review": "searches the web for competitor and market information",
+};
+
 // One line per skill for a plugin README: the first sentence of its description,
 // before the trigger list, with em dashes rewritten (the README is a directory
 // listing, and the house style for it has none).
@@ -179,6 +191,14 @@ function pluginReadme(key, r, skills, librarySize) {
     "  network calls and collects no data.",
     "- Skills run no commands on their own when they load.",
   ];
+  const external = entries.filter((e) => EXTERNAL_SERVICES[e.name]);
+  if (external.length) {
+    lines.push(
+      "- Some skills have Claude use a public service, through Claude's own tools and",
+      "  your permission settings:",
+      ...external.map((e) => `  - \`${e.name}\` ${EXTERNAL_SERVICES[e.name]}.`),
+    );
+  }
   lines.push(
     "",
     "## Install",

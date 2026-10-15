@@ -25,6 +25,9 @@ Claude loads a skill when your request matches it, or when you ask for it by nam
 - No hooks, MCP servers, commands, agents, or scripts. The plugin itself makes no
   network calls and collects no data.
 - Skills run no commands on their own when they load.
+- Some skills have Claude use a public service, through Claude's own tools and
+  your permission settings:
+  - `strategic-review` searches the web for competitor and market information.
 
 ## Install
 
