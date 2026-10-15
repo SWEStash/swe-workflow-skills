@@ -12,6 +12,13 @@ description, not here. Sections dated before 0.7.0 carry hand-written prose from
 file was curated manually.
 
 
+## [0.10.2](https://github.com/SWEStash/swe-workflow-skills/compare/v0.10.1...v0.10.2) (2026-10-15)
+
+
+### Fixed
+
+* **plugins:** list the public services skills use in each README ([#63](https://github.com/SWEStash/swe-workflow-skills/issues/63)) ([30ce345](https://github.com/SWEStash/swe-workflow-skills/commit/30ce345c9b7283e1cab7c767d13a8b9f99bcb844))
+
 ## [0.10.1](https://github.com/SWEStash/swe-workflow-skills/compare/v0.10.0...v0.10.1) (2026-10-15)
 
 
