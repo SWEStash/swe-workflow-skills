@@ -26,6 +26,20 @@ Claude loads a skill when your request matches it, or when you ask for it by nam
   network calls and collects no data.
 - Skills run no commands on their own when they load.
 
+## Network use
+
+The plugin declares no connectors or MCP servers and sends nothing on its own. A
+few skills include a step, within the task you asked for, where Claude looks
+something up or runs a standard developer tool. Claude does this with its own
+built-in tools (web search, or a command in your project), only when the task
+reaches that step, and under your permission settings, so you approve each
+command as you normally would. No skill contacts a service on its own initiative,
+and nothing is sent to SWEStash.
+
+Steps of that kind in this plugin:
+
+- `strategic-review`: researches competitors and the market with web search.
+
 ## Install
 
 In Claude Code:
@@ -46,6 +60,14 @@ npx swe-workflow-skills install --global
 ```
 
 See the [project README](https://github.com/SWEStash/swe-workflow-skills#readme) for setup and the other roles.
+
+## Privacy
+
+The plugin collects, stores, and sends no data, and SWEStash runs no service that
+receives any. Skills are instructions that run inside your Claude session. When a
+skill has Claude look something up or run a command, it happens through Claude's
+own tools, under your permission settings, as part of a task you asked for. What
+Claude does with your data is covered by Anthropic's privacy policy.
 
 ## License
 
