@@ -127,16 +127,26 @@ const PLUGIN_EXCLUDE = new Set(["skill-router"]);
 
 const REPO_URL = "https://github.com/SWEStash/swe-workflow-skills";
 
-// Skills whose instructions have Claude contact a public service (through its own
-// tools, under the user's permission settings). The directory's data-handling form
-// asks whether any skill sends data beyond declared connectors, and a "yes" must be
-// listed in the README, so keep this in step with the skill bodies.
-const EXTERNAL_SERVICES = {
-  "build-vs-buy": "reads vendor pricing pages and open-source repositories on the web",
-  "dependency-management": "runs `npm audit` and checks package registries such as npm and PyPI, which receive the package names",
-  "deployment-checklist": "suggests `npm audit` / `pip audit`, which send the dependency list to the registry's advisory service",
-  "security-audit": "runs dependency scanners such as `npm audit` or `pip-audit`, which send the dependency list to the registry's advisory service",
-  "strategic-review": "searches the web for competitor and market information",
+// Task steps in which a skill has Claude reach a public service with its own built-in
+// tools (web search, or a developer command run in the user's project). The
+// directory's data-handling form asks whether any skill sends data beyond declared
+// connectors, and a "yes" must be listed in the README. Keep each entry in step with
+// the skill body: name the step, the exact tools, and what leaves the machine.
+const NETWORK_STEPS = {
+  "build-vs-buy":
+    "when comparing options, checks current pricing, licensing, and maintenance status on vendor pages and open-source repositories",
+  "dependency-management":
+    "when vetting a package, confirms it exists on its registry (`npm view <pkg>`, the PyPI page) and checks public advisory " +
+    "databases (npm, Snyk, GitHub); when auditing, runs your ecosystem's audit tool (`npm audit`, `npx better-npm-audit audit`, " +
+    "`pip audit`, `safety check`, `govulncheck`, `bundle audit check --update`); when pruning, runs `npx depcheck`, which npm " +
+    "downloads before it runs locally",
+  "deployment-checklist":
+    "includes a dependency audit (`npm audit`, `pip audit`) among the pre-deploy checks",
+  "security-audit":
+    "during the dependency scan, runs your ecosystem's audit tool (`npm audit`, `npx better-npm-audit audit`, `pip audit`, `safety check`, " +
+    "`govulncheck`, `bundle audit check --update`), which checks your dependencies against that ecosystem's public vulnerability data; " +
+    "some, like `npm audit`, send the dependency list to do so",
+  "strategic-review": "researches competitors and the market with web search",
 };
 
 // One line per skill for a plugin README: the first sentence of its description,
@@ -191,12 +201,23 @@ function pluginReadme(key, r, skills, librarySize) {
     "  network calls and collects no data.",
     "- Skills run no commands on their own when they load.",
   ];
-  const external = entries.filter((e) => EXTERNAL_SERVICES[e.name]);
-  if (external.length) {
+  const network = entries.filter((e) => NETWORK_STEPS[e.name]);
+  if (network.length) {
     lines.push(
-      "- Some skills have Claude use a public service, through Claude's own tools and",
-      "  your permission settings:",
-      ...external.map((e) => `  - \`${e.name}\` ${EXTERNAL_SERVICES[e.name]}.`),
+      "",
+      "## Network use",
+      "",
+      "The plugin declares no connectors or MCP servers and sends nothing on its own. A",
+      "few skills include a step, within the task you asked for, where Claude looks",
+      "something up or runs a standard developer tool. Claude does this with its own",
+      "built-in tools (web search, or a command in your project), only when the task",
+      "reaches that step, and under your permission settings, so you approve each",
+      "command as you normally would. No skill contacts a service on its own initiative,",
+      "and nothing is sent to SWEStash.",
+      "",
+      "Steps of that kind in this plugin:",
+      "",
+      ...network.map((e) => `- \`${e.name}\`: ${NETWORK_STEPS[e.name]}.`),
     );
   }
   lines.push(
