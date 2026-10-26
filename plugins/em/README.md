@@ -7,7 +7,7 @@ Each skill is a step-by-step method, not a prompt snippet: it tells Claude what 
 check, in what order, and what evidence to produce before calling the work done.
 Claude loads a skill when your request matches it, or when you ask for it by name.
 
-## Skills (14)
+## Skills (15)
 
 - **brainstorming**: Facilitate divergent ideation before committing to a spec: Socratic questioning, widening the option space, challenging assumptions and inherited constraints, then converging on candidates.
 - **code-reviewing**: Structured code reviews enforcing DRY, KISS, YAGNI, SRP, best practices, and project conventions.
@@ -23,6 +23,7 @@ Claude loads a skill when your request matches it, or when you ask for it by nam
 - **retrospective**: Facilitate sprint retros, project post-mortems, and incident post-mortems with actionable, owned improvements.
 - **strategic-review**: Review a project's strategic position before going public, launching, or raising: vision, mission, value proposition, scope positioning, the defensible wedge, and a live competitive / market comparative analysis.
 - **technical-debt-review**: Strategic codebase health assessment: identify hotspots, categorize debt, produce remediation roadmap.
+- **working-agreement**: Define and validate how a multi-session project is run: where plans, status and decisions live, session routines, new work, milestone close.
 
 ## What the plugin contains
 
@@ -57,7 +58,7 @@ In Claude Code:
 
 ## The full library
 
-This plugin is one role's subset. The full library has 66 skills and an
+This plugin is one role's subset. The full library has 68 skills and an
 orchestrator (`skill-router`) that routes each request to the right skills and chains
 them across phases. It installs on the Claude Code CLI:
 

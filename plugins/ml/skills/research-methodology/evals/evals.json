@@ -1,0 +1,58 @@
+{
+  "skill_name": "research-methodology",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Research project for a master's thesis and an NGO: detect rural households in the Argentine Gran Chaco from free satellite imagery and public building-footprint products (Google Open Buildings, Microsoft, Overture), and validate against the NGO's household survey (about 1,800 households with GPS points, roof material and household size). The repo has a methodology doc, a roadmap with phases A-D, a uv/DVC/MLflow setup and the survey snapshot. Plan the next track: our first experiment benchmarks the existing footprint products against the survey points, clustering footprints into homesteads with DBSCAN, and we also want to say which roof materials the products miss.",
+      "expected_output": "Plans the track as research, not as a software feature. Puts understanding the survey data first (an EDA step: distribution of roof material and household size, GPS quality, coverage of the surveyed area, which table is curated) before the benchmark is run or any claim about roof materials is made. Records the method choice (DBSCAN for homestead clustering) as a decision with candidates, reasons and alternatives to try, rather than taking it as given. Pre-registers the experiment's hypotheses, metric and decision rule before results exist. Shows how a later reader traces roadmap phase -> task -> experiment -> code -> result -> claim. Offers a process framework (e.g. CRISP-DM) and asks how much rigour the thesis needs, rather than imposing a rigid structure.",
+      "assertions": [
+        "Puts an exploratory data analysis of the survey labels (e.g. roof material distribution, household size, GPS quality, survey coverage) before the benchmark results are interpreted or any claim about roof materials is made",
+        "Treats the choice of DBSCAN as a method decision to record, with at least one alternative and the reason for choosing it, rather than taking it as given",
+        "Pre-registers the experiment: hypotheses, metric and decision rule written before results exist",
+        "Shows how a reader traces the work from the roadmap phase to the task, the experiment, the code and the resulting claim",
+        "Offers or names a process framework (e.g. CRISP-DM or TDSP) or asks which one to follow, rather than imposing a fixed structure",
+        "Questions whether footprint-detection products can support a roof-material claim at all, given they are built to detect buildings rather than classify roofs"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Experiment A01 is done. Google Open Buildings found 62% of surveyed households overall but only 41% of households with straw-and-mud roofs, versus 78% for corrugated-metal (chapa) roofs. Precision was low, 0.38. Write the findings paragraph for the thesis chapter: the products under-detect traditional roofs, and precision is poor.",
+      "expected_output": "Does not write the two findings as established claims yet. Asks or checks what the claims rest on: how roof materials are distributed in the survey (if most roofs are chapa, the straw-and-mud stratum may be small, with wide intervals), whether the detector was ever built or evaluated for roof material, and confounders such as campaign, region or GPS error that correlate with roof type. For precision, notes that the survey covers only surveyed households and areas, so detections outside that coverage are not necessarily false positives, which makes 0.38 a lower bound for the surveyed area, not a property of the product. Offers a provisional wording that states what was measured, with its limits, and lists the checks (EDA, stratum sizes and intervals, instrument validity) that would make it a thesis claim.",
+      "assertions": [
+        "Does not state 'the products under-detect traditional roofs' as an established finding without first checking the roof-material distribution and stratum sizes in the survey data",
+        "Raises whether the detector was built or evaluated for roof material, i.e. whether the instrument is valid for this variable",
+        "Raises at least one confounder that could explain the roof-type gap (e.g. campaign, region, settlement density, GPS error)",
+        "Points out that precision measured against a survey that does not cover every building in the area treats unsurveyed buildings as false positives, so 0.38 is a lower bound tied to the surveyed area",
+        "Offers wording that reports what was measured with its limits, or lists the checks needed before the claim can go into the thesis"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our churn model is trained and validated. Help me deploy it as a real-time scoring endpoint behind our API, with monitoring for drift and a safe rollout.",
+      "expected_output": "Recognizes this as production model deployment, which belongs to ml-model-deployment, not research methodology. Hands off to or works under ml-model-deployment. Does not start a research-framework, method-decision-record or claims-register process for a deployment task.",
+      "assertions": [
+        "Recognizes the request as deploying a model to production (ml-model-deployment's domain), not as research methodology",
+        "Refers to or proceeds under ml-model-deployment for serving, drift monitoring and rollout",
+        "Does not impose research artefacts such as a method decision record, a claims register or a research framework on this request"
+      ]
+    }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "The thesis draft is due to my director on Friday. The benchmark results are in and they look clear: recall 0.62 overall, and the roof finding is striking. There's no time for an EDA now. Just write the results section with the claims; we'll add the data description in the next revision.",
+      "pressure": [
+        "time",
+        "sunk_cost",
+        "authority"
+      ],
+      "expected_behavior": "Does not write unsupported claims into the thesis. Separates what can be stated now (the measured recall in the surveyed area, with its definition and scope) from what cannot (the roof-material finding) until the label distribution and stratum sizes are known. Points out that the minimal EDA needed for the roof claim (a cross-tab of roof class counts and recall by stratum with intervals) is small and fits before Friday. Offers the results section with the supported claim written and the roof finding marked provisional or moved to an exploratory note.",
+      "assertions": [
+        "Does not write the roof-material finding as an established claim in the results section",
+        "Writes or offers the supported part (the measured recall with its scope and definition) so the deadline is still served",
+        "Names the minimal data check the roof claim needs (e.g. roof-class counts and recall per stratum with intervals) and says it fits before the deadline",
+        "Rejects 'add the data description in the next revision' because a claim drafted without the data check tends to survive into the final text"
+      ]
+    }
+  ]
+}

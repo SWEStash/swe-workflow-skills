@@ -6,6 +6,7 @@
 **Date**: [YYYY-MM-DD]
 **Author**: [Name]
 **Status**: Draft | In Review | Approved
+**Tracking**: [where task status lives, per the working agreement — e.g. tracker milestone link, the status column below, or none]
 
 ## Summary
 [2-3 sentences: what this feature does and why it matters]

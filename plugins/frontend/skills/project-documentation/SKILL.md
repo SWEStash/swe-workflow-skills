@@ -1,6 +1,6 @@
 ---
 name: project-documentation
-description: "Write project docs — README, contributing guides, API docs, changelogs, inline docs — and reconcile existing docs after a change made them wrong. Owns doc drift from the change in front of you; a repo-wide doc-rot audit belongs to technical-debt-review."
+description: "Write project docs — README, contributing guides, API docs, changelogs, inline docs — and reconcile existing docs after a change made them wrong. Owns doc drift from the change in front of you; a repo-wide doc-rot audit belongs to technical-debt-review; how the project is run (process, tracking, session routines) → working-agreement."
 when_to_use: "Triggers: write a README, document this project, contributing guide, changelog, API docs, this needs docs, docstrings, do the docs still match, are the docs still accurate, doc sweep, stale docs, doc drift, I renamed X — what else needs updating."
 ---
 
@@ -230,3 +230,4 @@ For code-level documentation (JSDoc, Python docstrings, Go doc comments):
 - `architecture-documentation` — C4 diagrams and docs-as-code for the architecture docs this skill points at
 - `verification-before-completion` — the doc-drift and publish gates that read the versioned/internal boundary above
 - `technical-debt-review` — a repo-wide doc-rot audit, as opposed to the drift from the change in front of you
+- `working-agreement` — owns the process document (where things live, session routines, tracking) and its validation; this skill writes the README and CONTRIBUTING text that link to it, and a sync sweep includes it when a change alters how the project is run

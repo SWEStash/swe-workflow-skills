@@ -97,6 +97,7 @@
       "core": "technical",
       "skills": [
         "ml-pipeline-design",
+        "research-methodology",
         "ml-experiment-tracking",
         "ml-model-deployment",
         "ai-evaluation",
@@ -135,6 +136,7 @@
       "core": "technical",
       "skills": [
         "exploratory-data-analysis",
+        "research-methodology",
         "statistical-analysis",
         "notebook-to-production",
         "ml-experiment-tracking",
@@ -171,6 +173,7 @@
         "dependency-impact-analysis",
         "technical-debt-review",
         "project-review",
+        "working-agreement",
         "configuration-strategy",
         "performance-optimization"
       ]
@@ -187,6 +190,7 @@
         "project-proposal",
         "prd-writing",
         "project-review",
+        "working-agreement",
         "strategic-review",
         "code-reviewing",
         "incident-response",
@@ -201,6 +205,7 @@
       "skills": [
         "project-proposal",
         "prd-writing",
+        "working-agreement",
         "effort-estimation",
         "metrics-and-okrs",
         "retrospective",

@@ -1004,6 +1004,26 @@
       ]
     },
     {
+      "id": "positive:research-methodology:1",
+      "kind": "positive",
+      "skill": "research-methodology",
+      "prompt": "Research project for a master's thesis and an NGO: detect rural households in the Argentine Gran Chaco from free satellite imagery and public building-footprint products (Google Open Buildings, Microsoft, Overture), and validate against the NGO's household survey (about 1,800 households with GPS points, roof material and household size). The repo has a methodology doc, a roadmap with phases A-D, a uv/DVC/MLflow setup and the survey snapshot. Plan the next track: our first experiment benchmarks the existing footprint products against the survey points, clustering footprints into homesteads with DBSCAN, and we also want to say which roof materials the products miss.",
+      "accept": [
+        "research-methodology"
+      ]
+    },
+    {
+      "id": "boundary:research-methodology:3",
+      "kind": "boundary",
+      "skill": "research-methodology",
+      "prompt": "Our churn model is trained and validated. Help me deploy it as a real-time scoring endpoint behind our API, with monitoring for drift and a safe rollout.",
+      "accept": [
+        "research-methodology",
+        "ml-model-deployment",
+        "NONE"
+      ]
+    },
+    {
       "id": "positive:resilience-engineering:1",
       "kind": "positive",
       "skill": "resilience-engineering",
@@ -1277,6 +1297,26 @@
       "prompt": "A subagent reported it implemented the feature and all its tests pass. Mark the task complete.",
       "accept": [
         "verification-before-completion",
+        "NONE"
+      ]
+    },
+    {
+      "id": "positive:working-agreement:1",
+      "kind": "positive",
+      "skill": "working-agreement",
+      "prompt": "We're starting a new open-source app for an NGO: offline survey collection on Android, a Python sync server and a web admin. The PRD is written (docs/product/prd-mvp.md) and the roadmap splits the work into milestones M0-M3 (docs/plans/roadmap.md). Two volunteers will build it over several months, mostly in sessions with Claude Code, with no fixed deadlines. There's no Git remote yet; we'll probably use GitLab later. Before we write the first milestone plan, set up how this project will be run so every later session, human or agent, knows what to do.",
+      "accept": [
+        "working-agreement"
+      ]
+    },
+    {
+      "id": "boundary:working-agreement:3",
+      "kind": "boundary",
+      "skill": "working-agreement",
+      "prompt": "Write a CONTRIBUTING.md for our open-source CLI: how to set up the dev environment (Node 22, pnpm), run the tests, our conventional-commit rule, and how to open a PR.",
+      "accept": [
+        "working-agreement",
+        "project-documentation",
         "NONE"
       ]
     },

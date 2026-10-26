@@ -7,7 +7,7 @@ Each skill is a step-by-step method, not a prompt snippet: it tells Claude what 
 check, in what order, and what evidence to produce before calling the work done.
 Claude loads a skill when your request matches it, or when you ask for it by name.
 
-## Skills (17)
+## Skills (18)
 
 - **api-design**: Design RESTful and GraphQL APIs: endpoint naming, request/response contracts, error handling, pagination, versioning, auth patterns, OpenAPI specs.
 - **architecture-design**: Guide architectural and structural decisions using Architecture Decision Records (ADRs): new services, pattern choices, database selection, component boundaries, state management, costly-to-reverse decisions.
@@ -26,6 +26,7 @@ Claude loads a skill when your request matches it, or when you ask for it by nam
 - **project-review**: Review a built project's execution health before a milestone: scope alignment, roadmap / execution-plan adherence, implementation maturity (what's production-ready vs stub/deferred), and the evidence it actually works (tests, coverage, validation results, changelog).
 - **technical-debt-review**: Strategic codebase health assessment: identify hotspots, categorize debt, produce remediation roadmap.
 - **verification-before-completion**: Evidence gate before any claim that work is done, fixed, passing, or deployed.
+- **working-agreement**: Define and validate how a multi-session project is run: where plans, status and decisions live, session routines, new work, milestone close.
 
 ## What the plugin contains
 
@@ -46,7 +47,7 @@ In Claude Code:
 
 ## The full library
 
-This plugin is one role's subset. The full library has 66 skills and an
+This plugin is one role's subset. The full library has 68 skills and an
 orchestrator (`skill-router`) that routes each request to the right skills and chains
 them across phases. It installs on the Claude Code CLI:
 

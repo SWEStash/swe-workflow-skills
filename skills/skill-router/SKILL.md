@@ -94,6 +94,7 @@ installed skill by name, regardless of role.
 ### Plan & Define
 - **brainstorming** — divergent Socratic ideation *before* a spec exists; opens options, then hands off
 - **feature-planning** — break a feature into scoped tasks, acceptance criteria, dependencies
+- **working-agreement** — define and validate how a multi-session project is run: where status lives, session routines, new work, milestone close
 - **build-vs-buy** — build in-house vs vendor/SaaS vs adopt OSS: TCO, lock-in, exit costs
 - **prd-writing** — write a PRD / RFC / tech spec to align on the WHAT and WHY
 - **project-proposal** — business case / budget / go-no-go before a project starts
@@ -175,6 +176,7 @@ installed skill by name, regardless of role.
 - **data-quality** — dbt tests, expectations, data contracts, freshness, lineage / blast radius
 
 ### Data Science
+- **research-methodology** — research with defensible claims: framework and rigor, data understood first, method decisions, claims traced, sources verified
 - **exploratory-data-analysis** — profile an unfamiliar dataset: missingness structure, distributions, leakage, hypotheses
 - **statistical-analysis** — hypothesis tests, experiment design/power, confidence intervals, multiple-comparison discipline
 - **notebook-to-production** — refactor analysis notebooks to tested, parameterized, scheduled production code
@@ -199,6 +201,13 @@ isolation model, the storage engine, the offline sync model — `architecture-de
 leads instead, and `feature-planning` then scopes the work that the chosen option
 implies. Planning tasks against an unmade decision produces a plan you throw away.
 Either way both skills are in the chain; what changes is which one runs first.
+
+**New project / multi-session work**
+`prd-writing` or `feature-planning` (the first plan that spans sessions) →
+`working-agreement` (how the project is run, validated by a fresh reader) →
+`plan-execution` (records status where the agreement says). In a project that
+already runs without one — nobody can say what's done — `working-agreement`
+leads, reconstructing the current process first.
 
 **Bug / incident**
 `incident-response` (if prod is down) → `bug-investigating` → `tdd-workflow`
@@ -230,6 +239,13 @@ Notebook to production: `exploratory-data-analysis` (understand the data) →
 `statistical-analysis` (test the hypotheses) → `notebook-to-production`
 (modules, tests, scheduling); if the notebook trains a model →
 `ml-pipeline-design` instead.
+
+**Research / data-science project**
+`research-methodology` leads: it agrees the framework (CRISP-DM by default, or
+the user's own) and the rigor, and the framework's phases set the order — not a
+fixed chain. What holds under any framework: `exploratory-data-analysis` before
+any result is interpreted, `statistical-analysis` and `ml-experiment-tracking`
+per experiment, `plan-execution` for the work itself.
 
 **Pre-public / pre-milestone review**
 `strategic-review` (vision, positioning, market) → `project-review` (scope,

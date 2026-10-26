@@ -2,10 +2,10 @@
 
 [![npm](https://img.shields.io/npm/v/swe-workflow-skills)](https://www.npmjs.com/package/swe-workflow-skills)
 [![roles-check](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml/badge.svg)](https://github.com/SWEStash/swe-workflow-skills/actions/workflows/roles-check.yml)
-![skills](https://img.shields.io/badge/skills-66-blue)
+![skills](https://img.shields.io/badge/skills-68-blue)
 [![license: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
-A curated library of **66 Claude Code Agent Skills** that walk Claude through the
+A curated library of **68 Claude Code Agent Skills** that walk Claude through the
 software lifecycle the way a disciplined senior engineer would: planning, design,
 TDD, review, security, deployment, incidents, and the project-management work around
 them.
@@ -31,7 +31,7 @@ Code web, claude.ai chat, and Cowork:
 is a **two-step** setup:
 
 ```bash
-# 1. Install all 66 skills + router + /role + the hook script, and apply the baseline
+# 1. Install all 68 skills + router + /role + the hook script, and apply the baseline
 npx swe-workflow-skills install --global
 ```
 
@@ -107,7 +107,7 @@ request can fan out to several skills. See a full session in
 
 - **An orchestrator, not auto-trigger roulette.** Description-based auto-triggering is
   probabilistic. Here `skill-router` routes intent to skills by name, and a routing
-  harness measures it: 65/65 top-1 and 64/65 on boundary cases on the committed k=3
+  harness measures it: 67/67 top-1 and 66/67 on boundary cases on the committed k=3
   baseline ([routing benchmark](docs/ROUTING-BENCHMARK.md)).
 - **Every skill stays reachable.** Claude Code lists skill descriptions only up to about
   1% of context, so large libraries stop auto-triggering past 20 to 40 skills. This
@@ -129,17 +129,17 @@ request can fan out to several skills. See a full session in
 
 ## What's included
 
-66 skills, listed in the **[full catalog → SKILLS.md](docs/SKILLS.md)**:
+68 skills, listed in the **[full catalog → SKILLS.md](docs/SKILLS.md)**:
 
 | Area | Count | Examples |
 |------|-------|----------|
 | Software Engineering | 30 | feature-planning, plan-execution, architecture-design, threat-modeling, compliance-privacy, code-archaeology, tdd-workflow, security-audit, browser-verification, subagent-orchestration |
-| Project Management | 8 | brainstorming, prd-writing, effort-estimation, build-vs-buy, metrics-and-okrs, retrospective, strategic-review |
+| Project Management | 9 | brainstorming, prd-writing, working-agreement, effort-estimation, build-vs-buy, metrics-and-okrs, retrospective, strategic-review |
 | DevOps | 8 | containerization, cicd-pipeline, release-management, gitops-delivery, resilience-engineering, finops-cost-optimization |
 | Design | 3 | ui-ux-design, frontend-architecture, accessibility-design |
 | MLOps | 3 | ml-pipeline-design, ml-experiment-tracking, ml-model-deployment |
 | AI Engineering | 2 | llm-app-engineering, ai-evaluation |
-| Data Science | 3 | exploratory-data-analysis, statistical-analysis, notebook-to-production |
+| Data Science | 4 | research-methodology, exploratory-data-analysis, statistical-analysis, notebook-to-production |
 | Data Engineering | 2 | data-pipeline-design, data-quality |
 | Mobile | 2 | mobile-architecture, mobile-release |
 | Evaluation & Monitoring | 2 | observability-design, test-data-strategy |

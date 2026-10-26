@@ -91,6 +91,8 @@ For each risk, suggest a mitigation strategy or a spike task to reduce uncertain
 
 Output the complete plan using the template at [templates/plan.md](templates/plan.md) — in the reply itself, not as a promise to produce one. Offer to save it as a markdown file in the project (e.g., `docs/plans/feature-name.md`); saving is a convenience, not the deliverable.
 
+If the plan spans several sessions or milestones, fill its **Tracking** field from the project's working agreement (where task status will live). When the project has none, say so and hand off to `working-agreement` so status has a home before execution starts.
+
 ## Principles Applied
 
 - **YAGNI**: Only plan what's needed now. Flag nice-to-haves separately.

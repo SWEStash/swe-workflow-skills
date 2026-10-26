@@ -1,6 +1,6 @@
 # Skill Catalog
 
-All 66 skills in the library — 64 SDLC workflows plus two meta skills
+All 68 skills in the library — 66 SDLC workflows plus two meta skills
 (`skill-router`, the orchestrator, and `writing-skills`, the authoring guide).
 Every skill's full description lives in `catalog.json` (what the orchestrator
 routes on); this page is the human-readable index.
@@ -87,10 +87,11 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `llm-app-engineering` | Prompt/context engineering, RAG architecture (chunking, hybrid retrieval, reranking, grounding), agent design, memory |
 | `ai-evaluation` | Golden datasets, offline metrics, RAG evaluation (ragas/deepeval/promptfoo), LLM-as-judge design and calibration, eval gates in CI, online A/B |
 
-## Data Science (3)
+## Data Science (4)
 
 | Skill | Purpose |
 |-------|---------|
+| `research-methodology` | Research with defensible claims — framework and rigor, data understood first, method decision records, claims register, source verification |
 | `exploratory-data-analysis` | Profile an unfamiliar dataset — missingness structure, distributions/outliers, feature–target relationships, leakage, hypotheses |
 | `statistical-analysis` | Hypothesis tests with stated assumptions, experiment design/power, confidence intervals, multiple-comparison discipline |
 | `notebook-to-production` | Refactor analysis notebooks to tested, parameterized, scheduled production code — with triage of what deserves it |
@@ -116,13 +117,14 @@ See [ROLES.md](ROLES.md) for which skills each role promotes, and the
 | `observability-design` | SLI/SLO/SLA design, error budgets, OpenTelemetry, structured logging, alerting, dashboards |
 | `test-data-strategy` | Test data factories, synthetic data, property-based testing, boundary analysis, contract testing |
 
-## Project Management — Agile (8)
+## Project Management — Agile (9)
 
 | Skill | Purpose |
 |-------|---------|
 | `brainstorming` | Divergent Socratic ideation before a spec exists — widen options, test constraints, converge with criteria, hand off |
 | `project-proposal` | Business case, scope, budget estimate, risk assessment, go/no-go documents |
 | `build-vs-buy` | Build vs vendor/SaaS vs OSS adoption — core-vs-commodity, multi-year TCO, lock-in and exit costs |
+| `working-agreement` | Define and validate how a multi-session project is run — where status lives, session routines, new work, milestone close |
 | `prd-writing` | Lightweight agile PRDs and technical RFCs for stakeholder alignment |
 | `effort-estimation` | Story points, t-shirt sizing, three-point estimation, capacity planning |
 | `metrics-and-okrs` | OKR design, KPI definition, DORA metrics, success measurement |
