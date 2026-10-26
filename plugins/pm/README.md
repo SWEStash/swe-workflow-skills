@@ -7,7 +7,7 @@ Each skill is a step-by-step method, not a prompt snippet: it tells Claude what 
 check, in what order, and what evidence to produce before calling the work done.
 Claude loads a skill when your request matches it, or when you ask for it by name.
 
-## Skills (8)
+## Skills (9)
 
 - **brainstorming**: Facilitate divergent ideation before committing to a spec: Socratic questioning, widening the option space, challenging assumptions and inherited constraints, then converging on candidates.
 - **effort-estimation**: Estimate engineering effort with agile techniques: story points, t-shirt sizing, three-point estimation, capacity planning.
@@ -17,6 +17,7 @@ Claude loads a skill when your request matches it, or when you ask for it by nam
 - **project-proposal**: Write lightweight project proposals for budget approval and go/no-go decisions: problem, business case, scope, rough estimates, risks, success criteria.
 - **retrospective**: Facilitate sprint retros, project post-mortems, and incident post-mortems with actionable, owned improvements.
 - **strategic-review**: Review a project's strategic position before going public, launching, or raising: vision, mission, value proposition, scope positioning, the defensible wedge, and a live competitive / market comparative analysis.
+- **working-agreement**: Define and validate how a multi-session project is run: where plans, status and decisions live, session routines, new work, milestone close.
 
 ## What the plugin contains
 
@@ -51,7 +52,7 @@ In Claude Code:
 
 ## The full library
 
-This plugin is one role's subset. The full library has 66 skills and an
+This plugin is one role's subset. The full library has 68 skills and an
 orchestrator (`skill-router`) that routes each request to the right skills and chains
 them across phases. It installs on the Claude Code CLI:
 

@@ -7,7 +7,7 @@ Each skill is a step-by-step method, not a prompt snippet: it tells Claude what 
 check, in what order, and what evidence to produce before calling the work done.
 Claude loads a skill when your request matches it, or when you ask for it by name.
 
-## Skills (14)
+## Skills (15)
 
 - **ai-evaluation**: Define how to evaluate ML models and GenAI/LLM apps: golden datasets, offline metrics, RAG evaluation (faithfulness, relevance, context precision/recall) with ragas/deepeval/promptfoo, LLM-as-judge design and calibration, eval regression gates in CI, online A/B and human feedback.
 - **bug-investigating**: Systematic debugging and root cause analysis using structured methodology: reproduce, isolate, hypothesize, verify.
@@ -21,6 +21,7 @@ Claude loads a skill when your request matches it, or when you ask for it by nam
 - **notebook-to-production**: Refactor analysis notebooks into production-grade code: triage what deserves productionizing, extract modules with tests, parameterize hardcoded values, pin environments for reproducibility, and schedule unattended runs with alerting.
 - **plan-execution**: Execute an already-approved plan with discipline: batch tasks into verifiable checkpoints, verify each with fresh evidence before marking it done, log drift, and stop to re-plan when reality diverges from the plan's assumptions.
 - **project-documentation**: Write project docs: README, contributing guides, API docs, changelogs, inline docs; and reconcile existing docs after a change made them wrong.
+- **research-methodology**: Run DS/ML research with defensible claims: framework and rigor, data understood before claims, method decision records, claims traced to evidence, sources verified.
 - **statistical-analysis**: Design and analyze experiments and statistical tests: test selection with stated assumptions, sample size and power, effect sizes and confidence intervals over bare p-values, and pitfall discipline (multiple comparisons, p-hacking, peeking/optional stopping).
 - **verification-before-completion**: Evidence gate before any claim that work is done, fixed, passing, or deployed.
 
@@ -43,7 +44,7 @@ In Claude Code:
 
 ## The full library
 
-This plugin is one role's subset. The full library has 66 skills and an
+This plugin is one role's subset. The full library has 68 skills and an
 orchestrator (`skill-router`) that routes each request to the right skills and chains
 them across phases. It installs on the Claude Code CLI:
 

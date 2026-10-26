@@ -21,6 +21,12 @@ customer? a customer-month?)? Duplicate keys and mixed grains invalidate every
 later statistic. If the eventual use is prediction, note *when* the prediction
 would be made — that timestamp drives the leakage checks in step 5.
 
+Also establish **which source is authoritative**: the curated table rather than
+the raw inputs it was built from (trace how it's produced — `code-archaeology` —
+when that isn't documented), and which fields are validated measurements versus
+informational ones (estimates, free text, fields only some forms collected).
+Profiling the wrong table produces a confident description of the wrong data.
+
 ### 2. Profile structurally
 
 Column types, ranges, cardinality, and summary statistics for every column —

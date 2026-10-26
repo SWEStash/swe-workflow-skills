@@ -35,6 +35,9 @@ Read the project's own statements of intent before judging anything:
   phase does it say it's in, and what does it promise for the milestone in question?
 - **The hard boundaries** — declared scope and explicit non-goals. These are what
   you measure scope drift against.
+- **The working agreement** — where the project says status lives and how
+  milestones close. If "what's done" can't be answered from where it says, or
+  there is no agreement, that is a finding: re-validate it with `working-agreement`.
 
 Capture this as the baseline. Everything downstream is "reality vs this baseline."
 

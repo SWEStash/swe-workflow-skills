@@ -814,8 +814,8 @@ The three layers from the original design:
 ### Dataset — mined from the existing evals
 
 `routing.py --build-dataset` writes `evals/routing-dataset.json` (GENERATED,
-committed, drift-checked via `--check-dataset` like `catalog.json`). Today: **65
-positive + 65 boundary + 8 trivial = 138 cases**. It stays in sync — every new
+committed, drift-checked via `--check-dataset` like `catalog.json`). Today: **67
+positive + 67 boundary + 8 trivial = 142 cases**. It stays in sync — every new
 skill's 3 evals yield 2 new routing cases.
 
 - **Happy-path** prompt (eval #1) → positive: `accept = {that skill}`.
@@ -868,7 +868,7 @@ python evals/routing.py --build-dataset          # mine → routing-dataset.json
 python evals/routing.py --check-dataset          # CI: fail if dataset is stale (offline)
 
 export ANTHROPIC_API_KEY=...
-python evals/routing.py --run                     # route all 138 cases on haiku
+python evals/routing.py --run                     # route all 142 cases on haiku
 python evals/routing.py --run -k 3                # majority-of-3 per case
 python evals/routing.py --run --changed --base origin/main   # CI: changed skills only
 python evals/routing.py --run --update-baseline   # record routing-baseline.json

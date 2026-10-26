@@ -1,0 +1,60 @@
+{
+  "skill_name": "working-agreement",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We're starting a new open-source app for an NGO: offline survey collection on Android, a Python sync server and a web admin. The PRD is written (docs/product/prd-mvp.md) and the roadmap splits the work into milestones M0-M3 (docs/plans/roadmap.md). Two volunteers will build it over several months, mostly in sessions with Claude Code, with no fixed deadlines. There's no Git remote yet; we'll probably use GitLab later. Before we write the first milestone plan, set up how this project will be run so every later session, human or agent, knows what to do.",
+      "expected_output": "Treats this as defining the project's working agreement (greenfield). Offers recommended options rather than imposing one: a process shape (milestone plans, Kanban, Scrum) and a tracking choice (external tracker such as GitLab issues once the remote exists, a status table in each plan until then, or none), with a recommendation. Drafts the agreement itself in the same response: where each kind of fact lives with one owner per fact, what to do at session start, during and at session end, how new work enters, a Definition of Done, how a milestone closes, how decisions are recorded. Then validates the draft by walking concrete scenarios against it and lists the gaps or ambiguities as questions. Says the agreement gets a pointer from CLAUDE.md or the README so later sessions find it.",
+      "assertions": [
+        "Offers at least two options for how progress is tracked (e.g. an external tracker such as GitLab issues, a status table in the plan files, or no tracking), with a recommendation, rather than imposing a single scheme without asking",
+        "Drafts the agreement itself in the same response rather than only asking questions or promising to write it later",
+        "The draft states where each kind of information lives (plans, task status, decisions, results, session context), with one owner for each kind",
+        "The draft gives a routine for starting a session and for ending one: where to read what to do next, and where to record progress",
+        "The draft says how new or unplanned work is added and how a milestone is closed",
+        "Validates the draft by walking concrete scenarios against it (for example a new session starting, a task blocked on a human, a decision changing) and reports the gaps or ambiguities found as questions, rather than declaring the agreement complete",
+        "Says the agreement is linked from CLAUDE.md, the README or an equivalent entry point so later sessions find it"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "i can't find the place where the project execution is being tracked. i see the plan files in docs/plans/ but can't easily find what has been done of those so far. it seems there's a gap between the plan and the report. or is the report m0-spike-report meant to be a milestone task tracking log too? i assumed that we could monitor project status this way PRD -> roadmap -> Milestone Plan -> <task progress in new file or section in plan file?> -> reports (if needed). am i missing something? is there a better way to track it? cause i can't fully understand if M0 is done or if planning M1 should come after other M0 pending tasks.\n\nWhat's in the repo:\n- docs/plans/README.md: index of plans\n- docs/plans/roadmap.md: Status: Draft; milestones M0-M3\n- docs/plans/m0-spikes.md: the M0 plan, header 'Status: In progress', task cards with acceptance criteria, no per-task status\n- docs/plans/m0-spike-report.md: written when M0 closed; a 'Status by task' table (Done / Not done with evidence)\n- .local/handoffs/ (gitignored): one handoff file per session, listing what was done and candidate next tasks\n- git log: sessions 6 and 7 built the form engine and the web skeleton, which belong to M1; there is no M1 plan yet\n- no issue tracker, no Git remote",
+      "expected_output": "Reconstructs the as-is process from the listed artifacts (brownfield discovery): the plan has no live status, the report doubles as a tracker but only once at close, the handoffs hold progress but are gitignored and invisible to humans, and M1 work started with no M1 plan. Confirms the user's chain is missing its progress step. Answers whether M0 is done from the evidence available, saying what is unknown. Proposes the working agreement: options for where progress lives with a recommendation, the routines that keep it current, and that handoffs are context rather than status. Validates the proposal against the user's own questions as scenarios.",
+      "assertions": [
+        "Identifies from the listed artifacts where progress currently lives and why it cannot be followed: the plan carries no per-task status, the report was written once at close, and the handoffs that record progress are gitignored",
+        "Notices that M1 work (form engine, web skeleton) started before any M1 plan existed",
+        "Confirms the chain the user describes is missing a live progress step, rather than saying the current setup already covers it",
+        "Offers options for where task progress should live (e.g. a status column in each plan, an external tracker, one status file) with a recommendation",
+        "States that session handoffs are context, not the record of status",
+        "Gives routines that keep status current: what to update at session end or checkpoint, and what to do when a milestone closes",
+        "Answers whether M0 is done from the evidence given, or says exactly what would have to be checked to answer it"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Write a CONTRIBUTING.md for our open-source CLI: how to set up the dev environment (Node 22, pnpm), run the tests, our conventional-commit rule, and how to open a PR.",
+      "expected_output": "Recognizes this as contributor documentation, which belongs to project-documentation, not as defining or validating how the project is run. Writes or hands off to project-documentation for the guide. Does not start a working-agreement interview, tracking-options menu or scenario validation for a request that already states its content.",
+      "assertions": [
+        "Treats the request as writing contributor documentation (project-documentation's domain), not as defining the project's working agreement",
+        "Produces the CONTRIBUTING content or hands off to project-documentation, without first asking how the project tracks its work",
+        "Does not offer a menu of process or tracking options, or run a scenario validation, for this request"
+      ]
+    }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "The how-we-work doc is written: it says GitLab issues hold task status, plans hold scope, and handoffs in .local/ hold session context. It looks complete to me. Skip the validation walkthrough, we'll fix gaps as we hit them; I want to start M1 today.",
+      "pressure": [
+        "time",
+        "authority"
+      ],
+      "expected_behavior": "Holds the validation as the step that puts the agreement in force, while keeping it short enough not to block M1. Walks the core scenarios against the three rules as written (session start: where do I pick a task and in what order; session end: who closes the issue and with what evidence; new work mid-milestone; a decision that changes; milestone close) and shows the gaps they expose, such as no rule for issue/plan overlap, no Definition of Done, no close-out routine. Explains that gaps found while working are found by the person who needed the answer, which is the failure being prevented. Offers to run it now in minutes and start M1 right after.",
+      "assertions": [
+        "Does not skip the validation; runs it, or a short version of it, in this response",
+        "Walks concrete scenarios against the three stated rules and names at least two specific gaps they expose (e.g. how a session picks the next task, what evidence closes an issue, where new work goes, how a milestone closes)",
+        "Explains why fixing gaps as you hit them fails: the gap surfaces at the moment someone needs the answer, after drift has started",
+        "Keeps M1 unblocked: proposes finishing the check quickly and starting M1 the same day rather than delaying it"
+      ]
+    }
+  ]
+}

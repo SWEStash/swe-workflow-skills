@@ -7,7 +7,7 @@ Each skill is a step-by-step method, not a prompt snippet: it tells Claude what 
 check, in what order, and what evidence to produce before calling the work done.
 Claude loads a skill when your request matches it, or when you ask for it by name.
 
-## Skills (14)
+## Skills (15)
 
 - **ai-evaluation**: Define how to evaluate ML models and GenAI/LLM apps: golden datasets, offline metrics, RAG evaluation (faithfulness, relevance, context precision/recall) with ragas/deepeval/promptfoo, LLM-as-judge design and calibration, eval regression gates in CI, online A/B and human feedback.
 - **bug-investigating**: Systematic debugging and root cause analysis using structured methodology: reproduce, isolate, hypothesize, verify.
@@ -21,6 +21,7 @@ Claude loads a skill when your request matches it, or when you ask for it by nam
 - **observability-design**: Design production observability: SLIs, SLOs, SLAs, error budgets, OpenTelemetry traces/metrics/logs, structured logging, alerting, dashboards.
 - **plan-execution**: Execute an already-approved plan with discipline: batch tasks into verifiable checkpoints, verify each with fresh evidence before marking it done, log drift, and stop to re-plan when reality diverges from the plan's assumptions.
 - **project-documentation**: Write project docs: README, contributing guides, API docs, changelogs, inline docs; and reconcile existing docs after a change made them wrong.
+- **research-methodology**: Run DS/ML research with defensible claims: framework and rigor, data understood before claims, method decision records, claims traced to evidence, sources verified.
 - **test-data-strategy**: Design and generate test data: factories, synthetic data, property-based testing, boundary analysis, contract testing, load scenarios, GDPR-safe data.
 - **verification-before-completion**: Evidence gate before any claim that work is done, fixed, passing, or deployed.
 
@@ -43,7 +44,7 @@ In Claude Code:
 
 ## The full library
 
-This plugin is one role's subset. The full library has 66 skills and an
+This plugin is one role's subset. The full library has 68 skills and an
 orchestrator (`skill-router`) that routes each request to the right skills and chains
 them across phases. It installs on the Claude Code CLI:
 

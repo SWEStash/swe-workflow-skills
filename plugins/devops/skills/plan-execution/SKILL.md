@@ -43,6 +43,13 @@ checkpoint, write down **before starting it**:
 A checkpoint whose verification you can't name isn't a checkpoint — split or
 rescope it until it has one.
 
+Read the project's **working agreement** too (linked from CLAUDE.md or the
+README): it says where task status is recorded, what evidence closes a task, and
+what a session records when it ends. Steps 3 and 6 follow it. When the plan spans
+sessions and no agreement exists, invoke `working-agreement` — it drafts one under
+stated assumptions in the same response, so execution isn't held up — because
+progress recorded only in this session is invisible to the next one.
+
 ### Step 2: Execute a Batch, Logging Drift As You Go
 
 Work the checkpoint's tasks. Any deviation from the plan — a different approach,
@@ -50,12 +57,16 @@ an extra task, a skipped step, a surprise — goes into a **drift log** the mome
 it happens, even when the deviation is an improvement. Undocumented "better
 ideas" are how a plan dies without anyone deciding to kill it.
 
+When a task needs a human — a review, an approval, field data — first do every
+part you can do yourself, then hand over a runbook: what is needed, where the
+data is, what to run, what to look for, and what to send back.
+
 ### Step 3: Verify the Checkpoint
 
 Run the verification you declared in Step 1 — fresh, in full, reading the entire
 output (see `verification-before-completion` for the gate function). Only then
 mark the checkpoint done, recording the evidence next to it: the command and its
-observed result. A failed verification means the checkpoint stays open — fix and
+observed result — in the place the working agreement names for status. A failed verification means the checkpoint stays open — fix and
 re-verify; two consecutive failed checkpoints are a re-planning trigger, not a
 push-through-it signal.
 
@@ -147,6 +158,8 @@ in checkpoint 5, and each looked locally complete while the README fell behind
 both. Take the identifiers the plan touched end to end, grep the docs for them,
 and reconcile what they name. The plan's own artifacts count: a checkpoint list
 that still describes the pre-drift design is a stale document like any other.
+So does the status record: close the plan where the working agreement says —
+items closed or moved on with a reason, the plan's header marked closed.
 
 ## Rationalizations to Reject
 
@@ -182,6 +195,7 @@ that still describes the pre-drift design is a stale document like any other.
 ## Cross-Skill References
 
 - `feature-planning` — creates and (on re-plan) revises the plan this skill executes
+- `working-agreement` — where status is recorded and how sessions start, end and close a plan; invoked at Step 1 when the plan spans sessions and none exists
 - `data-modeling` — where a schema question surfaced mid-execution belongs
 - `architecture-design` — where a structural or boundary question belongs
 - `verification-before-completion` — the per-claim evidence gate each checkpoint applies, and the publish gate on every checkpoint commit

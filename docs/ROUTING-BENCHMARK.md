@@ -3,9 +3,9 @@
 **TL;DR** — Claude Code's skill auto-triggering is probabilistic, and community
 measurements put it anywhere from ~45% to ~84% depending on prompt and hook hacks. This
 library replaces auto-triggering with an **orchestrator that routes intent to skills by
-name**, and it measures that routing the way you'd measure code: a 138-case harness,
-graded by accept-set, gated against a committed baseline. On the current 66-skill
-catalog, routing on `claude-haiku-4-5` at k=3 scores **65/65 top-1, 64/65 boundary, 0/8
+name**, and it measures that routing the way you'd measure code: a 142-case harness,
+graded by accept-set, gated against a committed baseline. On the current 68-skill
+catalog, routing on `claude-haiku-4-5` at k=3 scores **67/67 top-1, 66/67 boundary, 0/8
 false activation, and one confusion pair**. The numbers below are reproducible from
 the repo with no API key.
 
@@ -25,7 +25,7 @@ that unreliable as a library grows:
 2. **Listing-budget cropping.** Claude Code injects skill `name`+`description` pairs into
    a listing capped at ~1% of the context window (~20–22 descriptions on a 200k window).
    Past the cap it drops the least-recently-used descriptions, silently stripping the
-   keywords a skill needs to match. At 66 skills, most of the catalog is invisible to
+   keywords a skill needs to match. At 68 skills, most of the catalog is invisible to
    auto-triggering by default.
 
 ### What the wild looks like (⚠ small-sample practitioner benchmarks)
@@ -60,7 +60,7 @@ means it can be *tested*.
 Full methodology in [EVALS.md § Activation evaluation](EVALS.md#activation-evaluation-routing--implemented).
 The short version:
 
-- **Dataset (138 cases, generated + committed):** 65 positive + 65 boundary + 8 trivial.
+- **Dataset (142 cases, generated + committed):** 67 positive + 67 boundary + 8 trivial.
   Positive and boundary cases are **mined from each skill's own evals** (happy-path eval
   → positive; scope-boundary eval → boundary), so the dataset grows with the catalog and
   can't drift. The 8 trivial/conversational cases are the only hand-authored ones.
@@ -84,6 +84,9 @@ The short version:
 
 Recorded 2026-09 over all 138 cases at **k=3**: three independent samples per case,
 majority route. Every case was re-recorded, and nothing was carried forward.
+In 2026-10 the four cases of two new skills (`working-agreement`,
+`research-methodology`) were added at k=3, all passing; the figures below are the
+2026-09 recording.
 
 | Layer 2 metric | Result |
 |---|---|
@@ -116,7 +119,7 @@ Source of record: [`evals/routing-baseline.json`](../evals/routing-baseline.json
 # Offline: confirm the dataset is in sync with the skills' evals
 python evals/routing.py --check-dataset
 
-# With an API key: route all 138 cases on haiku, majority-of-3
+# With an API key: route all 142 cases on haiku, majority-of-3
 export ANTHROPIC_API_KEY=...
 python evals/routing.py --run -k 3
 
@@ -153,14 +156,14 @@ python evals/routing.py --run -k 3
   It's a periodic manual probe, **not** a CI
   gate (see [EVALS.md § Held-out generalization probe](EVALS.md#held-out-generalization-probe-independent)).
 - **The comparison isn't apples-to-apples.** The community numbers above measure native
-  auto-triggering on small skill sets; ours measures orchestrator routing on a 66-skill
+  auto-triggering on small skill sets; ours measures orchestrator routing on a 68-skill
   catalog. They're different mechanisms — which is the point: routing is what makes a
   large catalog reliable at all.
 
 ## The takeaway
 
 Native auto-triggering is a real, useful feature that degrades with scale. For a curated
-66-skill SDLC library, routing is what keeps every skill reachable *and* makes activation
-predictable enough to regression-test. The number to remember isn't 65/65, it's that
+68-skill SDLC library, routing is what keeps every skill reachable *and* makes activation
+predictable enough to regression-test. The number to remember isn't 67/67, it's that
 **activation is measured and gated at all**, which is not something the platform or the
 community libraries do at catalog scale.

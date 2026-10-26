@@ -10,7 +10,8 @@
         "Defines checkpoints with a concrete, named verification (command or observation) for each, declared before executing that batch",
         "Marks a checkpoint done only after running its verification fresh and recording the evidence (command and observed result)",
         "Tracks deviations from the plan in a drift log or equivalent explicit record",
-        "States the per-checkpoint reporting rule it will follow — each checkpoint reported as verified-done with its recorded evidence, or explicitly not done — and rules out vague 'mostly done' states"
+        "States the per-checkpoint reporting rule it will follow — each checkpoint reported as verified-done with its recorded evidence, or explicitly not done — and rules out vague 'mostly done' states",
+        "States where checkpoint status and evidence will be recorded so a later session can find them (per the project's working agreement, or by establishing one when none exists), rather than leaving progress only in the conversation"
       ]
     },
     {
