@@ -12,6 +12,13 @@ description, not here. Sections dated before 0.7.0 carry hand-written prose from
 file was curated manually.
 
 
+## [0.11.4](https://github.com/SWEStash/swe-workflow-skills/compare/v0.11.3...v0.11.4) (2026-10-27)
+
+
+### Fixed
+
+* **research-methodology:** write-ups say what was run and link shared terms ([#73](https://github.com/SWEStash/swe-workflow-skills/issues/73)) ([bb19c99](https://github.com/SWEStash/swe-workflow-skills/commit/bb19c9993e4e292bbecdbdf93623cd651cdebf10))
+
 ## [0.11.3](https://github.com/SWEStash/swe-workflow-skills/compare/v0.11.2...v0.11.3) (2026-10-27)
 
 
