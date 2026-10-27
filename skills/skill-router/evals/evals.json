@@ -9,7 +9,7 @@
         "Identifies that a dedicated skill / chain applies instead of improvising",
         "Places feature-planning in the chain, and leads with architecture-design where a costly-to-reverse decision dominates",
         "Names the relevant downstream skills (architecture-design, data-modeling) as next steps",
-        "References the New Feature golden path chain"
+        "Orders the work as the New Feature golden path does: planning and the costly-to-reverse design decisions before implementation"
       ]
     },
     {
