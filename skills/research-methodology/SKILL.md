@@ -109,18 +109,24 @@ Write findings at the strength the evidence has:
 
 **Write each artifact for a reader who wasn't in the session.** An experiment
 README, a results section or a method record is read later by the project owner,
-with nothing else open:
+with nothing else open, and must make the work clear without the notebook or the
+code:
 - **Open with what was found, in plain words**, and what it changes. Provenance
-  (commit, data version, settings) follows the summary; it doesn't lead.
+  (commit, data version) follows the summary; it doesn't lead.
+- **Say what was run**, in a few lines: what it modelled or predicted, on which
+  data, the method and its settings (algorithm, hyperparameters, thresholds), and
+  why that method, with a link to its method decision record. Metrics without the
+  run behind them can't be read. If the material doesn't say, ask; don't leave it out.
 - **Keep each question, its result and what it means for the project together**,
   in the same row or paragraph, not a table followed by a separate list of
   implications.
-- **Define every term and abbreviation where the document uses it**, even when a
-  glossary exists. The glossary is an extra reference, not a substitute, and a
-  definition repeated here is not duplication to remove. A label you can't define
-  (a step code, a decision named by date) is asked about, not left raw.
-- **Revising a dense document adds explanation; it never cuts.** Pre-registered
-  text stays verbatim.
+- **Link shared vocabulary; spell out the rest.** Glossary terms, the methodology
+  and other project-wide definitions have one home: link to it rather than
+  restating it. Shorthand with no home (a notebook symbol, a step code, a decision
+  named by date) is written out, or asked about.
+- **Revising a dense document adds what the work is missing.** Replacing a
+  repeated definition with a link is fine; cutting what was done or what it means
+  is not. Pre-registered text stays verbatim.
 - Don't add qualifiers the output doesn't carry, such as a CI level or a test name.
 
 Under deadline, write the supported part now and mark the rest provisional. The
