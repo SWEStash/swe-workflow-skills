@@ -1198,6 +1198,7 @@
       "prompt": "There's a 20-line pricing function with a bug in it. Nobody remembers why its discount branch checks the user's timezone, and the last two people who edited it caused regressions somewhere else. Can you fix the bug?",
       "accept": [
         "technical-debt-review",
+        "bug-investigating",
         "code-archaeology",
         "refactoring",
         "NONE"

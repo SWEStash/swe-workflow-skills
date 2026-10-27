@@ -22,6 +22,9 @@ Identify which documents the project needs based on context:
 | Inline docs (JSDoc/docstrings) | Public APIs, complex logic | Developers reading the code |
 
 Ask the user which they need. If unsure, start with README — every project needs one.
+Every document must answer a question someone actually has, so for each new one
+you propose or are asked for, **ask the user who reads it and what question it
+answers for them**, next to your draft or plan rather than in place of it.
 
 Two modes use this skill. **Authoring** creates a document that doesn't exist yet
 (the four workflows below). **Sync** reconciles documents that already exist
@@ -222,7 +225,7 @@ For code-level documentation (JSDoc, Python docstrings, Go doc comments):
 
 - **KISS**: Write the minimum documentation that makes the project usable. Don't over-document internals.
 - **DRY**: Don't duplicate information across docs. Link between documents instead.
-- **YAGNI**: Don't write architecture docs for a 200-line script. Match documentation depth to project complexity. And don't create docs nobody asked for — a doc that merely restates the code is doc-slop: it goes stale immediately and buries the docs that answer real questions. Every document must answer a question someone actually has.
+- **YAGNI**: Don't write architecture docs for a 200-line script. Match documentation depth to project complexity. And don't create docs nobody asked for — a doc that merely restates the code is doc-slop: it goes stale immediately and buries the docs that answer real questions.
 
 ## Cross-Skill References
 

@@ -30,7 +30,7 @@
     {
       "id": 3,
       "prompt": "There's a 20-line pricing function with a bug in it. Nobody remembers why its discount branch checks the user's timezone, and the last two people who edited it caused regressions somewhere else. Can you fix the bug?",
-      "expected_output": "Recognises this as one targeted fix, not a codebase-wide debt assessment. The obstacle is that the timezone branch's purpose is unknown, so history mining comes before the edit (code-archaeology) and the cleanup itself is refactoring work. Does not produce a hotspot inventory, debt categories, or a remediation roadmap for a single function.",
+      "expected_output": "Recognises this as one targeted fix, not a codebase-wide debt assessment: the fix itself is bug-investigating work. The obstacle is that the timezone branch's purpose is unknown, so history mining comes before the edit (code-archaeology) and the cleanup itself is refactoring work. Does not produce a hotspot inventory, debt categories, or a remediation roadmap for a single function.",
       "assertions": [
         "Recognises this is a single targeted fix rather than a codebase-wide debt assessment",
         "Identifies that the unexplained timezone branch must be understood before it is changed, and refers to code-archaeology or equivalent history mining for recovering why it exists",
