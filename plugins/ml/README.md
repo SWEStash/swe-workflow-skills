@@ -21,7 +21,7 @@ Claude loads a skill when your request matches it, or when you ask for it by nam
 - **observability-design**: Design production observability: SLIs, SLOs, SLAs, error budgets, OpenTelemetry traces/metrics/logs, structured logging, alerting, dashboards.
 - **plan-execution**: Execute an already-approved plan with discipline: batch tasks into verifiable checkpoints, verify each with fresh evidence before marking it done, log drift, and stop to re-plan when reality diverges from the plan's assumptions.
 - **project-documentation**: Write project docs: README, contributing guides, API docs, changelogs, inline docs; and reconcile existing docs after a change made them wrong.
-- **research-methodology**: Run DS/ML research with defensible claims: framework and rigor, data understood before claims, method decision records, claims traced to evidence, sources verified.
+- **research-methodology**: Run DS/ML research with defensible claims: framework and rigor, data understood before claims, method decision records, claims traced to evidence, sources verified, and the write-ups that report them.
 - **test-data-strategy**: Design and generate test data: factories, synthetic data, property-based testing, boundary analysis, contract testing, load scenarios, GDPR-safe data.
 - **verification-before-completion**: Evidence gate before any claim that work is done, fixed, passing, or deployed.
 

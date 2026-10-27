@@ -21,7 +21,7 @@ Claude loads a skill when your request matches it, or when you ask for it by nam
 - **notebook-to-production**: Refactor analysis notebooks into production-grade code: triage what deserves productionizing, extract modules with tests, parameterize hardcoded values, pin environments for reproducibility, and schedule unattended runs with alerting.
 - **plan-execution**: Execute an already-approved plan with discipline: batch tasks into verifiable checkpoints, verify each with fresh evidence before marking it done, log drift, and stop to re-plan when reality diverges from the plan's assumptions.
 - **project-documentation**: Write project docs: README, contributing guides, API docs, changelogs, inline docs; and reconcile existing docs after a change made them wrong.
-- **research-methodology**: Run DS/ML research with defensible claims: framework and rigor, data understood before claims, method decision records, claims traced to evidence, sources verified.
+- **research-methodology**: Run DS/ML research with defensible claims: framework and rigor, data understood before claims, method decision records, claims traced to evidence, sources verified, and the write-ups that report them.
 - **statistical-analysis**: Design and analyze experiments and statistical tests: test selection with stated assumptions, sample size and power, effect sizes and confidence intervals over bare p-values, and pitfall discipline (multiple comparisons, p-hacking, peeking/optional stopping).
 - **verification-before-completion**: Evidence gate before any claim that work is done, fixed, passing, or deployed.
 

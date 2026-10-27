@@ -1,7 +1,7 @@
 ---
 name: research-methodology
-description: "Run DS/ML research with defensible claims — framework and rigor, data understood before claims, method decision records, claims traced to evidence, sources verified. Production serving → ml-model-deployment."
-when_to_use: "Triggers: research project, thesis, plan the research track, is this finding solid, can I claim this, why this method, literature review, verify these sources, deep research citations."
+description: "Run DS/ML research with defensible claims — framework and rigor, data understood before claims, method decision records, claims traced to evidence, sources verified, and the write-ups that report them. An experiment or results write-up, even a README, is here, not project-documentation. Production serving → ml-model-deployment."
+when_to_use: "Triggers: research project, thesis, plan the research track, is this finding solid, can I claim this, why this method, literature review, verify these sources, deep research citations, write up the results, experiment README, I can't follow these findings."
 ---
 
 # Research Methodology
@@ -106,6 +106,22 @@ Write findings at the strength the evidence has:
 - **Explained or generalized** — "the product under-detects traditional roofs":
   only after Step 2's distributions, Step 3's instrument check and the
   confounders are done. Until then it is a provisional observation, worded as one.
+
+**Write each artifact for a reader who wasn't in the session.** An experiment
+README, a results section or a method record is read later by the project owner,
+with nothing else open:
+- **Open with what was found, in plain words**, and what it changes. Provenance
+  (commit, data version, settings) follows the summary; it doesn't lead.
+- **Keep each question, its result and what it means for the project together**,
+  in the same row or paragraph, not a table followed by a separate list of
+  implications.
+- **Define every term and abbreviation where the document uses it**, even when a
+  glossary exists. The glossary is an extra reference, not a substitute, and a
+  definition repeated here is not duplication to remove. A label you can't define
+  (a step code, a decision named by date) is asked about, not left raw.
+- **Revising a dense document adds explanation; it never cuts.** Pre-registered
+  text stays verbatim.
+- Don't add qualifiers the output doesn't carry, such as a CI level or a test name.
 
 Under deadline, write the supported part now and mark the rest provisional. The
 minimal check a striking subgroup claim needs (group counts, per-group metric
