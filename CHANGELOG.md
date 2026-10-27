@@ -12,6 +12,13 @@ description, not here. Sections dated before 0.7.0 carry hand-written prose from
 file was curated manually.
 
 
+## [0.11.2](https://github.com/SWEStash/swe-workflow-skills/compare/v0.11.1...v0.11.2) (2026-10-27)
+
+
+### Fixed
+
+* **project-documentation:** ask who reads a new document; eval follow-ups ([#69](https://github.com/SWEStash/swe-workflow-skills/issues/69)) ([e4c7bc4](https://github.com/SWEStash/swe-workflow-skills/commit/e4c7bc4445d81513774ee53cc84a0f24b4dc51ed))
+
 ## [0.11.1](https://github.com/SWEStash/swe-workflow-skills/compare/v0.11.0...v0.11.1) (2026-10-27)
 
 
