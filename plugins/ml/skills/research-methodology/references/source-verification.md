@@ -1,8 +1,5 @@
 # Source Verification
 
-Adapted from article-craft's `references/source-verification.md`
-(swestash/article-craft), cut down for research projects.
-
 The rule: **cite only what you opened.**
 
 ## Trust tiers
