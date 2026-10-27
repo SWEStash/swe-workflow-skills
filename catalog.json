@@ -253,7 +253,7 @@
     },
     {
       "name": "research-methodology",
-      "description": "Run DS/ML research with defensible claims — framework and rigor, data understood before claims, method decision records, claims traced to evidence, sources verified. Production serving → ml-model-deployment. Triggers: research project, thesis, plan the research track, is this finding solid, can I claim this, why this method, literature review, verify these sources, deep research citations.",
+      "description": "Run DS/ML research with defensible claims — framework and rigor, data understood before claims, method decision records, claims traced to evidence, sources verified, and the write-ups that report them. An experiment or results write-up, even a README, is here, not project-documentation. Production serving → ml-model-deployment. Triggers: research project, thesis, plan the research track, is this finding solid, can I claim this, why this method, literature review, verify these sources, deep research citations, write up the results, experiment README, I can't follow these findings.",
       "path": "research-methodology/SKILL.md"
     },
     {

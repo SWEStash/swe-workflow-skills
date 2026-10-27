@@ -53,6 +53,35 @@
         "Names the minimal data check the roof claim needs (e.g. roof-class counts and recall per stratum with intervals) and says it fits before the deadline",
         "Rejects 'add the data description in the next revision' because a claim drafted without the data check tends to survive into the final text"
       ]
+    },
+    {
+      "id": 2,
+      "prompt": "Write the Results section of experiments/AE04_matching/README.md from my notebook output below. The project owner reads these between other work and wasn't in the session. Terms are already in docs/glossary.md, so keep it tight.\n\nPre-registered: H1 R@50m >= 0.65 on closed parajes; H2 adding MS to G raises precision by >= 3 pp; H3 eps 100 keeps towns out of HS.\nOutput:\n- H1: R@50m = 0.71 [0.66, 0.76], n_cp = 41 -> supp\n- H2: dPrec(MS u G - G) = +2.1 pp [-0.4, 4.6] -> inconcl\n- H3: eps 100 merges M-masked towns into 39 HS -> not supp; A.7 pending\n- l = 225 m (grid), imposib. excluded per 2026-10-22",
+      "pressure": [
+        "brevity",
+        "glossary_exists"
+      ],
+      "expected_behavior": "Writes the section for a reader who was not in the session: a plain-language summary of what was found first, then each hypothesis with its question, result and meaning for the project together, defining the shorthand where it is used even though a glossary exists, and reporting the inconclusive result as inconclusive with the numbers exactly as given. Recorded from a real project where results written as session shorthand had to be rewritten because the owner could not follow them; without guidance, replies put implications in a separate list and lean on the glossary link.",
+      "assertions": [
+        "Opens with a short plain-language summary of what was found, before the per-hypothesis detail",
+        "For each hypothesis, states the question asked, the result, and what it means for the project, next to each other",
+        "Explains the shorthand where it is used (e.g. R@50m, pp, closed parajes, HS, M, A.7, eps) instead of relying only on the glossary link",
+        "Reports H2 as inconclusive, not as an effect, and keeps every number as given without inventing values"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I can't follow experiments/AE02_t0_products_eda/README.md. It's about 300 lines: the pre-registration (rules written before the run) comes first, then results as lists of numbers like 'cov@50 = 0.94 (med 6 m); rand 0.05; dCov(MS|G) +5.3 pp [3.3, 7.5] < 5 -> inconcl; FP/HH G 5.0 vs MS 2.65; M share 47-53%'. Each question is about 150 lines from its answer. We also have docs/glossary.md. Fix the README so I can follow it; tell me what you'd change.",
+      "pressure": [
+        "dry_instinct"
+      ],
+      "expected_behavior": "Treats the complaint as too little explanation, not too much text: adds a plain summary and the meaning of each result, keeps definitions inside the README rather than moving them to the glossary, puts each question next to its answer, and leaves the pre-registration verbatim. Recorded from a real project where the first fix moved definitions out to a glossary and the owner objected that the document had been trimmed further.",
+      "assertions": [
+        "Adds explanation (a plain summary, what each result means) rather than shortening or cutting content",
+        "Keeps or adds definitions of terms inside the README itself rather than moving them out to the glossary",
+        "Puts each question next to its answer and its meaning",
+        "Leaves the pre-registration unchanged, or states that it must stay verbatim, while restructuring around it"
+      ]
     }
   ]
 }
