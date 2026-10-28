@@ -32,6 +32,12 @@
 
 [Ordered list of tasks using the task template]
 
+## New Dependencies
+
+| Library | What we use | Verdict (own module / adopt / ask) | Why it earns its place |
+|---------|-------------|------------------------------------|------------------------|
+| [name, or "none"] | [functions/features] | [verdict] | [reason, or the question for the user] |
+
 ## Dependency Map
 
 ```

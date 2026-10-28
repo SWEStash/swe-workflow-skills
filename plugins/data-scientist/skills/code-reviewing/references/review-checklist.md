@@ -72,6 +72,7 @@ Flag when you see:
 - Shared mutable state between components
 - Functions that require knowledge of the caller's context
 - Temporal coupling (function A must be called before function B with nothing enforcing this)
+- A new entry in a dependency manifest with no recorded reason, or one used for a sliver of what it ships (see `dependency-management` Step 1)
 
 ## Security Checklist
 

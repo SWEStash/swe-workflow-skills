@@ -18,6 +18,15 @@ Use this template when evaluating a library for adoption:
 **Alternative to**: [What we're using now, or "nothing — new capability"]
 **Evaluated on**: [Date]
 
+### Necessity (Step 1)
+- Used: [functions/features we call] of [what it ships]
+- Pulls in: [transitive packages, native builds, maintainer groups]
+- Already covered by: [stdlib / platform / existing dependency / nothing]
+- Own module: [what, ~lines, how tested]
+- Grows into: [planned features that would use more of it, or "none known"]
+- Gives beyond code: [portability, abstraction, spec conformance, security record, checked]
+- Verdict: [Own module / Adopt / Ask the user (question asked)]
+
 ### Maintenance Health
 - Last release: [date]
 - Commits in last 6 months: [number]

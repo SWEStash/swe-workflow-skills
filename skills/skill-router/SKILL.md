@@ -50,6 +50,11 @@ config edits, dependency bumps) and anything that matches a specific skill's
 domain (accessibility, API design, security, data modeling, migrations,
 performance…) are exactly what the skills are for. When in doubt, route.
 
+**Naming a new library is a routing point**, even mid-plan or mid-build and even
+when nobody asked about dependencies. Invoke `dependency-management` before the
+library goes into a plan, an ADR, or an install command. Its first question is
+whether you need the library at all.
+
 Skip **only** for genuinely trivial, conversational, or information-lookup
 requests where no workflow adds value, or when the user tells you not to use a
 skill or to "just do X". **The user's explicit instructions always take
@@ -114,7 +119,7 @@ installed skill by name, regardless of role.
 - **compliance-privacy** — GDPR/SOC 2 obligations: data mapping, retention/deletion, DSRs, controls
 - **configuration-strategy** — env config, secrets management, feature-flag hierarchy
 - **dependency-impact-analysis** — blast radius of a change *before* implementing
-- **dependency-management** — evaluate, audit (CVEs), and upgrade libraries
+- **dependency-management** — whether a library is needed at all vs an own module; evaluate, audit (CVEs), and upgrade libraries
 
 ### Build & Test
 - **plan-execution** — execute an APPROVED plan: checkpoints, verification evidence, drift → re-plan

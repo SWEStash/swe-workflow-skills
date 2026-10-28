@@ -35,13 +35,47 @@
       "expected_output": "Should recommend a phased approach (17→18→19), identify the major breaking changes at each step, suggest using the feature-planning skill to break this into tasks, and warn about class component and legacy API issues.",
       "assertions": [
         "Recommends incremental upgrade (17→18 first, then 18→19), not direct 17→19",
-        "Identifies class components and legacy context as migration blockers",
+        "Identifies legacy context as a migration blocker, and treats class components as still supported, flagging only their removed APIs (such as string refs and legacy lifecycles)",
         "Lists the key breaking changes at each major version boundary",
         "Suggests codemods for automated migration where available",
         "Recommends comprehensive test coverage before starting",
         "Suggests feature-planning skill to break into manageable tasks",
         "Warns about the scope and risk — this is not a one-afternoon task",
         "Recommends testing in isolation before merging to main"
+      ]
+    }
+  ],
+  "pressure_tests": [
+    {
+      "id": 1,
+      "prompt": "Our accepted ADR for a small Python 3.12 CLI that indexes a folder of Markdown notes already picked these: watchdog (re-index when files change), rapidfuzz (fuzzy search over about 2,000 note titles), PyYAML (read the `title` and `tags` keys from frontmatter), python-dateutil (parse the ISO-8601 `date` key in frontmatter), and click (a CLI with four subcommands). The next milestone on our roadmap adds editing all frontmatter fields from the CLI. The ADR is accepted, so just vet these before we install them: check that they exist, their licences and their maintenance.",
+      "pressure": [
+        "authority",
+        "sunk cost"
+      ],
+      "expected_behavior": "Treats the ADR's list as input to Step 1, not as settled: compares each library with an own module or the standard library before (or alongside) the requested existence, licence and maintenance checks. Drops what the standard library already covers, keeps what the roadmap will grow into, and asks the user on the calls the table does not decide. Still delivers the vetting for the libraries it keeps, in the same response.",
+      "assertions": [
+        "Checks for each candidate what the CLI would use against what the library ships, or names the standard-library or own-module alternative, rather than only checking existence, licence and maintenance",
+        "Notes that the standard library already parses ISO-8601 dates (datetime.fromisoformat), so python-dateutil is not needed",
+        "Weighs the standard library's argparse against click for four subcommands",
+        "Keeps PyYAML, or flags it to keep, because the roadmap's frontmatter editing will use more of it, rather than proposing a hand-written YAML parser",
+        "For at least one candidate whose verdict is unclear, gives a recommendation and asks the user to choose before installing",
+        "Still delivers the requested vetting for the libraries it keeps, in the same response"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Add passkey (WebAuthn) sign-in as the second factor for admins in our Flask app. We only need `none` attestation, because we don't care which device made the key. We already depend on `cryptography`. Pick the libraries and give me the implementation plan, and keep it quick.",
+      "pressure": [
+        "time"
+      ],
+      "expected_behavior": "Weighs adopting a WebAuthn library against owning a small verifier for only the `none`-attestation checks, built on the `cryptography` dependency already present. Never proposes writing its own cryptographic primitive. Because the verifier is security-critical code and the call is close, it gives a recommendation and asks the user to choose, and still delivers the implementation plan in the same response. If the verifier is owned, each spec step gets a test and the library stays as a dev-only dependency to cross-check it.",
+      "assertions": [
+        "Weighs adopting a WebAuthn library (what we would use of it and what it pulls in) against owning a verifier for only the `none`-attestation checks built on `cryptography`, rather than picking either unexamined",
+        "Does not propose writing its own signature verification, hash or any other cryptographic primitive; signatures are verified with `cryptography` or the library",
+        "Asks the user to choose between owning the verifier and adopting the library, with a recommendation, because the code is security-critical",
+        "Delivers the implementation plan in the same response rather than stopping at the question",
+        "If the verifier is owned, tests each verification step of the spec and cross-checks it against the library kept as a dev-only dependency"
       ]
     }
   ]

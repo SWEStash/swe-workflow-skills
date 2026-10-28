@@ -67,6 +67,8 @@ Decompose the feature into implementation tasks. Each task should:
 
 Use this structure for each task — see [templates/task.md](templates/task.md).
 
+When a task adds a library, run `dependency-management`'s Step 1 on it before writing the task, and put the verdict in the plan's **New dependencies** section: own module, adopt, or a question for the user. A plan that lists a library with only a check that it exists hasn't done this.
+
 ### Step 4: Map Dependencies
 
 Identify and visualize dependencies between tasks:

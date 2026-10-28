@@ -1,7 +1,7 @@
 ---
 name: dependency-management
-description: "Evaluate, audit, and upgrade project dependencies — assess libraries before adoption, audit CVEs, plan major upgrades, resolve conflicts."
-when_to_use: "Triggers: should I use this library, npm audit, upgrade dependencies, dependency vulnerability, outdated packages, evaluate this package, is this library maintained, dependency conflict, lock file, breaking changes in upgrade, slopsquatting, package hallucination, does this package exist, verify package name, AI suggested this library."
+description: "Evaluate, audit, and upgrade dependencies — whether a library is needed at all or an own module beats it, adoption vetting, CVE audits, major upgrades, conflicts. Run before naming any new library in a plan, ADR or install."
+when_to_use: "Triggers: should I use this library, which packages do we need, write our own instead, we use a small part of it, npm audit, dependency vulnerability, upgrade dependencies, outdated packages, lock file, breaking changes in upgrade, is this library maintained, dependency conflict, slopsquatting, does this package exist, AI suggested this library."
 ---
 
 # Dependency Management
@@ -16,13 +16,28 @@ Help make disciplined decisions about project dependencies. Every dependency is 
 
 ### Step 1: Do You Need It?
 
-Before evaluating any library, check if the need can be met without one:
+Run this for every library you are about to name: one the user asks about, and one you are about to put in a plan, an ADR, or an install command. A candidate list someone hands you (an ADR, a plan, a teammate's pick) is the input to this step, not its result. Compare each candidate with **an own module**, not only with other libraries. Checking that a package exists and is maintained (Steps 2–3) does not answer whether you need it.
 
-- **Is this a few lines of code?** Writing `leftPad` yourself is better than importing it.
-- **Does the language/framework already provide this?** Check built-in APIs first.
-- **Is this a one-time use?** Copy-paste a small utility function instead of adding a dependency.
+For each candidate, fill one row:
 
-A dependency is justified when it provides substantial, maintained functionality that would be costly and error-prone to build yourself (e.g., cryptography, date handling with timezones, database drivers, authentication).
+| Field | What to write |
+|---|---|
+| **Used** | The functions or features we would call, against what it ships |
+| **Pulls in** | Transitive packages, native builds, and maintainer groups (count groups, not packages) |
+| **Already covered** | By the standard library, the platform, or a dependency we already have |
+| **Own module** | What it would be, rough line count, and how it is tested |
+| **Grows into** | Planned features (roadmap, PRD, open issues) that would use more of it. An own module that would have to regrow the library is not small |
+| **Gives beyond code** | Portability, an abstraction, spec conformance, a security track record. Check the claim: one vendor's SDK is not an abstraction over many vendors |
+
+Then give each row a verdict:
+
+- **Own module, or nothing:** we'd use a sliver of it, the own module is small, and nothing planned grows it. Same when the standard library or a current dependency already covers it.
+- **Adopt:** we'd use a substantial part of it, or correctness is specialized and costly to get right (cryptographic primitives, timezone math, database drivers, a parser for hostile input). Continue to Steps 2–4.
+- **Ask the user:** the rows don't decide it. That covers a mid-size own module, security-critical code, or a call that hinges on the roadmap or on how much code the team is willing to maintain, which you can't see. Present both options with your recommendation and what each costs, and get the user's choice before installing the library or writing the module. This is not a gate on the rest of the answer: deliver the table and the other verdicts in the same response, with the question beside them.
+
+**Security-critical code:** never write your own cryptographic primitives. Thin protocol code over a crypto library you already ship can be owned, for example TOTP, a request signer, or a WebAuthn check that only accepts `none` attestation. Own it only when the user chooses to (ask), with a test per spec step, and with differential tests against the library kept as a dev-only dependency.
+
+**Exit condition:** the table with a verdict per row, in the same response. Steps 2–4 apply only to rows marked Adopt.
 
 ### Step 2: Verify the Package Exists (anti-slopsquatting)
 
@@ -60,7 +75,7 @@ For any library under consideration, assess these dimensions:
 - Does it have excessive transitive dependencies?
 
 **Alternatives comparison:**
-- Identify 2-3 alternatives and compare on the dimensions above
+- Identify 2-3 alternatives, including Step 1's own module, and compare on the dimensions above
 - A slightly less popular library that's better maintained may be the better choice
 
 See [references/evaluation-checklist.md](references/evaluation-checklist.md) for the structured assessment template.
@@ -68,10 +83,10 @@ See [references/evaluation-checklist.md](references/evaluation-checklist.md) for
 ### Step 4: Present the Recommendation
 
 For the user, summarize:
-- **Recommendation**: Use / Don't use / Consider alternative
+- **Recommendation**: Use / Own module / Don't use / Consider alternative. When Step 1 marked the row Ask the user, give your recommendation and ask; don't install until they answer
 - **Primary reason**: The most compelling argument
 - **Risks accepted**: What you're trading off
-- **Alternatives considered**: Brief comparison
+- **Alternatives considered**: when you compare two or more libraries, a table with one column per candidate covering the Step 3 dimensions. Give numbers: bundle or install size, transitive dependency count, weekly downloads. Then show the same small task (one schema, one call) written in each library, so the ergonomics can be compared rather than asserted
 
 ## Workflow: Auditing Existing Dependencies
 
@@ -100,7 +115,7 @@ bundle audit check --update
 Not all vulnerabilities require action. For each finding:
 
 1. **Is the vulnerable code path actually used in your project?** Many CVEs affect specific features you may not use.
-2. **What's the severity?** Critical and High need immediate action. Medium within a sprint. Low can be tracked.
+2. **What's the severity?** Start with Critical and High, which need immediate action. Many Moderate and Low findings sit in dev-only tooling or in code paths you never call. Those are acceptable risk: say so, record the decision with its reason, and recheck at the next upgrade instead of fixing everything. Fix the rest of the Moderate findings within a sprint.
 3. **Is a patched version available?** If yes, upgrade. If no, assess mitigation or replacement.
 4. **Is it a transitive dependency?** You may need to upgrade the parent package, or use overrides/resolutions.
 
@@ -119,9 +134,11 @@ vulture src/ --min-confidence 80
 
 Remove unused dependencies. If unsure, comment it out, run tests, and deploy to staging.
 
+Then run Step 1's table on each remaining direct dependency to find the ones used for only a sliver. Fill **Grows into** before proposing a replacement: a library we use lightly today can be the right choice for a feature on the roadmap.
+
 ### Step 4: Produce the Report
 
-Summarize: N vulnerabilities found (X critical, Y high), N unused packages, N significantly outdated.
+Summarize: N vulnerabilities found (X critical, Y high), N unused packages, N used for a sliver (with own-module alternatives and sizes), N significantly outdated.
 
 ## Workflow: Major Version Upgrades
 
@@ -139,8 +156,9 @@ For low-risk upgrades (well-documented, small surface area):
 - Create a branch, bump the version, run tests, fix failures.
 
 For high-risk upgrades (framework major version, ORM, auth library):
+- Before starting, make sure the tests cover the surface the upgrade touches. Write characterization tests where coverage is thin, because the suite is how you will know the upgrade broke nothing
 - Create a detailed task list of changes needed
-- Test in isolation first if possible
+- Changes that work on both the old and the new version can merge to main as they land. The version bump itself runs in isolation (a branch through the full suite, then staging) before it merges
 - Consider running old and new versions in parallel temporarily (expand-contract)
 - Suggest using the `feature-planning` skill to break the upgrade into tasks
 
