@@ -12,6 +12,13 @@ description, not here. Sections dated before 0.7.0 carry hand-written prose from
 file was curated manually.
 
 
+## [0.11.5](https://github.com/SWEStash/swe-workflow-skills/compare/v0.11.4...v0.11.5) (2026-10-28)
+
+
+### Fixed
+
+* **dependency-management:** ask whether a library is needed at all ([#75](https://github.com/SWEStash/swe-workflow-skills/issues/75)) ([af89d96](https://github.com/SWEStash/swe-workflow-skills/commit/af89d96b0bfe7a39df49a929c3a69e8953e9791d))
+
 ## [0.11.4](https://github.com/SWEStash/swe-workflow-skills/compare/v0.11.3...v0.11.4) (2026-10-27)
 
 
