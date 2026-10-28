@@ -171,6 +171,7 @@ Use [templates/folder-structure.md](templates/folder-structure.md) as a starting
 - [ ] Are components reusable without bringing business logic along?
 - [ ] Is there one clear way to do common tasks (fetching, forms, navigation)?
 - [ ] Are design tokens used consistently (no hardcoded values)?
+- [ ] Does every library this design adds (state, fetching, routing, UI kit) carry `dependency-management`'s Step 1 verdict: own module, adopt, or ask the user?
 
 ## Principles Applied
 

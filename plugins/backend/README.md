@@ -16,7 +16,7 @@ Claude loads a skill when your request matches it, or when you ask for it by nam
 - **code-slop-cleanup**: Strip AI slop from a branch diff before PR: judge each hunk against the surrounding file's conventions, remove without changing behavior, re-run tests.
 - **configuration-strategy**: Design environment configuration, secrets management, and feature-flag hierarchy for a service or feature.
 - **data-modeling**: Design database schemas, relationships, indexes, and migration strategies: relational and document stores.
-- **dependency-management**: Evaluate, audit, and upgrade project dependencies: assess libraries before adoption, audit CVEs, plan major upgrades, resolve conflicts.
+- **dependency-management**: Evaluate, audit, and upgrade dependencies: whether a library is needed at all or an own module beats it, adoption vetting, CVE audits, major upgrades, conflicts.
 - **deployment-checklist**: Pre-deploy verification and release safety checks: config, migrations, monitoring, rollback readiness, comms.
 - **feature-planning**: Break features into well-scoped tasks with acceptance criteria, risk assessment, and dependency mapping.
 - **git-workflow**: Write commit messages, PR descriptions, and manage branching strategy following conventional commits.

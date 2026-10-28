@@ -57,6 +57,8 @@ an extra task, a skipped step, a surprise — goes into a **drift log** the mome
 it happens, even when the deviation is an improvement. Undocumented "better
 ideas" are how a plan dies without anyone deciding to kill it.
 
+Installing a library the plan doesn't list is drift too. Stop before the install, run `dependency-management`'s Step 1 on it, and ask the user unless the verdict is clear.
+
 When a task needs a human — a review, an approval, field data — first do every
 part you can do yourself, then hand over a runbook: what is needed, where the
 data is, what to run, what to look for, and what to send back.

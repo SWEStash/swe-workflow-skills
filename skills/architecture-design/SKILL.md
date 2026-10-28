@@ -70,6 +70,7 @@ Present 2-4 viable options. For each option:
 3. **Analyze trade-offs** against the quality attributes identified in Step 2
 4. **Estimate complexity** (implementation effort, operational overhead)
 5. **Identify reversibility** — how hard is it to change this decision later?
+6. **Name any new library it brings in**, with `dependency-management`'s Step 1 verdict (own module, adopt, or ask the user) in the option itself. The ADR records why each library is worth the coupling.
 
 Avoid presenting a straw-man option just to make the preferred one look better.
 

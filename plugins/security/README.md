@@ -14,7 +14,7 @@ Claude loads a skill when your request matches it, or when you ask for it by nam
 - **compliance-privacy**: Engineer for regulatory and privacy obligations: GDPR/CCPA privacy-by-design, PII data mapping and minimization, retention and deletion (right to erasure), data subject requests, consent, SOC 2 controls (access, change management, audit logging).
 - **configuration-strategy**: Design environment configuration, secrets management, and feature-flag hierarchy for a service or feature.
 - **dependency-impact-analysis**: Map the blast radius of a change before implementing: find dependents, classify breaking vs additive, identify coordination needs, produce a propagation plan.
-- **dependency-management**: Evaluate, audit, and upgrade project dependencies: assess libraries before adoption, audit CVEs, plan major upgrades, resolve conflicts.
+- **dependency-management**: Evaluate, audit, and upgrade dependencies: whether a library is needed at all or an own module beats it, adoption vetting, CVE audits, major upgrades, conflicts.
 - **feature-planning**: Break features into well-scoped tasks with acceptance criteria, risk assessment, and dependency mapping.
 - **git-workflow**: Write commit messages, PR descriptions, and manage branching strategy following conventional commits.
 - **incident-response**: Structured production incident workflow: triage, mitigation, investigation, recovery, comms.
