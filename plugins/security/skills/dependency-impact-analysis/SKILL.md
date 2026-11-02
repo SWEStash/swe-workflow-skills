@@ -116,6 +116,8 @@ For each breaking change, define the coordination plan:
 - What is the migration deadline?
 - Is there a deprecation period?
 
+**Exit condition:** the dependents with their Step 3 classification, and the propagation plan, written in your reply before any design question or code. This is not a gate on delivering: when a design choice is open, give the map under your recommended option and put the question beside it. A choice dialog shows only its own text, so a question asked instead of the map hides it.
+
 ## Principles Applied
 
 - **Functional independence**: Minimize blast radius — prefer additive changes over breaking changes when both achieve the same goal

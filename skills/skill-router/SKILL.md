@@ -53,7 +53,10 @@ performance…) are exactly what the skills are for. When in doubt, route.
 **Naming a new library is a routing point**, even mid-plan or mid-build and even
 when nobody asked about dependencies. Invoke `dependency-management` before the
 library goes into a plan, an ADR, or an install command. Its first question is
-whether you need the library at all.
+whether you need the library at all. A library an RFC, ADR, issue or earlier plan
+already names is a candidate, not a decision. Writing "run
+`dependency-management`" as a later step of the plan doesn't count: the plan
+names the library only after the check has run.
 
 Skip **only** for genuinely trivial, conversational, or information-lookup
 requests where no workflow adds value, or when the user tells you not to use a

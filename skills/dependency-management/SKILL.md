@@ -37,7 +37,11 @@ Then give each row a verdict:
 
 **Security-critical code:** never write your own cryptographic primitives. Thin protocol code over a crypto library you already ship can be owned, for example TOTP, a request signer, or a WebAuthn check that only accepts `none` attestation. Own it only when the user chooses to (ask), with a test per spec step, and with differential tests against the library kept as a dev-only dependency.
 
-**Exit condition:** the table with a verdict per row, in the same response. Steps 2–4 apply only to rows marked Adopt.
+**Exit condition:** the table with a verdict per row, written in your reply, in the same response. Steps 2–4 apply only to rows marked Adopt.
+
+- **The table goes in the message, not in a question.** A choice dialog shows only its own text, so a question whose option labels carry the comparison hides the table. Write the table and your recommendation first; the question that follows only names the options.
+- **A registry page fills no row.** The package existing, its licence and its last release are Steps 2–3. A verdict reached from them has skipped this step.
+- **Size the own module with the hard part in it.** If our version would have to rebuild what makes the library worth having (its typing, its protocol or OAuth flow, its parser), count that part, or the own module looks smaller than it is.
 
 ### Step 2: Verify the Package Exists (anti-slopsquatting)
 
