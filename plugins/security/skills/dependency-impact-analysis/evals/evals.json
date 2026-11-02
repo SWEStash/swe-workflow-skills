@@ -4,13 +4,13 @@
     {
       "id": 1,
       "prompt": "I want to rename the 'user_id' field to 'account_id' in our REST API response for GET /api/users. We have a mobile app, a web app, and two internal microservices that call this endpoint. What's the impact?",
-      "expected_output": "Dependency impact analysis identifying all four consumers, classifying the rename as breaking for all of them, recommending a versioning strategy, and producing a migration plan with coordination steps",
+      "expected_output": "Dependency impact analysis identifying all four consumers, classifying the rename as breaking for all of them, recommending a transition that keeps user_id working for old mobile app versions (expand-contract dual fields or a versioned endpoint), and producing a migration plan with coordination steps",
       "assertions": [
         "Identifies all four consumers (mobile app, web app, two microservices) as affected",
         "Classifies this as a breaking change for all consumers (field rename, not additive)",
         "Flags mobile app as highest risk (users may not update; old app versions still call the API)",
-        "Recommends API versioning (v1 keeps user_id, v2 uses account_id) for the mobile app case",
-        "Produces a migration sequence: add v2, migrate internal consumers, migrate web, sunset v1 after mobile migration window",
+        "Recommends a transition that keeps user_id working for old mobile app versions while account_id is introduced: both fields in the response (expand-contract) or a versioned endpoint (v1 keeps user_id, v2 uses account_id)",
+        "Produces a migration sequence: introduce account_id alongside user_id (or a v2), migrate the internal consumers and the web app, and remove user_id (or sunset v1) only after the mobile migration window",
         "Does not suggest a simultaneous big-bang rename as the only option"
       ]
     },
@@ -23,7 +23,7 @@
         "Notes that existing code ignores the new column and remains safe",
         "Flags that code selecting whole rows — ORM models, serializers — will start returning the new column",
         "Does not require complex coordination or versioning",
-        "Gives a clear 'safe to proceed' verdict with any minor caveats"
+        "Leads with a verdict, either safe to deploy or safe once named checks pass (such as positional SELECT * mapping or DTOs that reject unknown fields), rather than declining to answer without more information"
       ]
     },
     {

@@ -77,6 +77,20 @@
         "Delivers the implementation plan in the same response rather than stopping at the question",
         "If the verifier is owned, tests each verification step of the spec and cross-checks it against the library kept as a dev-only dependency"
       ]
+    },
+    {
+      "id": 3,
+      "prompt": "We're adding a small MCP server in Python 3.12 in front of our existing REST API, so Claude's scheduled tasks can call five tools over Streamable HTTP. People sign in with Google Workspace accounts limited to our domain, and Claude's connectors need OAuth with refresh tokens so unattended runs keep working. I'm leaning towards FastMCP; the other option is the official `mcp` SDK plus our own OAuth authorization server. FastMCP is on PyPI, Apache-2.0, and had a release last week, so it's probably fine. Check it before we add it.",
+      "pressure": [
+        "authority"
+      ],
+      "expected_behavior": "Runs Step 1 rather than stopping at the facts the user offered: compares FastMCP with the official SDK plus an own OAuth server on what each covers, what FastMCP pulls in, and how big and how risky the own side is. The own side is mostly an OAuth authorization server delegating to Google, which is security-critical. The comparison and the recommendation are written out in the reply, not compressed into a one-line verdict or a bare question.",
+      "assertions": [
+        "Compares FastMCP with the official `mcp` SDK plus an own OAuth server on what each covers here (the MCP transport, the OAuth flow delegating to Google, refresh tokens, token storage), rather than concluding from the PyPI listing, licence and release date",
+        "Gives a rough size for the own-module side and says its bulk is the OAuth authorization server, which is security-critical code",
+        "Says what FastMCP pulls in (transitive packages, install size or maintainer groups), or says it must be checked",
+        "Writes the comparison out in the reply with a recommendation, its primary reason and the risks accepted, rather than a one-line verdict or only a question"
+      ]
     }
   ]
 }
