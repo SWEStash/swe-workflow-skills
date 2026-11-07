@@ -7,6 +7,12 @@
 // any row whose control arm loaded the skill under test, and stores the hash of the
 // skill listing the controls saw (warning when it changed since the row's last run).
 //
+// Other models: a run generated on sonnet or haiku goes into its OWN file, e.g.
+//   --baseline evals/baseline.claude-haiku-5-5.json --init --model claude-haiku-5-5 --judge claude-opus-5-5
+// --init starts that file when it does not exist yet; --judge records the judge's
+// resolved id on each row when it differs from --model. Rows are keyed by case, not
+// by model, so the merge refuses to replace a row recorded on another model family.
+//
 // <results.json> is the { results, errored, total, baseline } object returned by
 // evals/workflow-runner.mjs (the Workflow arm). Rows are read from its
 // `baseline.skills`, falling back to `results`.
@@ -50,6 +56,8 @@ for (let i = 0; i < argv.length; i++) {
   const a = argv[i]
   const next = () => argv[++i] ?? die(`${a} needs a value`)
   if (a === '--model') opts.model = next()
+  else if (a === '--judge') opts.judge = next()
+  else if (a === '--init') opts.init = true
   else if (a === '--baseline') opts.baseline = next()
   else if (a === '--out') opts.out = next()
   else if (a === '--note') opts.note = next()
@@ -59,7 +67,7 @@ for (let i = 0; i < argv.length; i++) {
   else if (a === '--transcripts') opts.transcripts = next()
   else if (a === '--allow-contaminated') opts.allowContaminated = true
   else if (a === '-h' || a === '--help') {
-    console.log(fs.readFileSync(new URL(import.meta.url), 'utf8').split('\n').slice(1, 27).join('\n'))
+    console.log(fs.readFileSync(new URL(import.meta.url), 'utf8').split('\n').slice(1, 33).join('\n'))
     process.exit(0)
   } else if (a.startsWith('-')) die(`unknown flag ${a}`)
   else if (resultsPath) die(`unexpected extra argument ${a}`)
@@ -71,6 +79,11 @@ if (!opts.model) die('--model is required: the resolved model id the agents ran 
 opts.out ??= opts.baseline
 
 // The model guard is the whole reason a row gates instead of being skipped.
+for (const [flag, id] of [['--model', opts.model], ['--judge', opts.judge]]) {
+  if (id == null || flag === '--model') continue
+  if (HARNESS_SHORTHANDS.has(id)) die(`${flag} "${id}" is a harness shorthand, not a model id. Pass the resolved id (e.g. claude-opus-5-5).`)
+  if (/[[\]]/.test(id)) die(`${flag} "${id}" carries a variant suffix. Record the base id (e.g. claude-opus-5-5, not claude-opus-5-5[1m]).`)
+}
 if (HARNESS_SHORTHANDS.has(opts.model)) {
   die(
     `--model "${opts.model}" is a harness shorthand, not a model id. The runner pins ` +
@@ -120,7 +133,22 @@ const readJson = (p, what) => {
 }
 
 const resultsFile = readJson(resultsPath, 'results file')
-const baseline = readJson(opts.baseline, 'baseline')
+if (opts.init && fs.existsSync(opts.baseline)) die(`--init given but ${opts.baseline} already exists; drop --init to merge into it.`)
+const baseline = opts.init
+  ? {
+      _note:
+        `Comparison content baseline for ${opts.model}${opts.judge && opts.judge !== opts.model ? `, judged by ${opts.judge}` : ''}, ` +
+        `recorded in-session via evals/workflow-runner.mjs. It does not gate: evals/baseline.json is the regression baseline. ` +
+        `Rows match evals/baseline.json's shape and case keys, so the two can be compared row by row.\n\nCOVERAGE:`,
+      model: opts.model,
+      ...(opts.judge && opts.judge !== opts.model ? { judge: opts.judge } : {}),
+      k: '',
+      runner: 'workflow-runner.mjs',
+      option: 'A',
+      summary: {},
+      skills: {},
+    }
+  : readJson(opts.baseline, 'baseline')
 if (!baseline.skills || typeof baseline.skills !== 'object') die(`${opts.baseline} has no "skills" object`)
 
 // Rows: prefer the runner's own pre-grouped baseline.skills, else rebuild from results[].
@@ -208,6 +236,16 @@ for (const { skill, key, row } of incoming) {
     continue
   }
   const prev = baseline.skills[skill]?.[key]
+  // claude-opus-5 and claude-opus-5-5 are one family (a model rollover the gate
+  // handles row by row); claude-haiku-* replacing claude-opus-* is a wrong --baseline.
+  const family = (id) => String(id ?? '').split('-')[1]
+  if (prev && family(prev.model ?? baseline.model) !== family(opts.model)) {
+    problems.push(
+      `${where}: would REPLACE a ${prev.model ?? baseline.model} row with a ${opts.model} row. ` +
+        `Rows are keyed by case, not model: merge other models into their own file (--baseline <file> [--init]).`
+    )
+    continue
+  }
   if (prev && prev.green.length !== row.green.length)
     problems.push(`${where}: baseline row has ${prev.green.length} verdicts, incoming has ${row.green.length}`)
   plan.push({ skill, key, row: { ...row, model: opts.model }, prev })
@@ -343,6 +381,7 @@ for (const { skill, key, row } of plan) {
     green: row.green,
     red: row.red,
     model: opts.model,
+    ...(opts.judge && opts.judge !== opts.model ? { judge: opts.judge } : {}),
     k: row.k,
     runner: row.runner ?? 'workflow-runner.mjs',
     ...(row.listing ? { listing: row.listing } : {}),
