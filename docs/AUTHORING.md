@@ -205,11 +205,12 @@ concrete for this library:
 - **Cadence** — once per release cycle, or when the shipping base models change
   materially (a new default model family or tier).
 - **Procedure** — re-run the skill's 3 evals RED (without the skill) on shipping
-  models via `evals/workflow-runner.mjs`; its generators and judges all run on the
-  same model line, so one sweep is internally consistent. (That pin is the harness
-  shorthand `opus`, which tracks whatever opus the session runs — it does **not**
+  models via `evals/workflow-runner.mjs`; by default its generators and judges all
+  run on the same model line, so one sweep is internally consistent. (That default is
+  the harness shorthand `opus`, which tracks whatever opus the session runs — it does **not**
   make scores comparable across sessions months apart; record the resolved model
-  with the numbers.) Re-sample ×3
+  with the numbers. The payload's `model` field runs the generators on another model;
+  see [Cross-model results](EVALS.md#cross-model-results-sonnet-and-haiku).) Re-sample ×3
   on borderline scores, and **read the judge journal before writing a gap off as
   variance** — a "flaky" case is often a real content gap the skill itself causes.
 - **Decision rule** — RED ≈ GREEN across **all three evals** (ignore assertion pairs

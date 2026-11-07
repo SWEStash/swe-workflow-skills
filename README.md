@@ -114,8 +114,8 @@ request can fan out to several skills. See a full session in
   library keeps the router and safety skills fully listed and the rest **`name-only`**
   (Claude Code's own setting for low-priority skills), so every skill is one route away
   with no pre-picking ([how it works](docs/ROLES.md)).
-- **Tested like code, not prose.** Across 234 eval cases and 1323 assertions, the same
-  model passes **63.6%** of assertions without the skill's content and **97.9%** with
+- **Tested like code, not prose.** Across 247 eval cases and 1388 assertions, the same
+  model passes **65.3%** of assertions without the skill's content and **98.4%** with
   it, and **no case scores lower with the skill** ([results](docs/EVALS.md#results-content-evals-full-catalog)).
   Safety-critical skills are **hardened** with an Iron Law, a rationalization table, and
   pressure tests.
