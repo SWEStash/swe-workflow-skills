@@ -18,6 +18,14 @@ Logs                     → WHAT happened in detail (events, errors, context)
 Traces                   → WHERE time was spent across services (request flow)
 ```
 
+**Which workflow comes first depends on what exists.** With no telemetry yet (console
+logs only), there is nothing to measure an SLO against, so start with the
+instrumentation workflow on **one** service: structured logs carrying the trace ID,
+OpenTelemetry auto-instrumentation, export through a Collector to a named backend —
+and show that setup in the team's own stack. Roll it out to the other services once
+the first one works; design SLOs when there is telemetry to measure them. When
+telemetry already exists, start with SLI/SLO design.
+
 ## Workflow: SLI/SLO Design
 
 ### Step 1: Identify Critical User Journeys

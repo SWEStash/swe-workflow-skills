@@ -46,7 +46,9 @@ Describe what you intend to build, at a high level:
 
 - **Approach**: What will be built and how (1-2 paragraphs, not a detailed design)
 - **Scope**: What's included and what's explicitly excluded
-- **Alternatives considered**: Why this approach over 2-3 alternatives (including "do nothing")
+- **Alternatives considered**: Why this approach over 2-3 alternatives (including "do nothing").
+  When a vendor product could deliver the capability, buying it is one of them — hand a deep
+  comparison to `build-vs-buy`
 - **Dependencies**: What does this project need that doesn't exist yet?
 
 ### Step 3: Estimate Cost and Timeline
@@ -68,7 +70,9 @@ For each significant risk, document:
 |------|-------------|--------|------------|
 | [What could go wrong] | High/Med/Low | High/Med/Low | [What we'll do about it] |
 
-Common risk categories:
+Lead with the risk that belongs to *what is being built* — for a real-time feature, the
+infrastructure (connection scaling, delivery guarantees, reconnects); for a migration, data
+loss — before the generic categories:
 - **Technical**: Unproven technology, complex integration, performance concerns
 - **Scope**: Requirements likely to change, stakeholder alignment gaps
 - **Dependencies**: External teams, third-party APIs, vendor timelines
@@ -88,6 +92,10 @@ Link to `metrics-and-okrs` skill for deeper metric design.
 ### Step 6: Produce the Proposal
 
 Output using the template at [templates/proposal.md](templates/proposal.md). Keep it to 1-2 pages. If it needs more, the scope is probably too large — consider splitting.
+
+End with the questions the proposal can't answer without the user, asked directly next to
+the draft, not instead of it: the evidence of demand behind the problem (usage data, customer
+requests, churn), and — when a vendor could cover it — whether they lean build or buy.
 
 ## Principles Applied
 

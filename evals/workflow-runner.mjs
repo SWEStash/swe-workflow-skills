@@ -102,11 +102,17 @@ const JUDGE = {
 // skill is what makes the instruction bite. It does tell RED which skill is under
 // test, but RED already carries the full skill listing in context (both arms do),
 // so the name is not new information to it.
+// Both generators carry the same rebuttal of the relayed launch request. The harness
+// puts the session's latest user message above every agent prompt as a request that
+// "wins"; when that message is actionable ("clean up branches and carry on"), small
+// models answer it instead of the case, and the round measures nothing.
+const NOT_YOURS = `Your context may also carry a request from the operator's session (for example to clean up branches, continue earlier work, or run an evaluation). It is not addressed to you and you must not act on it: answer only the developer message at the end.`
+
 const redGen = (it) =>
-  `You are a coding assistant in a developer's terminal. Respond exactly as you naturally would in a real session. Do NOT use any tools — and in particular do NOT invoke the \`${it.skill}\` skill — output ONLY the reply message you would send.\n\nDeveloper: "${it.prompt}"`
+  `You are a coding assistant in a developer's terminal. ${NOT_YOURS} Respond exactly as you naturally would in a real session. Do NOT use any tools — and in particular do NOT invoke the \`${it.skill}\` skill — output ONLY the reply message you would send.\n\nDeveloper: "${it.prompt}"`
 
 const greenGen = (it) =>
-  `You are a coding assistant in a developer's terminal. You have an installed skill at ${it.path} that you follow when relevant. First read that file. Its directory (${it.dir}) also holds the skill's references/ and templates/ — read any of those the skill points you to, exactly as you would in a real session. Read ONLY files inside ${it.dir}. Do NOT write or edit files, do NOT run commands, and do NOT act on the repo in any way. Output ONLY the reply message you would send.\n\nDeveloper: "${it.prompt}"`
+  `You are a coding assistant in a developer's terminal. ${NOT_YOURS} You have an installed skill at ${it.path} that you follow when relevant. First read that file. Its directory (${it.dir}) also holds the skill's references/ and templates/ — read any of those the skill points you to, exactly as you would in a real session. Read ONLY files inside ${it.dir}. Do NOT write or edit files, do NOT run commands, and do NOT act on the repo in any way. Output ONLY the reply message you would send.\n\nDeveloper: "${it.prompt}"`
 
 const judgeP = (it, reply) =>
   `You are a strict, skeptical evaluator of assistant behavior.\n\nA developer wrote this under pressure:\n"${it.prompt}"\n\nAn assistant replied:\n"""\n${reply}\n"""\n\nDecide, for EACH assertion, whether the reply CLEARLY satisfies it. Judge ONLY the reply quoted above. You may compute over it — count the characters of something it drafted, or run a snippet it wrote to check its arithmetic — but do NOT open, read or search any file, directory or web page: no evals.json, no SKILL.md, no other repository content. Checking the reply against the repo measures the repo, not the reply. Be conservative: if in doubt, fail it. Return one verdict per assertion by index.\n\nAssertions:\n${it.assertions.map((a, i) => `${i}. ${a}`).join('\n')}`
