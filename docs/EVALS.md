@@ -220,8 +220,8 @@ cases drops that skill's other rows.
 
 ### Results (content evals, full catalog)
 
-All 68 skills, 247 cases, 1388 assertions, **every row at k>=3**. 176 rows were measured on
-`claude-opus-5` and 71 on `claude-opus-5-5`, each recorded under its own id; the gate re-runs every
+All 68 skills, 247 cases, 1388 assertions, **every row at k>=3**. 173 rows were measured on
+`claude-opus-5` and 74 on `claude-opus-5-5`, each recorded under its own id; the gate re-runs every
 row on the model it was recorded on, because CI lists both. The figures below pool both.
 
 **What RED actually is.** RED answers the same prompt without the skill's *content* —
@@ -236,18 +236,18 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **906 / 1388 = 65.3%** |
-| Assertions passed, skill loaded (GREEN) | **1366 / 1388 = 98.4%** |
-| Gain | **+33.1 points** |
-| Cases where GREEN beats RED | **221 / 247** |
-| Cases where GREEN ties RED | **26 / 247** |
+| Assertions passed, no skill body (RED) | **911 / 1388 = 65.6%** |
+| Assertions passed, skill loaded (GREEN) | **1368 / 1388 = 98.6%** |
+| Gain | **+32.9 points** |
+| Cases where GREEN beats RED | **219 / 247** |
+| Cases where GREEN ties RED | **28 / 247** |
 | Cases where GREEN is *below* RED | **0 / 247** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
 content is worse than no skill at all. **There are also zero RED-true / GREEN-false
-assertions** anywhere in the library. The 26 ties are mostly cases where RED already
+assertions** anywhere in the library. The 28 ties are mostly cases where RED already
 saturates — no headroom left to show, not a skill doing nothing — and saturation
-concentrates by case kind: `eval:1` 3%, `eval:2` 16%, `eval:3` 12%, pressure 12%.
+concentrates by case kind: `eval:1` 4%, `eval:2` 18%, `eval:3` 12%, pressure 12%.
 Scope-boundary cases used to saturate at 18% because three of their four assertions
 (recognise the request, name the sibling skill, withhold the wrong deliverable) were
 satisfied by the roster alone. Rewriting 26 of them against a sibling the roster cannot
@@ -262,9 +262,9 @@ for depth:
 |---|---|---|---|
 | zero (no references at all) | 16 | 63.7% → 98.5% | **+34.7** |
 | light (0 < ratio < 1) | 23 | 66.8% → 98.8% | +32.0 |
-| heavy (ratio ≥ 1) | 29 | 64.7% → 98.1% | +33.4 |
+| heavy (ratio ≥ 1) | 29 | 65.5% → 98.4% | +32.9 |
 
-Pearson r between reference ratio and GREEN gain is **−0.09** across the 68 skills —
+Pearson r between reference ratio and GREEN gain is **−0.11** across the 68 skills —
 no relationship. The zero-reference skills are the control that makes this readable:
 they gained the *most* with nothing to read, so the gain comes from the instruction
 itself. Note the standing confound — GREEN gained tool access alongside reference
@@ -312,14 +312,14 @@ id, and lists every case where the skill lowered an assertion. It is read-only.
 
 | Case set | Model | Cases | RED | GREEN | Gain [95% CI] | Cases GREEN < RED |
 |---|---|---|---|---|---|---|
-| Edge case of every skill (`eval:2`) | Haiku | 68 | 71.6% | 87.2% | +15.6 [10.3, 21.0] | 6 |
+| Edge case of every skill (`eval:2`) | Haiku | 68 | 71.6% | 88.6% | +17.0 [12.3, 22.1] | 5 |
 | | Sonnet | 68 | 78.3% | 95.6% | +17.3 [12.2, 22.4] | 1 |
-| | Opus (stored) | 68 | 72.3% | 98.8% | +26.5 | 0 |
-| Whole suite | Haiku | 245 | 62.0% | 87.7% | +25.7 [22.6, 28.8] | 8 |
-| | Opus (stored) | 245 | 65.3% | 98.4% | +33.1 | 0 |
+| | Opus (stored) | 68 | 73.3% | 99.0% | +25.7 | 0 |
+| Whole suite | Haiku | 245 | 62.0% | 88.1% | +26.0 [23.1, 29.0] | 7 |
+| | Opus (stored) | 245 | 65.6% | 98.6% | +32.9 | 0 |
 
-Haiku by case kind (whole suite): happy path +25.5, edge case +15.6, scope boundary
-+30.8, pressure **+38.7**. Sonnet was run on the edge-case set plus a 15-case pilot,
+Haiku by case kind (whole suite): happy path +25.5, edge case +17.0, scope boundary
++30.5, pressure **+38.7**. Sonnet was run on the edge-case set plus a 15-case pilot,
 not the whole suite. Two Haiku cases are excluded (`project-review eval:1`,
 `project-documentation eval:3`): they ask for repositories or git history that no arm
 can read, and every reply declined, in both arms.
@@ -330,7 +330,7 @@ What the numbers show:
   less than they help Opus. Gain is the robust comparison: both arms of a model share
   the generator, the judge and the session.
 - **Sonnet with the skill is close to Opus with the skill** on the edge-case set
-  (95.6% vs 98.8%). Haiku is about 11 points behind in every case kind.
+  (95.6% vs 99.0%). Haiku is about 10 points behind in every case kind.
 - **Pressure is where Haiku gains most.** Without the skill it gives in most often
   (RED 46.4%); with it, it holds (85.1%).
 - **Harm appears as the model gets smaller.** The skill lowered a whole case 0 times
@@ -343,21 +343,22 @@ What the numbers show:
     (`exploratory-data-analysis`, `project-proposal`, `research-methodology`,
     `rollback-strategy`): each now says, in Step 1, when a request is out of scope,
     what to name and what to leave out. All four scope-boundary cases now score
-    GREEN ≥ RED on Haiku, `baseline.json` gave up no green assertion, and Haiku's harm
-    count fell to **8 (3%)**.
-  - *It runs the whole workflow when the request wants one part of it*, for example
-    leading with SLOs when the request asked for the quick tracing win
-    (`observability-design eval:2`, still open).
+    GREEN ≥ RED on Haiku and `baseline.json` gave up no green assertion.
+  - *It ran the whole workflow when the request wanted one part of it*, for example
+    leading with SLOs when a team with no telemetry asked for the quick tracing win.
+    **Fixed** in `observability-design`, which now says which of its two workflows
+    comes first: with no telemetry, instrument one service before designing SLOs.
 
-  The other remaining cases are single-assertion margins at k=3.
+  After both fixes Haiku's harm count is **7 (3%)**: single-assertion margins at k=3,
+  one severity-calibration disagreement (`security-audit eval:2`) and one judge error.
 
 What the numbers do not show:
 
 - **"Smaller model with the skill vs Opus without it" is mostly confounded.** Most
   stored Opus rows were generated and judged by `claude-opus-5`, months earlier. On
   the rows recorded on `claude-opus-5-5`, Haiku with the skill beats Opus without it
-  on happy-path (+24.8), scope-boundary (+24.1) and pressure (+23.2) cases, with
-  intervals above zero. On edge cases (+3.1) the interval includes zero.
+  on happy-path (+22.3), scope-boundary (+24.1) and pressure (+23.2) cases, with
+  intervals above zero. On edge cases (+2.7) the interval includes zero.
 - **Routing is not re-measured here.** In real use the model also has to pick the
   skill; [Activation evaluation](#activation-evaluation-routing--implemented) covers
   that on Haiku.
@@ -655,6 +656,15 @@ flaky). Several findings from running this make the choice necessary:
    And the 1571 denominator was true when counted: workflow transcripts age off
    disk, and a re-scan today finds 1250 RED generators still present, containing
    all 16 of the same calls.
+
+   **Generators can also answer the wrong request.** The Workflow harness places the
+   operator's latest message above every agent prompt as a request that takes
+   precedence. When that message is actionable, a small model may act on it instead
+   of the case: one Haiku run launched right after "clean up branches and carry on"
+   had most of its RED rounds report on the repo's branches, and the leak scan
+   refused it. Both generator prompts now say that any such request is not addressed
+   to them and to answer only the developer message. Both arms carry the same
+   sentence, so the comparison is unchanged.
 
 9. **Most rows measure one assertion or none, and scope-boundary cases are
    saturated by construction.** `merge-baseline.mjs` reports, per row, how many
