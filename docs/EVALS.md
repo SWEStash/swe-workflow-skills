@@ -125,11 +125,14 @@ Two properties matter:
   baseline spanning a model rollover stays gated row by row. A row recorded on a
   model not in the list is not run, and is reported "not comparable" rather than
   as a regression. The first model in the list runs cases that have no row yet.
-  `EVAL_JUDGE_MODEL` is optional: unset, each case is judged by the model that
-  generated it, which is how the workflow arm records its rows. `workflow-runner.mjs`'s
-  `MODEL = 'opus'` is a harness shorthand, not a model id — the session that runs
-  the sweep reports the resolved id, and that string goes into the provenance
-  fields.
+  `EVAL_JUDGE_MODEL` is optional: unset, `run.py` judges each case with the model
+  that generated it. Every row in `baseline.json` was recorded that way, generated and
+  judged on the same model, which is the workflow runner's default (`model` and
+  `judge` both `opus`). The payload can set either one; a row records `judge` only
+  when it differs from `model` (see [Cross-model results](#cross-model-results-sonnet-and-haiku)).
+  `opus`, `sonnet` and `haiku` are harness shorthands, not model ids — the session
+  that runs the sweep reports the resolved id, and that string goes into the
+  provenance fields.
 
 **`k` is per row.** The original sweep was recorded at k=1 (one sample per case),
 matching the routing precedent. **As of 2026-09-07 that is history: every row is
@@ -217,9 +220,9 @@ cases drops that skill's other rows.
 
 ### Results (content evals, full catalog)
 
-`claude-opus-5`, all 66 skills, 234 cases, 1323 assertions, **every row at k>=3**. Twenty-one rows
-were measured on `claude-opus-5-5` and are recorded under that id; the gate re-runs each of them
-on that model, because CI lists both. They are included in the figures below.
+All 68 skills, 247 cases, 1388 assertions, **every row at k>=3**. 182 rows were measured on
+`claude-opus-5` and 65 on `claude-opus-5-5`, each recorded under its own id; the gate re-runs every
+row on the model it was recorded on, because CI lists both. The figures below pool both.
 
 **What RED actually is.** RED answers the same prompt without the skill's *content* —
 it cannot read any `SKILL.md`, `references/` or `templates/`. Both arms do carry the
@@ -233,22 +236,22 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **842 / 1323 = 63.6%** |
-| Assertions passed, skill loaded (GREEN) | **1295 / 1323 = 97.9%** |
-| Gain | **+34.2 points** |
-| Cases where GREEN beats RED | **210 / 234** |
-| Cases where GREEN ties RED | **24 / 234** |
-| Cases where GREEN is *below* RED | **0 / 234** |
+| Assertions passed, no skill body (RED) | **907 / 1388 = 65.3%** |
+| Assertions passed, skill loaded (GREEN) | **1366 / 1388 = 98.4%** |
+| Gain | **+33.1 points** |
+| Cases where GREEN beats RED | **218 / 247** |
+| Cases where GREEN ties RED | **29 / 247** |
+| Cases where GREEN is *below* RED | **0 / 247** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
 content is worse than no skill at all. **There are also zero RED-true / GREEN-false
-assertions** anywhere in the library. The 24 ties are mostly cases where RED already
+assertions** anywhere in the library. The 29 ties are mostly cases where RED already
 saturates — no headroom left to show, not a skill doing nothing — and saturation
-concentrates by case kind: `eval:1` 2%, `eval:2` 15%, `eval:3` **5%**, pressure 14%.
+concentrates by case kind: `eval:1` 4%, `eval:2` 16%, `eval:3` 12%, pressure 16%.
 Scope-boundary cases used to saturate at 18% because three of their four assertions
 (recognise the request, name the sibling skill, withhold the wrong deliverable) were
 satisfied by the roster alone. Rewriting 26 of them against a sibling the roster cannot
-disambiguate took that to 5% — and moved the
+disambiguate took that to 5% at the time (12% in today's 68 rows) — and moved the
 discriminating assertion from "states the boundary" to the routing assertion itself
 (limitation 9).
 
@@ -257,19 +260,102 @@ for depth:
 
 | Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
 |---|---|---|---|
-| zero (no references at all) | 16 | 63.6% → 98.9% | **+35.2** |
-| light (0 < ratio < 1) | 22 | 64.4% → 97.2% | +32.8 |
-| heavy (ratio ≥ 1) | 28 | 63.1% → 98.0% | +34.9 |
+| zero (no references at all) | 16 | 63.7% → 98.5% | **+34.7** |
+| light (0 < ratio < 1) | 23 | 67.4% → 98.8% | +31.4 |
+| heavy (ratio ≥ 1) | 29 | 64.4% → 98.1% | +33.7 |
 
-Pearson r between reference ratio and GREEN gain is **−0.07** across the 66 skills —
+Pearson r between reference ratio and GREEN gain is **−0.08** across the 68 skills —
 no relationship. The zero-reference skills are the control that makes this readable:
 they gained the *most* with nothing to read, so the gain comes from the instruction
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at **k>=3 for every row** (174 at k=3, 60 at k=5) as of 2026-09-30; `k` is
+Recorded at **k>=3 for every row** (195 at k=3, 52 at k=5) as of 2026-11-07; `k` is
 per row. All 173 remaining single-sample cases have since been re-measured, so the
 k=1 caveat that used to sit here no longer applies.
+
+### Cross-model results (Sonnet and Haiku)
+
+The baseline above measures each skill on Opus. The library ships to users on every
+model, so the same cases were run with **Haiku and Sonnet generating** both arms and
+**Opus judging** them. The judge stays fixed for two reasons. The Opus rows were
+judged by Opus, so a fixed judge keeps every model's rows comparable. And a small
+model judging its own replies would mix judge quality into the generator score.
+
+**How to run one.** Add `model` (who generates both arms) and optionally `judge`
+(default `opus`) to the runner payload:
+
+```js
+Workflow({ scriptPath: "evals/workflow-runner.mjs",
+           args: { k: 3, model: "haiku", cases: [...] } })
+```
+
+Merge the result into **that model's own file**, never into `evals/baseline.json`. The
+merge is row-level by `(skill, case-id)`, so it would replace the Opus row, and
+`merge-baseline.mjs` refuses to replace a row recorded on another model family:
+
+```bash
+node evals/merge-baseline.mjs <results.json> \
+     --baseline evals/baseline.claude-haiku-5-5.json --init \
+     --model claude-haiku-5-5 --judge claude-opus-5-5 --transcripts <dir> --note "..."
+```
+
+`--init` creates the file on the first merge; `--judge` takes a resolved id, like
+`--model`. The per-model files share `baseline.json`'s shape and **do not gate**:
+`run.py` reads only `baseline.json`. `node evals/compare-models.mjs <model files…>`
+compares them case by case against the Opus rows. It prints RED, GREEN and gain with
+95% intervals from resampling whole cases, splits the Opus rows by recorded model
+id, and lists every case where the skill lowered an assertion. It is read-only.
+
+**Results** (2026-11-07, k=3 on every row, generators `claude-haiku-5-5` /
+`claude-sonnet-5-5`, every judge `claude-opus-5-5`):
+
+| Case set | Model | Cases | RED | GREEN | Gain [95% CI] | Cases GREEN < RED |
+|---|---|---|---|---|---|---|
+| Edge case of every skill (`eval:2`) | Haiku | 68 | 72.1% | 87.7% | +15.6 [10.3, 21.2] | 6 |
+| | Sonnet | 68 | 78.3% | 95.6% | +17.3 [12.2, 22.4] | 1 |
+| | Opus (stored) | 68 | 72.1% | 98.8% | +26.7 | 0 |
+| Whole suite | Haiku | 245 | 62.1% | 87.1% | +25.0 [21.9, 28.3] | 13 |
+| | Opus (stored) | 245 | 65.3% | 98.4% | +33.1 | 0 |
+
+Haiku by case kind (whole suite): happy path +25.3, edge case +15.6, scope boundary
++27.7, pressure **+39.7**. Sonnet was run on the edge-case set plus a 15-case pilot,
+not the whole suite. Two Haiku cases are excluded (`project-review eval:1`,
+`project-documentation eval:3`): they ask for repositories or git history that no arm
+can read, and every reply declined, in both arms.
+
+What the numbers show:
+
+- **The skills help both smaller models**, with every interval well above zero, but
+  less than they help Opus. Gain is the robust comparison: both arms of a model share
+  the generator, the judge and the session.
+- **Sonnet with the skill is close to Opus with the skill** on the edge-case set
+  (95.6% vs 98.8%). Haiku is about 11 points behind in every case kind.
+- **Pressure is where Haiku gains most.** Without the skill it gives in most often
+  (RED 45.9%); with it, it holds (85.6%).
+- **Harm appears as the model gets smaller.** The skill lowered a whole case 0 times
+  on Opus, once on Sonnet and 13 times (5%) on Haiku. Two patterns repeat on Haiku:
+  - *The loaded skill takes over an out-of-scope request.* Haiku often says the
+    request belongs to another skill, then applies the loaded skill's artefacts
+    anyway: a proposal template after "forget the business case", a rollback-plan
+    template while users are getting errors.
+  - *It runs the whole workflow when the request wants one part of it*, for example
+    leading with SLOs when the request asked for the quick tracing win.
+
+  The other cases are single-assertion margins at k=3.
+
+What the numbers do not show:
+
+- **"Smaller model with the skill vs Opus without it" is mostly confounded.** Most
+  stored Opus rows were generated and judged by `claude-opus-5`, months earlier. On
+  the rows recorded on `claude-opus-5-5`, Haiku with the skill beats Opus without it
+  on happy-path (+23.1) and pressure (+22.1) cases, with intervals above zero. On
+  edge (+4.3) and scope-boundary (+11.1) cases the intervals include zero.
+- **Routing is not re-measured here.** In real use the model also has to pick the
+  skill; [Activation evaluation](#activation-evaluation-routing--implemented) covers
+  that on Haiku.
+- **Only one case per skill on Sonnet** (plus the pilot), so its per-kind numbers are
+  unknown.
 
 ### Why the gate is regression-vs-baseline, not an absolute threshold
 

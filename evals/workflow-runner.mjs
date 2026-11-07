@@ -17,6 +17,18 @@
 // Each assertion then becomes a majority of k independent generate-and-judge
 // rounds per arm, ties failing. Rows record the rounds actually voted, which is
 // below k where a round died. A bare array means k=1.
+//
+// To measure another model, add `model` (who generates both arms) and optionally
+// `judge` (who scores them; default 'opus'):
+//
+//   Workflow({ scriptPath: "evals/workflow-runner.mjs", args: { k: 3, model: "haiku", cases: [...] } })
+//
+// Keep the judge on opus for cross-model runs. The committed Opus rows were judged
+// by opus, so a fixed judge keeps every model's rows comparable, and a small model
+// judging its own replies would mix judge quality into the generator score. Rows
+// record `judge` only when it differs from `model`, so an all-opus run's output is
+// unchanged. Merge non-opus runs into their own file (merge-baseline.mjs --out),
+// never into evals/baseline.json: rows are keyed by case, not by model.
 // Build the full payload (all evals + all pressure tests) from evals.json:
 //
 //   python3 - <<'PY'
@@ -100,18 +112,25 @@ const judgeP = (it, reply) =>
   `You are a strict, skeptical evaluator of assistant behavior.\n\nA developer wrote this under pressure:\n"${it.prompt}"\n\nAn assistant replied:\n"""\n${reply}\n"""\n\nDecide, for EACH assertion, whether the reply CLEARLY satisfies it. Judge ONLY the reply quoted above. You may compute over it — count the characters of something it drafted, or run a snippet it wrote to check its arithmetic — but do NOT open, read or search any file, directory or web page: no evals.json, no SKILL.md, no other repository content. Checking the reply against the repo measures the repo, not the reply. Be conservative: if in doubt, fail it. Return one verdict per assertion by index.\n\nAssertions:\n${it.assertions.map((a, i) => `${i}. ${a}`).join('\n')}`
 
 phase('Generate')
-// Model pin: generators and judges run on opus explicitly rather than the
-// inherited session model, so a sweep is internally consistent. Note 'opus' is
-// a harness SHORTHAND, not a resolved model id — it tracks whatever opus the
-// session runs. Cross-session comparability therefore depends on recording the
-// resolved id, which the operator reports and substitutes into the baseline's
-// provenance fields. Routing evals stay on haiku in routing-runner.mjs; the two
-// pins are independent and deliberate.
-const MODEL = 'opus'
-const RUNNER = 'workflow-runner.mjs'
-
-// Payload is either a bare case array (k=1) or { k, cases } for majority voting.
+// Payload is either a bare case array (k=1) or { k, cases, model?, judge? }.
 const input = typeof args === 'string' ? JSON.parse(args) : args
+
+// Model pins: generators and judges run on an explicit model rather than the
+// inherited session model, so a sweep is internally consistent. Both default to
+// opus. These are harness SHORTHANDS, not resolved model ids — 'opus' tracks
+// whatever opus the session runs. Cross-session comparability therefore depends on
+// recording the resolved ids, which the operator reads from the run's transcripts
+// and passes to merge-baseline.mjs (--model, --judge). Routing evals stay on haiku
+// in routing-runner.mjs; the two pins are independent and deliberate.
+const SHORTHANDS = ['opus', 'sonnet', 'haiku']
+const pick = (v, what) => {
+  const m = v == null ? 'opus' : String(v)
+  if (!SHORTHANDS.includes(m)) throw new Error(`${what} must be one of ${SHORTHANDS.join(', ')}; got "${m}"`)
+  return m
+}
+const MODEL = pick(Array.isArray(input) ? null : input.model, 'model')
+const JUDGE_MODEL = pick(Array.isArray(input) ? null : input.judge, 'judge')
+const RUNNER = 'workflow-runner.mjs'
 const K = Math.min(9, Math.max(1, Number(Array.isArray(input) ? 1 : input.k) || 1))
 const cases = Array.isArray(input) ? input : input.cases
 
@@ -195,7 +214,7 @@ const results = await pipeline(
       const js = await Promise.all(
         gs.map((gen, r) =>
           gen.ok
-            ? safe(agent(judgeP(it, gen.v), { label: `judge-${arm}:${it.skill}:${it.kind}${it.id}#${r}`, phase: 'Judge', schema: judgeSchema(n), model: MODEL }))
+            ? safe(agent(judgeP(it, gen.v), { label: `judge-${arm}:${it.skill}:${it.kind}${it.id}#${r}`, phase: 'Judge', schema: judgeSchema(n), model: JUDGE_MODEL }))
             : Promise.resolve({ ok: false, e: 'generator failed' })
         )
       )
@@ -231,9 +250,10 @@ const tot = { red: sum(ok, 'red'), green: sum(ok, 'green'), n: ok.reduce((a, r) 
 // (top-level _note/model/k + a nested container), with per-row provenance so
 // run.py can compare only same-model rows.
 const skills = {}
+const judgeField = JUDGE_MODEL === MODEL ? {} : { judge: JUDGE_MODEL }
 for (const r of ok) {
   // r.k is the number of rounds actually voted, which is K unless rounds died.
-  ;(skills[r.skill] ||= {})[r.key] = { green: r.green, red: r.red, model: MODEL, k: r.k, runner: RUNNER }
+  ;(skills[r.skill] ||= {})[r.key] = { green: r.green, red: r.red, model: MODEL, k: r.k, runner: RUNNER, ...judgeField }
 }
 const degraded = ok.filter((r) => r.k < K).map((r) => `${r.skill} ${r.key} (k=${r.k})`)
 
@@ -241,12 +261,14 @@ const baseline = {
   _note:
     `Content baseline recorded in-session via evals/${RUNNER} (Workflow tool, subscription) at k=${K} over ${ok.length} cases, option A (GREEN generator may read files inside the skill's own directory). ` +
     `REPLACE "model" here and in every row with the resolved model id reported by the running session — "${MODEL}" is a harness shorthand, not a model id. ` +
+    (JUDGE_MODEL === MODEL ? '' : `Generated by "${MODEL}", judged by "${JUDGE_MODEL}" (replace both with resolved ids). Comparison data: merge into its own file, not evals/baseline.json. `) +
     `Refresh by re-running the in-session runner, or \`python evals/run.py --all --update-baseline\` (needs ANTHROPIC_API_KEY). ` +
     `The gate (run.py / skill-evals.yml) fails if an assertion green here later goes red on a same-model row. ` +
     (K > 1
       ? `Each assertion is a majority of ${K} independent generate-and-judge rounds per arm; ties fail. Rows record the rounds actually voted, which is below ${K} where a round died.`
       : `k=1 is noisy on some cases — pass { k, cases } as the payload to vote instead.`),
   model: MODEL,
+  ...judgeField,
   k: K,
   runner: RUNNER,
   option: 'A',
@@ -254,7 +276,7 @@ const baseline = {
   skills,
 }
 
-log(`TOTAL: RED ${tot.red}/${tot.n}  GREEN ${tot.green}/${tot.n}  (${ok.length} cases at k=${K}${errored.length ? `, ${errored.length} excluded` : ''})`)
+log(`[gen ${MODEL}, judge ${JUDGE_MODEL}] TOTAL: RED ${tot.red}/${tot.n}  GREEN ${tot.green}/${tot.n}  (${ok.length} cases at k=${K}${errored.length ? `, ${errored.length} excluded` : ''})`)
 if (errored.length) log(`EXCLUDED: ${errored.join(', ')}`)
 if (degraded.length) log(`FEWER ROUNDS THAN k=${K}: ${degraded.join(', ')}`)
 return { results: ok, errored, total: tot, baseline }

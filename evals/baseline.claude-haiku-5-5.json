@@ -1,0 +1,5599 @@
+{
+  "_note": "Comparison content baseline for claude-haiku-5-5, judged by claude-opus-5-5, recorded in-session via evals/workflow-runner.mjs. It does not gate: evals/baseline.json is the regression baseline. Rows match evals/baseline.json's shape and case keys, so the two can be compared row by row.\n\nCOVERAGE: 2026-11-06: 15-case pilot (cases hand-picked from rows with claude-opus-5-5 Opus measurements, each with at least one assertion only the skill passed on Opus), k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. project-review eval:1 left out: it scored 0 in both arms because the model declined to review repos it could not read, and the merge refuses all-false rows. 2026-11-06/07: edge-case sweep, the eval:2 case of every skill not already in the pilot, run in four parts, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. 2026-11-07: rest of the suite (every pressure test, eval:3 and eval:1 case not yet recorded), run in eleven parts, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. Excluded: project-documentation eval:3 (0/6 in both arms because the fixture asks for git history no arm can read) and project-review eval:1 again (the fixture asks for a review of repos no arm can read, so every reply declines).",
+  "model": "claude-haiku-5-5",
+  "judge": "claude-opus-5-5",
+  "k": "3",
+  "runner": "workflow-runner.mjs",
+  "option": "A",
+  "summary": {
+    "cases": 245,
+    "excluded": 0,
+    "assertions": 1375,
+    "red": 854,
+    "green": 1198,
+    "skills": 68
+  },
+  "skills": {
+    "data-modeling": {
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "176eba4e10d0"
+      },
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "working-agreement": {
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "176eba4e10d0"
+      },
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "effort-estimation": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "176eba4e10d0"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          false,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "performance-optimization": {
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "176eba4e10d0"
+      },
+      "eval:2": {
+        "green": [
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "security-audit": {
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "176eba4e10d0"
+      },
+      "eval:2": {
+        "green": [
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "research-methodology": {
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "176eba4e10d0"
+      },
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:2": {
+        "green": [
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "data-pipeline-design": {
+      "eval:1": {
+        "green": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "176eba4e10d0"
+      },
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "dependency-impact-analysis": {
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "176eba4e10d0"
+      },
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "feature-planning": {
+      "eval:3": {
+        "green": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "176eba4e10d0"
+      },
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "test-suite-design": {
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "176eba4e10d0"
+      },
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "verification-before-completion": {
+      "pressure:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "176eba4e10d0"
+      },
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:3": {
+        "green": [
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:4": {
+        "green": [
+          true,
+          false,
+          false,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:5": {
+        "green": [
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:6": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:7": {
+        "green": [
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:8": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "plan-execution": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          false,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "176eba4e10d0"
+      },
+      "pressure:3": {
+        "green": [
+          true,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "176eba4e10d0"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:2": {
+        "green": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:4": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:5": {
+        "green": [
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          false,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "exploratory-data-analysis": {
+      "eval:3": {
+        "green": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "176eba4e10d0"
+      },
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "accessibility-design": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "ai-evaluation": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "api-design": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "architecture-design": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "architecture-documentation": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "brainstorming": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          false,
+          true,
+          false,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "browser-verification": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "bug-investigating": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "build-vs-buy": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "cicd-pipeline": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "code-archaeology": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "code-reviewing": {
+      "eval:2": {
+        "green": [
+          true,
+          false,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:2": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:3": {
+        "green": [
+          true,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:4": {
+        "green": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "code-slop-cleanup": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "compliance-privacy": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          false,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "configuration-strategy": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "containerization": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "data-quality": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "dependency-management": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          false,
+          true,
+          false,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:3": {
+        "green": [
+          true,
+          false,
+          true,
+          false
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "deployment-checklist": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "deployment-repo": {
+      "eval:2": {
+        "green": [
+          false,
+          true,
+          true,
+          false,
+          false,
+          false
+        ],
+        "red": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "dx-audit": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "finops-cost-optimization": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "frontend-architecture": {
+      "eval:2": {
+        "green": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "git-workflow": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:3": {
+        "green": [
+          false,
+          false,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "gitops-delivery": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "incident-response": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          false,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          false,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "infrastructure-as-code": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          false,
+          false,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "llm-app-engineering": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "metrics-and-okrs": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "ml-experiment-tracking": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "ml-model-deployment": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          false,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "ml-pipeline-design": {
+      "eval:2": {
+        "green": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "mobile-architecture": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "mobile-release": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "notebook-to-production": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "observability-design": {
+      "eval:2": {
+        "green": [
+          false,
+          false,
+          false,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "prd-writing": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "project-documentation": {
+      "eval:2": {
+        "green": [
+          false,
+          true,
+          false,
+          false,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:3": {
+        "green": [
+          true,
+          false,
+          false,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:4": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "project-proposal": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          false,
+          false,
+          false,
+          true,
+          false
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          false,
+          false,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "project-review": {
+      "eval:2": {
+        "green": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "refactoring": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          false,
+          false,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "release-management": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          false,
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "resilience-engineering": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "retrospective": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          false,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          false,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "rollback-strategy": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          false,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "skill-router": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "statistical-analysis": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          false,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "strategic-review": {
+      "eval:2": {
+        "green": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          false,
+          false,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          false,
+          true,
+          false,
+          false,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "subagent-orchestration": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "tdd-workflow": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          false,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "technical-debt-review": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "pressure:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "test-data-strategy": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          false,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "threat-modeling": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          false,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          false,
+          false,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "ui-ux-design": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "red": [
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    },
+    "writing-skills": {
+      "eval:2": {
+        "green": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:3": {
+        "green": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          true,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      },
+      "eval:1": {
+        "green": [
+          true,
+          false,
+          false,
+          true,
+          true,
+          true
+        ],
+        "red": [
+          true,
+          false,
+          true,
+          false,
+          false,
+          true
+        ],
+        "model": "claude-haiku-5-5",
+        "judge": "claude-opus-5-5",
+        "k": 3,
+        "runner": "workflow-runner.mjs",
+        "listing": "af3b3307dd57"
+      }
+    }
+  }
+}
