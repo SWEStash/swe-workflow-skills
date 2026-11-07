@@ -25,6 +25,12 @@ List every change being deployed:
 
 For each change, ask: **If this change caused a production incident 30 minutes after deploy, what would rollback look like?**
 
+**When the deploy has already happened and users are affected now**, this is an
+active incident, not planning. Lead with the fastest safe undo — revert the deploy or
+turn the flag off — as exact steps, and name `incident-response` as the workflow
+for the rest of the incident. Keep the rollback-plan template (owner, estimated time,
+staging rehearsal) out of this answer; it belongs in the post-incident review.
+
 ## Step 2: Classify by Rollback Complexity
 
 Assign each change a rollback complexity:

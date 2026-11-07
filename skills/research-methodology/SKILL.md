@@ -52,6 +52,12 @@ experiments, method decisions and claims live — see
 and state it — *"Planned under CRISP-DM at `<rigour>`; say if you'd rather use
 another"* — then carry the plan in the same response.
 
+**When the request is production work on a model that's already built** — serving it
+behind an API, monitoring drift, rolling it out — it belongs to `ml-model-deployment`:
+hand it over and help with the deployment itself. Leave this skill's research artefacts
+out of that answer (no framework choice, rigour level, method decision record or claims
+register); they are for work that is still producing claims.
+
 ### Step 2: Understand the Data Before Any Claim
 
 **Invoke `exploratory-data-analysis`** before any result is interpreted, and

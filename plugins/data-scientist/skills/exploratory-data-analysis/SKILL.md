@@ -15,6 +15,12 @@ test next. Every step below feeds that document.
 
 ### 1. Frame the goal and the grain
 
+**When the data is supposed to be right and isn't** — a dashboard showing wrong
+numbers, a scheduled load that broke — that is a pipeline-trust problem for
+`data-quality`, not an unfamiliar dataset: say by name that `data-quality` owns it,
+and point at where to look (source freshness, tests, schema drift, the upstream
+contract, lineage). Don't answer it with this skill's profiling workflow.
+
 Before profiling anything, write down what decision or model this data will
 feed, and establish the **grain**: what does one row represent (an order? a
 customer? a customer-month?)? Duplicate keys and mixed grains invalidate every

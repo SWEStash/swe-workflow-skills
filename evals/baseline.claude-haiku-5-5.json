@@ -1,5 +1,5 @@
 {
-  "_note": "Comparison content baseline for claude-haiku-5-5, judged by claude-opus-5-5, recorded in-session via evals/workflow-runner.mjs. It does not gate: evals/baseline.json is the regression baseline. Rows match evals/baseline.json's shape and case keys, so the two can be compared row by row.\n\nCOVERAGE: 2026-11-06: 15-case pilot (cases hand-picked from rows with claude-opus-5-5 Opus measurements, each with at least one assertion only the skill passed on Opus), k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. project-review eval:1 left out: it scored 0 in both arms because the model declined to review repos it could not read, and the merge refuses all-false rows. 2026-11-06/07: edge-case sweep, the eval:2 case of every skill not already in the pilot, run in four parts, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. 2026-11-07: rest of the suite (every pressure test, eval:3 and eval:1 case not yet recorded), run in eleven parts, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. Excluded: project-documentation eval:3 (0/6 in both arms because the fixture asks for git history no arm can read) and project-review eval:1 again (the fixture asks for a review of repos no arm can read, so every reply declines).",
+  "_note": "Comparison content baseline for claude-haiku-5-5, judged by claude-opus-5-5, recorded in-session via evals/workflow-runner.mjs. It does not gate: evals/baseline.json is the regression baseline. Rows match evals/baseline.json's shape and case keys, so the two can be compared row by row.\n\nCOVERAGE: 2026-11-06: 15-case pilot (cases hand-picked from rows with claude-opus-5-5 Opus measurements, each with at least one assertion only the skill passed on Opus), k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. project-review eval:1 left out: it scored 0 in both arms because the model declined to review repos it could not read, and the merge refuses all-false rows. 2026-11-06/07: edge-case sweep, the eval:2 case of every skill not already in the pilot, run in four parts, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. 2026-11-07: rest of the suite (every pressure test, eval:3 and eval:1 case not yet recorded), run in eleven parts, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. Excluded: project-documentation eval:3 (0/6 in both arms because the fixture asks for git history no arm can read) and project-review eval:1 again (the fixture asks for a review of repos no arm can read, so every reply declines). 2026-11-07: re-measured exploratory-data-analysis, project-proposal, research-methodology and rollback-strategy after adding an out-of-scope paragraph to each, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5.",
   "model": "claude-haiku-5-5",
   "judge": "claude-opus-5-5",
   "k": "3",
@@ -9,8 +9,8 @@
     "cases": 245,
     "excluded": 0,
     "assertions": 1375,
-    "red": 854,
-    "green": 1198,
+    "red": 853,
+    "green": 1206,
     "skills": 68
   },
   "skills": {
@@ -455,7 +455,7 @@
         "judge": "claude-opus-5-5",
         "k": 3,
         "runner": "workflow-runner.mjs",
-        "listing": "176eba4e10d0"
+        "listing": "af3b3307dd57"
       },
       "eval:2": {
         "green": [
@@ -483,7 +483,7 @@
           true,
           true,
           true,
-          true
+          false
         ],
         "red": [
           true,
@@ -507,10 +507,10 @@
         ],
         "red": [
           false,
+          true,
           false,
           false,
-          false,
-          false
+          true
         ],
         "model": "claude-haiku-5-5",
         "judge": "claude-opus-5-5",
@@ -531,7 +531,7 @@
           false,
           true,
           false,
-          true
+          false
         ],
         "model": "claude-haiku-5-5",
         "judge": "claude-opus-5-5",
@@ -543,7 +543,7 @@
         "green": [
           true,
           true,
-          false
+          true
         ],
         "red": [
           true,
@@ -1259,10 +1259,10 @@
     "exploratory-data-analysis": {
       "eval:3": {
         "green": [
-          false,
-          false,
-          false,
-          false
+          true,
+          true,
+          true,
+          true
         ],
         "red": [
           true,
@@ -1274,7 +1274,7 @@
         "judge": "claude-opus-5-5",
         "k": 3,
         "runner": "workflow-runner.mjs",
-        "listing": "176eba4e10d0"
+        "listing": "af3b3307dd57"
       },
       "eval:2": {
         "green": [
@@ -1289,7 +1289,7 @@
           true,
           false,
           true,
-          true,
+          false,
           true,
           true
         ],
@@ -1312,11 +1312,11 @@
         "red": [
           true,
           true,
-          true,
+          false,
           true,
           false,
-          false,
-          false
+          true,
+          true
         ],
         "model": "claude-haiku-5-5",
         "judge": "claude-opus-5-5",
@@ -4374,8 +4374,8 @@
     "project-proposal": {
       "eval:2": {
         "green": [
-          true,
-          true,
+          false,
+          false,
           true,
           true,
           true
@@ -4396,10 +4396,10 @@
       "eval:3": {
         "green": [
           false,
-          false,
-          false,
           true,
-          false
+          true,
+          true,
+          true
         ],
         "red": [
           false,
@@ -4419,7 +4419,7 @@
           true,
           true,
           false,
-          false,
+          true,
           true,
           false,
           true
@@ -4788,7 +4788,7 @@
           true,
           true,
           true,
-          true,
+          false,
           true
         ],
         "model": "claude-haiku-5-5",
@@ -4820,8 +4820,8 @@
         "green": [
           true,
           true,
-          false,
-          false
+          true,
+          true
         ],
         "red": [
           true,
@@ -4846,7 +4846,7 @@
         ],
         "red": [
           true,
-          true,
+          false,
           false,
           true,
           true,
