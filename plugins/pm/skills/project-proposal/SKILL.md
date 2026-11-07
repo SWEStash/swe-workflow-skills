@@ -23,6 +23,14 @@ For small features that are already in the approved roadmap, skip this and go st
 
 ### Step 1: Define the Problem
 
+**First check that a proposal is what's wanted.** When the budget or go-ahead is
+already settled and the user wants a technical choice (which broker, which database,
+which framework), say so: the approval is in hand, so no proposal is needed, and the
+choice is a costly-to-reverse architecture decision that belongs in an ADR via
+`architecture-design`. Then make the technical call as a plain technical answer, not
+in this skill's proposal format (business case, ROI, alternatives table, decision
+requested).
+
 Before proposing a solution, clearly articulate the problem:
 
 - **Who has this problem?** (Users, internal team, business)
