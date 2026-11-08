@@ -237,9 +237,9 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **911 / 1388 = 65.6%** |
-| Assertions passed, skill loaded (GREEN) | **1368 / 1388 = 98.6%** |
-| Gain | **+32.9 points** |
+| Assertions passed, no skill body (RED) | **914 / 1388 = 65.9%** |
+| Assertions passed, skill loaded (GREEN) | **1367 / 1388 = 98.5%** |
+| Gain | **+32.6 points** |
 | Cases where GREEN beats RED | **219 / 247** |
 | Cases where GREEN ties RED | **28 / 247** |
 | Cases where GREEN is *below* RED | **0 / 247** |
@@ -262,16 +262,16 @@ for depth:
 | Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
 |---|---|---|---|
 | zero (no references at all) | 16 | 63.7% → 98.5% | **+34.7** |
-| light (0 < ratio < 1) | 23 | 66.8% → 98.8% | +32.0 |
+| light (0 < ratio < 1) | 23 | 67.4% → 98.6% | +31.2 |
 | heavy (ratio ≥ 1) | 29 | 65.5% → 98.4% | +32.9 |
 
-Pearson r between reference ratio and GREEN gain is **−0.11** across the 68 skills —
+Pearson r between reference ratio and GREEN gain is **−0.09** across the 68 skills —
 no relationship. The zero-reference skills are the control that makes this readable:
 they gained the *most* with nothing to read, so the gain comes from the instruction
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at **k>=3 for every row** (197 at k=3, 50 at k=5) as of 2026-11-07; `k` is
+Recorded at **k>=3 for every row** (199 at k=3, 48 at k=5) as of 2026-11-07; `k` is
 per row. All 173 remaining single-sample cases have since been re-measured, so the
 k=1 caveat that used to sit here no longer applies.
 
@@ -315,11 +315,11 @@ id, and lists every case where the skill lowered an assertion. It is read-only.
 |---|---|---|---|---|---|---|
 | Edge case of every skill (`eval:2`) | Haiku | 68 | 71.6% | 88.6% | +17.0 [12.3, 22.1] | 5 |
 | | Sonnet | 68 | 78.3% | 95.6% | +17.3 [12.2, 22.4] | 1 |
-| | Opus (stored) | 68 | 73.3% | 99.0% | +25.7 | 0 |
-| Whole suite | Haiku | 245 | 62.0% | 88.1% | +26.0 [23.1, 29.0] | 7 |
-| | Opus (stored) | 245 | 65.6% | 98.6% | +32.9 | 0 |
+| | Opus (stored) | 68 | 73.6% | 98.8% | +25.2 | 0 |
+| Whole suite | Haiku | 245 | 62.0% | 88.1% | +26.2 [23.2, 29.2] | 7 |
+| | Opus (stored) | 245 | 65.8% | 98.5% | +32.7 | 0 |
 
-Haiku by case kind (whole suite): happy path +25.5, edge case +17.0, scope boundary
+Haiku by case kind (whole suite): happy path +26.0, edge case +17.0, scope boundary
 +30.5, pressure **+38.7**. Sonnet was run on the edge-case set plus a 15-case pilot,
 not the whole suite. Two Haiku cases are excluded (`project-review eval:1`,
 `project-documentation eval:3`): they ask for repositories or git history that no arm
@@ -331,7 +331,7 @@ What the numbers show:
   less than they help Opus. Gain is the robust comparison: both arms of a model share
   the generator, the judge and the session.
 - **Sonnet with the skill is close to Opus with the skill** on the edge-case set
-  (95.6% vs 99.0%). Haiku is about 10 points behind in every case kind.
+  (95.6% vs 98.8%). Haiku is about 10 points behind in every case kind.
 - **Pressure is where Haiku gains most.** Without the skill it gives in most often
   (RED 46.4%); with it, it holds (85.1%).
 - **Harm appears as the model gets smaller.** The skill lowered a whole case 0 times

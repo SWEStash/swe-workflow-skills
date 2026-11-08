@@ -168,11 +168,12 @@ stronger.
 **Do not assume the entry point is the safe place to add anything.** A scope gate was added
 to `refactoring` immediately above Step 1 *Ensure Test Coverage*. Its strongest row fell
 from **9/9 to 5/9**, and the first casualty was "asks about existing tests" — the step the
-new text sat on top of. Three more went with it. **This is one case, not a law.** The
-hypothesis it suggests — that a step inserted before Step 1 competes with Step 1 rather
-than adding to it — is plausible and cheap to respect, so prefer putting an entry-point
-scope decision *inside* the existing first step. But it has not been confirmed on a second
-skill, and it should not be quoted as though it has.
+new text sat on top of. Three more went with it. The same displacement has since shown up
+in two more skills: a boundary paragraph *opening* Step 1 crowded out that step's own
+content in `research-methodology` and `rollback-strategy`, in repeated runs on Opus and,
+for `rollback-strategy`, on Haiku. Moving it to the **end** of Step 1, same wording, fixed
+both (`docs/AUTHORING.md` → *Model Variance*). So put an entry-point scope decision at the
+end of the existing first step — not above it, and not as its opening.
 
 Two details from that failure worth copying:
 
