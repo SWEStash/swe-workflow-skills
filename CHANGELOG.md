@@ -12,6 +12,26 @@ description, not here. Sections dated before 0.7.0 carry hand-written prose from
 file was curated manually.
 
 
+## [0.12.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.11.6...v0.12.0) (2026-11-08)
+
+
+### Added
+
+* **evals:** measure each skill on Sonnet and Haiku with an Opus judge ([#79](https://github.com/SWEStash/swe-workflow-skills/issues/79)) ([e9f3fa5](https://github.com/SWEStash/swe-workflow-skills/commit/e9f3fa5cc55dd2f2b0215fbbb9cc8f0fde074306))
+
+
+### Fixed
+
+* **evals:** routing runner ignores relayed requests, reports its model ([#83](https://github.com/SWEStash/swe-workflow-skills/issues/83)) ([c19b3e2](https://github.com/SWEStash/swe-workflow-skills/commit/c19b3e27789271c47e3e5fa80cc1c748009b038b))
+* keep four skills from taking over out-of-scope requests ([#80](https://github.com/SWEStash/swe-workflow-skills/issues/80)) ([3ad7ccf](https://github.com/SWEStash/swe-workflow-skills/commit/3ad7ccfd1a8c68f3dd78463883bda7f7bfc19243))
+* observability starts from one service; proposals ask and name risks ([#82](https://github.com/SWEStash/swe-workflow-skills/issues/82)) ([ffc1ea9](https://github.com/SWEStash/swe-workflow-skills/commit/ffc1ea98d188a4b8efdc4242d2085035e0aff626))
+
+
+### Changed
+
+* **authoring:** replace the Model Variance guess with measured results ([#84](https://github.com/SWEStash/swe-workflow-skills/issues/84)) ([9cbba73](https://github.com/SWEStash/swe-workflow-skills/commit/9cbba73956ffb4d84264f3a009b78d2eafc6b14e))
+* track work in GitHub Issues and write down how the project runs ([#93](https://github.com/SWEStash/swe-workflow-skills/issues/93)) ([11fe0a6](https://github.com/SWEStash/swe-workflow-skills/commit/11fe0a66a9087b12216f1c3c153f2a762d4aca21))
+
 ## [0.11.6](https://github.com/SWEStash/swe-workflow-skills/compare/v0.11.5...v0.11.6) (2026-11-02)
 
 
