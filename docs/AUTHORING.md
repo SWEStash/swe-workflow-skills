@@ -303,10 +303,29 @@ pattern (Iron Law + rationalization table + pressure tests) is adopted from
 
 ## Model Variance
 
-Skills are tested against Claude Sonnet as the baseline. What works on Sonnet will
-typically work on Opus; Haiku may need more explicit guidance in SKILL.md. If you plan
-cross-model deployment, test on the lowest-capability model you'll target and add detail
-accordingly.
+The regression baseline (`evals/baseline.json`) is measured on Opus. Haiku and Sonnet are
+measured as comparisons, judged by Opus, in `evals/baseline.claude-{haiku,sonnet}-5-5.json`
+(see EVALS.md, "Cross-model results"). What those runs show for authors:
+
+- **Skills help smaller models less, and can hurt them.** A skill that never scores below
+  no-skill on Opus can on Haiku, because Haiku follows the loaded skill more literally.
+  Run a changed skill's evals on Haiku as well as Opus before calling it safe.
+- **A boundary stated only in the description and the cross-skill list is not enough on
+  Haiku.** Opus reads it; Haiku will say a request belongs to another skill and then apply
+  this skill's template anyway. Say in Step 1 when the request is out of scope, which
+  sibling to name, and what to leave out of the answer.
+- **When a skill has more than one workflow, say which comes first.** Without that, every
+  model ran the first one in the file, even when the request needed the other.
+- **Where the boundary paragraph sits matters.** Opening Step 1, it crowded out that step's
+  own content on a happy-path case in two skills of four (`research-methodology`,
+  `rollback-strategy`), in repeated runs on Opus and, for `rollback-strategy`, on Haiku;
+  moving it to the end of Step 1 with the same wording fixed both.
+- **Say what the answer states; don't forbid what it mentions.** "Without mentioning the
+  sections you left out" made Opus stop saying *why* no proposal was needed — the point
+  of the edit.
+- **A drop against an older model's row is not yet a regression.** Rows recorded on an
+  earlier model can fail on the current one with or without your edit. Re-run the old
+  text on the current model before blaming the change.
 
 ## Explain the Why
 
