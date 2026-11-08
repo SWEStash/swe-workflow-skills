@@ -1,5 +1,5 @@
 {
-  "_note": "Comparison content baseline for claude-sonnet-5-5, judged by claude-opus-5-5, recorded in-session via evals/workflow-runner.mjs. It does not gate: evals/baseline.json is the regression baseline. Rows match evals/baseline.json's shape and case keys, so the two can be compared row by row.\n\nCOVERAGE: 2026-11-06: 15-case pilot (cases hand-picked from rows with claude-opus-5-5 Opus measurements, each with at least one assertion only the skill passed on Opus), k=3, generated on claude-sonnet-5-5 and judged by claude-opus-5-5. 2026-11-06/07: edge-case sweep, the eval:2 case of every skill not already in the pilot, run in four parts, k=3, generated on claude-sonnet-5-5 and judged by claude-opus-5-5.",
+  "_note": "Comparison content baseline for claude-sonnet-5-5, judged by claude-opus-5-5, recorded in-session via evals/workflow-runner.mjs. It does not gate: evals/baseline.json is the regression baseline. Rows match evals/baseline.json's shape and case keys, so the two can be compared row by row.\n\nCOVERAGE: 2026-11-06: 15-case pilot (cases hand-picked from rows with claude-opus-5-5 Opus measurements, each with at least one assertion only the skill passed on Opus), k=3, generated on claude-sonnet-5-5 and judged by claude-opus-5-5. 2026-11-06/07: edge-case sweep, the eval:2 case of every skill not already in the pilot, run in four parts, k=3, generated on claude-sonnet-5-5 and judged by claude-opus-5-5. 2026-11-07: the 7 Sonnet rows on skills whose text changed after Sonnet's run (exploratory-data-analysis, project-proposal, research-methodology and rollback-strategy got an out-of-scope paragraph at the end of Step 1; observability-design now says which workflow comes first) re-measured on the current text (#86).",
   "model": "claude-sonnet-5-5",
   "judge": "claude-opus-5-5",
   "k": "3",
@@ -9,8 +9,8 @@
     "cases": 81,
     "excluded": 0,
     "assertions": 477,
-    "red": 354,
-    "green": 451,
+    "red": 355,
+    "green": 455,
     "skills": 68
   },
   "skills": {
@@ -251,23 +251,23 @@
           true,
           true,
           true,
-          true,
+          false,
           true,
           true
         ],
         "red": [
+          true,
           false,
           false,
           false,
           false,
-          false,
-          true
+          false
         ],
         "model": "claude-sonnet-5-5",
         "judge": "claude-opus-5-5",
         "k": 3,
         "runner": "workflow-runner.mjs",
-        "listing": "176eba4e10d0"
+        "listing": "fe685001e639"
       },
       "eval:2": {
         "green": [
@@ -288,7 +288,7 @@
         "judge": "claude-opus-5-5",
         "k": 3,
         "runner": "workflow-runner.mjs",
-        "listing": "af3b3307dd57"
+        "listing": "fe685001e639"
       }
     },
     "data-pipeline-design": {
@@ -609,7 +609,7 @@
       "eval:3": {
         "green": [
           true,
-          false,
+          true,
           true,
           true
         ],
@@ -623,7 +623,7 @@
         "judge": "claude-opus-5-5",
         "k": 3,
         "runner": "workflow-runner.mjs",
-        "listing": "176eba4e10d0"
+        "listing": "fe685001e639"
       },
       "eval:2": {
         "green": [
@@ -638,7 +638,7 @@
           true,
           false,
           true,
-          false,
+          true,
           true,
           true
         ],
@@ -646,7 +646,7 @@
         "judge": "claude-opus-5-5",
         "k": 3,
         "runner": "workflow-runner.mjs",
-        "listing": "af3b3307dd57"
+        "listing": "fe685001e639"
       }
     },
     "accessibility-design": {
@@ -1525,15 +1525,15 @@
     "observability-design": {
       "eval:2": {
         "green": [
-          false,
-          true,
-          false,
-          true,
           true,
           true,
           false,
           true,
-          false
+          true,
+          true,
+          true,
+          true,
+          true
         ],
         "red": [
           false,
@@ -1550,7 +1550,7 @@
         "judge": "claude-opus-5-5",
         "k": 3,
         "runner": "workflow-runner.mjs",
-        "listing": "af3b3307dd57"
+        "listing": "fe685001e639"
       }
     },
     "prd-writing": {
@@ -1611,7 +1611,7 @@
       "eval:2": {
         "green": [
           true,
-          false,
+          true,
           true,
           true,
           true
@@ -1627,7 +1627,7 @@
         "judge": "claude-opus-5-5",
         "k": 3,
         "runner": "workflow-runner.mjs",
-        "listing": "af3b3307dd57"
+        "listing": "fe685001e639"
       }
     },
     "refactoring": {
@@ -1744,7 +1744,7 @@
         "judge": "claude-opus-5-5",
         "k": 3,
         "runner": "workflow-runner.mjs",
-        "listing": "af3b3307dd57"
+        "listing": "fe685001e639"
       }
     },
     "skill-router": {
