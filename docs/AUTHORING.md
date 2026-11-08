@@ -202,8 +202,9 @@ work well unaided, and the skill just spends listing budget and re-attachment to
 This mirrors the obsolescence detection the official skill-creator practices, made
 concrete for this library:
 
-- **Cadence** — once per release cycle, or when the shipping base models change
-  materially (a new default model family or tier).
+- **Cadence** — once per minor release, or when the shipping base models change
+  materially (a new default model family or tier), filed as a *Task* issue
+  ([HOW-WE-WORK](HOW-WE-WORK.md)).
 - **Procedure** — re-run the skill's 3 evals RED (without the skill) on shipping
   models via `evals/workflow-runner.mjs`; by default its generators and judges all
   run on the same model line, so one sweep is internally consistent. (That default is
@@ -234,7 +235,8 @@ concrete for this library:
   score 0/0 in both arms and are excluded from the decision rule, as above.
 - **Retirement** — only after a slimmed skill stays RED ≈ GREEN for a full further
   cycle. Removal is user-visible (roles and plugins ship the skill), so it needs a
-  deprecation notice in CHANGELOG.md and ROLES.md before the skill is dropped from
+  deprecation notice in ROLES.md, and a release whose changelog announces it (a commit whose
+  subject says so; the CHANGELOG itself is generated), before the skill is dropped from
   `roles.json` and the router's phase index.
 
 ## Token Economy and Progressive Disclosure
@@ -283,6 +285,25 @@ agent uses *without* the skill (RED), then writing the minimum that counters the
 (GREEN) — see [EVALS.md](EVALS.md) and the `writing-skills` skill. This hardening
 pattern (Iron Law + rationalization table + pressure tests) is adopted from
 [obra/superpowers](https://github.com/obra/superpowers), which pioneered it.
+
+## Adding a skill
+
+A new skill touches more than its own directory. In one PR:
+
+1. `skills/<name>/SKILL.md` (frontmatter + workflow) and `skills/<name>/evals/evals.json`
+   with exactly 3 evals (pressure tests too for a safety-critical skill); `references/` and
+   `templates/` as needed.
+2. `roles.json`: add the skill to every role it belongs to (`docs/ROLES.md`).
+3. `skills/skill-router/SKILL.md`: add it to the catalog under its SDLC phase, and to any
+   Golden Path chain it joins.
+4. `docs/SKILLS.md`: add its row.
+5. Regenerate: `node scripts/build-plugins.mjs` (plugins, marketplace, catalog) and
+   `python evals/routing.py --build-dataset` (the routing cases are mined from the evals).
+6. Measure it as [EVALS](EVALS.md) describes, and check routing to it with the routing
+   runner. Then `node scripts/verify.mjs` and `node scripts/build-plugins.mjs --check`.
+
+What the PR must show to count as done (models, evidence) is
+[HOW-WE-WORK](HOW-WE-WORK.md) → *Closing*.
 
 ## Common Mistakes
 

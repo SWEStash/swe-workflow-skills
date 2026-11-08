@@ -163,13 +163,16 @@ in **[EVALS.md](docs/EVALS.md)**.
 - **[ROUTING-BENCHMARK.md](docs/ROUTING-BENCHMARK.md)**: the routing reliability numbers, methodology, and how to reproduce them.
 - **[AUTHORING.md](docs/AUTHORING.md)**: write or modify a skill (descriptions, budget, progressive disclosure, evals).
 - **[RELEASING.md](docs/RELEASING.md)**: versioning policy and how to cut a release. Changes are tracked in **[CHANGELOG.md](CHANGELOG.md)**.
+- **[HOW-WE-WORK.md](docs/HOW-WE-WORK.md)**: how issues, pull requests and releases are run.
 - **[SECURITY.md](SECURITY.md)**: the security model, what runs automatically, supply-chain guarantees, and how to report a vulnerability.
 
 ## Contributing
 
-New or improved skills are welcome. Start with **[AUTHORING.md](docs/AUTHORING.md)** (or
-install the `writing-skills` skill). The short version: descriptions are everything, keep
-SKILL.md concise with detail in `references/`, and ship exactly 3 evals.
+Bug reports, feature requests and new or improved skills are welcome; see
+**[CONTRIBUTING.md](CONTRIBUTING.md)**. For a skill, start with
+**[AUTHORING.md](docs/AUTHORING.md)** (or install the `writing-skills` skill). The short
+version: descriptions are everything, keep SKILL.md concise with detail in `references/`,
+and ship exactly 3 evals.
 
 ## Acknowledgements
 
