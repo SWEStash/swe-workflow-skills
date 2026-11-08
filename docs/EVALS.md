@@ -314,7 +314,7 @@ id, and lists every case where the skill lowered an assertion. It is read-only.
 | Case set | Model | Cases | RED | GREEN | Gain [95% CI] | Cases GREEN < RED |
 |---|---|---|---|---|---|---|
 | Edge case of every skill (`eval:2`) | Haiku | 68 | 71.6% | 88.6% | +17.0 [12.3, 22.1] | 5 |
-| | Sonnet | 68 | 78.3% | 95.6% | +17.3 [12.2, 22.4] | 1 |
+| | Sonnet | 68 | 78.5% | 96.5% | +18.0 [13.3, 22.9] | 0 |
 | | Opus (stored) | 68 | 73.6% | 98.8% | +25.2 | 0 |
 | Whole suite | Haiku | 245 | 62.0% | 88.1% | +26.2 [23.2, 29.2] | 7 |
 | | Opus (stored) | 245 | 65.8% | 98.5% | +32.7 | 0 |
@@ -331,7 +331,7 @@ What the numbers show:
   less than they help Opus. Gain is the robust comparison: both arms of a model share
   the generator, the judge and the session.
 - **Sonnet with the skill is close to Opus with the skill** on the edge-case set
-  (95.6% vs 98.8%). Haiku is about 10 points behind in every case kind.
+  (96.5% vs 98.8%). Haiku is about 10 points behind in every case kind.
 - **Pressure is where Haiku gains most.** Without the skill it gives in most often
   (RED 46.4%); with it, it holds (85.1%).
 - **Harm appears as the model gets smaller.** The skill lowered a whole case 0 times
@@ -352,6 +352,8 @@ What the numbers show:
 
   After both fixes Haiku's harm count is **7 (3%)**: single-assertion margins at k=3,
   one severity-calibration disagreement (`security-audit eval:2`) and one judge error.
+  Sonnet's one case was `observability-design eval:2`; re-measured on the fixed text,
+  it scores GREEN 8/9 against RED 6/9, so Sonnet's harm count is **0**.
 
 What the numbers do not show:
 
