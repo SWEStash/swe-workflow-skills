@@ -899,20 +899,18 @@ skill only delivers its proven lift if `skill-router` routes to it. In short:
 | `evals/routing-runner.mjs` | 2 + 3 | Fast in-session run on haiku, RED/GREEN loop | Claude Code Workflow tool (no key) |
 
 Both route on **haiku**, `skill-router`'s shipping model. `routing.py` pins an id
-(`EVAL_ROUTING_MODEL`, default `claude-haiku-4-5`); `routing-runner.mjs` passes the
-harness shorthand `haiku`, which tracks whatever haiku the session resolves to — on
-2026-11-07 that was `claude-haiku-5-5`. Until then the runner's summary printed
-`claude-haiku-4-5` whatever had run, so the `claude-haiku-4-5` label on the in-session
-routing baseline is that fixed string, not a resolved id; the transcripts behind it
-have aged off disk and cannot confirm it.
+(`EVAL_ROUTING_MODEL`, default `claude-haiku-5-5`); `routing-runner.mjs` and
+`routing-heldout-runner.mjs` pass the harness shorthand `haiku`, which tracks whatever
+haiku the session resolves to. Until 2026-11-07 both runners' summaries printed
+`claude-haiku-4-5` whatever had run, so results labelled `claude-haiku-4-5` below carry
+that fixed string, not a resolved id; their transcripts have aged off disk.
 
-**2026-11-07 re-check** (`claude-haiku-5-5` on every agent, resolved from the
-transcripts; 142 cases, k=3, plus layer 3), run after both runner prompts gained a
-rebuttal of the request the Workflow harness relays from the operator's session
-(limitation 8): positive accuracy 100%, boundary 98.5%, false activation 0%, layer 3
-8/8 invoked with no over-route — the same figures as the baseline. Three boundary
-cases changed route, each to another skill in its accept set. The baseline file was
-not re-recorded.
+**Baseline re-recorded on 2026-11-07** on `claude-haiku-5-5` (every one of 442 agents,
+resolved from the transcripts; 142 cases, k=3, plus layer 3), after both runner prompts
+gained a rebuttal of the request the Workflow harness relays from the operator's session
+(limitation 8): positive accuracy 100%, boundary 98.5%, false activation 0%, layer 3 8/8
+invoked with no over-route — the same figures as the previous recording. Three boundary
+cases changed route, each to another skill in its accept set.
 The three layers from the original design:
 
 1. **Plumbing** — covered by `node scripts/verify.mjs` (offline: the hook writes the
@@ -1018,7 +1016,7 @@ so routing is re-run in-session with `routing-runner.mjs` and compared against
 
 ### Results (haiku) and the haiku recommendation
 
-Full run on `claude-haiku-4-5` over the 138-case dataset (2026-09, 66-skill
+Full run labelled `claude-haiku-4-5` (see above) over the 138-case dataset (2026-09, 66-skill
 catalog), recorded at **k=3**: three independent samples per case, majority route,
 all three votes stored in `evals/routing-baseline.json`. Every case was re-recorded
 in this run and nothing was carried forward. After the description fix described
@@ -1148,7 +1146,7 @@ Workflow({ scriptPath: "evals/routing-heldout-runner.mjs", args: {
   cases: <the .cases array of evals/routing-heldout.json> }})
 ```
 
-**Result (`claude-haiku-4-5`, k=3, 2026-09, 162 cases, 486 route agents, clean
+**Result (labelled `claude-haiku-4-5`, see above; k=3, 2026-09, 162 cases, 486 route agents, clean
 leak scan):** paraphrase **94/101**, confusable **25/25** (every cluster separated,
 zero confusion), trap **18/18**, trivial **18/18**, false activation **0/23**, and
 **159/162 unanimous**.
