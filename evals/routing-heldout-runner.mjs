@@ -173,7 +173,8 @@ for (const r of failures) log(`  FAIL ${r.id}  chosen=${r.chosen}  accept=[${r.a
 
 return {
   k: K,
-  model: 'claude-haiku-4-5',
+  // MODEL is the harness shorthand; read the resolved id from the transcripts.
+  model: MODEL,
   summary: {
     n: { total: ok.length, positive: pos.length, boundary: bound.length, trivial: triv.length },
     kind: {

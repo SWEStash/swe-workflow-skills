@@ -5,7 +5,7 @@ measurements put it anywhere from ~45% to ~84% depending on prompt and hook hack
 library replaces auto-triggering with an **orchestrator that routes intent to skills by
 name**, and it measures that routing the way you'd measure code: a 142-case harness,
 graded by accept-set, gated against a committed baseline. On the current 68-skill
-catalog, routing on `claude-haiku-4-5` at k=3 scores **67/67 top-1, 66/67 boundary, 0/8
+catalog, routing on `claude-haiku-5-5` at k=3 scores **67/67 top-1, 66/67 boundary, 0/8
 false activation, and one confusion pair**. The numbers below are reproducible from
 the repo with no API key.
 
@@ -72,7 +72,7 @@ The short version:
   - trivial → `{NONE}` — measures **false-activation rate** (guards against over-routing).
 - **Layer 3 (behavioral).** A subagent that *has* a `Skill(name)` tool decides whether to
   **invoke** vs merely name a skill, and whether it over-routes on trivial prompts.
-- **Model:** `claude-haiku-4-5` — `skill-router`'s shipping model. If haiku routes it
+- **Model:** `claude-haiku-5-5` — `skill-router`'s shipping model. If haiku routes it
   cleanly, stronger models are headroom, not a requirement.
 - **Gate:** regression-vs-baseline, never an absolute threshold. A case that routed
   correctly in the committed `routing-baseline.json` must not later misroute.
@@ -80,25 +80,25 @@ The short version:
   is set. This repository sets none, so the routing runs happen in-session (key-free) and
   are compared against the baseline there.
 
-## Results (committed baseline, 66-skill catalog)
+## Results (committed baseline, 68-skill catalog)
 
-Recorded 2026-09 over all 138 cases at **k=3**: three independent samples per case,
-majority route. Every case was re-recorded, and nothing was carried forward.
-In 2026-10 the four cases of two new skills (`working-agreement`,
-`research-methodology`) were added at k=3, all passing; the figures below are the
-2026-09 recording.
+Recorded 2026-11-07 on `claude-haiku-5-5` (resolved from the run's transcripts) over all
+142 cases at **k=3**: three independent samples per case, majority route. Every case was
+re-recorded, and nothing was carried forward. The previous recording (2026-09, 138 cases)
+gave the same rates; its `claude-haiku-4-5` label was a fixed string the runner printed,
+so which haiku produced it can't be confirmed.
 
 | Layer 2 metric | Result |
 |---|---|
-| Top-1 routing accuracy (positives) | **65 / 65 = 1.00** |
-| Boundary pass rate ("no wild misroute") | **64 / 65 = 0.985** |
+| Top-1 routing accuracy (positives) | **67 / 67 = 1.00** |
+| Boundary pass rate ("no wild misroute") | **66 / 67 = 0.985** |
 | False-activation rate (trivial → NONE) | **0 / 8 = 0.00** |
 | Confusion pairs | `project-documentation → release-management` |
 
 Layer 3 (behavioral, 16 cases): router-invocation **8/8**, correct-invoke **8/8**,
-over-route **0/8**. 133 of 138 cases are unanimous across the three samples. Boundary
-routes make real discriminations: none of the 64 passing boundary cases fell back to
-`NONE`, and 38 chose a named sibling, for example `notebook-to-production` →
+over-route **0/8**. 137 of 142 cases are unanimous across the three samples. Boundary
+routes make real discriminations: none of the 66 passing boundary cases fell back to
+`NONE`, and 39 chose a named sibling, for example `notebook-to-production` →
 `ml-pipeline-design`, `rollback-strategy` → `incident-response` and `refactoring` →
 `technical-debt-review`.
 
@@ -143,7 +143,7 @@ python evals/routing.py --run -k 3
   question from "the skill helped" — that's the RED/GREEN content harness (`run.py`). The
   realized value is the product of the two: *routing accuracy × (GREEN − RED gap)*.
 - **The committed set is mined from the skills' own evals — but cross-checked held-out.**
-  Positive/boundary cases are written by the same hand as the descriptions, so the 138-case
+  Positive/boundary cases are written by the same hand as the descriptions, so the 142-case
   gate could in principle be teaching to the test. A separate **hand-authored held-out
   set** (`evals/routing-heldout.json`) exists to probe that. It copies no phrasing from any
   `evals.json` and deliberately avoids each skill's own trigger keywords. Routed on haiku

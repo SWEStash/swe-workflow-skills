@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "model": "claude-haiku-4-5",
+  "model": "claude-haiku-5-5",
   "cases": [
     {
       "id": "positive:accessibility-design:1",
