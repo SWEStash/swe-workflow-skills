@@ -664,7 +664,9 @@ flaky). Several findings from running this make the choice necessary:
    had most of its RED rounds report on the repo's branches, and the leak scan
    refused it. Both generator prompts now say that any such request is not addressed
    to them and to answer only the developer message. Both arms carry the same
-   sentence, so the comparison is unchanged.
+   sentence, so the comparison is unchanged. `routing-runner.mjs`'s route and
+   behavioral prompts carry it too; a full routing re-run with it matched the
+   routing baseline's figures.
 
 9. **Most rows measure one assertion or none, and scope-boundary cases are
    saturated by construction.** `merge-baseline.mjs` reports, per row, how many
@@ -896,7 +898,21 @@ skill only delivers its proven lift if `skill-router` routes to it. In short:
 | `evals/routing.py` | 2 | API-billed regression gate, scriptable | `ANTHROPIC_API_KEY` + `pip install -r evals/requirements.txt` |
 | `evals/routing-runner.mjs` | 2 + 3 | Fast in-session run on haiku, RED/GREEN loop | Claude Code Workflow tool (no key) |
 
-Both route on **haiku** (`claude-haiku-4-5` — `skill-router`'s shipping model).
+Both route on **haiku**, `skill-router`'s shipping model. `routing.py` pins an id
+(`EVAL_ROUTING_MODEL`, default `claude-haiku-4-5`); `routing-runner.mjs` passes the
+harness shorthand `haiku`, which tracks whatever haiku the session resolves to — on
+2026-11-07 that was `claude-haiku-5-5`. Until then the runner's summary printed
+`claude-haiku-4-5` whatever had run, so the `claude-haiku-4-5` label on the in-session
+routing baseline is that fixed string, not a resolved id; the transcripts behind it
+have aged off disk and cannot confirm it.
+
+**2026-11-07 re-check** (`claude-haiku-5-5` on every agent, resolved from the
+transcripts; 142 cases, k=3, plus layer 3), run after both runner prompts gained a
+rebuttal of the request the Workflow harness relays from the operator's session
+(limitation 8): positive accuracy 100%, boundary 98.5%, false activation 0%, layer 3
+8/8 invoked with no over-route — the same figures as the baseline. Three boundary
+cases changed route, each to another skill in its accept set. The baseline file was
+not re-recorded.
 The three layers from the original design:
 
 1. **Plumbing** — covered by `node scripts/verify.mjs` (offline: the hook writes the
