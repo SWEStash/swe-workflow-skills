@@ -1,0 +1,21 @@
+name: Feature request
+description: Something a skill, the router or the tooling should do, or a new skill
+type: Feature
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What you're trying to do and what gets in the way. For a new skill, the workflow it would guide.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: How it could work. Optional.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Constraints, alternatives, existing skills it overlaps with, what's out of scope. Optional.

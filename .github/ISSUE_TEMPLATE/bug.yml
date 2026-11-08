@@ -1,0 +1,40 @@
+name: Bug
+description: A skill, the router, the installer or the evals do something wrong
+type: Bug
+body:
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps
+      description: What you did, one step per line. For a skill, include the prompt you typed and which skill ran (or should have).
+      placeholder: |
+        1. Asked "help me roll back the deploy I just did, users are getting 500s"
+        2. `rollback-strategy` ran
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual
+      description: What happened. Paste the relevant part of the reply or the error.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version and setup
+      description: Library version (`VERSION`, or the npm/plugin version), how you installed it, Claude Code version, model.
+      placeholder: swe-workflow-skills 0.11.6, npx install --global, Claude Code 2.x, Sonnet
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: How often it happens, what it blocks, any workaround. Optional.

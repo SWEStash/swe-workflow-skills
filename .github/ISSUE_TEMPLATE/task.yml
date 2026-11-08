@@ -1,0 +1,26 @@
+name: Task
+description: Maintenance, eval runs, checks or chores (maintainer)
+type: Task
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What's involved and why it matters, in one to three lines.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What to do.
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      value: |
+        - [ ] 
+    validations:
+      required: true

@@ -61,7 +61,8 @@ from the commit types since the last tag and maps them to changelog sections
 untidy history.
 
 [CHANGELOG.md](../CHANGELOG.md) is **generated, not written.** Release-please owns the
-file; nobody edits it by hand and there is no `[Unreleased]` section to maintain. The
+file; nobody edits it by hand (the exceptions are manual step 2 below, on the release PR
+before it merges, and the manual fallback) and there is no `[Unreleased]` section to maintain. The
 point of the tool is that the changelog is a *derivative* of history — hand-curating it
 alongside gives up that guarantee and reintroduces the drift it exists to prevent.
 
@@ -79,7 +80,8 @@ the release — it files the entry in the wrong place or hides it entirely.
 
 **Reasoning goes in the commit body and the PR description**, which is where it belongs:
 the changelog answers *what changed* for someone deciding whether to upgrade, the body
-answers *why* for whoever reads history later, and durable decisions belong in an ADR.
+answers *why* for whoever reads history later, and durable decisions belong in the doc they
+change ([HOW-WE-WORK](HOW-WE-WORK.md)).
 See `git-workflow` for the subject and body rules.
 
 Prior versions in the file still carry hand-written prose from when it was curated by
@@ -119,8 +121,8 @@ lockstep fan-out), and [`.github/workflows/release.yml`](../.github/workflows/re
    (or the config), don't hand-edit the version.
 2. **Read the generated changelog section as a consumer would.** Don't edit it — if an
    entry is unhelpful, the commit subject was, and that's the thing to fix next time.
-   The one edit worth making is deleting an entry that shipped nothing user-visible
-   and should have been typed `chore`.
+   The one edit worth making, on the release PR before it merges, is deleting an entry
+   that shipped nothing user-visible and should have been typed `chore`.
 3. **Merge the release PR** — this is the deliberate release trigger. Nothing tags or
    publishes until a human merges.
 4. **Verify the artifact like a user** (see below) before announcing.

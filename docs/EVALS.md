@@ -62,10 +62,11 @@ nudging the result toward compliance.
 
 - Assertions are binary and specific by design — "Asks at least 3 clarifying
   questions", not "produces a good plan". If an assertion is fuzzy, tighten it.
-- A skill passes an eval when all its assertions hold. Track misses; they are
-  the backlog for the next authoring pass.
-- Re-run after any SKILL.md change to the affected skill (this is the
-  `verification-before-completion` discipline applied to the skills themselves).
+- A skill passes an eval when all its assertions hold. File misses as issues
+  ([HOW-WE-WORK](HOW-WE-WORK.md)); they are the backlog for the next authoring pass.
+- Re-run after any SKILL.md change to the affected skill, on Opus and Haiku (this is
+  the `verification-before-completion` discipline applied to the skills themselves;
+  what closes the change is [HOW-WE-WORK](HOW-WE-WORK.md) → *Closing*).
 
 ## Automated harness (TDD for the skill set)
 
