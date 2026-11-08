@@ -1,16 +1,16 @@
 {
-  "_note": "Comparison content baseline for claude-haiku-5-5, judged by claude-opus-5-5, recorded in-session via evals/workflow-runner.mjs. It does not gate: evals/baseline.json is the regression baseline. Rows match evals/baseline.json's shape and case keys, so the two can be compared row by row.\n\nCOVERAGE: 2026-11-06: 15-case pilot (cases hand-picked from rows with claude-opus-5-5 Opus measurements, each with at least one assertion only the skill passed on Opus), k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. project-review eval:1 left out: it scored 0 in both arms because the model declined to review repos it could not read, and the merge refuses all-false rows. 2026-11-06/07: edge-case sweep, the eval:2 case of every skill not already in the pilot, run in four parts, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. 2026-11-07: rest of the suite (every pressure test, eval:3 and eval:1 case not yet recorded), run in eleven parts, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. Excluded: project-documentation eval:3 (0/6 in both arms because the fixture asks for git history no arm can read) and project-review eval:1 again (the fixture asks for a review of repos no arm can read, so every reply declines). 2026-11-07: re-measured exploratory-data-analysis, project-proposal, research-methodology and rollback-strategy after adding an out-of-scope paragraph to each, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. 2026-11-07: re-measured observability-design and project-proposal after the same edits, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. 2026-11-07, branch fix/writing-skills-step1-placement: writing-skills 3 cases re-run after the Step 1 placement text was aligned with AUTHORING (#91).",
+  "_note": "Comparison content baseline for claude-haiku-5-5, judged by claude-opus-5-5, recorded in-session via evals/workflow-runner.mjs. It does not gate: evals/baseline.json is the regression baseline. Rows match evals/baseline.json's shape and case keys, so the two can be compared row by row.\n\nCOVERAGE: 2026-11-06: 15-case pilot (cases hand-picked from rows with claude-opus-5-5 Opus measurements, each with at least one assertion only the skill passed on Opus), k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. project-review eval:1 left out: it scored 0 in both arms because the model declined to review repos it could not read, and the merge refuses all-false rows. 2026-11-06/07: edge-case sweep, the eval:2 case of every skill not already in the pilot, run in four parts, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. 2026-11-07: rest of the suite (every pressure test, eval:3 and eval:1 case not yet recorded), run in eleven parts, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. Excluded: project-documentation eval:3 (0/6 in both arms because the fixture asks for git history no arm can read) and project-review eval:1 again (the fixture asks for a review of repos no arm can read, so every reply declines). 2026-11-07: re-measured exploratory-data-analysis, project-proposal, research-methodology and rollback-strategy after adding an out-of-scope paragraph to each, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. 2026-11-07: re-measured observability-design and project-proposal after the same edits, k=3, generated on claude-haiku-5-5 and judged by claude-opus-5-5. 2026-11-07, branch fix/writing-skills-step1-placement: writing-skills 3 cases re-run after the Step 1 placement text was aligned with AUTHORING (#91). 2026-11-08: the 7 Haiku cases scoring GREEN < RED at k=3 re-run at k=5 (#87). Four tie at k=5 (noise); security-audit eval:2, api-design eval:2 and project-review eval:2 stay GREEN < RED.",
   "model": "claude-haiku-5-5",
   "judge": "claude-opus-5-5",
-  "k": "3",
+  "k": "3, except 7 cases at 5",
   "runner": "workflow-runner.mjs",
   "option": "A",
   "summary": {
     "cases": 245,
     "excluded": 0,
     "assertions": 1375,
-    "red": 852,
-    "green": 1212,
+    "red": 851,
+    "green": 1214,
     "skills": 68
   },
   "skills": {
@@ -278,7 +278,7 @@
           true,
           true,
           true,
-          false,
+          true,
           true,
           true
         ],
@@ -293,9 +293,9 @@
         ],
         "model": "claude-haiku-5-5",
         "judge": "claude-opus-5-5",
-        "k": 3,
+        "k": 5,
         "runner": "workflow-runner.mjs",
-        "listing": "af3b3307dd57"
+        "listing": "fe685001e639"
       },
       "eval:1": {
         "green": [
@@ -355,7 +355,7 @@
           false,
           true,
           false,
-          true,
+          false,
           true,
           false
         ],
@@ -366,15 +366,15 @@
           true,
           true,
           false,
-          true,
+          false,
           false,
           false
         ],
         "model": "claude-haiku-5-5",
         "judge": "claude-opus-5-5",
-        "k": 3,
+        "k": 5,
         "runner": "workflow-runner.mjs",
-        "listing": "af3b3307dd57"
+        "listing": "fe685001e639"
       },
       "eval:3": {
         "green": [
@@ -867,7 +867,7 @@
           true
         ],
         "red": [
-          true,
+          false,
           true,
           true,
           true,
@@ -878,9 +878,9 @@
         ],
         "model": "claude-haiku-5-5",
         "judge": "claude-opus-5-5",
-        "k": 3,
+        "k": 5,
         "runner": "workflow-runner.mjs",
-        "listing": "af3b3307dd57"
+        "listing": "fe685001e639"
       }
     },
     "verification-before-completion": {
@@ -945,7 +945,7 @@
         "green": [
           true,
           false,
-          false,
+          true,
           false,
           false
         ],
@@ -958,9 +958,9 @@
         ],
         "model": "claude-haiku-5-5",
         "judge": "claude-opus-5-5",
-        "k": 3,
+        "k": 5,
         "runner": "workflow-runner.mjs",
-        "listing": "af3b3307dd57"
+        "listing": "fe685001e639"
       },
       "pressure:4": {
         "green": [
@@ -1098,23 +1098,23 @@
           true,
           true,
           true,
-          false,
-          false,
+          true,
+          true,
           false
         ],
         "red": [
           true,
           true,
           true,
-          false,
+          true,
           true,
           false
         ],
         "model": "claude-haiku-5-5",
         "judge": "claude-opus-5-5",
-        "k": 3,
+        "k": 5,
         "runner": "workflow-runner.mjs",
-        "listing": "176eba4e10d0"
+        "listing": "fe685001e639"
       },
       "pressure:3": {
         "green": [
@@ -1488,7 +1488,7 @@
           true,
           true,
           true,
-          true
+          false
         ],
         "red": [
           true,
@@ -1501,9 +1501,9 @@
         ],
         "model": "claude-haiku-5-5",
         "judge": "claude-opus-5-5",
-        "k": 3,
+        "k": 5,
         "runner": "workflow-runner.mjs",
-        "listing": "af3b3307dd57"
+        "listing": "fe685001e639"
       },
       "eval:3": {
         "green": [
@@ -4458,9 +4458,9 @@
         ],
         "model": "claude-haiku-5-5",
         "judge": "claude-opus-5-5",
-        "k": 3,
+        "k": 5,
         "runner": "workflow-runner.mjs",
-        "listing": "af3b3307dd57"
+        "listing": "fe685001e639"
       },
       "eval:3": {
         "green": [
