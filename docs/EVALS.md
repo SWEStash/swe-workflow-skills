@@ -308,19 +308,19 @@ compares them case by case against the Opus rows. It prints RED, GREEN and gain 
 95% intervals from resampling whole cases, splits the Opus rows by recorded model
 id, and lists every case where the skill lowered an assertion. It is read-only.
 
-**Results** (2026-11-07, k=3 on every row, generators `claude-haiku-5-5` /
+**Results** (2026-11-08, k=3 on every row except seven Haiku rows at k=5, generators `claude-haiku-5-5` /
 `claude-sonnet-5-5`, every judge `claude-opus-5-5`):
 
 | Case set | Model | Cases | RED | GREEN | Gain [95% CI] | Cases GREEN < RED |
 |---|---|---|---|---|---|---|
-| Edge case of every skill (`eval:2`) | Haiku | 68 | 71.6% | 88.6% | +17.0 [12.3, 22.1] | 5 |
+| Edge case of every skill (`eval:2`) | Haiku | 68 | 71.6% | 88.9% | +17.3 [12.5, 22.1] | 3 |
 | | Sonnet | 68 | 78.5% | 96.5% | +18.0 [13.3, 22.9] | 0 |
 | | Opus (stored) | 68 | 73.6% | 98.8% | +25.2 | 0 |
-| Whole suite | Haiku | 245 | 62.0% | 88.1% | +26.2 [23.2, 29.2] | 7 |
+| Whole suite | Haiku | 245 | 61.9% | 88.3% | +26.4 [23.4, 29.1] | 3 |
 | | Opus (stored) | 245 | 65.8% | 98.5% | +32.7 | 0 |
 
-Haiku by case kind (whole suite): happy path +26.0, edge case +17.0, scope boundary
-+30.5, pressure **+38.7**. Sonnet was run on the edge-case set plus a 15-case pilot,
+Haiku by case kind (whole suite): happy path +26.2, edge case +17.3, scope boundary
++30.5, pressure **+39.2**. Sonnet was run on the edge-case set plus a 15-case pilot,
 not the whole suite. Two Haiku cases are excluded (`project-review eval:1`,
 `project-documentation eval:3`): they ask for repositories or git history that no arm
 can read, and every reply declined, in both arms.
@@ -333,7 +333,7 @@ What the numbers show:
 - **Sonnet with the skill is close to Opus with the skill** on the edge-case set
   (96.5% vs 98.8%). Haiku is about 10 points behind in every case kind.
 - **Pressure is where Haiku gains most.** Without the skill it gives in most often
-  (RED 46.4%); with it, it holds (85.1%).
+  (RED 46.4%); with it, it holds (85.6%).
 - **Harm appears as the model gets smaller.** The skill lowered a whole case 0 times
   on Opus, once on Sonnet and 13 times on Haiku when first measured. Two patterns
   repeated on Haiku:
@@ -350,8 +350,13 @@ What the numbers show:
     **Fixed** in `observability-design`, which now says which of its two workflows
     comes first: with no telemetry, instrument one service before designing SLOs.
 
-  After both fixes Haiku's harm count is **7 (3%)**: single-assertion margins at k=3,
-  one severity-calibration disagreement (`security-audit eval:2`) and one judge error.
+  After both fixes, 7 Haiku cases (3%) still scored GREEN < RED at k=3, all by one
+  assertion. Re-run at k=5, four tie (noise; one of them had a judge error at k=3), so
+  Haiku's harm count is **3 (1%)**. Two are real: `security-audit eval:2` rates MD5
+  hashing High and a missing JWT expiry Medium where the eval expects Critical and
+  High, and `api-design eval:2` leaves email verification out of an auth API. The
+  third, `project-review eval:2`, asks for a review of a repository the harness never
+  provides, so neither arm can do it.
   Sonnet's one case was `observability-design eval:2`; re-measured on the fixed text,
   it scores GREEN 8/9 against RED 6/9, so Sonnet's harm count is **0**.
 
@@ -360,8 +365,8 @@ What the numbers do not show:
 - **"Smaller model with the skill vs Opus without it" is mostly confounded.** Most
   stored Opus rows were generated and judged by `claude-opus-5`, months earlier. On
   the rows recorded on `claude-opus-5-5`, Haiku with the skill beats Opus without it
-  on happy-path (+22.3), scope-boundary (+24.1) and pressure (+23.2) cases, with
-  intervals above zero. On edge cases (+2.7) the interval includes zero.
+  on happy-path (+22.1), scope-boundary (+24.1) and pressure (+23.2) cases, with
+  intervals above zero. On edge cases (+6.0) the interval includes zero.
 - **Routing is not re-measured here.** In real use the model also has to pick the
   skill; [Activation evaluation](#activation-evaluation-routing--implemented) covers
   that on Haiku.
