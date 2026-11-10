@@ -142,6 +142,12 @@ GET /api/v1/orders?status=pending&created_after=2025-01-01
 GET /api/v1/orders?sort=-created_at,total
 ```
 
+When the request also asks what the storage must do to serve these (indexes,
+partitioning, table size), say where the line falls, in one sentence of the answer:
+this design fixes what the endpoint promises, and `data-modeling` decides whether the
+store can keep that promise. Then name where the two meet: a cursor's ordering key is
+both a contract choice and an index.
+
 ### Step 6: Define Authentication and Authorization
 
 For each endpoint, specify:

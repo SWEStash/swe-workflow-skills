@@ -238,8 +238,8 @@ See limitation 7 for what it means for assertion design.
 | Metric | Result |
 |---|---|
 | Assertions passed, no skill body (RED) | **924 / 1388 = 66.6%** |
-| Assertions passed, skill loaded (GREEN) | **1364 / 1388 = 98.3%** |
-| Gain | **+31.7 points** |
+| Assertions passed, skill loaded (GREEN) | **1365 / 1388 = 98.3%** |
+| Gain | **+31.8 points** |
 | Cases where GREEN beats RED | **217 / 247** |
 | Cases where GREEN ties RED | **30 / 247** |
 | Cases where GREEN is *below* RED | **0 / 247** |
@@ -262,7 +262,7 @@ for depth:
 | Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
 |---|---|---|---|
 | zero (no references at all) | 16 | 63.7% → 98.5% | **+34.7** |
-| light (0 < ratio < 1) | 24 | 68.1% → 98.5% | +30.4 |
+| light (0 < ratio < 1) | 24 | 68.1% → 98.7% | +30.6 |
 | heavy (ratio ≥ 1) | 28 | 66.4% → 98.0% | +31.6 |
 
 Pearson r between reference ratio and GREEN gain is **−0.09** across the 68 skills —
@@ -316,11 +316,11 @@ id, and lists every case where the skill lowered an assertion. It is read-only.
 | Edge case of every skill (`eval:2`) | Haiku | 68 | 71.9% | 90.6% | +18.8 [14.3, 23.4] | 1 |
 | | Sonnet | 68 | 78.5% | 96.5% | +18.0 [13.3, 22.9] | 0 |
 | | Opus (stored) | 68 | 73.1% | 98.5% | +25.4 | 0 |
-| Whole suite | Haiku | 245 | 62.0% | 88.9% | +26.8 [23.9, 29.6] | 1 |
-| | Opus (stored) | 245 | 66.5% | 98.3% | +31.7 | 0 |
+| Whole suite | Haiku | 245 | 62.0% | 89.0% | +27.0 [24.1, 29.7] | 1 |
+| | Opus (stored) | 245 | 66.5% | 98.3% | +31.8 | 0 |
 
 Haiku by case kind (whole suite): happy path +25.5, edge case +18.8, scope boundary
-+31.1, pressure **+39.7**. Sonnet was run on the edge-case set plus a 15-case pilot,
++31.8, pressure **+39.7**. Sonnet was run on the edge-case set plus a 15-case pilot,
 not the whole suite. Two Haiku cases are excluded (`project-review eval:1`,
 `project-documentation eval:3`): they ask for repositories or git history that no arm
 can read, and every reply declined, in both arms.
@@ -367,7 +367,7 @@ What the numbers do not show:
 - **"Smaller model with the skill vs Opus without it" is mostly confounded.** Most
   stored Opus rows were generated and judged by `claude-opus-5`, months earlier. On
   the rows recorded on `claude-opus-5-5`, Haiku with the skill beats Opus without it
-  on happy-path (+20.0), scope-boundary (+21.4) and pressure (+23.2) cases, with
+  on happy-path (+20.0), scope-boundary (+24.3) and pressure (+23.2) cases, with
   intervals above zero. On edge cases (+8.3) the interval includes zero.
 - **Routing is not re-measured here.** In real use the model also has to pick the
   skill; [Activation evaluation](#activation-evaluation-routing--implemented) covers
