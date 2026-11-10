@@ -237,18 +237,18 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **917 / 1388 = 66.1%** |
-| Assertions passed, skill loaded (GREEN) | **1365 / 1388 = 98.3%** |
-| Gain | **+32.3 points** |
-| Cases where GREEN beats RED | **218 / 247** |
-| Cases where GREEN ties RED | **29 / 247** |
+| Assertions passed, no skill body (RED) | **924 / 1388 = 66.6%** |
+| Assertions passed, skill loaded (GREEN) | **1364 / 1388 = 98.3%** |
+| Gain | **+31.7 points** |
+| Cases where GREEN beats RED | **217 / 247** |
+| Cases where GREEN ties RED | **30 / 247** |
 | Cases where GREEN is *below* RED | **0 / 247** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
 content is worse than no skill at all. **There are also zero RED-true / GREEN-false
-assertions** anywhere in the library. The 29 ties are mostly cases where RED already
+assertions** anywhere in the library. The 30 ties are mostly cases where RED already
 saturates — no headroom left to show, not a skill doing nothing — and saturation
-concentrates by case kind: `eval:1` 6%, `eval:2` 18%, `eval:3` 12%, pressure 12%.
+concentrates by case kind: `eval:1` 6%, `eval:2` 19%, `eval:3` 12%, pressure 12%.
 Scope-boundary cases used to saturate at 18% because three of their four assertions
 (recognise the request, name the sibling skill, withhold the wrong deliverable) were
 satisfied by the roster alone. Rewriting 26 of them against a sibling the roster cannot
@@ -262,8 +262,8 @@ for depth:
 | Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
 |---|---|---|---|
 | zero (no references at all) | 16 | 63.7% → 98.5% | **+34.7** |
-| light (0 < ratio < 1) | 23 | 67.4% → 98.6% | +31.2 |
-| heavy (ratio ≥ 1) | 29 | 66.0% → 98.1% | +32.1 |
+| light (0 < ratio < 1) | 24 | 68.1% → 98.5% | +30.4 |
+| heavy (ratio ≥ 1) | 28 | 66.4% → 98.0% | +31.6 |
 
 Pearson r between reference ratio and GREEN gain is **−0.09** across the 68 skills —
 no relationship. The zero-reference skills are the control that makes this readable:
@@ -271,7 +271,7 @@ they gained the *most* with nothing to read, so the gain comes from the instruct
 itself. Note the standing confound — GREEN gained tool access alongside reference
 access — which is exactly why the zero-reference band matters.
 
-Recorded at **k>=3 for every row** (200 at k=3, 47 at k=5) as of 2026-11-08; `k` is
+Recorded at **k>=3 for every row** (200 at k=3, 47 at k=5) as of 2026-11-10; `k` is
 per row. All 173 remaining single-sample cases have since been re-measured, so the
 k=1 caveat that used to sit here no longer applies.
 
@@ -308,18 +308,18 @@ compares them case by case against the Opus rows. It prints RED, GREEN and gain 
 95% intervals from resampling whole cases, splits the Opus rows by recorded model
 id, and lists every case where the skill lowered an assertion. It is read-only.
 
-**Results** (2026-11-08, k=3 on every row except ten Haiku rows at k=5, generators `claude-haiku-5-5` /
+**Results** (2026-11-10, k=3 on every row except twelve Haiku rows at k=5, generators `claude-haiku-5-5` /
 `claude-sonnet-5-5`, every judge `claude-opus-5-5`):
 
 | Case set | Model | Cases | RED | GREEN | Gain [95% CI] | Cases GREEN < RED |
 |---|---|---|---|---|---|---|
-| Edge case of every skill (`eval:2`) | Haiku | 68 | 71.9% | 90.1% | +18.3 [13.5, 22.9] | 2 |
+| Edge case of every skill (`eval:2`) | Haiku | 68 | 71.9% | 90.6% | +18.8 [14.3, 23.4] | 1 |
 | | Sonnet | 68 | 78.5% | 96.5% | +18.0 [13.3, 22.9] | 0 |
-| | Opus (stored) | 68 | 72.6% | 98.5% | +25.9 | 0 |
-| Whole suite | Haiku | 245 | 62.0% | 88.7% | +26.7 [23.8, 29.5] | 2 |
-| | Opus (stored) | 245 | 66.0% | 98.3% | +32.3 | 0 |
+| | Opus (stored) | 68 | 73.1% | 98.5% | +25.4 | 0 |
+| Whole suite | Haiku | 245 | 62.0% | 88.9% | +26.8 [23.9, 29.6] | 1 |
+| | Opus (stored) | 245 | 66.5% | 98.3% | +31.7 | 0 |
 
-Haiku by case kind (whole suite): happy path +25.5, edge case +18.3, scope boundary
+Haiku by case kind (whole suite): happy path +25.5, edge case +18.8, scope boundary
 +31.1, pressure **+39.7**. Sonnet was run on the edge-case set plus a 15-case pilot,
 not the whole suite. Two Haiku cases are excluded (`project-review eval:1`,
 `project-documentation eval:3`): they ask for repositories or git history that no arm
@@ -354,8 +354,9 @@ What the numbers show:
   assertion. Re-run at k=5, four tie (noise; one of them had a judge error at k=3).
   `security-audit eval:2` rated MD5 hashing High and a missing JWT expiry Medium
   where the eval expects Critical and High; **fixed** with a severity rubric in Step 2
-  (GREEN 8/9 against RED 5/9 at k=5). Haiku's harm count is now **2 (1%)**:
-  `api-design eval:2` leaves email verification out of an auth API, and
+  (GREEN 8/9 against RED 5/9 at k=5). `api-design eval:2` left email verification
+  out of an auth API; **fixed** by naming, in Step 1, the operations a request needs
+  to be safe (7/7 against 7/7). Haiku's harm count is now **1 (0.4%)**:
   `project-review eval:2` asks for a review of a repository the harness never
   provides, so neither arm can do it.
   Sonnet's one case was `observability-design eval:2`; re-measured on the fixed text,
@@ -366,8 +367,8 @@ What the numbers do not show:
 - **"Smaller model with the skill vs Opus without it" is mostly confounded.** Most
   stored Opus rows were generated and judged by `claude-opus-5`, months earlier. On
   the rows recorded on `claude-opus-5-5`, Haiku with the skill beats Opus without it
-  on happy-path (+20.5), scope-boundary (+23.1) and pressure (+23.2) cases, with
-  intervals above zero. On edge cases (+8.8) the interval includes zero.
+  on happy-path (+20.0), scope-boundary (+21.4) and pressure (+23.2) cases, with
+  intervals above zero. On edge cases (+8.3) the interval includes zero.
 - **Routing is not re-measured here.** In real use the model also has to pick the
   skill; [Activation evaluation](#activation-evaluation-routing--implemented) covers
   that on Haiku.
