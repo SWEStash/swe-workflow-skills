@@ -38,7 +38,10 @@ Start from the domain model, not the UI:
 - **What are the relationships?** (user has orders, order contains items)
 - **Who consumes this API?** (web app, mobile app, third-party, internal service)
 
-Map each resource to its operations before choosing URLs or methods.
+Map each resource to its operations before choosing URLs or methods. Include the
+operations the requested ones need in order to be safe, even when the request doesn't
+name them: registration needs email verification, or anyone can claim any address. These
+are part of the design, not an open decision to default away.
 
 ### Step 2: Design Endpoints
 
@@ -108,6 +111,9 @@ Map HTTP status codes consistently:
 - `429` — Rate limited
 - `500` — Server error (never expose internals)
 
+Keep `401` and `403` both in the mapping even when no endpoint returns `403` yet: clients
+code against the distinction, and adding it later changes what they must handle.
+
 ### Step 5: Design Pagination, Filtering, Sorting
 
 For any list endpoint that could return many results:
@@ -135,6 +141,12 @@ GET /api/v1/orders?status=pending&created_after=2025-01-01
 ```
 GET /api/v1/orders?sort=-created_at,total
 ```
+
+When the request also asks what the storage must do to serve these (indexes,
+partitioning, table size), say where the line falls, in one sentence of the answer:
+this design fixes what the endpoint promises, and `data-modeling` decides whether the
+store can keep that promise. Then name where the two meet: a cursor's ordering key is
+both a contract choice and an index.
 
 ### Step 6: Define Authentication and Authorization
 
