@@ -115,7 +115,7 @@ request can fan out to several skills. See a full session in
   (Claude Code's own setting for low-priority skills), so every skill is one route away
   with no pre-picking ([how it works](docs/ROLES.md)).
 - **Tested like code, not prose.** Across 247 eval cases and 1388 assertions, the same
-  model passes **65.9%** of assertions without the skill's content and **98.5%** with
+  model passes **66.1%** of assertions without the skill's content and **98.3%** with
   it, and **no case scores lower with the skill** ([results](docs/EVALS.md#results-content-evals-full-catalog)).
   Safety-critical skills are **hardened** with an Iron Law, a rationalization table, and
   pressure tests.

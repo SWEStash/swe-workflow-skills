@@ -46,7 +46,15 @@ Walk through each category systematically. See [references/owasp-top-10.md](refe
 
 For each finding:
 
-- **Severity**: Critical / High / Medium / Low
+- **Severity**, by what the attacker needs:
+  - **Critical**: nothing beyond reaching the system to take data, accounts or the
+    host (injection, auth bypass, RCE), or one leak of a store exposes every
+    credential in it (plaintext, or a fast hash like MD5/SHA without a KDF)
+  - **High**: one extra step or condition: forgeable or never-expiring tokens,
+    hard-coded secrets, IDOR, stored XSS
+  - **Medium**: makes other attacks easier or leaks a little: no rate limiting,
+    missing input validation, user enumeration, missing security headers
+  - **Low**: hardening with no exploit path of its own
 - **Location**: File, line, endpoint
 - **Vulnerability**: What the issue is
 - **Exploit scenario**: How an attacker would use this (concrete, not theoretical)
