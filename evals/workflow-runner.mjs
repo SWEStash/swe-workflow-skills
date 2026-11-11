@@ -183,7 +183,35 @@ const judgeSchema = (n) => ({
   properties: { verdicts: { ...JUDGE.properties.verdicts, minItems: n, maxItems: n } },
 })
 
+// Whether a judge round can vote. Loaded and tested by check-red-leaks.mjs
+// --self-test, so keep the block self-contained.
+// <judge-check>
+// A verdict whose reason is empty or a stand-in ("Placeholder corrected below", the
+// correction never made) is not a judgment; one was the whole cause of a Haiku case
+// reading GREEN < RED. Only a reason that IS a stand-in counts: a real reason that
+// mentions the reply's placeholder names is a judgment like any other.
+const placeholderWhy = (why) => {
+  if (typeof why !== 'string') return true
+  const t = why.trim()
+  return t === '' ||
+    /^\W*(placeholder|tbd|todo|xxx|pending|n\/?a|\.\.\.|…)\W*$/i.test(t) ||
+    /\b(corrected|fixed|filled in|updated|revised|completed) (below|later)\b/i.test(t)
+}
+// A judge that returns no verdicts, or a partial list, is indistinguishable from a
+// failed round once toBools() fills the gaps with `false`: a judge that scored 1 of
+// 4 assertions would be recorded as 1 pass and 3 fails. Require full, in-range
+// coverage of 0..n-1, and a real reason on every verdict.
+const judgeDefect = (verdicts, n) => {
+  if (!Array.isArray(verdicts) || verdicts.length === 0) return { kind: 'incomplete' }
+  const seen = new Set(verdicts.map((d) => d.index).filter((i) => Number.isInteger(i) && i >= 0 && i < n))
+  if (seen.size !== n) return { kind: 'incomplete' }
+  const bad = verdicts.find((d) => placeholderWhy(d.why))
+  return bad ? { kind: 'placeholder', index: bad.index, why: bad.why ?? '' } : null
+}
+// </judge-check>
+
 const rounds = Array.from({ length: K }, (_, i) => i)
+const placeholders = []
 
 const results = await pipeline(
   items,
@@ -203,19 +231,8 @@ const results = await pipeline(
     const { it, red, green } = g
     const key = `${it.kind}:${it.id}`
     const n = it.assertions.length
-    // A judge that returns no verdicts is indistinguishable from the null case
-    // above once toBools() has run: 0 verdicts -> n false booleans. Drop it too.
-    // A PARTIAL list is the same defect wearing a smaller number: toBools() fills
-    // every index the judge skipped with `false`, so a judge that scored 1 of 4
-    // assertions is recorded as 1 pass and 3 fails rather than as the incomplete
-    // round it is. Observed in the field — it changed no verdict there only because
-    // the majority covered it. Require full, in-range coverage of 0..n-1.
-    const incomplete = (x) => {
-      const v = x?.v?.verdicts
-      if (!Array.isArray(v) || v.length === 0) return true
-      const seen = new Set(v.map((d) => d.index).filter((i) => Number.isInteger(i) && i >= 0 && i < n))
-      return seen.size !== n
-    }
+    // A defective judge round (see judgeDefect) is a round we don't have: drop it,
+    // so the row records the rounds actually voted.
     const judgeArm = async (arm, gs) => {
       const js = await Promise.all(
         gs.map((gen, r) =>
@@ -224,9 +241,15 @@ const results = await pipeline(
             : Promise.resolve({ ok: false, e: 'generator failed' })
         )
       )
-      const usable = js.filter((j) => j.ok && !incomplete(j))
-      const dropped = js.filter((j) => j.ok && incomplete(j)).length
-      if (dropped) log(`${it.skill} ${key}: dropped ${dropped} ${arm} round(s) with an incomplete verdict list`)
+      const usable = []
+      js.forEach((j, r) => {
+        if (!j.ok) return
+        const d = judgeDefect(j.v?.verdicts, n)
+        if (!d) return usable.push(j)
+        if (d.kind === 'incomplete') return log(`${it.skill} ${key}: dropped ${arm} round ${r}: incomplete verdict list`)
+        placeholders.push({ skill: it.skill, key, arm, round: r, index: d.index, why: d.why })
+        log(`${it.skill} ${key}: dropped ${arm} round ${r}: placeholder verdict at #${d.index} (${JSON.stringify(d.why)})`)
+      })
       return usable.map((j) => toBools(j.v, n))
     }
     const [redR, greenR] = await Promise.all([judgeArm('red', red), judgeArm('green', green)])
@@ -285,4 +308,5 @@ const baseline = {
 log(`[gen ${MODEL}, judge ${JUDGE_MODEL}] TOTAL: RED ${tot.red}/${tot.n}  GREEN ${tot.green}/${tot.n}  (${ok.length} cases at k=${K}${errored.length ? `, ${errored.length} excluded` : ''})`)
 if (errored.length) log(`EXCLUDED: ${errored.join(', ')}`)
 if (degraded.length) log(`FEWER ROUNDS THAN k=${K}: ${degraded.join(', ')}`)
-return { results: ok, errored, total: tot, baseline }
+if (placeholders.length) log(`PLACEHOLDER VERDICTS DROPPED: ${placeholders.map((p) => `${p.skill} ${p.key} ${p.arm}#${p.round} @${p.index}`).join(', ')}`)
+return { results: ok, errored, placeholders, total: tot, baseline }
