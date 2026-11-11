@@ -12,6 +12,18 @@ description, not here. Sections dated before 0.7.0 carry hand-written prose from
 file was curated manually.
 
 
+## [0.12.1](https://github.com/SWEStash/swe-workflow-skills/compare/v0.12.0...v0.12.1) (2026-11-11)
+
+
+### Fixed
+
+* **api-design:** keep email verification and 403 in an auth API design ([#102](https://github.com/SWEStash/swe-workflow-skills/issues/102)) ([324b953](https://github.com/SWEStash/swe-workflow-skills/commit/324b95357a660ae566dd21453b6bb195b7c5bddb))
+* **evals:** drop judge rounds whose verdict reason is a placeholder ([#104](https://github.com/SWEStash/swe-workflow-skills/issues/104)) ([81c3e0d](https://github.com/SWEStash/swe-workflow-skills/commit/81c3e0d3463a63dceeb8e77e5700e232d273e854)), closes [#92](https://github.com/SWEStash/swe-workflow-skills/issues/92)
+* **evals:** give three eval cases the material they ask about ([#107](https://github.com/SWEStash/swe-workflow-skills/issues/107)) ([ea0ba71](https://github.com/SWEStash/swe-workflow-skills/commit/ea0ba7193c5260ea6a19771f5b9620683d1da1dc))
+* **security-audit:** ask for code fixes at every severity when the code is given ([#106](https://github.com/SWEStash/swe-workflow-skills/issues/106)) ([9e4f445](https://github.com/SWEStash/swe-workflow-skills/commit/9e4f445b1bd1625ca331b7aef0c5e7d1a36c4437)), closes [#101](https://github.com/SWEStash/swe-workflow-skills/issues/101)
+* **security-audit:** define what makes a finding Critical, High, Medium or Low ([#100](https://github.com/SWEStash/swe-workflow-skills/issues/100)) ([e5bbf96](https://github.com/SWEStash/swe-workflow-skills/commit/e5bbf96272ed35baf79aad5d4dc7fa33f667e22b)), closes [#98](https://github.com/SWEStash/swe-workflow-skills/issues/98)
+* **writing-skills:** put entry-point scope text at the end of Step 1 ([#94](https://github.com/SWEStash/swe-workflow-skills/issues/94)) ([bef85ae](https://github.com/SWEStash/swe-workflow-skills/commit/bef85aeb3c235777ad87a91db85139f053fdca3f)), closes [#91](https://github.com/SWEStash/swe-workflow-skills/issues/91)
+
 ## [0.12.0](https://github.com/SWEStash/swe-workflow-skills/compare/v0.11.6...v0.12.0) (2026-11-08)
 
 
