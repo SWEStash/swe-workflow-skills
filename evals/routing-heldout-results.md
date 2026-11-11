@@ -1,7 +1,8 @@
 # Held-out routing probe — results
 
-Independent generalization probe for `skill-router`, run on **`claude-haiku-4-5`**
-at **k=3** (majority vote of 3 independent samples per case) via
+Independent generalization probe for `skill-router`, run on **`claude-haiku-5-5`**
+(2026-11-10; the 2026-09 run below is labelled `claude-haiku-4-5`, a fixed string
+the runner printed) at **k=3** (majority vote of 3 independent samples per case) via
 `evals/routing-heldout-runner.mjs` against `evals/routing-heldout.json`.
 
 **Why this exists.** The committed routing gate (`routing-dataset.json`) is *mined
@@ -13,7 +14,33 @@ No phrasing is copied from any `evals.json`, and prompts deliberately avoid thei
 target skill's own `Triggers:` keywords. It asks whether in-dataset routing
 generalizes.
 
-## Result (2026-09, 162 cases, 486 route agents)
+## Result (2026-11-10, `claude-haiku-5-5`, 162 cases, 486 route agents)
+
+| Metric | Result (k=3) |
+|---|---|
+| Paraphrase (positive) accuracy | **101/101 = 1.00** |
+| Confusable accuracy | **25/25 = 1.00** |
+| Trap accuracy (route-elsewhere or NONE) | **18/18 = 1.00** |
+| Harder-trivial accuracy (→ NONE) | **18/18 = 1.00** |
+| Kind: positive / boundary / trivial | 133/133 · 6/6 · 23/23 |
+| False-activation rate (23 NONE-expected cases) | **0/23 = 0.00** |
+| Vote unanimity | **161/162 unanimous** |
+
+Model resolved from the transcripts: every route agent ran on `claude-haiku-5-5`.
+All 486 agents returned a vote with no retry. `evals/check-red-leaks.mjs` passed: no
+agent read an answer key; 43 tool calls went beyond one catalog read, all of them
+grep lookups into `catalog.json` or reads of its saved output. The runner now carries
+the same rebuttal of the relayed operator request as `routing-runner.mjs`.
+
+**The whole set routes home, including the first full re-route under the fixed
+`verification-before-completion` description.** All nine terse completion claims
+below route to it unanimously; the 2026-09 fix had only been checked on those nine
+and 64 guards. The one split is `trivial:5` ("morning! did the deploy last night go
+through okay?"): one vote for `verification-before-completion`, majority `NONE`.
+The boundary cases land as before: four on the primary, `confuse:c4:4` and
+`confuse:c6:4` on the other accepted skill.
+
+## Previous result (2026-09, labelled `claude-haiku-4-5`, 162 cases, 486 route agents)
 
 | Metric | Result (k=3) |
 |---|---|
@@ -123,12 +150,11 @@ description.
 
 The defensible summary:
 
-> **On an independent, keyword-avoiding, 162-case held-out set, haiku routes
-> 155/162 correctly at k=3, with zero false activations and every adjacent
-> cluster separated. The cases the earlier record covered still score 150/150
-> without the answer key in reach. All seven misses are terse "I'm done" claims
-> meant for `verification-before-completion`, which the router treats as
-> conversation or as the git/release step they mention.**
+> **On an independent, keyword-avoiding, 162-case held-out set, `claude-haiku-5-5`
+> routes 162/162 correctly at k=3 (161 unanimous), with zero false activations and
+> every adjacent cluster separated. The 2026-09 run's seven misses, terse "I'm
+> done" claims meant for `verification-before-completion`, route home since that
+> skill's description changed.**
 
 ## Recommendation: keep it a periodic manual probe, not a CI gate
 
@@ -137,7 +163,7 @@ Do **not** wire this into the blocking CI routing gate:
 1. **It is meant to find edges, and gating on them is noisy.** This run found one,
    the completion claims, and that is a finding to work, not a regression to block
    on.
-2. **Cost.** About 490 agents (162 × k=3), roughly 7M tokens, is far too expensive
+2. **Cost.** About 490 agents (162 × k=3), about 24M subagent tokens on the 2026-11-10 run, is far too expensive
    to run on every PR. The mined `routing.py --changed` gate (only cases for
    changed skills) guards per-PR regressions cheaply.
 3. **Its value is as a generalization probe**, run periodically or when
@@ -149,7 +175,7 @@ drift checks: there is nothing to regenerate.
 
 ---
 
-*Run: `claude-haiku-4-5`, k=3, 162 cases / 486 route agents, 0 errors. Runner:
+*Latest run: `claude-haiku-5-5` (resolved), 2026-11-10, k=3, 162 cases / 486 route agents, 0 errors. Runner:
 `evals/routing-heldout-runner.mjs`. Dataset: `evals/routing-heldout.json`. This
 probe is separate from the committed CI gate (`routing-baseline.json`) and does
 not modify it.*

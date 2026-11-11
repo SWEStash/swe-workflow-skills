@@ -146,13 +146,13 @@ python evals/routing.py --run -k 3
   Positive/boundary cases are written by the same hand as the descriptions, so the 142-case
   gate could in principle be teaching to the test. A separate **hand-authored held-out
   set** (`evals/routing-heldout.json`) exists to probe that. It copies no phrasing from any
-  `evals.json` and deliberately avoids each skill's own trigger keywords. Routed on haiku
-  at k=3 with the fixed runner, it scores **155/162**: every adjacent cluster separated,
-  every trap handled, and 0/23 false activations. **All seven misses are terse "I'm
-  done" claims** ("Let's commit and move on", "Ship it") meant for
-  `verification-before-completion`. The router read them as conversation or as the
-  git or release step they mention. A one-line routing instruction in that skill's
-  description has since fixed all nine, with no guard case moving.
+  `evals.json` and deliberately avoids each skill's own trigger keywords. Routed on
+  `claude-haiku-5-5` at k=3 (2026-11-10), it scores **162/162**: every adjacent cluster
+  separated, every trap handled, and 0/23 false activations. The 2026-09 run scored
+  155/162; **all seven misses were terse "I'm done" claims** ("Let's commit and move
+  on", "Ship it") meant for `verification-before-completion`, read as conversation or
+  as the git or release step they mention. A one-line routing instruction in that
+  skill's description fixed all nine.
   It's a periodic manual probe, **not** a CI
   gate (see [EVALS.md § Held-out generalization probe](EVALS.md#held-out-generalization-probe-independent)).
 - **The comparison isn't apples-to-apples.** The community numbers above measure native

@@ -1097,8 +1097,8 @@ written by the same hand as the descriptions — so this measures routing on
 author-anticipated phrasings, not held-out or adversarial ones (a mild
 teaching-to-the-test risk), and a skill can ace its single prompt yet misroute on
 paraphrases. Boundary accept-sets include `NONE` by construction. The independent
-held-out set below probes this: 155/162, with every miss a terse completion claim,
-all nine of which route home after the description fix.
+held-out set below probes this: 162/162 on `claude-haiku-5-5` (2026-11-10). Its
+2026-09 run missed seven terse completion claims, fixed since by a description change.
 
 Boundary routes worth knowing: `notebook-to-production` → `ml-pipeline-design`,
 `ml-pipeline-design` → `data-quality`, `rollback-strategy` → `incident-response`,
@@ -1156,10 +1156,15 @@ Workflow({ scriptPath: "evals/routing-heldout-runner.mjs", args: {
   cases: <the .cases array of evals/routing-heldout.json> }})
 ```
 
-**Result (labelled `claude-haiku-4-5`, see above; k=3, 2026-09, 162 cases, 486 route agents, clean
-leak scan):** paraphrase **94/101**, confusable **25/25** (every cluster separated,
-zero confusion), trap **18/18**, trivial **18/18**, false activation **0/23**, and
-**159/162 unanimous**.
+**Result (`claude-haiku-5-5`, resolved from the transcripts; k=3, 2026-11-10, 162 cases,
+486 route agents, clean leak scan):** paraphrase **101/101**, confusable **25/25**
+(every cluster separated, zero confusion), trap **18/18**, trivial **18/18**, false
+activation **0/23**, and **161/162 unanimous** (the split, `trivial:5`, still lands on
+`NONE`). It is the first full re-route since the `verification-before-completion`
+fix, and all nine completion claims route home unanimously.
+
+**Previous result (labelled `claude-haiku-4-5`, see above; k=3, 2026-09):** paraphrase
+**94/101**, every other category perfect, **159/162 unanimous**.
 
 **All seven misses are terse completion claims meant for
 `verification-before-completion`.** Examples: "Let's commit and move on" →
@@ -1167,9 +1172,10 @@ zero confusion), trap **18/18**, trivial **18/18**, false activation **0/23**, a
 end, go ahead and close this out" → `NONE`, read as a conversational closing. The
 one such prompt that asks for the work to be proved routes correctly. The mined
 suite's `verification-before-completion` positive missed the same way. **Fixed
-since:** after the description change below, all nine route home, unanimously.
-The fix was written with these failures in view, so treat that as weaker evidence
-than the miss was.
+since:** after the description change below, all nine route home, unanimously,
+first on the nine plus 64 guards and then in the 2026-11-10 full run. The fix was
+written with these failures in view, so treat that as weaker evidence than the miss
+was.
 
 An earlier record reported a perfect sweep on the then-150-case set, made with a
 runner that let agents read the accept sets. On those same 150 cases this run is
