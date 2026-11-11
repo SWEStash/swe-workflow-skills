@@ -33,10 +33,10 @@
     },
     {
       "id": 3,
-      "prompt": "Generate a changelog from our recent git history. We're about to release v2.1.0.",
-      "expected_output": "Should read git log, categorize commits into Added/Changed/Fixed/etc., and produce a Keep a Changelog formatted entry.",
+      "prompt": "Generate a changelog entry for v2.1.0 from our git history. We release tomorrow and keep CHANGELOG.md by hand. The repo is github.com/acme/reportly and the last release was v2.0.0.\n\n$ git log --oneline v2.0.0..HEAD\ne41f0a2 Merge pull request #231 from acme/feat/csv-export\nb7c9d13 feat(export): export any report as CSV\n5a2e8f0 fix typo in README\n9d0c4b6 fix(auth): sessions expired after 5 minutes instead of 30\nc3f1a77 chore(deps): bump axios from 1.6.2 to 1.7.4 (CVE-2024-39338)\n1e8b2d5 refactor(reports): extract query builder into its own module\nf02a9c1 feat(dashboard): filter reports by date range\n7b4d6e3 Merge branch 'main' into feat/date-filter\na9c5e08 fix(pdf): charts were cut off on A4 exports\n3d7f1b2 feat(api)!: remove the deprecated /v1/reports endpoint\n0c6a4f9 docs: fix typos in API guide\n8e2b5c4 test: add coverage for CSV export edge cases",
+      "expected_output": "Should build the entry from the pasted log, categorize the commits into Keep a Changelog sections (Added/Changed/Removed/Fixed/Security), write them from the user's perspective, drop merges, typo fixes, refactors and test-only commits, and produce a Keep a Changelog entry with the version, date and a v2.0.0...v2.1.0 comparison link.",
       "assertions": [
-        "Reads git log to find changes since last tag/release",
+        "Builds the entry from the pasted log, not from invented changes",
         "Categorizes changes into Keep a Changelog sections",
         "Writes entries from user perspective, not developer perspective",
         "Includes the version number and date",
