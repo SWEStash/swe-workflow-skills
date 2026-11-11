@@ -46,6 +46,9 @@ a malicious input, or a sequence of actions.]
 ```
 
 **Remediation:**
+<!-- Code for every finding, Medium and Low included, when the vulnerable code is in
+     front of you. With no code, name the concrete change (library, setting, pattern)
+     instead of stopping. -->
 ```[language]
 // The fixed code
 ```
