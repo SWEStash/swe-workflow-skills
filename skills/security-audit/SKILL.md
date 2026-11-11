@@ -58,7 +58,10 @@ For each finding:
 - **Location**: File, line, endpoint
 - **Vulnerability**: What the issue is
 - **Exploit scenario**: How an attacker would use this (concrete, not theoretical)
-- **Remediation**: Specific code change or configuration fix
+- **Remediation**: when the vulnerable code is in front of you, the corrected code,
+  for every finding, Medium and Low included. A sentence describing the fix is not
+  a fix. When there is no code, name the concrete change (library, setting, pattern)
+  and keep auditing. Missing code is not a reason to stop and ask.
 
 ### Step 3: Authentication & Authorization Deep Dive
 

@@ -183,6 +183,13 @@ if (resultsFile.placeholders?.length) {
       resultsFile.placeholders.map((p) => `${p.skill} ${p.key} ${p.arm}#${p.round} @${p.index}`).join(', ')
   )
 }
+if (resultsFile.offtask?.length) {
+  console.warn(
+    `warning: the run dropped ${resultsFile.offtask.length} generator round(s) whose reply answered ` +
+      `another request (the relayed launch message), not the case; those rows record fewer rounds: ` +
+      resultsFile.offtask.map((p) => `${p.skill} ${p.key} ${p.arm}#${p.round}`).join(', ')
+  )
+}
 
 // ------------------------------------------------- validate before we mutate
 
