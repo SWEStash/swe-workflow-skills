@@ -176,6 +176,13 @@ if (resultsFile.errored?.length) {
       `keep their previous baseline value: ${resultsFile.errored.join(', ')}`
   )
 }
+if (resultsFile.placeholders?.length) {
+  console.warn(
+    `warning: the run dropped ${resultsFile.placeholders.length} judge round(s) with a placeholder ` +
+      `verdict; those rows record fewer rounds: ` +
+      resultsFile.placeholders.map((p) => `${p.skill} ${p.key} ${p.arm}#${p.round} @${p.index}`).join(', ')
+  )
+}
 
 // ------------------------------------------------- validate before we mutate
 

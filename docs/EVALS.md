@@ -167,11 +167,16 @@ node evals/merge-baseline.mjs <results.json> --model claude-opus-5 \
      --note "2026-08-27, branch main / parent 50c44b6: <what it covered>, N cases."
 ```
 
-`<results.json>` is the `{ results, errored, total, baseline }` object the runner
-returned. The merge is **row-level**, keyed by `(skill, case-id)`: k=3 rows
-supersede their k=1 predecessors, every untouched row stays byte-identical, and
-re-merging the same results is a no-op — so it does not matter which of two
-concurrent sessions merges first. `--dry-run` prints the plan and writes nothing;
+`<results.json>` is the `{ results, errored, placeholders, total, baseline }` object
+the runner returned. `placeholders` lists every judge round the runner dropped because a
+verdict's reason was empty or a stand-in ("Placeholder corrected below"); those rows
+record the rounds that actually voted, and the merge warns with each one named. The
+check itself is the `<judge-check>` block in `workflow-runner.mjs`, which
+`check-red-leaks.mjs --self-test` loads and tests in CI.
+
+The merge is **row-level**, keyed by `(skill, case-id)`: k=3 rows supersede their k=1
+predecessors, every untouched row stays byte-identical, and re-merging the same results
+is a no-op — so it does not matter which of two concurrent sessions merges first. `--dry-run` prints the plan and writes nothing;
 `--baseline` / `--out` retarget the file (merge against a copy to rehearse).
 
 It recomputes `summary` from **all** rows (including the `skills` count the runner

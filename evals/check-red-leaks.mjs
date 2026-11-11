@@ -358,6 +358,14 @@ const EXPECT = {
   'listing-drift': { contaminated: 0, crossSkill: 0, forked: 0, otherToolUse: 0, redGens: 2, greenGens: 0, ...NO_JUDGE, listings: 2, redWithoutListing: 0, exit: 0 },
 }
 
+const RUNNER = 'evals/workflow-runner.mjs'
+const loadRunnerJudgeCheck = () => {
+  const src = readFileSync(RUNNER, 'utf8')
+  const m = src.match(/\/\/ <judge-check>\n([\s\S]*?)\/\/ <\/judge-check>/)
+  if (!m) throw new Error(`${RUNNER}: no // <judge-check> … // </judge-check> block`)
+  return new Function(`${m[1]}\nreturn { judgeDefect }`)()
+}
+
 const selfTest = () => {
   const cases = loadCases(`${FIXTURES}/skills`)
   let failed = 0
@@ -392,6 +400,32 @@ const selfTest = () => {
       failed++
       console.error(`FAIL listingDrift ${name}: want ${JSON.stringify(want)} got ${JSON.stringify(got)}`)
     } else console.log(`ok   listingDrift ${name}`)
+  }
+  // The runner's judge-round check. workflow-runner.mjs runs only inside the Workflow
+  // tool, so the check lives between markers there and is loaded from that file:
+  // these cases test the code the runner actually executes.
+  const { judgeDefect } = loadRunnerJudgeCheck()
+  const v = (why, index = 0, pass = true) => ({ index, pass, why })
+  const REASON = 'The reply names IDOR on user and order IDs and scopes every query to req.user.id.'
+  const JUDGE = [
+    ['placeholder text (observed)', [v('Placeholder corrected below')], 1, 'placeholder'],
+    ['empty reason', [v('')], 1, 'placeholder'],
+    ['whitespace reason', [v('   ')], 1, 'placeholder'],
+    ['missing reason', [{ index: 0, pass: false }], 1, 'placeholder'],
+    ['bare TBD', [v('TBD')], 1, 'placeholder'],
+    ['real reason', [v(REASON)], 1, null],
+    ['reason that mentions placeholders', [v('The reply leaves placeholder names (UserService, Mailer) and says to paste the real ones.')], 1, null],
+    ['reason opening with the word', [v('Placeholder names are flagged as such and the reply asks for the real signatures.')], 1, null],
+    ['one bad verdict of two', [v(REASON, 0), v('to be filled in later', 1)], 2, 'placeholder'],
+    ['incomplete list', [v(REASON, 0)], 2, 'incomplete'],
+    ['no verdicts', [], 1, 'incomplete'],
+  ]
+  for (const [name, verdicts, n, want] of JUDGE) {
+    const got = judgeDefect(verdicts, n)?.kind ?? null
+    if (got !== want) {
+      failed++
+      console.error(`FAIL judgeDefect ${name}: want ${want} got ${got}`)
+    } else console.log(`ok   judgeDefect ${name}`)
   }
   // The GREEN fixture reads its own SKILL.md, which is the mechanism working as
   // designed; a detector that flagged it would fail every honest run.
