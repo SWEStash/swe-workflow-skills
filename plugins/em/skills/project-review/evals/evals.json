@@ -3,8 +3,8 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "We're about to go public with our toolkit. It's spread across a strategy repo, a core implementation repo, and a validation harness. Before we announce, review where the project actually stands against its roadmap — what's really built, what's still a stub, and whether our own validation backs up the claims.",
-      "expected_output": "A structured execution review: inventories the project's own scope/roadmap claims, maps implementation maturity by component (production-ready vs stub/deferred), reconciles against the roadmap to surface ahead/behind and scope drift, reads the actual validation results (including negative ones), and produces prioritized severity-tagged findings with an execution scorecard.",
+      "prompt": "We're about to go public with our toolkit. It's spread across a strategy repo, a core implementation repo, and a validation harness. Before we announce, review where the project actually stands against its roadmap — what's really built, what's still a stub, and whether our own validation backs up the claims. Here's what's in each repo:\n\nstrategy/ROADMAP.md\n  Phase 1 (v0.1) — DONE: parser, rule engine, CLI\n  Phase 2 (v0.2) — IN PROGRESS: plugin API, web dashboard\nstrategy/README.md: \"Validated on 12 real-world codebases with 95% precision.\"\n\ncore/ (current version v0.1.4)\n  src/parser/          2,400 lines, tests at 88% line coverage\n  src/rules/engine.py  41 tests, all passing\n  src/cli.py           check and fix commands; `fix` prints \"TODO: not implemented yet\" and exits 0\n  src/plugins/api.py   4 of 6 public methods are `raise NotImplementedError`\n  src/dashboard/       only an empty __init__.py\n  src/cache/redis.py   result caching, 12 tests; not on the roadmap\n\nvalidation/results/summary.csv (last run 4 months ago, against core v0.0.8)\n  12 codebases listed: 6 at precision 0.95, 3 at 0.71, 3 timed out",
+      "expected_output": "A structured execution review built from the material given: inventories the roadmap and README claims first, maps each component to a maturity tier with its path (parser and rule engine production-ready; CLI fix, plugin API and dashboard stub; cache built but off-roadmap), reconciles against the roadmap (Phase 1 is not fully done; Phase 2 is mostly stub), reads the validation results as they are (precision 0.95 holds on 6 of 12 codebases, and the run is stale, against v0.0.8), and produces prioritized, severity-tagged findings with an execution scorecard. Positioning and announcement messaging go to strategic-review.",
       "assertions": [
         "Starts by inventorying the project's own claims/scope/roadmap before judging",
         "Maps implementation maturity by component into tiers (production-ready / thin / stub / deferred), naming specific paths",
@@ -17,14 +17,14 @@
     },
     {
       "id": 2,
-      "prompt": "Our strategy doc says the project is still 'pre-development', but I think engineering has actually built most of phase 1 already. Can you review the real state? Also a lot of the docs claim features that I'm not sure are real.",
-      "expected_output": "Recognizes the docs may be stale or over-claiming and treats code as the source of truth: maps what's actually implemented vs what docs claim, flags both directions of mismatch (built-but-undocumented and claimed-but-absent), and labels each finding confirmed vs inferred with a cited source.",
+      "prompt": "Our strategy doc says the project is still 'pre-development', but I think engineering has actually built most of phase 1 already. Can you review the real state? Also a lot of the docs claim features that I'm not sure are real. Here's what I pulled together:\n\ndocs/STRATEGY.md: \"Status: pre-development. Phase 1 = REST API, Postgres schema, background worker.\"\nREADME.md: \"Supports SSO (SAML), offline mode, and audit-log export.\"\n\nRepo files:\n  api/routes/*.py       14 route modules, tests/api/ has 96 tests\n  db/migrations/        0001_init.sql through 0012_add_audit_log.sql\n  worker/tasks.py       email and report jobs, retried with backoff\n  auth/sso.py:\n      def saml_login(request):\n          # TODO: wire up SAML provider\n          return Response(status=501)\n  export/audit.py       writes audit_log rows to CSV, 9 tests\n  (nothing matching 'offline' anywhere in the repo)",
+      "expected_output": "Treats the code as the source of truth over both documents: Phase 1 (API, schema, worker) is built, so the strategy doc understates it; SSO is a stub (TODO, returns 501) and offline mode is absent, so the README over-claims; audit export is real. Labels each conclusion confirmed with the file it rests on, or inferred.",
       "assertions": [
         "Treats the actual code/artifacts as ground truth when docs and reality conflict",
         "Flags claimed-but-absent features (documentation over-claiming) as findings",
         "Flags built-but-understated work (code ahead of the stated status) as findings",
         "Labels each conclusion as confirmed (with a cited source) or inferred",
-        "Greps for stub/not-implemented markers rather than trusting prose descriptions of capability"
+        "Checks the code itself for stub or not-implemented markers (the TODO and 501 in auth/sso.py) rather than trusting the README's prose about capability"
       ]
     },
     {

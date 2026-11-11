@@ -251,9 +251,9 @@ See limitation 7 for what it means for assertion design.
 
 | Metric | Result |
 |---|---|
-| Assertions passed, no skill body (RED) | **924 / 1388 = 66.6%** |
+| Assertions passed, no skill body (RED) | **927 / 1388 = 66.8%** |
 | Assertions passed, skill loaded (GREEN) | **1367 / 1388 = 98.5%** |
-| Gain | **+31.9 points** |
+| Gain | **+31.7 points** |
 | Cases where GREEN beats RED | **218 / 247** |
 | Cases where GREEN ties RED | **29 / 247** |
 | Cases where GREEN is *below* RED | **0 / 247** |
@@ -275,11 +275,11 @@ for depth:
 
 | Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
 |---|---|---|---|
-| zero (no references at all) | 16 | 63.7% → 98.5% | **+34.7** |
+| zero (no references at all) | 16 | 64.9% → 98.5% | **+33.6** |
 | light (0 < ratio < 1) | 25 | 68.4% → 98.7% | +30.3 |
 | heavy (ratio ≥ 1) | 27 | 66.1% → 98.2% | +32.2 |
 
-Pearson r between reference ratio and GREEN gain is **−0.09** across the 68 skills —
+Pearson r between reference ratio and GREEN gain is **−0.07** across the 68 skills —
 no relationship. The zero-reference skills are the control that makes this readable:
 they gained the *most* with nothing to read, so the gain comes from the instruction
 itself. Note the standing confound — GREEN gained tool access alongside reference
@@ -322,22 +322,20 @@ compares them case by case against the Opus rows. It prints RED, GREEN and gain 
 95% intervals from resampling whole cases, splits the Opus rows by recorded model
 id, and lists every case where the skill lowered an assertion. It is read-only.
 
-**Results** (2026-11-10, k=3 on every row except twelve Haiku rows at k=5, generators `claude-haiku-5-5` /
+**Results** (2026-11-10, k=3 on every row except fifteen Haiku rows at k=5, generators `claude-haiku-5-5` /
 `claude-sonnet-5-5`, every judge `claude-opus-5-5`):
 
 | Case set | Model | Cases | RED | GREEN | Gain [95% CI] | Cases GREEN < RED |
 |---|---|---|---|---|---|---|
-| Edge case of every skill (`eval:2`) | Haiku | 68 | 72.1% | 90.9% | +18.8 [14.3, 23.4] | 1 |
+| Edge case of every skill (`eval:2`) | Haiku | 68 | 72.8% | 91.9% | +19.0 [14.6, 23.6] | 0 |
 | | Sonnet | 68 | 78.5% | 96.5% | +18.0 [13.3, 22.9] | 0 |
-| | Opus (stored) | 68 | 73.1% | 98.8% | +25.7 | 0 |
-| Whole suite | Haiku | 245 | 62.1% | 89.1% | +27.0 [24.1, 29.7] | 1 |
-| | Opus (stored) | 245 | 66.5% | 98.5% | +32.0 | 0 |
+| | Opus (stored) | 68 | 73.3% | 98.8% | +25.4 | 0 |
+| Whole suite | Haiku | 247 | 62.4% | 89.5% | +27.1 [24.3, 30.1] | 0 |
+| | Opus (stored) | 247 | 66.8% | 98.5% | +31.7 | 0 |
 
-Haiku by case kind (whole suite): happy path +25.5, edge case +18.8, scope boundary
-+31.8, pressure **+39.7**. Sonnet was run on the edge-case set plus a 15-case pilot,
-not the whole suite. Two Haiku cases are excluded (`project-review eval:1`,
-`project-documentation eval:3`): they ask for repositories or git history that no arm
-can read, and every reply declined, in both arms.
+Haiku by case kind (whole suite): happy path +25.8, edge case +19.0, scope boundary
++31.5, pressure **+39.7**. Sonnet was run on the edge-case set plus a 15-case pilot,
+not the whole suite.
 
 What the numbers show:
 
@@ -373,9 +371,14 @@ What the numbers show:
   severity when the code is given, and to keep auditing when it isn't (GREEN 9/9
   against RED 6/9 at k=5, Haiku eval:1 unchanged at 9/10). `api-design eval:2` left email verification
   out of an auth API; **fixed** by naming, in Step 1, the operations a request needs
-  to be safe (7/7 against 7/7). Haiku's harm count is now **1 (0.4%)**:
-  `project-review eval:2` asks for a review of a repository the harness never
-  provides, so neither arm can do it.
+  to be safe (7/7 against 7/7). Haiku's harm count is now **0**. The last
+  case, `project-review eval:2`, asked for a review of a repository the harness never
+  provides, and two more cases asked for repositories or git history no arm could read.
+  All three now carry that material in the prompt (#90), which exposed two gaps in
+  `project-review` that the prompt without material hid: it opened with a verdict before
+  listing the project's claims, and rarely handed market questions to `strategic-review`.
+  Step 1 now opens the report with the claims and Step 5 hands off the market half
+  (Opus `eval:1` GREEN 7/7 against RED 5/7, Haiku 7/7 against 4/7).
   Sonnet's one case was `observability-design eval:2`; re-measured on the fixed text,
   it scores GREEN 8/9 against RED 6/9, so Sonnet's harm count is **0**.
 

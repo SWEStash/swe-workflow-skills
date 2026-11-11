@@ -40,6 +40,12 @@ Read the project's own statements of intent before judging anything:
   there is no agreement, that is a finding: re-validate it with `working-agreement`.
 
 Capture this as the baseline. Everything downstream is "reality vs this baseline."
+**The report opens with it**: a short list of what the project claims (scope,
+phase, milestone promises, headline numbers), each with its source, before any
+verdict. A bottom line that comes first has judged before the baseline exists.
+When the material was pasted in rather than readable, list it back from what was
+given. This is not a gate on delivering: write the baseline, then continue to
+Step 2 in the same response.
 
 ## Step 2: Map implementation maturity
 
@@ -93,6 +99,11 @@ Produce ranked, severity-tagged findings, each tied to its evidence:
   and the smallest action that addresses it.
 - **An execution scorecard** — maturity, roadmap-adherence, evidence-strength,
   each rated with a one-line justification, so the reader gets the picture at a glance.
+- **Hand off the market half.** When the review is for a launch, an announcement
+  or going public, end the findings with one line naming `strategic-review` for
+  vision, positioning and market, and do not answer those here, not even a
+  suggested launch framing. The execution findings stay complete in this answer;
+  only the market questions move.
 
 **Write the full report to a file** — default a gitignored location (e.g.
 `.local/project-review-<date>.md`) unless told otherwise — and state its path in
@@ -108,7 +119,8 @@ findings table), hand off to `artifact-design`.
 ## Principles Applied
 
 - **Honesty over comfort** — a review that flatters the plan is worthless; lead
-  with the most load-bearing problem, even when it undercuts the project's thesis.
+  the findings with the most load-bearing problem, even when it undercuts the
+  project's thesis.
 - **Evidence over assertion** — confirmed vs inferred, always; cite the source.
 - **Prioritize** — a ranked short list of what matters beats an exhaustive catalog.
 - **Right altitude** — execution health, not line-level nits (that's `code-reviewing`).

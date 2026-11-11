@@ -915,7 +915,7 @@
       "id": "boundary:project-documentation:3",
       "kind": "boundary",
       "skill": "project-documentation",
-      "prompt": "Generate a changelog from our recent git history. We're about to release v2.1.0.",
+      "prompt": "Generate a changelog entry for v2.1.0 from our git history. We release tomorrow and keep CHANGELOG.md by hand. The repo is github.com/acme/reportly and the last release was v2.0.0.\n\n$ git log --oneline v2.0.0..HEAD\ne41f0a2 Merge pull request #231 from acme/feat/csv-export\nb7c9d13 feat(export): export any report as CSV\n5a2e8f0 fix typo in README\n9d0c4b6 fix(auth): sessions expired after 5 minutes instead of 30\nc3f1a77 chore(deps): bump axios from 1.6.2 to 1.7.4 (CVE-2024-39338)\n1e8b2d5 refactor(reports): extract query builder into its own module\nf02a9c1 feat(dashboard): filter reports by date range\n7b4d6e3 Merge branch 'main' into feat/date-filter\na9c5e08 fix(pdf): charts were cut off on A4 exports\n3d7f1b2 feat(api)!: remove the deprecated /v1/reports endpoint\n0c6a4f9 docs: fix typos in API guide\n8e2b5c4 test: add coverage for CSV export edge cases",
       "accept": [
         "project-documentation",
         "NONE"
@@ -945,7 +945,7 @@
       "id": "positive:project-review:1",
       "kind": "positive",
       "skill": "project-review",
-      "prompt": "We're about to go public with our toolkit. It's spread across a strategy repo, a core implementation repo, and a validation harness. Before we announce, review where the project actually stands against its roadmap \u2014 what's really built, what's still a stub, and whether our own validation backs up the claims.",
+      "prompt": "We're about to go public with our toolkit. It's spread across a strategy repo, a core implementation repo, and a validation harness. Before we announce, review where the project actually stands against its roadmap \u2014 what's really built, what's still a stub, and whether our own validation backs up the claims. Here's what's in each repo:\n\nstrategy/ROADMAP.md\n  Phase 1 (v0.1) \u2014 DONE: parser, rule engine, CLI\n  Phase 2 (v0.2) \u2014 IN PROGRESS: plugin API, web dashboard\nstrategy/README.md: \"Validated on 12 real-world codebases with 95% precision.\"\n\ncore/ (current version v0.1.4)\n  src/parser/          2,400 lines, tests at 88% line coverage\n  src/rules/engine.py  41 tests, all passing\n  src/cli.py           check and fix commands; `fix` prints \"TODO: not implemented yet\" and exits 0\n  src/plugins/api.py   4 of 6 public methods are `raise NotImplementedError`\n  src/dashboard/       only an empty __init__.py\n  src/cache/redis.py   result caching, 12 tests; not on the roadmap\n\nvalidation/results/summary.csv (last run 4 months ago, against core v0.0.8)\n  12 codebases listed: 6 at precision 0.95, 3 at 0.71, 3 timed out",
       "accept": [
         "project-review"
       ]
