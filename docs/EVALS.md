@@ -174,6 +174,15 @@ record the rounds that actually voted, and the merge warns with each one named. 
 check itself is the `<judge-check>` block in `workflow-runner.mjs`, which
 `check-red-leaks.mjs --self-test` loads and tests in CI.
 
+`offtask` lists every round whose reply the judge marked `on_task: false`: it answered
+some other request instead of the case, usually the operator's launch message, which the
+Workflow harness relays into every agent as a request that "wins". Those rounds are
+dropped too, and the merge names them. Both generator prompts end with a rebuttal of the
+relayed request. When it sat before the task it did not hold on haiku: after "go on with
+#101", hijacked rounds edited the skill, committed, pushed and opened a pull request.
+Launch eval runs from a message that gives an agent nothing to act on anyway, and check
+`git status` and open pull requests after a small-model run.
+
 The merge is **row-level**, keyed by `(skill, case-id)`: k=3 rows supersede their k=1
 predecessors, every untouched row stays byte-identical, and re-merging the same results
 is a no-op — so it does not matter which of two concurrent sessions merges first. `--dry-run` prints the plan and writes nothing;
@@ -243,17 +252,17 @@ See limitation 7 for what it means for assertion design.
 | Metric | Result |
 |---|---|
 | Assertions passed, no skill body (RED) | **924 / 1388 = 66.6%** |
-| Assertions passed, skill loaded (GREEN) | **1365 / 1388 = 98.3%** |
-| Gain | **+31.8 points** |
-| Cases where GREEN beats RED | **217 / 247** |
-| Cases where GREEN ties RED | **30 / 247** |
+| Assertions passed, skill loaded (GREEN) | **1367 / 1388 = 98.5%** |
+| Gain | **+31.9 points** |
+| Cases where GREEN beats RED | **218 / 247** |
+| Cases where GREEN ties RED | **29 / 247** |
 | Cases where GREEN is *below* RED | **0 / 247** |
 
 **The zero is the number to protect.** A skill that scores below the model without its
 content is worse than no skill at all. **There are also zero RED-true / GREEN-false
-assertions** anywhere in the library. The 30 ties are mostly cases where RED already
+assertions** anywhere in the library. The 29 ties are mostly cases where RED already
 saturates — no headroom left to show, not a skill doing nothing — and saturation
-concentrates by case kind: `eval:1` 6%, `eval:2` 19%, `eval:3` 12%, pressure 12%.
+concentrates by case kind: `eval:1` 4%, `eval:2` 19%, `eval:3` 12%, pressure 12%.
 Scope-boundary cases used to saturate at 18% because three of their four assertions
 (recognise the request, name the sibling skill, withhold the wrong deliverable) were
 satisfied by the roster alone. Rewriting 26 of them against a sibling the roster cannot
@@ -267,8 +276,8 @@ for depth:
 | Band (references+templates bytes ÷ SKILL.md bytes) | Skills | RED → GREEN | Gain |
 |---|---|---|---|
 | zero (no references at all) | 16 | 63.7% → 98.5% | **+34.7** |
-| light (0 < ratio < 1) | 24 | 68.1% → 98.7% | +30.6 |
-| heavy (ratio ≥ 1) | 28 | 66.4% → 98.0% | +31.6 |
+| light (0 < ratio < 1) | 25 | 68.4% → 98.7% | +30.3 |
+| heavy (ratio ≥ 1) | 27 | 66.1% → 98.2% | +32.2 |
 
 Pearson r between reference ratio and GREEN gain is **−0.09** across the 68 skills —
 no relationship. The zero-reference skills are the control that makes this readable:
@@ -318,11 +327,11 @@ id, and lists every case where the skill lowered an assertion. It is read-only.
 
 | Case set | Model | Cases | RED | GREEN | Gain [95% CI] | Cases GREEN < RED |
 |---|---|---|---|---|---|---|
-| Edge case of every skill (`eval:2`) | Haiku | 68 | 71.9% | 90.6% | +18.8 [14.3, 23.4] | 1 |
+| Edge case of every skill (`eval:2`) | Haiku | 68 | 72.1% | 90.9% | +18.8 [14.3, 23.4] | 1 |
 | | Sonnet | 68 | 78.5% | 96.5% | +18.0 [13.3, 22.9] | 0 |
-| | Opus (stored) | 68 | 73.1% | 98.5% | +25.4 | 0 |
-| Whole suite | Haiku | 245 | 62.0% | 89.0% | +27.0 [24.1, 29.7] | 1 |
-| | Opus (stored) | 245 | 66.5% | 98.3% | +31.8 | 0 |
+| | Opus (stored) | 68 | 73.1% | 98.8% | +25.7 | 0 |
+| Whole suite | Haiku | 245 | 62.1% | 89.1% | +27.0 [24.1, 29.7] | 1 |
+| | Opus (stored) | 245 | 66.5% | 98.5% | +32.0 | 0 |
 
 Haiku by case kind (whole suite): happy path +25.5, edge case +18.8, scope boundary
 +31.8, pressure **+39.7**. Sonnet was run on the edge-case set plus a 15-case pilot,
@@ -359,7 +368,10 @@ What the numbers show:
   assertion. Re-run at k=5, four tie (noise; one of them had a judge error at k=3).
   `security-audit eval:2` rated MD5 hashing High and a missing JWT expiry Medium
   where the eval expects Critical and High; **fixed** with a severity rubric in Step 2
-  (GREEN 8/9 against RED 5/9 at k=5). `api-design eval:2` left email verification
+  (GREEN 8/9 against RED 5/9 at k=5). Its Medium findings then came back with prose
+  fixes instead of code; Step 2's Remediation now asks for the corrected code at every
+  severity when the code is given, and to keep auditing when it isn't (GREEN 9/9
+  against RED 6/9 at k=5, Haiku eval:1 unchanged at 9/10). `api-design eval:2` left email verification
   out of an auth API; **fixed** by naming, in Step 1, the operations a request needs
   to be safe (7/7 against 7/7). Haiku's harm count is now **1 (0.4%)**:
   `project-review eval:2` asks for a review of a repository the harness never
